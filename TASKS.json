@@ -1432,9 +1432,20 @@
       ],
       "risk": "this is the highest-risk technical bet in SUS",
       "rollback": "Explore framework instrumentation, framework-specific adapters, then scoped style/token alternatives without declaring missing mandatory component editing complete. Exhausted options block Studio pending owner decision; preview-only cannot pass.",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0700.md",
+        "evals/spikes/t0700-VERDICT.md",
+        "evals/spikes/t0700-run.json",
+        "scripts/spike-t0700.mjs"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0700.md",
+      "results": [
+        "NO-GO for static mapping (65%/40%, 81%/65%); ladder step 1 (render-time stamping) confirmed; capability unchanged"
+      ]
     },
     {
       "id": "T0701",

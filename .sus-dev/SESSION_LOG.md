@@ -201,3 +201,9 @@
   lint wired into check w/ honest not-run) + interaction state-machine schema
   (motion none w/ reason, reduced-motion parity, interruption/rapid-toggle,
   reachability). 10/10 schema tests. Receipts: T0404.md, T0600.md. Next: T0406, T0551, T0901, T0700.
+
+- 2026-11-14T04:10:00+06:00 | ZCode (GLM) | T0700 | Dual-stack mapping spike complete:
+  NO-GO for static mapping on both stacks (root cause proven: expression-bound
+  map-instance ids); ladder step 1 (render-time data-sus-id stamping) confirmed as
+  required path. A buggy first pass (spurious GO from greedy regex) caught+fixed
+  before recording. Verdict: evals/spikes/t0700-VERDICT.md. Next: T0701 bridge server.

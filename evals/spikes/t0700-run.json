@@ -1,0 +1,26 @@
+{
+  "threshold": 0.9,
+  "results": [
+    {
+      "name": "fixtureA:next-marketing",
+      "domElements": 23,
+      "sourceElements": 31,
+      "matched": 15,
+      "unique": 15,
+      "matchRate": 0.6521739130434783,
+      "uniqueRate": 0.6521739130434783,
+      "ambiguousSample": []
+    },
+    {
+      "name": "fixtureB:astro-commerce",
+      "domElements": 43,
+      "sourceElements": 34,
+      "matched": 17,
+      "unique": 17,
+      "matchRate": 0.3953488372093023,
+      "uniqueRate": 0.3953488372093023,
+      "ambiguousSample": []
+    }
+  ]
+}
+VERDICT: NO-GO (unique-owner fixtureA:next-marketing=65%, fixtureB:astro-commerce=40%)
