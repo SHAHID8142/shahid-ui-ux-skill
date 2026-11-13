@@ -26,7 +26,8 @@ function parseSource(path) {
   const text = readFileSync(path, 'utf8');
   const elements = [];
   // JSX/Astro element inventory: opening tags with optional id + inner text
-  const re = /<(h[1-6]|p|button|a|section|header|footer|nav|ul|li|main|article|label|input|table|dl|figure)\b([^>]*)>/g;
+  const re =
+    /<(h[1-6]|p|button|a|section|header|footer|nav|ul|li|main|article|label|input|table|dl|figure)\b([^>]*)>/g;
   let m;
   while ((m = re.exec(text)) !== null) {
     const attrs = m[2];
@@ -34,7 +35,13 @@ function parseSource(path) {
     // capture text until closing tag (same tag) — bounded window
     const window = text.slice(m.index, m.index + 400);
     const textContent = />([^<>{}]{4,120})</.exec(window)?.[1]?.trim() ?? null;
-    elements.push({ tag: m[1], id, text: textContent, pos: m.index, line: text.slice(0, m.index).split('\n').length });
+    elements.push({
+      tag: m[1],
+      id,
+      text: textContent,
+      pos: m.index,
+      line: text.slice(0, m.index).split('\n').length,
+    });
   }
   return elements;
 }
@@ -46,7 +53,10 @@ function parseBuiltHtml(html) {
   let m;
   while ((m = leafRe.exec(html)) !== null) {
     const id = /id="([^"]+)"/.exec(m[2])?.[1] ?? null;
-    const text = m[3].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const text = m[3]
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
     if (text.length > 0) dom.push({ tag: m[1], id, text: text.slice(0, 120) });
   }
   // container landmarks: identified by id attribute only (structure owners)
@@ -81,11 +91,21 @@ function spike(name, sourcePath, builtPath) {
         });
     if (candidates.length > 0) matched += 1;
     if (candidates.length === 1) unique += 1;
-    else if (candidates.length > 1) ambiguous.push({ id: el.id, tag: el.tag, n: candidates.length });
+    else if (candidates.length > 1)
+      ambiguous.push({ id: el.id, tag: el.tag, n: candidates.length });
   }
   const matchRate = dom.length ? matched / dom.length : 0;
   const uniqueRate = dom.length ? unique / dom.length : 0;
-  return { name, domElements: dom.length, sourceElements: src.length, matched, unique, matchRate, uniqueRate, ambiguousSample: ambiguous.slice(0, 5) };
+  return {
+    name,
+    domElements: dom.length,
+    sourceElements: src.length,
+    matched,
+    unique,
+    matchRate,
+    uniqueRate,
+    ambiguousSample: ambiguous.slice(0, 5),
+  };
 }
 
 // fixture A: Next.js marketing (built output: .next/server/app/index.html)
@@ -103,7 +123,10 @@ if (!existsSync(A_BUILT)) {
 const B_SRC = join(ROOT, 'fixtures', 'commerce', 'src', 'pages', 'index.astro');
 const B_BUILT = join(ROOT, 'fixtures', 'commerce', 'dist', 'index.html');
 
-const results = [spike('fixtureA:next-marketing', A_SRC, A_BUILT), spike('fixtureB:astro-commerce', B_SRC, B_BUILT)];
+const results = [
+  spike('fixtureA:next-marketing', A_SRC, A_BUILT),
+  spike('fixtureB:astro-commerce', B_SRC, B_BUILT),
+];
 
 const THRESHOLD = 0.9;
 console.log(JSON.stringify({ threshold: THRESHOLD, results }, null, 2));
@@ -113,5 +136,7 @@ if (errors.length > 0) {
   process.exit(3);
 }
 const go = results.every((r) => r.uniqueRate >= THRESHOLD);
-console.log(`VERDICT: ${go ? 'GO' : 'NO-GO'} (unique-owner ${results.map((r) => `${r.name}=${(r.uniqueRate * 100).toFixed(0)}%`).join(', ')})`);
+console.log(
+  `VERDICT: ${go ? 'GO' : 'NO-GO'} (unique-owner ${results.map((r) => `${r.name}=${(r.uniqueRate * 100).toFixed(0)}%`).join(', ')})`,
+);
 process.exit(go ? 0 : 2);

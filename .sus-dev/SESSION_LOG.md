@@ -207,3 +207,10 @@
   map-instance ids); ladder step 1 (render-time data-sus-id stamping) confirmed as
   required path. A buggy first pass (spurious GO from greedy regex) caught+fixed
   before recording. Verdict: evals/spikes/t0700-VERDICT.md. Next: T0701 bridge server.
+
+- 2026-11-14T04:25:00+06:00 | ZCode (GLM) | T0406+T0551+T0901 | Copy/SEO module (claims
+  register, DA-47 behavior contracts w/ structural non-waivable separation, G3/G9
+  emission, fixture A integration pass), hardening matrix (12 cells live, 320px G7
+  equivalence, per-brief locales, honest zoom note), adapter interface + generated
+  support matrix (no guessed claims). 36/36 new tests; workspace green.
+  Receipts: T0406.md, T0551.md, T0901.md. Next: M5 progressive workflow.

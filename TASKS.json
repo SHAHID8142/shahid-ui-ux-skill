@@ -1064,9 +1064,17 @@
       ],
       "risk": "SEO overclaim",
       "rollback": "cite Google guidance only",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0406.md",
+        "packages/schemas/src/copy-seo.ts",
+        "packages/scanners/src/seo.ts",
+        "skill/references/copy-seo.md"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0406.md"
     },
     {
       "id": "T0407",
@@ -1290,12 +1298,19 @@
       ],
       "risk": "runtime cost",
       "rollback": "advisory until M8, blocking at GA",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
       "gates": [
         "G7"
-      ]
+      ],
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0551.md",
+        "packages/eval-core/src/hardening.ts",
+        "packages/eval-core/tests/hardening.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0551.md"
     },
     {
       "id": "T0600",
@@ -1880,9 +1895,16 @@
       ],
       "risk": "adapter sprawl",
       "rollback": "interface frozen before third adapter",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0901.md",
+        "packages/adapters/src/adapter-interface.ts",
+        "packages/adapters/tests/support-matrix.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0901.md"
     },
     {
       "id": "T0902",

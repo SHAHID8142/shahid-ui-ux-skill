@@ -4,3 +4,4 @@
  * T0305: suite + precision/recall on the labelled corpus (G10).
  */
 export { scanText, type Finding, type ScanResult } from './engine.js';
+export { checkSeo, type SeoCheck, type SeoResult } from './seo.js';

@@ -99,3 +99,16 @@ export {
   type PlaybookData,
   type PlaybookRuleData,
 } from './playbook.js';
+export {
+  BehaviorKind,
+  ClaimsRegister,
+  ClaimsRegisterEntry,
+  DomainBehavior,
+  DomainBehaviorContract,
+  REQUIRED_COMMERCE_BEHAVIORS,
+  REQUIRED_OPERATE_BEHAVIORS,
+  SusClaimsRegister,
+  SusDomainBehaviorContract,
+  type ClaimsRegisterEntryData,
+  type DomainBehaviorData,
+} from './copy-seo.js';

@@ -31,3 +31,4 @@ export {
   type BudgetSpec,
   type GateStatus,
 } from './harness/a11y-budgets.js';
+export { runHardeningMatrix, type HardeningResult, type MatrixCell } from './hardening.js';

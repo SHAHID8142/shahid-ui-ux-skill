@@ -19,3 +19,11 @@ export {
   type PrecedenceConflict,
   type LayerSource,
 } from './precedence.js';
+export { CAPABILITY_MATRIX, capabilitiesText, main as cliMain } from './cli.js';
+export {
+  type HostAdapter,
+  type HostCapabilities,
+  type SupportTier,
+  supportTier,
+  generateSupportMatrix,
+} from './adapter-interface.js';

@@ -49,7 +49,7 @@ export function moduleRegistry(): ModuleDescriptor[] {
     { id: 'playbook:commerce', path: null, status: 'not-built' },
     { id: 'playbook:operate', path: null, status: 'not-built' },
     { id: 'playbook:portfolio', path: null, status: 'not-built' },
-    { id: 'copy-seo', path: null, status: 'not-built' },
+    { id: 'copy-seo', path: 'skill/references/copy-seo.md', status: 'built' },
     { id: 'motion', path: null, status: 'not-built' },
     { id: 'research', path: null, status: 'not-built' },
     { id: 'scanner', path: null, status: 'not-built' },
