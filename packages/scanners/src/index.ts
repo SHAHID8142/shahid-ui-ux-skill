@@ -1,6 +1,6 @@
 /**
- * @sus/scanners — deterministic anti-slop detector over DOM/CSS/AST (M3).
- * T0101 skeleton stub. Implemented from T0303/T0304 onward (rules, CLI,
- * precision/recall on a labelled corpus).
+ * @sus/scanners — deterministic anti-slop detector (M3).
+ * T0303: rule engine + first rule; T0304: CLI + JSON contract;
+ * T0305: suite + precision/recall on the labelled corpus (G10).
  */
-export const SUS_SCANNERS_PACKAGE = '0.0.0' as const;
+export { scanText, type Finding, type ScanResult } from './engine.js';

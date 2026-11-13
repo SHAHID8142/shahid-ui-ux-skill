@@ -57,3 +57,17 @@ export const SUS_SCHEMA_REGISTRY_ALL = [
   SusEvidenceBundle,
 ] as const;
 export { ACTIONS, MODULES, SURFACES, Intent, SusIntent, type IntentData } from './intent.js';
+export {
+  ProvenanceCatalog,
+  ResearchClaim,
+  ResearchPlan,
+  Source,
+  Strength,
+  VerificationMethod,
+  SusProvenanceCatalog,
+  type ProvenanceCatalogData,
+  type ResearchClaimData,
+  type ResearchPlanData,
+  type SourceData,
+} from './research-evidence.js';
+export { SusSlopTaxonomy, TAXONOMY, type SlopCategoryData } from './slop-taxonomy.js';

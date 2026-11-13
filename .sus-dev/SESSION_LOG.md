@@ -182,3 +182,10 @@
   recorded (precision 1.0 / recall 1.0, live host evals deferred to M9 explicitly).
   18/18 adapters tests; workspace suites green. M2 COMPLETE (T0201-T0205).
   Receipts: VERIFICATION/T0204.md, T0205.md. Next: M3 research/anti-slop.
+
+- 2026-11-14T03:35:00+06:00 | ZCode (GLM) | T0301-T0305+T0310 | M3 COMPLETE:
+  research evidence schema (hearsay cannot back facts), 5-category slop taxonomy
+  w/ counterexamples, deterministic engine w/ allowlist, sus-scan CLI (exit
+  codes documented), labelled corpus P/R = 1.0/1.0 (blocking rules), trend loop
+  (stale volatile flagged, reuse blocked). 16/16 scanner tests; workspace
+  110/110. Receipts: VERIFICATION/T0301..T0310.md. Next: M4 design intelligence.

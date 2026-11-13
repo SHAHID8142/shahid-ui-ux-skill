@@ -725,9 +725,16 @@
       ],
       "risk": "link rot",
       "rollback": "archived excerpts with dates",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0301.md",
+        "packages/schemas/src/research-evidence.ts",
+        "evals/research/provenance-catalog.json"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0301.md"
     },
     {
       "id": "T0302",
@@ -748,9 +755,15 @@
       ],
       "risk": "taxonomy dogma",
       "rollback": "advisory tier by default",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0302.md",
+        "packages/schemas/src/slop-taxonomy.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0302.md"
     },
     {
       "id": "T0303",
@@ -771,12 +784,18 @@
       ],
       "risk": "rule quality sets precedent",
       "rollback": "single rule, easily revised",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
       "gates": [
         "G3"
-      ]
+      ],
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0303.md",
+        "packages/scanners/src/engine.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0303.md"
     },
     {
       "id": "T0304",
@@ -798,9 +817,15 @@
       ],
       "risk": "output churn breaks CI consumers",
       "rollback": "versioned output schema",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0304.md",
+        "packages/scanners/src/cli.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0304.md"
     },
     {
       "id": "T0305",
@@ -824,13 +849,20 @@
       ],
       "risk": "corpus licensing",
       "rollback": "synthetic + licensed-only pages",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
       "gates": [
         "G3",
         "G10"
-      ]
+      ],
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0305.md",
+        "packages/scanners/corpus/",
+        "packages/scanners/tests/scanner.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0305.md"
     },
     {
       "id": "T0400",
@@ -2219,9 +2251,15 @@
       ],
       "risk": "trend churn",
       "rollback": "adopted trends pinned until reviewed change approved",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0310.md",
+        "packages/scanners/tests/research.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0310.md"
     },
     {
       "id": "T0405b",

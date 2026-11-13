@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "claims": [
+    {
+      "id": "sus-baseline-floor",
+      "claim": "Unassisted agent output on the SUS 4-surface corpus scored 25-31/55 acceptance with 2 of 4 surfaces failing the G4 contrast gate (2026-11-14 measurement).",
+      "strength": "fact",
+      "verification": "replicated-measurement",
+      "source": {
+        "url": "file://evals/baselines/bundle.json",
+        "title": "SUS no-skill baseline evidence bundles",
+        "publisher": "SUS evaluation corpus (this repository)",
+        "publishedAt": "2026-11-14",
+        "accessedAt": "2026-11-14"
+      },
+      "firstObserved": "2026-11-14",
+      "lastVerified": "2026-11-14",
+      "revisit": "volatile",
+      "revisitMonths": 6
+    },
+    {
+      "id": "scanner-precision-corpus",
+      "claim": "The first three blocking scanner rules measure precision 1.0 and recall 1.0 on the labelled corpus (5 positive files, 1 negative file with 8 registered counterexamples).",
+      "strength": "fact",
+      "verification": "replicated-measurement",
+      "source": {
+        "url": "file://packages/scanners/corpus/",
+        "title": "Labelled scanner corpus + suite",
+        "publisher": "SUS evaluation corpus (this repository)",
+        "publishedAt": "2026-11-14",
+        "accessedAt": "2026-11-14"
+      },
+      "firstObserved": "2026-11-14",
+      "lastVerified": "2026-11-14",
+      "revisit": "volatile",
+      "revisitMonths": 3
+    },
+    {
+      "id": "token-estimate-method",
+      "claim": "Chars/4 is a conservative token estimate for English UI copy and is used consistently by the skill validator, JIT loader and budget CLI until real usage metadata exists.",
+      "strength": "strong-claim",
+      "verification": "read-full-source",
+      "source": {
+        "url": "file://docs/TASK_RECORD_CONTRACT.md",
+        "title": "SUS repo conventions (scripts/validate-skill.mjs header, jit-loader)",
+        "publisher": "SUS repository",
+        "publishedAt": "2026-11-14",
+        "accessedAt": "2026-11-14"
+      },
+      "firstObserved": "2026-11-14",
+      "lastVerified": "2026-11-14",
+      "revisit": "durable"
+    }
+  ],
+  "plans": [
+    {
+      "id": "surface-corpus-expansion",
+      "questions": [
+        "Do baseline scores hold when fixtures gain interactive states?",
+        "Do the heuristic router precision numbers survive held-out briefs?"
+      ],
+      "budget": { "sources": 4 },
+      "stopRule": "stop when both questions have measured answers or the 4-source budget is spent",
+      "revisitTrigger": "any fixture content change or router rule change"
+    }
+  ]
+}

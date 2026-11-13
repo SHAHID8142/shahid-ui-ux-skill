@@ -152,10 +152,20 @@ importers:
         version: 5.9.3
 
   packages/scanners:
+    dependencies:
+      '@sus/schemas':
+        specifier: workspace:*
+        version: link:../schemas
     devDependencies:
+      '@types/node':
+        specifier: ^20.17.6
+        version: 20.17.6
       typescript:
         specifier: ^5.9.2
         version: 5.9.3
+      vitest:
+        specifier: ^3.2.7
+        version: 3.2.7(@types/debug@4.1.13)(@types/node@20.17.6)(supports-color@10.2.2)
 
   packages/schemas:
     dependencies:
