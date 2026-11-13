@@ -261,3 +261,9 @@
   exhaustive field-removal negatives, motion:none intent discipline, required
   reduced-motion parity. 5/5 tests. Receipt: VERIFICATION/T0601.md. Next: T0702
   CDP attach; then T0602/T0603 playbooks+interruption suite.
+
+- 2026-11-14T06:15:00+06:00 | ZCode (GLM) | T0702 | CDP attach + trusted overlay:
+  isolated-world state (main world cannot see bridge), no-app-modification
+  injection, load-based reconnect, keyboard-navigable + axe-clean in-slice
+  (kilo H3 honored). 5/5 tests; workspace 185/185. Receipt: VERIFICATION/T0702.md.
+  Next: T0602/T0603 motion; T0703 anchors.

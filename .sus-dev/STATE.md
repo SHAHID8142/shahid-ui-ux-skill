@@ -9,10 +9,10 @@ amended (D29). Checkpoint pushes to private dev branches permitted (D30).
 Canonical statuses: TASKS.json. Done: T0001-T0007 (M0 complete). No active lease.
 Concurrency 1.
 
-Current task: none (between tasks). No active leases.
-Next exact steps: `pnpm check` (exit 0 verified). Then ready set: T0702
-(CDP attach + overlay injection), T0602/T0603 (motion playbooks + interruption
-suite — tokens done), then T0402b fixtures-deep + T0703-T0709 chain ->
+Current task: none (between tasks). No active leases. Last: T0702 done.
+Next exact steps: `pnpm check` (exit 0 verified). Then ready set: T0602/T0603 (motion playbooks + interruption suite —
+tokens done), T0703 (element selection + stable anchors), then T0402b
+fixtures-deep + T0704-T0709 chain ->
 T0700w -> T0400/T0405 playbooks -> M8/M9/M10.
 Blockers: none open except standing B003 (licence/publication, later phase) and B004
 (irreversible externals during build). Active files: none after checkpoint.

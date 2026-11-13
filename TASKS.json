@@ -1581,9 +1581,16 @@
       ],
       "risk": "browser version drift",
       "rollback": "pinned Playwright chromium default",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0702.md",
+        "packages/studio-bridge/src/cdp.ts",
+        "packages/studio-bridge/tests/cdp.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0702.md"
     },
     {
       "id": "T0703",

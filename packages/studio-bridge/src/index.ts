@@ -13,3 +13,4 @@ export {
   type AuditEntry,
   type MessageEnvelopeData,
 } from './server.js';
+export { CdpOverlay, type AttachResult } from './cdp.js';
