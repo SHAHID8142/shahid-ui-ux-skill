@@ -29,7 +29,8 @@
       "status": "done",
       "approval": "n/a",
       "evidence": [
-        "session log; workspace reorganised into docs/ + archive/"
+        "docs/OWNER_DECISIONS_LOG.md",
+        "README.md"
       ],
       "phase": "planning"
     },
@@ -56,7 +57,7 @@
       "status": "done",
       "approval": "pending",
       "evidence": [
-        "PRD_GAP_ANALYSIS.md"
+        "docs/PRD_GAP_ANALYSIS.md"
       ],
       "phase": "planning"
     },
@@ -85,7 +86,7 @@
       "approval": "pending",
       "evidence": [
         "RISKS.md",
-        "COVERAGE_MATRIX.md"
+        "docs/COVERAGE_MATRIX.md"
       ],
       "phase": "planning"
     },
@@ -112,7 +113,7 @@
       "status": "done",
       "approval": "OWNER_DECISIONS_LOG.md D28-D29 (same commit as TASKS.json update)",
       "evidence": [
-        "ADR_DRAFTS.md"
+        "docs/ADR_DRAFTS.md"
       ],
       "phase": "planning"
     },
@@ -2418,12 +2419,16 @@
       ],
       "risk": "False continuity or unsafe resumption",
       "rollback": "Revert only this task’s known changes; preserve unrelated work",
-      "status": "pending",
-      "approval": "pending",
+      "status": "done",
+      "approval": "D28/D29 build authorization (self-verified per protocol)",
       "phase": "build",
-      "owner": null,
+      "owner": "zcode-glm-2026-11-13",
       "lease": null,
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0010.md",
+        "scripts/check-continuation.mjs"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0010.md"
     },
     {
       "id": "T0700w",

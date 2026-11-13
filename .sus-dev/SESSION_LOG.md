@@ -31,3 +31,11 @@
   pnpm -r exec tsc --noEmit exit 0; negative type fixture caught (exit 1, TS2322)
   then restored; 7/7 packages private. Receipt: .sus-dev/VERIFICATION/T0101.md.
   Commit: same commit as receipt. Next: T0010 executable continuation checker.
+
+- 2026-11-13T23:40:00+06:00 | ZCode (GLM) | T0010 | Delivered scripts/check-continuation.mjs
+  (zero-dep Node ESM; required files, TASKS.json validation, DAG, done-task evidence +
+  receipt self-consistency, gate consistency, git dirty/conflict/branch/upstream/worktree,
+  tooling census, stale lease; exit 0/1/2). First run caught 4 real stale evidence paths
+  in T0001-T0004 — corrected honestly in this commit. Resume experiments E1-E10 all pass
+  (partial edit -> 2; false pass/missing artifact/bad ID/dangling dep/stale lease/gate flip
+  -> 1; fixtures restored). Receipt: .sus-dev/VERIFICATION/T0010.md. Next: T0102 fixture A.
