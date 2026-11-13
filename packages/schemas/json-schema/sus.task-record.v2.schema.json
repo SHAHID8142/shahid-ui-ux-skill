@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^T\\d{3,4}[a-z]{0,2}$"
+    },
+    "m": {
+      "type": "string",
+      "pattern": "^M\\d+(?:\\.\\d+)?$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "obj": {
+      "type": "string",
+      "minLength": 1
+    },
+    "deps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^T\\d{3,4}[a-z]{0,2}$"
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "acc": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "risk": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rollback": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "review",
+        "done",
+        "blocked"
+      ]
+    },
+    "approval": {
+      "type": "string",
+      "minLength": 1
+    },
+    "phase": {
+      "type": "string",
+      "enum": [
+        "planning",
+        "build",
+        "post-build-audit",
+        "publication"
+      ]
+    },
+    "owner": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "lease": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "session": {
+              "type": "string",
+              "minLength": 1
+            },
+            "task": {
+              "type": "string",
+              "pattern": "^T\\d{3,4}[a-z]{0,2}$"
+            },
+            "branch": {
+              "type": "string",
+              "minLength": 1
+            },
+            "baseSha": {
+              "type": "string",
+              "minLength": 7
+            },
+            "acquired": {
+              "type": "string",
+              "minLength": 1
+            },
+            "expires": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fencingGeneration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "session",
+            "task",
+            "branch",
+            "baseSha",
+            "acquired",
+            "expires",
+            "fencingGeneration"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "commit": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "m",
+    "title",
+    "obj",
+    "deps",
+    "files",
+    "acc",
+    "tests",
+    "risk",
+    "rollback",
+    "status",
+    "approval"
+  ],
+  "additionalProperties": false,
+  "$id": "sus.task-record",
+  "x-sus-version": 2
+}

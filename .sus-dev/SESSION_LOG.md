@@ -62,3 +62,14 @@
   format:check 0; typecheck 0; test 4/4; workflow YAML parsed. Remote CI run not-run
   (triggers on push). Dead code in checker removed. Receipt: .sus-dev/VERIFICATION/T0103.md.
   Next: T0104 schema versioning + contract-test strategy (Zod, ADR-005).
+
+- 2026-11-13T23:15:00+06:00 | ZCode (GLM) | T0104 | @sus/schemas: defineSusSchema/
+  applyMigrations (registry-gap hard error; version lives outside records), compact
+  task-record contract v1+v2 (aliases, status vocabulary, evidence refs, DA-40
+  completion rules), additive-only v1->v2 migration with pinned fixtures, zod 4
+  toJSONSchema export committed + test:sync (fails on tracked drift OR untracked
+  artifacts; honest negative = source drift without re-export). 18 tests pass;
+  workspace lint/typecheck/test/format/stylelint all 0. Also: ci.yml format fix
+  committed after first CI run failed at Format check (pipeline caught real issue);
+  a transient push rejection retried. Receipt: .sus-dev/VERIFICATION/T0104.md.
+  Next: M1 complete -> M1.5 evaluation spine from T0151.

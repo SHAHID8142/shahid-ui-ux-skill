@@ -13,9 +13,16 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "vitest run",
+    "export": "tsc && node scripts/export-json-schema.mjs",
+    "test:sync": "pnpm run --silent export && git diff --exit-code -- json-schema/ && if git ls-files --others --exclude-standard -- json-schema/ | grep -q .; then echo 'untracked JSON Schema artifacts — export output must be committed (ADR-005)'; exit 1; fi"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
   },
   "devDependencies": {
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.7"
   }
 }

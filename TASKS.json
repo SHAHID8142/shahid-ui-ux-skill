@@ -273,9 +273,17 @@
       ],
       "risk": "migration complexity creep",
       "rollback": "migrations are additive-only v1",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D28/D29 build authorization (self-verified per protocol)",
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0104.md",
+        "packages/schemas/src/versioning.ts",
+        "packages/schemas/src/task-record.ts",
+        "packages/schemas/json-schema/"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0104.md"
     },
     {
       "id": "T0151",
