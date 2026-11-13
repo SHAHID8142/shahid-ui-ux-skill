@@ -33,3 +33,5 @@ over a page skeleton, layout recipe, or copy text to paste.
 every `skill/references/playbooks/*.json` against SusPlaybook and rejects:
 duplicate authoritative rules, missing sources, unknown rule references,
 unordered steps, malformed state machines.
+
+---

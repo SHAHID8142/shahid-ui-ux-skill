@@ -9,7 +9,7 @@ amended (D29). Checkpoint pushes to private dev branches permitted (D30).
 Canonical statuses: TASKS.json. Done: T0001-T0007 (M0 complete). No active lease.
 Concurrency 1.
 
-Current task: T0402+T0403 foundations (main agent, in progress). Lease: zcode-subagent-t0904 owns T0904 installer (isolated scripts/install/; main agent integrates).
+Current task: T0601 (motion tokens — next, pending) while subagent-t0904 (lease zcode-subagent-t0904) completes T0904; main agent integrates.
 Next exact steps: `pnpm check` (exit 0 verified). Then ready set: T0402
 (color/typography foundations), T0403 (layout/responsive/a11y foundations),
 T0409 (knowledge lint in CI — validates skill refs + playbooks + provenance
