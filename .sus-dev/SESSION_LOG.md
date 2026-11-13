@@ -220,3 +220,10 @@
   negatives), change plans w/ explicit-approval requirement, version-bound receipts,
   decision log w/ expiries, prediction->lesson lifecycle, 4-section enforcement.
   9 new tests; workspace 146/146. Receipts: T0501-T0508.md. Next: T0402/T0403/T0409.
+
+- 2026-11-14T04:55:00+06:00 | ZCode (GLM) | SESSION-CHECKPOINT | 51/94 tasks done;
+  149/149 tests; typecheck/lint/format/styleline/check all exit 0 on clean tree;
+  all checkpoints pushed to origin chore/continuation-reconciliation. Ready set
+  recorded in STATE.md. Lesson recorded: two pushes went out with red typecheck/
+  format before the combined-check discipline was complete — receipts and fixes
+  landed immediately after; discipline now: typecheck+lint+format+tests BEFORE push.

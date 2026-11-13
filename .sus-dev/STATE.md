@@ -9,11 +9,14 @@ amended (D29). Checkpoint pushes to private dev branches permitted (D30).
 Canonical statuses: TASKS.json. Done: T0001-T0007 (M0 complete). No active lease.
 Concurrency 1.
 
-Current task: none (between tasks). M1 + M1.5 COMPLETE (T0101-T0104, T0010, T0102b, T0103b, T0151-T0159). Next: M2 skill core — T0201 minimal SKILL.md + frontmatter validator.
-Next exact steps: run `pnpm check` (must exit 0), then T0151 rubric schema +
-scoring CLI in @sus/eval-core (deps T0104 done). Then T0152 screenshot+DOM
-harness, T0152b axe/Lighthouse budgets, T0102b fixtures B/C/D (needed by T0153
-baselines and T0700 spike).
+Current task: none (between tasks). DONE: M0-M5 core (51 of 94 tasks incl. T0103b issue#8, T0700 spike NO-GO verdict, T0151-T0159 eval spine, T0201-T0205 skill core, T0301-T0310 scanner, T0401 tokens/G12, T0404/T0600 contracts, T0406/T0551/T0901, T0501-T0508 workflow). READY NEXT: T0402, T0403, T0409, T0601, T0701, T0904.
+Next exact steps: `pnpm check` (exit 0 verified). Then ready set: T0402
+(color/typography foundations), T0403 (layout/responsive/a11y foundations),
+T0409 (knowledge lint in CI — validates skill refs + playbooks + provenance
+catalog), T0601 (motion tokens), T0701 (bridge server: auth, allowlist,
+session state — NO consumer-source writes; ladder step 1 confirmed by T0700),
+T0904 (installer/doctor). Then T0402b fixtures-deep + T0702-T0709 chain ->
+T0700w -> T0400/T0405 playbooks -> M8/M9/M10.
 
 Blockers: none open except standing B003 (licence/publication, later phase) and B004
 (irreversible externals during build). Active files: none after checkpoint.
