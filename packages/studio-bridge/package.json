@@ -12,10 +12,17 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
+    "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "build": "tsc"
+    "test": "vitest run"
   },
   "devDependencies": {
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.7",
+    "@types/node": "^20.0.0"
+  },
+  "dependencies": {
+    "@sus/schemas": "workspace:*",
+    "zod": "^4.6.7"
   }
 }

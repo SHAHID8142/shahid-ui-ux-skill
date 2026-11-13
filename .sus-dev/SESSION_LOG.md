@@ -236,3 +236,9 @@
   Receipt: VERIFICATION/T0010b.md. Issues #9/#10 remain OPEN (workflow directives,
   resolved on completion of their wired tasks; #9's continuous execution is now
   the operative loop).
+
+- 2026-11-14T05:15:00+06:00 | ZCode (GLM) | T0701 | Bridge server: loopback-only,
+  Origin+Host allowlists, per-session HMAC (fail-closed incl. closed sessions),
+  payload cap, append-only audit, injection quarantine, structurally read-only
+  surface. 10/10 security tests. Receipt: VERIFICATION/T0701.md. Next: T0702 CDP
+  attach + T0402/T0403/T0409/T0601 while sub-agent T0904 completes.

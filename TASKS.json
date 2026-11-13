@@ -1521,9 +1521,17 @@
       ],
       "risk": "auth bypass",
       "rollback": "fail-closed default",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "lease": null,
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0701.md",
+        "packages/studio-bridge/src/server.ts",
+        "packages/studio-bridge/tests/server.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0701.md"
     },
     {
       "id": "T0702",
@@ -2016,7 +2024,17 @@
       "rollback": "transactional install with manifest",
       "status": "pending",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "subagent-t0904",
+      "lease": {
+        "session": "zcode-subagent-t0904",
+        "task": "T0904",
+        "branch": "chore/continuation-reconciliation",
+        "baseSha": "worktree-main",
+        "acquired": "2026-11-14T05:10:00Z",
+        "expires": "2026-11-14T07:10:00Z",
+        "fencingGeneration": 1
+      }
     },
     {
       "id": "T0905",
