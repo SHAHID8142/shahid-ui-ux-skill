@@ -1,0 +1,688 @@
+{
+  "meta": {
+    "product": "SUS — Shahid UI UX Skill",
+    "version": "planning-v1.1",
+    "updated": "2026-11-13",
+    "protocol": "docs/ROADMAP_AND_TASK_PROTOCOL.md §B record format, compacted",
+    "build_gate": "APERIO not yet received — all implementation tasks remain pending",
+    "concurrency": 1,
+    "note": "statuses reflect planning progress only; no product code exists"
+  },
+  "tasks": [
+    {
+      "id": "T0001", "m": "M0", "title": "Inspect workspace, tools, permissions (read-only)",
+      "obj": "Inventory files, git state, toolchain, host capabilities",
+      "deps": [], "files": [],
+      "acc": ["file tree reported", "git/gh auth verified", "no user changes overwritten"],
+      "tests": ["ls/find/git status output captured"],
+      "risk": "none (read-only)", "rollback": "n/a",
+      "status": "done", "approval": "n/a",
+      "evidence": ["session log; workspace reorganised into docs/ + archive/"]
+    },
+    {
+      "id": "T0002", "m": "M0", "title": "Verify requirements vs PRD; separate open decisions",
+      "obj": "Cross-check PRD internal consistency and testability",
+      "deps": ["T0001"], "files": ["docs/PRD_GAP_ANALYSIS.md"],
+      "acc": ["findings F1–F20 with severity", "conflicts named, not silently resolved"],
+      "tests": ["manual line-by-line review against §1–§22"],
+      "risk": "review is single-context (no subagent tool)", "rollback": "n/a (documented findings)",
+      "status": "done", "approval": "pending",
+      "evidence": ["PRD_GAP_ANALYSIS.md"]
+    },
+    {
+      "id": "T0003", "m": "M0", "title": "Risk register + support tiers + capability matrix",
+      "obj": "Durable risk register with mitigations and tier definitions",
+      "deps": ["T0002"], "files": ["RISKS.md", "docs/COVERAGE_MATRIX.md"],
+      "acc": ["every PRD §19 risk has an owner-mechanism", "coverage matrix lists ✅/🟡/❌ per surface"],
+      "tests": ["matrix reviewed against D14 scope"],
+      "risk": "drift between matrix and implementation", "rollback": "matrix is versioned docs",
+      "status": "done", "approval": "pending",
+      "evidence": ["RISKS.md", "COVERAGE_MATRIX.md"]
+    },
+    {
+      "id": "T0004", "m": "M0", "title": "ADR proposals for irreversible decisions",
+      "obj": "Six ADRs: repo layout, skill packaging, studio bridge, tokens, schemas, runtime",
+      "deps": ["T0002"], "files": ["docs/ADR_DRAFTS.md"],
+      "acc": ["options + tradeoffs + reversal trigger per ADR", "no silent irreversible choice"],
+      "tests": ["owner review"],
+      "risk": "ADR-003 (CDP bridge) unproven until T0700 spike", "rollback": "ADRs revisable before build",
+      "status": "review", "approval": "pending",
+      "evidence": ["ADR_DRAFTS.md"]
+    },
+    {
+      "id": "T0005", "m": "M0", "title": "Master WBS + first unlocked batch; approval gate",
+      "obj": "Complete dependency-ordered task tree with stable IDs",
+      "deps": ["T0003", "T0004"], "files": ["TASKS.json", "ROADMAP.md"],
+      "acc": ["every milestone decomposed to 15–60 min tasks", "first batch identified"],
+      "tests": ["dependency graph acyclic; every task has acceptance + rollback"],
+      "risk": "over-planning; tasks must be revised against reality in M1",
+      "rollback": "TASKS.json is versioned; revisions logged",
+      "status": "review", "approval": "pending",
+      "evidence": ["TASKS.json"]
+    },
+
+    {
+      "id": "T0101", "m": "M1", "title": "Repository skeleton + contribution boundaries",
+      "obj": "Create ADR-001 layout, CONTRIBUTING.md, branch/permission policy",
+      "deps": ["T0005"], "files": ["packages/*", "skill/", "CONTRIBUTING.md"],
+      "acc": ["workspaces resolve", "no package publishes", "boundary doc reviewed"],
+      "tests": ["pnpm install; pnpm -r exec tsc --noEmit"],
+      "risk": "layout churn later", "rollback": "git revert; layout is cheap pre-code",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0102", "m": "M1", "title": "Test runner + fixture app A (marketing surface)",
+      "obj": "Vitest wired; fixture app 1 of 4 runnable with dev server",
+      "deps": ["T0101"], "files": ["fixtures/marketing/", "packages/eval-core/"],
+      "acc": ["fixture builds + serves", "one smoke test passes in CI"],
+      "tests": ["pnpm test", "curl localhost route"],
+      "risk": "fixture maintenance burden", "rollback": "fixtures isolated per directory",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0103", "m": "M1", "title": "Lint, typecheck, format, CI skeleton",
+      "obj": "ESLint+typescript-eslint+stylelint+prettier; GitHub Actions pipeline",
+      "deps": ["T0101"], "files": [".github/workflows/", "eslint.config.*"],
+      "acc": ["CI green on empty packages", "lint blocks raw values (G1 precursor)"],
+      "tests": ["pnpm lint; pnpm typecheck; act/gh actions run"],
+      "risk": "over-strict lint slows iteration", "rollback": "rule tiers: error/warn/advisory",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0104", "m": "M1", "title": "Schema versioning + contract-test strategy",
+      "obj": "Decide $id/version/migration pattern (implements ADR-005)",
+      "deps": ["T0101"], "files": ["packages/schemas/"],
+      "acc": ["versioned schema with migration fixture passes", "JSON Schema export committed"],
+      "tests": ["vitest contract tests", "schema export sync check"],
+      "risk": "migration complexity creep", "rollback": "migrations are additive-only v1",
+      "status": "pending", "approval": "pending"
+    },
+
+    {
+      "id": "T0151", "m": "M1.5", "title": "Rubric schema + scoring CLI",
+      "obj": "12 axes, 1–5 anchors, deterministic/hybrid/judged tiers (amendments Part 3)",
+      "deps": ["T0104"], "files": ["packages/schemas/", "packages/eval-core/"],
+      "acc": ["scores composite /60", "judged tier flagged never-gates-CI"],
+      "tests": ["score fixture section; assert band"],
+      "risk": "rubric inflation", "rollback": "calibration (T0155) can retire axes",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0152", "m": "M1.5", "title": "Screenshot + DOM metric harness",
+      "obj": "Playwright: 3 viewports × 2 themes, overflow/CLS/LCP proxy, tap targets",
+      "deps": ["T0102"], "files": ["packages/eval-core/"],
+      "acc": ["evidence shots stored deterministically", "G7/G8 metrics emitted"],
+      "tests": ["run on fixture A; assert JSON metrics"],
+      "risk": "flaky screenshots", "rollback": "masking + retry policy documented",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0152b", "m": "M1.5", "title": "axe-core + Lighthouse budget integration",
+      "obj": "G4 zero serious/critical; G5 budgets per route",
+      "deps": ["T0152"], "files": ["packages/eval-core/"],
+      "acc": ["axe JSON archived", "budget table rendered in evidence"],
+      "tests": ["inject known violation into fixture; gate fails"],
+      "risk": "axe covers ~1/3 of WCAG — manual protocol needed",
+      "rollback": "manual checklist generated per section",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0153", "m": "M1.5", "title": "No-skill baseline scores on 4 fixtures",
+      "obj": "Measure unassisted agent output as comparison floor",
+      "deps": ["T0151", "T0152", "T0152b"], "files": ["evals/baselines/"],
+      "acc": ["baseline evidence bundles committed for 4 surfaces"],
+      "tests": ["rerun once for stability; delta < threshold"],
+      "risk": "baseline drifts with model updates", "rollback": "baselines dated + re-runnable",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0154", "m": "M1.5", "title": "Evidence bundle schema + validator",
+      "obj": "Acceptance artifact (amendments Part 6) machine-checked",
+      "deps": ["T0104", "T0152"], "files": ["packages/schemas/", "packages/eval-core/"],
+      "acc": ["bundle without shots/metrics/gates rejected"],
+      "tests": ["valid + invalid fixtures"],
+      "risk": "bundle bloat", "rollback": "retention policy in schema",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0155", "m": "M1.5", "title": "Blind judge protocol + calibration run 1",
+      "obj": "Fresh-context critic vs human ratings; agreement ≥80% ±1 target",
+      "deps": ["T0151", "T0153"], "files": ["evals/"],
+      "acc": ["agreement number recorded", "below-target axes flagged"],
+      "tests": ["calibration report artifact"],
+      "risk": "no human raters available → owner rates", "rollback": "judged tier stays advisory",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0156", "m": "M1.5", "title": "Token/cost budget measurement",
+      "obj": "Measure tokens per section task; set budget target (F17)",
+      "deps": ["T0153"], "files": ["evals/"],
+      "acc": ["p50/p95 tokens per section recorded"],
+      "tests": ["re-measured each milestone"],
+      "risk": "budget too tight reduces quality", "rollback": "budget advisory first",
+      "status": "pending", "approval": "pending"
+    },
+
+    {
+      "id": "T0201", "m": "M2", "title": "Minimal SKILL.md + frontmatter validator",
+      "obj": "Spec-compliant entry skill; sus doctor validates",
+      "deps": ["T0104"], "files": ["skill/SKILL.md", "packages/adapters/"],
+      "acc": ["name/dir match", "description ≤1024 chars", "≤5k tokens"],
+      "tests": ["validator CLI on valid+invalid fixtures"],
+      "risk": "host quirks", "rollback": "generated host entries isolated",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0202", "m": "M2", "title": "Intent schema + router",
+      "obj": "audit/unslop/refine/redesign/create/system/live → module selection",
+      "deps": ["T0201"], "files": ["skill/", "packages/schemas/"],
+      "acc": ["every intent maps to explicit module set", "unknown intent → honest fallback"],
+      "tests": ["router table fixtures"],
+      "risk": "intent overlap (unslop vs audit)", "rollback": "router table is data, editable",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0203", "m": "M2", "title": "Just-in-time loader + precedence resolver",
+      "obj": "Foundation/playbook loading with code-enforced precedence (§6)",
+      "deps": ["T0202"], "files": ["skill/scripts/", "packages/schemas/"],
+      "acc": ["conflicts surfaced not silently resolved", "token budget per load measured"],
+      "tests": ["conflict fixture produces explicit surface"],
+      "risk": "loader complexity", "rollback": "static manifest fallback",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0204", "m": "M2", "title": "CLI invocation fallback",
+      "obj": "sus CLI for hosts without skill loading; no-tool error honesty",
+      "deps": ["T0202"], "files": ["packages/adapters/"],
+      "acc": ["graceful degradation documented per capability"],
+      "tests": ["CLI smoke on each subcommand"],
+      "risk": "CLI/skill drift", "rollback": "shared contract tests",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0205", "m": "M2", "title": "Triggering evals for skill description",
+      "obj": "Should/should-not trigger sets run in CI",
+      "deps": ["T0201"], "files": ["skill/evals/"],
+      "acc": ["trigger precision/recall recorded"],
+      "tests": ["eval runner"],
+      "risk": "description churn", "rollback": "description changes require eval rerun",
+      "status": "pending", "approval": "pending"
+    },
+
+    {
+      "id": "T0301", "m": "M3", "title": "Evidence schema + provenance catalog + offline mode",
+      "obj": "Citations with URL/date/classification; offline → unverified",
+      "deps": ["T0104"], "files": ["packages/schemas/", "skill/references/"],
+      "acc": ["no fabricated citation passes validation"],
+      "tests": ["provenance fixtures"],
+      "risk": "link rot", "rollback": "archived excerpts with dates",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0302", "m": "M3", "title": "Slop taxonomy schema + counterexamples",
+      "obj": "Versioned pattern records with legitimate-use cases (§8.2)",
+      "deps": ["T0301"], "files": ["knowledge/anti-slop/"],
+      "acc": ["every rule has ≥1 false-positive case"],
+      "tests": ["taxonomy lint"],
+      "risk": "taxonomy dogma", "rollback": "advisory tier by default",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0303", "m": "M3", "title": "First deterministic rule + negative fixture",
+      "obj": "One rule end-to-end: detect, explain, severity, repair hint",
+      "deps": ["T0302"], "files": ["packages/scanners/"],
+      "acc": ["true positive + false positive both handled"],
+      "tests": ["unit + fixture scan"],
+      "risk": "rule quality sets precedent", "rollback": "single rule, easily revised",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0304", "m": "M3", "title": "Scanner CLI + JSON output contract",
+      "obj": "sus scan: files or URL; machine-readable findings",
+      "deps": ["T0303"], "files": ["packages/scanners/"],
+      "acc": ["exit codes documented", "JSON validates against schema"],
+      "tests": ["CLI fixtures; golden outputs"],
+      "risk": "output churn breaks CI consumers", "rollback": "versioned output schema",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0305", "m": "M3", "title": "Rule suite + precision/recall on labelled corpus",
+      "obj": "40 bad / 40 acceptable pages; G10 numbers before blocking claims",
+      "deps": ["T0304"], "files": ["evals/corpus/"],
+      "acc": ["precision/recall published per rule", "advisory vs blocking decided by numbers"],
+      "tests": ["corpus runner in CI"],
+      "risk": "corpus licensing", "rollback": "synthetic + licensed-only pages",
+      "status": "pending", "approval": "pending"
+    },
+
+    {
+      "id": "T0400", "m": "M4", "title": "Direction Reasoning module (E1: no templates)",
+      "obj": "Derive direction from brief: 3 candidates → thesis → anti-references",
+      "deps": ["T0203", "T0301"], "files": ["skill/references/direction.md"],
+      "acc": ["derivation record schema validates", "banned-defaults check runs"],
+      "tests": ["one brief → 3 distinct reasoned directions"],
+      "risk": "library converges into new defaults", "rollback": "taxonomy stays small + audited",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0401", "m": "M4", "title": "Token format + semantic roles + validation",
+      "obj": "Implements ADR-004; .sus/tokens.json pipeline",
+      "deps": ["T0104"], "files": ["packages/tokens/"],
+      "acc": ["DTCG validation + semantic layer + exports regenerate"],
+      "tests": ["token fixtures; export snapshot"],
+      "risk": "semantic layer bikeshed", "rollback": "roles minimal at v1",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0402", "m": "M4", "title": "Color + typography foundations",
+      "obj": "Contrast systems, dark mode, type scale, measure, fix-order audit",
+      "deps": ["T0401"], "files": ["skill/references/"],
+      "acc": ["blur-test + CPL checks machine-runnable"],
+      "tests": ["foundation fixtures"],
+      "risk": "prose bloat", "rollback": "≤2k tokens per file enforced",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0403", "m": "M4", "title": "Layout/responsive + accessibility foundations",
+      "obj": "Grid, container queries, reflow contracts, keyboard/ARIA rules",
+      "deps": ["T0401"], "files": ["skill/references/"],
+      "acc": ["reflow contract schema validates"],
+      "tests": ["fixtures at 5 viewports"],
+      "risk": "over-prescriptive rules", "rollback": "rules cite standards, advisory unless gate",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0404", "m": "M4", "title": "Playbook schema + authoring standard",
+      "obj": "12-part playbook structure + knowledge-lint (F16)",
+      "deps": ["T0203"], "files": ["packages/schemas/", "skill/playbooks/"],
+      "acc": ["lint rejects duplicate authoritative rules + missing sources"],
+      "tests": ["lint on seed playbook"],
+      "risk": "schema too rigid", "rollback": "optional fields with lint warnings",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0405", "m": "M4", "title": "Launch playbooks: button/CTA, navbar, form/input",
+      "obj": "Full state matrices + motion + a11y + responsive per coverage matrix",
+      "deps": ["T0402", "T0403", "T0404", "T0600"], "files": ["skill/playbooks/"],
+      "acc": ["variant-vs-state matrix complete", "every state has motion + reduced-motion"],
+      "tests": ["playbook lint + fixture render"],
+      "risk": "playbook drift from code", "rollback": "fixtures bind playbooks to reality",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0406", "m": "M4", "title": "Content/UX copy + SEO module",
+      "obj": "Message ladder, claims register, search intent; no invented metrics",
+      "deps": ["T0301"], "files": ["skill/references/"],
+      "acc": ["G3 placeholder check wired", "claims register schema"],
+      "tests": ["copy fixtures"],
+      "risk": "SEO overclaim", "rollback": "cite Google guidance only",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0407", "m": "M4", "title": "Operate-mode playbooks (CMS admin/CRM)",
+      "obj": "Data table, filters, bulk actions, settings, record forms (D20)",
+      "deps": ["T0405"], "files": ["skill/playbooks/"],
+      "acc": ["table states: sort/filter/empty/loading/error/pagination"],
+      "tests": ["fixture dashboard render + axe"],
+      "risk": "dashboard scope creep", "rollback": "second-wave list respected",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0408", "m": "M4", "title": "Art direction + imagery module",
+      "obj": "Asset strategy, licensing record, focal points, weight budgets",
+      "deps": ["T0400"], "files": ["skill/references/"],
+      "acc": ["imagery plan required in direction record"],
+      "tests": ["module lint"],
+      "risk": "licensing mistakes", "rollback": "licensing field mandatory",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0409", "m": "M4", "title": "Knowledge-lint in CI",
+      "obj": "Every knowledge file: sources, dates, token budget, no duplicates",
+      "deps": ["T0404"], "files": ["scripts/"],
+      "acc": ["CI fails on lint violations"],
+      "tests": ["violation fixtures"],
+      "risk": "lint maintenance", "rollback": "warnings first month",
+      "status": "pending", "approval": "pending"
+    },
+
+    {
+      "id": "T0501", "m": "M5", "title": "Brief + design-contract schemas (5A)",
+      "obj": "PRODUCT.md / DESIGN_CONTRACT.md machine-readable forms",
+      "deps": ["T0104", "T0401"], "files": ["packages/schemas/"],
+      "acc": ["contract validates", "conflict with user files detected"],
+      "tests": ["schema fixtures"],
+      "risk": "contract rigidity", "rollback": "optional fields + migration path",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0502", "m": "M5", "title": "Section state machine + section locks (5A)",
+      "obj": "planned→…→accepted states; lease file prevents concurrent section edits (F12)",
+      "deps": ["T0501"], "files": ["packages/schemas/", "packages/eval-core/"],
+      "acc": ["illegal transitions rejected", "lock expiry handled"],
+      "tests": ["state-machine property tests"],
+      "risk": "lock deadlock after crash", "rollback": "expiry + manual override logged",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0503", "m": "M5", "title": "Change-plan / review interface + diff contract",
+      "obj": "Bounded proposal: files, mock, criteria, risk — before any code",
+      "deps": ["T0501"], "files": ["packages/schemas/"],
+      "acc": ["plan without approval cannot proceed (G2 enforced later)"],
+      "tests": ["contract tests"],
+      "risk": "plan ceremony fatigue", "rollback": "small-change fast path with logging",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0504", "m": "M5", "title": "Decision persistence + exception policy",
+      "obj": "DECISIONS.md append-only; dissent ledger (E4); exception expiry",
+      "deps": ["T0501"], "files": ["packages/eval-core/"],
+      "acc": ["exception without expiry rejected", "history preserved on conflict"],
+      "tests": ["journal append/atomic-rename tests (F19)"],
+      "risk": "journal growth", "rollback": "compaction with hash chain",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0505", "m": "M5", "title": "Four-section fixture enforcement test (5B)",
+      "obj": "Prove: no section N+1 implementation before N accepted (gate G2)",
+      "deps": ["T0502", "T0503"], "files": ["fixtures/", "packages/eval-core/"],
+      "acc": ["violation attempt fails CI with clear message (F18 UX)"],
+      "tests": ["negative test: out-of-order edit attempt"],
+      "risk": "gate blocks legitimate fixes", "rollback": "fix-tier fast path",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0551", "m": "M5.5", "title": "Hardening matrix runner",
+      "obj": "0/1/many items, long strings, RTL, i18n +40%, zoom 200%, dark/light, reduced motion, offline, error injection",
+      "deps": ["T0152"], "files": ["packages/eval-core/"],
+      "acc": ["matrix result per section in evidence bundle"],
+      "tests": ["fixture with deliberate edge cases"],
+      "risk": "runtime cost", "rollback": "advisory until M8, blocking at GA",
+      "status": "pending", "approval": "pending"
+    },
+
+    {
+      "id": "T0600", "m": "M6", "title": "Interaction state-machine schema",
+      "obj": "States/transitions/guards/announcements as data (A6); motion attaches to transitions",
+      "deps": ["T0104"], "files": ["packages/schemas/"],
+      "acc": ["illegal state combos rejected", "announcements required for async states"],
+      "tests": ["schema fixtures"],
+      "risk": "over-formalism", "rollback": "schema optional for simple components",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0601", "m": "M6", "title": "Motion taxonomy + tokens + reduced-motion semantics",
+      "obj": "8 motion categories (§9.1); duration/easing tokens; reduced-motion = alternative not faster",
+      "deps": ["T0600", "T0401"], "files": ["skill/references/", "packages/tokens/"],
+      "acc": ["every transition spec has all 12 fields (§9.2)"],
+      "tests": ["spec completeness lint"],
+      "risk": "token values dogma", "rollback": "values are project choices",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0602", "m": "M6", "title": "Motion playbooks for launch components",
+      "obj": "Button/input/nav/modal motion plans with interruption behaviour",
+      "deps": ["T0601", "T0405"], "files": ["skill/playbooks/"],
+      "acc": ["no click duplication", "focus preserved across animated change"],
+      "tests": ["fixture interaction tests"],
+      "risk": "motion perf on low-end devices", "rollback": "compositor-friendly property rule",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0603", "m": "M6", "title": "Interruption + reduced-motion test suite",
+      "obj": "Fast repeated clicks, stale async, unmount mid-animation, prefers-reduced-motion parity (G6)",
+      "deps": ["T0602"], "files": ["packages/eval-core/"],
+      "acc": ["no flash-as-only-feedback violations", "state converges after interruption"],
+      "tests": ["Playwright interaction specs"],
+      "risk": "flaky timing tests", "rollback": "deterministic virtual clock where possible",
+      "status": "pending", "approval": "pending"
+    },
+
+    {
+      "id": "T0700", "m": "M7", "title": "Dual-stack mapping spike — GO/NO-GO",
+      "obj": "DOM→source mapping on Next.js AND Astro (A2b); confidence distribution recorded",
+      "deps": ["T0102"], "files": ["fixtures/", "packages/adapters/"],
+      "acc": ["≥90% single-node mapping at confidence ≥0.8 on ≥1 stack, else re-scope"],
+      "tests": ["spike report with numbers, committed"],
+      "risk": "this is the highest-risk technical bet in SUS",
+      "rollback": "no-go → Studio re-scoped to variant-preview-only, knowledge product continues",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0701", "m": "M7", "title": "Bridge server: auth, allowlist, session state",
+      "obj": "127.0.0.1 bind, Host/Origin checks, HMAC session token, workspace realpath allowlist",
+      "deps": ["T0700"], "files": ["packages/studio-bridge/"],
+      "acc": ["rebind/CSRF/rebinding attempts blocked in tests"],
+      "tests": ["security unit tests"],
+      "risk": "auth bypass", "rollback": "fail-closed default",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0702", "m": "M7", "title": "CDP attach + overlay injection",
+      "obj": "Attach bundled chromium or user Chrome (opt-in); inject overlay with CSP nonce",
+      "deps": ["T0701"], "files": ["packages/studio-bridge/", "packages/studio-web/"],
+      "acc": ["overlay loads without app modification", "reconnect after dev-server restart"],
+      "tests": ["E2E attach/detach/reconnect"],
+      "risk": "browser version drift", "rollback": "pinned Playwright chromium default",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0703", "m": "M7", "title": "Element selection + stable anchors",
+      "obj": "Pick element → semantic selector + sus-id + confidence tier (§7.1)",
+      "deps": ["T0702"], "files": ["packages/studio-web/"],
+      "acc": ["below 0.6 confidence → never edit; ask user from ranked candidates"],
+      "tests": ["selection fixtures across both stacks"],
+      "risk": "selector fragility across renders", "rollback": "anchor on stable attributes first",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0704", "m": "M7", "title": "Annotations: rectangle/pen/arrow + serialization",
+      "obj": "Viewport + anchor metadata; undo/redo of annotations without DOM/source mutation",
+      "deps": ["T0703"], "files": ["packages/studio-web/"],
+      "acc": ["schema validates; malformed/out-of-bounds rejected; undo safe"],
+      "tests": ["serialization round-trip tests"],
+      "risk": "coordinate spaces across zoom/scroll", "rollback": "store in viewport space + transforms",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0705", "m": "M7", "title": "Visual Intent Schema + constraint compiler",
+      "obj": "Strokes → relationships/order/alignment/reflow constraints; pixels never reach source (§7.3)",
+      "deps": ["T0704"], "files": ["packages/schemas/", "packages/studio-bridge/"],
+      "acc": ["ambiguous target → focused clarification, not a guess"],
+      "tests": ["compiler property tests (fast-check)"],
+      "risk": "over-constrained layouts", "rollback": "constraints advisory in preview",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0706", "m": "M7", "title": "Dry-run proposal preview + source diff",
+      "obj": "Show files affected, before/after, responsive alternative, confidence",
+      "deps": ["T0705"], "files": ["packages/studio-web/", "packages/studio-bridge/"],
+      "acc": ["no write occurs without explicit approval"],
+      "tests": ["E2E: propose→reject leaves tree clean"],
+      "risk": "diff readability", "rollback": "unified + split views",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0707", "m": "M7", "title": "Approval-gated apply + rollback (AST writes)",
+      "obj": "ts-morph/recast edits; git snapshot; typecheck+build verify; auto-revert on failure (§7.2)",
+      "deps": ["T0706"], "files": ["packages/studio-bridge/"],
+      "acc": ["uncommitted user edits never overwritten; conflict detected"],
+      "tests": ["apply/revert/conflict E2E"],
+      "risk": "AST rewrite breaks unusual syntax", "rollback": "refuse + report on unknown syntax",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0708", "m": "M7", "title": "Studio E2E demo: desktop/mobile + reconnect",
+      "obj": "Full loop on fixture: annotate→intent→diff→approve→apply→verify→undo",
+      "deps": ["T0707"], "files": ["evals/"],
+      "acc": ["demo reproducible by command; video + evidence bundle"],
+      "tests": ["E2E suite"],
+      "risk": "demo-only polish", "rollback": "demo is the acceptance test, not marketing",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0790", "m": "M7", "title": "Verification loop (M7.9)",
+      "obj": "apply→build→axe→shots→motion→gate summary; hard-gate failure = auto-revert (§7.4)",
+      "deps": ["T0707", "T0152b", "T0603"], "files": ["packages/studio-bridge/", "packages/eval-core/"],
+      "acc": ["failing gate shows raw error + auto-revert, never 'completed'"],
+      "tests": ["inject failing change; assert revert + message"],
+      "risk": "loop latency", "rollback": "async verification with status surface",
+      "status": "pending", "approval": "pending"
+    },
+
+    {
+      "id": "T0801", "m": "M8", "title": "Multi-select + between-section insertion",
+      "obj": "Insertion markers; multi-element spatial edits",
+      "deps": ["T0705"], "files": ["packages/studio-web/"],
+      "acc": ["insert-between produces ordered constraint set"],
+      "tests": ["E2E"], "risk": "ordering ambiguity", "rollback": "explicit index confirmation",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0802", "m": "M8", "title": "Mapping ambiguity + conflict handling",
+      "obj": "Stale mapping detection; user-edited conflict detection; fail-closed",
+      "deps": ["T0707"], "files": ["packages/studio-bridge/"],
+      "acc": ["annotations preserved on failure; retry/export offered"],
+      "tests": ["failure-injection tests"],
+      "risk": "silent wrong-file edits", "rollback": "fail-closed is the default",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0803", "m": "M8", "title": "Variants + visual diff + viewports",
+      "obj": "A/B/C side-by-side, multi-viewport simultaneous, accept one",
+      "deps": ["T0706"], "files": ["packages/studio-web/"],
+      "acc": ["variant provenance recorded; discard is cheap"],
+      "tests": ["E2E variant flow"],
+      "risk": "HMR state loss", "rollback": "full-page reload fallback",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0804", "m": "M8", "title": "Scanner overlay + dismissals with reasons",
+      "obj": "Source-linked findings in browser; suppress with recorded reason; re-scan",
+      "deps": ["T0304", "T0703"], "files": ["packages/studio-web/"],
+      "acc": ["dismissal log in DECISIONS.md"],
+      "tests": ["overlay E2E"],
+      "risk": "alert fatigue", "rollback": "severity filter default",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0805", "m": "M8", "title": "Session persistence + crash/restart recovery",
+      "obj": "Annotations + intent + session survive restart; stale state detected",
+      "deps": ["T0704", "T0504"], "files": ["packages/studio-bridge/"],
+      "acc": ["kill -9 mid-session → recovery without data loss"],
+      "tests": ["crash-injection tests"],
+      "risk": "corrupt journal", "rollback": "append-only + hash chain",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0806", "m": "M8", "title": "Security test suite (§7.5)",
+      "obj": "CSP/origin/auth/prompt-injection/retention/redaction/audit-log coverage",
+      "deps": ["T0701", "T0805"], "files": ["packages/studio-bridge/"],
+      "acc": ["threat-model doc + passing suite; no critical open"],
+      "tests": ["dedicated security CI job"],
+      "risk": "unknown unknowns", "rollback": "external review at T1003",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0807", "m": "M8", "title": "Studio accessibility (F13)",
+      "obj": "Keyboard drawing, SR-accessible annotation list, focus management in overlay",
+      "deps": ["T0704"], "files": ["packages/studio-web/"],
+      "acc": ["overlay passes axe; full keyboard path documented"],
+      "tests": ["axe + manual keyboard protocol"],
+      "risk": "canvas a11y limits", "rollback": "DOM panel as equal-power alternative",
+      "status": "pending", "approval": "pending"
+    },
+
+    {
+      "id": "T0901", "m": "M9", "title": "Capability matrix + adapter interface",
+      "obj": "Typed adapter contract; unsupported capability → explicit error (§12)",
+      "deps": ["T0204"], "files": ["packages/adapters/"],
+      "acc": ["no guessed host claims in code or docs"],
+      "tests": ["contract tests per adapter"],
+      "risk": "adapter sprawl", "rollback": "interface frozen before third adapter",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0902", "m": "M9", "title": "FreePi + one additional host smoke tests",
+      "obj": "Install/load/invoke/uninstall on two hosts, evidence recorded",
+      "deps": ["T0901", "T0205"], "files": ["evals/hosts/"],
+      "acc": ["both hosts pass identical smoke script"],
+      "tests": ["host smoke suite"],
+      "risk": "host API changes", "rollback": "version-pinned verification",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0903", "m": "M9", "title": "Codex / Claude Code / Cursor adapters",
+      "obj": "Only with verified identities + test environments (F11: no unverified rows)",
+      "deps": ["T0902"], "files": ["packages/adapters/"],
+      "acc": ["each passes smoke before 'experimental' label"],
+      "tests": ["per-host smoke"],
+      "risk": "maintaining many hosts", "rollback": "tier system caps promises",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0904", "m": "M9", "title": "Installer: install/update/uninstall/status/doctor",
+      "obj": "Global + project scope; checksums; no silent installs",
+      "deps": ["T0901"], "files": ["packages/adapters/"],
+      "acc": ["uninstall restores prior state; doctor reports drift"],
+      "tests": ["installer E2E on clean dirs"],
+      "risk": "partial installs", "rollback": "transactional install with manifest",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0905", "m": "M9", "title": "Generated support matrix (A9)",
+      "obj": "compatibility.json → docs page + CLI status output",
+      "deps": ["T0902"], "files": ["packages/adapters/", "docs/"],
+      "acc": ["docs generated, never hand-edited"],
+      "tests": ["generation snapshot test"],
+      "risk": "stale claims", "rollback": "CI fails if docs differ from data",
+      "status": "pending", "approval": "pending"
+    },
+
+    {
+      "id": "T1001", "m": "M10", "title": "Cross-module regression suite",
+      "obj": "All gates G1–G12 + skill evals + studio E2E in one pipeline",
+      "deps": ["M3–M9 tasks"], "files": ["evals/", ".github/"],
+      "acc": ["single command runs everything; <10 min CI"],
+      "tests": ["full run recorded"],
+      "risk": "suite fragility", "rollback": "tiered: blocking vs nightly",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T1002", "m": "M10", "title": "Benchmark protocol + run (Part 9)",
+      "obj": "6 briefs × 3 modes; blind human A/B n≥20; deterministic metrics; reproducible",
+      "deps": ["T0155", "T1001"], "files": ["evals/benchmarks/"],
+      "acc": ["raw data released; no claim without this"],
+      "tests": ["benchmark artifacts committed"],
+      "risk": "recruiting raters", "rollback": "owner + recruited designers; protocol published regardless",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T1003", "m": "M10", "title": "Independent security/a11y/licence review",
+      "obj": "Fresh-context review of shipped code + dependency licence audit",
+      "deps": ["T0806"], "files": [],
+      "acc": ["findings triaged; criticals zero"],
+      "tests": ["review report"],
+      "risk": "no independent reviewer available", "rollback": "disclose limitation; deterministic gates stand",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T1004", "m": "M10", "title": "Docs, examples, installer guide, changelog",
+      "obj": "Honest docs from coverage matrix + support matrix; no unverified claims",
+      "deps": ["T0905"], "files": ["docs/", "README.md"],
+      "acc": ["limitation statements shipped verbatim from coverage matrix"],
+      "tests": ["docs lint: claim-checker"],
+      "risk": "marketing creep", "rollback": "claim-checker in CI",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T1005", "m": "M10", "title": "Release approval + publish",
+      "obj": "Owner GA approval; licence chosen (D06); channel chosen; publish",
+      "deps": ["T1001", "T1002", "T1003", "T1004"], "files": [],
+      "acc": ["§22 Definition of Done met; human approval recorded"],
+      "tests": ["release checklist"],
+      "risk": "premature announcement", "rollback": "publish is the last action, always",
+      "status": "pending", "approval": "pending"
+    }
+  ]
+}

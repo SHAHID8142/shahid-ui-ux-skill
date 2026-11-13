@@ -17,13 +17,21 @@ Milestone M0 (discovery + architecture decisions) is not started.
 ```text
 SUS/
 ├── README.md                          # this index
+├── ROADMAP.md                         # living milestone status (points at TASKS.json)
+├── TASKS.json                         # full WBS: 73 tasks, validated IDs + deps
+├── HANDOFF.md                         # fresh-context resume file (protocol §D)
+├── DECISIONS.md                       # append-only decision record
+├── RISKS.md                           # risk register R1–R14
+├── TEST_EVIDENCE.md                   # honest log: what was actually run
 ├── docs/
 │   ├── SUS_MASTER_PRD_v1.0.md         # requirements of record (read first)
 │   ├── PRD_AMENDMENTS_v1.1.md         # proposed: scope, epistemic contract, gates, rubric, studio spec
 │   ├── RESEARCH_AND_EXPERTISE_MODEL.md# research: how expert designers work → mechanisms
 │   ├── PRD_GAP_ANALYSIS.md            # cross-check findings F1–F20 + open questions
+│   ├── COVERAGE_MATRIX.md             # what SUS covers / partially / never
+│   ├── ADR_DRAFTS.md                  # 6 architecture decisions, proposed
 │   ├── TOOLING_CANDIDATES.md          # open-source tool candidates + licences
-│   ├── OWNER_DECISIONS_LOG.md         # every owner instruction, decisions D01–D22, build gate
+│   ├── OWNER_DECISIONS_LOG.md         # every owner instruction, D01–D22, build gate
 │   ├── AGENT_START_PROMPT.md          # paste into a coding agent to start
 │   ├── ROADMAP_AND_TASK_PROTOCOL.md   # milestones, micro-task record, review gates
 │   ├── AUDIT_AND_OPEN_DECISIONS.md    # audit findings + deliberately open decisions
