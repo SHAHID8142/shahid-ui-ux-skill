@@ -338,9 +338,17 @@
       ],
       "risk": "flaky screenshots",
       "rollback": "masking + retry policy documented",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D28/D29 build authorization (self-verified per protocol)",
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0152.md",
+        "packages/eval-core/src/harness/metrics.ts",
+        "packages/eval-core/src/harness/capture.ts",
+        "packages/eval-core/tests/harness.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0152.md"
     },
     {
       "id": "T0152b",

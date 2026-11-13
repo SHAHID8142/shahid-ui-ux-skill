@@ -94,3 +94,9 @@
   exclusion asserted; tier mismatch + duplicate/missing axes rejected. Test-bug fix
   (duplicate construction) + stale T0102 smoke superseded/removed. Receipt:
   VERIFICATION/T0151.md. Next: T0152 Playwright harness.
+
+- 2026-11-14T00:10:00+06:00 | ZCode (GLM) | T0152 | Playwright harness: metrics collector
+  (overflow/CLS/LCP/tap-targets/landmarks/headings) + captureMatrix 3 viewports x 2
+  themes + capture CLI command. 5 harness tests pass live against served fixture A
+  (matrix complete, no overflow, CLS<0.1, landmarks recorded); workspace 33/33.
+  Receipt: VERIFICATION/T0152.md. Next: T0152b axe/Lighthouse.

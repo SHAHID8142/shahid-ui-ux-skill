@@ -46,4 +46,34 @@ if (command === 'score') {
   process.exit(0);
 }
 
-fail(`unknown command "${String(command)}" — usage: sus-eval score --in <file> [--out <file>]`);
+if (command === 'capture') {
+  const { values } = parseArgs({
+    args: args.slice(1),
+    options: { url: { type: 'string' }, out: { type: 'string' } },
+  });
+  if (!values.url || !values.out) fail('capture requires --url <url> --out <dir>');
+  // playwright is a devDependency: imported lazily so `score` works without it
+  const { captureMatrix } = await import('./harness/capture.js');
+  const result = await captureMatrix(values.url, values.out);
+  console.log(
+    JSON.stringify(
+      {
+        url: result.url,
+        combos: result.combos.map((c) => ({
+          viewport: c.viewport,
+          theme: c.theme,
+          screenshot: c.screenshot,
+          horizontalOverflow: c.metrics.horizontalOverflow,
+          cls: c.metrics.cls,
+          lcpMs: c.metrics.lcpMs,
+          smallTapTargets: c.metrics.smallTapTargets.length,
+        })),
+      },
+      null,
+      2,
+    ),
+  );
+  process.exit(0);
+}
+
+fail(`unknown command "${String(command)}" — usage: sus-eval score|capture`);
