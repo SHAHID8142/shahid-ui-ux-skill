@@ -11,16 +11,16 @@
   "runs": [
     {
       "url": "http://127.0.0.1:4345/portfolio",
-      "lcpMs": 604,
+      "lcpMs": 602,
       "cls": 0,
-      "totalBlockingMs": 314,
+      "totalBlockingMs": 424,
       "totalByteWeight": 3607
     }
   ],
   "detail": [
-    "http://127.0.0.1:4345/portfolio LCP ms: 604 / limit 2500 — ok",
+    "http://127.0.0.1:4345/portfolio LCP ms: 602 / limit 2500 — ok",
     "http://127.0.0.1:4345/portfolio CLS: 0 / limit 0.1 — ok",
-    "http://127.0.0.1:4345/portfolio TBT ms: 314 / limit 200 — EXCEEDED",
+    "http://127.0.0.1:4345/portfolio TBT ms: 424 / limit 200 — EXCEEDED",
     "http://127.0.0.1:4345/portfolio totalBytes: 3607 / limit 500000 — ok"
   ]
 }

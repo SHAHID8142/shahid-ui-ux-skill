@@ -87,7 +87,8 @@ export function recordPass(
     for (const axis of Object.keys(axisScores)) {
       if (!session.axes.includes(axis as never)) throw new Error(`unknown axis "${axis}"`);
       const v = axisScores[axis]!;
-      if (!Number.isInteger(v) || v < 1 || v > 5) throw new Error(`score for ${alias}.${axis} out of 1..5`);
+      if (!Number.isInteger(v) || v < 1 || v > 5)
+        throw new Error(`score for ${alias}.${axis} out of 1..5`);
     }
     for (const axis of session.axes) {
       if (!(axis in axisScores)) throw new Error(`missing axis "${axis}" for ${alias}`);
@@ -115,7 +116,9 @@ export function computeAgreement(
   if (lines.length < 2) throw new Error('agreement needs >= 2 recorded passes');
   // compare consecutive passes pairwise (intra-judge when same judgeId)
   const axesAgreement: AxisAgreement[] = [];
-  const aliases = Object.keys(JSON.parse(readFileSync(join(dir, 'session.json'), 'utf8')).mapping as Record<string, string>);
+  const aliases = Object.keys(
+    JSON.parse(readFileSync(join(dir, 'session.json'), 'utf8')).mapping as Record<string, string>,
+  );
   const pairs = lines.length - 1;
   for (const axis of RUBRIC_AXES) {
     let exact = 0;

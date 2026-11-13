@@ -104,4 +104,40 @@ if (command === 'evidence') {
   process.exit(0);
 }
 
-fail(`unknown command "${String(command)}" — usage: sus-eval score|capture|evidence`);
+if (command === 'budget') {
+  const { values } = parseArgs({
+    args: args.slice(1),
+    options: { in: { type: 'string' }, budget: { type: 'string' } },
+  });
+  if (!values.in) fail('budget requires --in <usage.json> (items: [{id, tokens}])');
+  const usage = JSON.parse(readFileSync(values.in, 'utf8')) as Array<{
+    id: string;
+    tokens: number;
+  }>;
+  if (!Array.isArray(usage) || usage.length === 0) fail('usage must be a non-empty array');
+  const sorted = [...usage].map((u) => u.tokens).sort((a, b) => a - b);
+  const p = (q: number): number =>
+    sorted[Math.min(sorted.length - 1, Math.floor(q * sorted.length))]!;
+  const budget = values.budget ? Number.parseInt(values.budget, 10) : null;
+  const flagged = budget === null ? [] : usage.filter((u) => u.tokens > budget).map((u) => u.id);
+  console.log(
+    JSON.stringify(
+      {
+        n: usage.length,
+        p50: p(0.5),
+        p95: p(0.95),
+        budgetTarget: budget,
+        budgetStatus:
+          budget === null
+            ? 'not-set — target must be proposed to the owner, never silently adopted'
+            : 'advisory',
+        flaggedOverBudget: flagged,
+      },
+      null,
+      2,
+    ),
+  );
+  process.exit(0);
+}
+
+fail(`unknown command "${String(command)}" — usage: sus-eval score|capture|evidence|budget`);

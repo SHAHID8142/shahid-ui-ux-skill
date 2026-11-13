@@ -147,3 +147,9 @@
   0 below-target, limitations disclosed (single judge, author-judge, no vision;
   inter-rater NOT-RUN). 4 judge tests; workspace 65/65. Receipt: VERIFICATION/T0155.md.
   Next: T0156 token/cost budgets.
+
+- 2026-11-14T02:15:00+06:00 | ZCode (GLM) | T0156+T0158 | Budget: p50 949/p95 1009
+  est. tokens per baseline section (chars/4 method disclosed); 30k target PROPOSED to
+  owner; advisory flagging (never silent). Eval infra: 3 held-out briefs + matched-
+  conditions record with skill arm NOT-RUN (impossible to fabricate). 71/71 tests.
+  Receipts: VERIFICATION/T0156.md, T0158.md. Next: T0159 gate registry.

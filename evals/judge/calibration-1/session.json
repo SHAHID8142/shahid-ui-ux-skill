@@ -7,12 +7,7 @@
     "C": "baseline:admin",
     "D": "baseline:portfolio"
   },
-  "order": [
-    "C",
-    "D",
-    "A",
-    "B"
-  ],
+  "order": ["C", "D", "A", "B"],
   "axes": [
     "hierarchy",
     "composition",

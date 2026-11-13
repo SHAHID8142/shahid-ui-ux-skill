@@ -506,9 +506,19 @@
       ],
       "risk": "budget too tight reduces quality",
       "rollback": "budget advisory first",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0156.md",
+        "evals/budgets/",
+        "packages/eval-core/tests/budget.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0156.md",
+      "results": [
+        "budget target 30000 PROPOSED to owner — decision required before adoption"
+      ]
     },
     {
       "id": "T0201",
@@ -2090,9 +2100,19 @@
       ],
       "risk": "subjective scoring drift",
       "rollback": "rubric anchors calibrated per T0155",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0158.md",
+        "evals/briefs/held-out/",
+        "packages/eval-core/tests/evalrun.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0158.md",
+      "results": [
+        "skill-arm comparison runs NOT-RUN until skill core exists (T0201+); tracked in M2"
+      ]
     },
     {
       "id": "T0310",

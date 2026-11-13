@@ -1,0 +1,26 @@
+{
+  "measuredAt": "2026-11-14",
+  "approximation": "chars/4 per item + ~380-char brief share; re-measure with real usage metadata when SUS-assisted runs exist (T0158/T1002)",
+  "items": [
+    {
+      "id": "baselines/marketing",
+      "method": "chars/4 approximation \u2014 no API usage metadata available offline",
+      "tokens": 665
+    },
+    {
+      "id": "baselines/commerce",
+      "method": "chars/4 approximation \u2014 no API usage metadata available offline",
+      "tokens": 949
+    },
+    {
+      "id": "baselines/admin",
+      "method": "chars/4 approximation \u2014 no API usage metadata available offline",
+      "tokens": 1009
+    },
+    {
+      "id": "baselines/portfolio",
+      "method": "chars/4 approximation \u2014 no API usage metadata available offline",
+      "tokens": 916
+    }
+  ]
+}
