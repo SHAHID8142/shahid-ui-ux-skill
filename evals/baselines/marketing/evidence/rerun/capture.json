@@ -20,13 +20,7 @@
             "height": 38
           }
         ],
-        "landmarks": [
-          "header",
-          "main",
-          "section#features",
-          "section#testimonial",
-          "footer"
-        ],
+        "landmarks": ["header", "main", "section#features", "section#testimonial", "footer"],
         "headings": [
           {
             "level": 1,
@@ -73,13 +67,7 @@
             "height": 38
           }
         ],
-        "landmarks": [
-          "header",
-          "main",
-          "section#features",
-          "section#testimonial",
-          "footer"
-        ],
+        "landmarks": ["header", "main", "section#features", "section#testimonial", "footer"],
         "headings": [
           {
             "level": 1,
@@ -126,13 +114,7 @@
             "height": 38
           }
         ],
-        "landmarks": [
-          "header",
-          "main",
-          "section#features",
-          "section#testimonial",
-          "footer"
-        ],
+        "landmarks": ["header", "main", "section#features", "section#testimonial", "footer"],
         "headings": [
           {
             "level": 1,
@@ -179,13 +161,7 @@
             "height": 38
           }
         ],
-        "landmarks": [
-          "header",
-          "main",
-          "section#features",
-          "section#testimonial",
-          "footer"
-        ],
+        "landmarks": ["header", "main", "section#features", "section#testimonial", "footer"],
         "headings": [
           {
             "level": 1,
@@ -232,13 +208,7 @@
             "height": 38
           }
         ],
-        "landmarks": [
-          "header",
-          "main",
-          "section#features",
-          "section#testimonial",
-          "footer"
-        ],
+        "landmarks": ["header", "main", "section#features", "section#testimonial", "footer"],
         "headings": [
           {
             "level": 1,
@@ -285,13 +255,7 @@
             "height": 38
           }
         ],
-        "landmarks": [
-          "header",
-          "main",
-          "section#features",
-          "section#testimonial",
-          "footer"
-        ],
+        "landmarks": ["header", "main", "section#features", "section#testimonial", "footer"],
         "headings": [
           {
             "level": 1,

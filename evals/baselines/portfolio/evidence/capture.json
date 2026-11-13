@@ -10,9 +10,7 @@
         "url": "http://127.0.0.1:4345/portfolio",
         "title": "Studio Fixture — Portfolio",
         "horizontalOverflow": true,
-        "overflowingElements": [
-          "code"
-        ],
+        "overflowingElements": ["code"],
         "cls": 0,
         "lcpMs": 0,
         "smallTapTargets": [
@@ -37,11 +35,7 @@
             "height": 19
           }
         ],
-        "landmarks": [
-          "nav",
-          "main",
-          "section#work"
-        ],
+        "landmarks": ["nav", "main", "section#work"],
         "headings": [
           {
             "level": 1,
@@ -82,9 +76,7 @@
         "url": "http://127.0.0.1:4345/portfolio",
         "title": "Studio Fixture — Portfolio",
         "horizontalOverflow": true,
-        "overflowingElements": [
-          "code"
-        ],
+        "overflowingElements": ["code"],
         "cls": 0,
         "lcpMs": 0,
         "smallTapTargets": [
@@ -109,11 +101,7 @@
             "height": 19
           }
         ],
-        "landmarks": [
-          "nav",
-          "main",
-          "section#work"
-        ],
+        "landmarks": ["nav", "main", "section#work"],
         "headings": [
           {
             "level": 1,
@@ -179,11 +167,7 @@
             "height": 19
           }
         ],
-        "landmarks": [
-          "nav",
-          "main",
-          "section#work"
-        ],
+        "landmarks": ["nav", "main", "section#work"],
         "headings": [
           {
             "level": 1,
@@ -249,11 +233,7 @@
             "height": 19
           }
         ],
-        "landmarks": [
-          "nav",
-          "main",
-          "section#work"
-        ],
+        "landmarks": ["nav", "main", "section#work"],
         "headings": [
           {
             "level": 1,
@@ -319,11 +299,7 @@
             "height": 19
           }
         ],
-        "landmarks": [
-          "nav",
-          "main",
-          "section#work"
-        ],
+        "landmarks": ["nav", "main", "section#work"],
         "headings": [
           {
             "level": 1,
@@ -389,11 +365,7 @@
             "height": 19
           }
         ],
-        "landmarks": [
-          "nav",
-          "main",
-          "section#work"
-        ],
+        "landmarks": ["nav", "main", "section#work"],
         "headings": [
           {
             "level": 1,
