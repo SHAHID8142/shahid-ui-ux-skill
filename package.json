@@ -20,7 +20,8 @@
     "gates": "node scripts/check-gates.mjs",
     "skill": "node scripts/validate-skill.mjs",
     "playbooks": "node scripts/validate-playbooks.mjs",
-    "knowledge": "node scripts/validate-knowledge.mjs"
+    "knowledge": "node scripts/validate-knowledge.mjs",
+    "verify": "pnpm check && pnpm lint && pnpm format:check && pnpm stylelint && pnpm typecheck && pnpm build && pnpm test"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
