@@ -1166,9 +1166,16 @@
       ],
       "risk": "contract rigidity",
       "rollback": "optional fields + migration path",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0501.md",
+        "packages/schemas/src/section-brief.ts",
+        "packages/adapters/tests/section-workflow.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0501.md"
     },
     {
       "id": "T0502",
@@ -1192,12 +1199,19 @@
       ],
       "risk": "lock deadlock after crash",
       "rollback": "expiry + manual override logged",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
       "gates": [
         "G2"
-      ]
+      ],
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0502.md",
+        "packages/schemas/src/progressive.ts",
+        "packages/adapters/tests/progressive.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0502.md"
     },
     {
       "id": "T0503",
@@ -1218,12 +1232,19 @@
       ],
       "risk": "plan ceremony fatigue",
       "rollback": "small-change fast path with logging",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
       "gates": [
         "G2"
-      ]
+      ],
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0503.md",
+        "packages/schemas/src/progressive.ts",
+        "packages/adapters/tests/progressive.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0503.md"
     },
     {
       "id": "T0504",
@@ -1246,9 +1267,16 @@
       ],
       "risk": "journal growth",
       "rollback": "compaction with hash chain",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0504.md",
+        "packages/schemas/src/progressive.ts",
+        "packages/adapters/tests/progressive.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0504.md"
     },
     {
       "id": "T0505",
@@ -1274,9 +1302,16 @@
       ],
       "risk": "gate blocks legitimate fixes",
       "rollback": "fix-tier fast path",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0505.md",
+        "packages/schemas/src/progressive.ts",
+        "packages/adapters/tests/progressive.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0505.md"
     },
     {
       "id": "T0551",
@@ -2385,9 +2420,16 @@
       ],
       "risk": "accidental rule promotion",
       "rollback": "promotion requires reviewed scope + expiry",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0506.md",
+        "packages/schemas/src/progressive.ts",
+        "packages/adapters/tests/progressive.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0506.md"
     },
     {
       "id": "T0508",
@@ -2410,9 +2452,16 @@
       ],
       "risk": "UX friction",
       "rollback": "one-click confirm with visible scope",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0508.md",
+        "packages/schemas/src/progressive.ts",
+        "packages/adapters/tests/progressive.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0508.md"
     },
     {
       "id": "T0709",

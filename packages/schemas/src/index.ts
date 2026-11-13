@@ -112,3 +112,31 @@ export {
   type ClaimsRegisterEntryData,
   type DomainBehaviorData,
 } from './copy-seo.js';
+export {
+  DesignContract,
+  SectionBrief,
+  SectionOrder,
+  SusDesignContract,
+  type DesignContractData,
+  type SectionBriefData,
+} from './section-brief.js';
+export {
+  ApprovalReceipt,
+  ChangePlan,
+  DecisionEntry,
+  DecisionLog,
+  LearningLog,
+  Lesson,
+  Prediction,
+  SECTION_STATUSES,
+  SectionState,
+  SusApprovalReceipt,
+  SusChangePlan,
+  SusDecisionLog,
+  SusLearningLog,
+  canTransition,
+  sectionLockViolation,
+  type ApprovalReceiptData,
+  type ChangePlanData,
+  type SectionStateData,
+} from './progressive.js';

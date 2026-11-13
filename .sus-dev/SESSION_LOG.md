@@ -214,3 +214,9 @@
   equivalence, per-brief locales, honest zoom note), adapter interface + generated
   support matrix (no guessed claims). 36/36 new tests; workspace green.
   Receipts: T0406.md, T0551.md, T0901.md. Next: M5 progressive workflow.
+
+- 2026-11-14T04:40:00+06:00 | ZCode (GLM) | T0501-T0506+T0508 | M5 core COMPLETE:
+  section briefs/design contract (token binding), lifecycle + G2 locks (function,
+  negatives), change plans w/ explicit-approval requirement, version-bound receipts,
+  decision log w/ expiries, prediction->lesson lifecycle, 4-section enforcement.
+  9 new tests; workspace 146/146. Receipts: T0501-T0508.md. Next: T0402/T0403/T0409.
