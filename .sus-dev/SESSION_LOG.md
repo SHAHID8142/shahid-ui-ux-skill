@@ -39,3 +39,8 @@
   in T0001-T0004 — corrected honestly in this commit. Resume experiments E1-E10 all pass
   (partial edit -> 2; false pass/missing artifact/bad ID/dangling dep/stale lease/gate flip
   -> 1; fixtures restored). Receipt: .sus-dev/VERIFICATION/T0010.md. Next: T0102 fixture A.
+
+- 2026-11-13T23:50:00+06:00 | ZCode (GLM) | T0010-fix | Receipt wording ("= fail" in the
+  E3 experiment description) tripped the checker's own false-pass detector on a done task.
+  Reworded to "failing verdict markers"; checker green. Dogfooding note: the detector
+  works, receipts must be written in verdict-safe language.
