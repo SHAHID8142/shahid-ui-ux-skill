@@ -1,0 +1,674 @@
+{
+  "subject": "evals/baselines/admin/page.html",
+  "provenance": "no-skill baseline: builder-agent (GLM via ZCode) unassisted generation from evals/briefs/briefs.md, 2026-11-14",
+  "generatedAt": "2026-11-14T01:30:00Z",
+  "shots": [
+    {
+      "viewport": "mobile",
+      "theme": "light",
+      "path": "evals/baselines/admin/evidence/mobile-light.png"
+    },
+    {
+      "viewport": "mobile",
+      "theme": "dark",
+      "path": "evals/baselines/admin/evidence/mobile-dark.png"
+    },
+    {
+      "viewport": "tablet",
+      "theme": "light",
+      "path": "evals/baselines/admin/evidence/tablet-light.png"
+    },
+    {
+      "viewport": "tablet",
+      "theme": "dark",
+      "path": "evals/baselines/admin/evidence/tablet-dark.png"
+    },
+    {
+      "viewport": "desktop",
+      "theme": "light",
+      "path": "evals/baselines/admin/evidence/desktop-light.png"
+    },
+    {
+      "viewport": "desktop",
+      "theme": "dark",
+      "path": "evals/baselines/admin/evidence/desktop-dark.png"
+    }
+  ],
+  "metrics": [
+    {
+      "url": "http://127.0.0.1:4345/admin",
+      "title": "Ledger CMS — Dashboard",
+      "horizontalOverflow": true,
+      "overflowingElements": [
+        "h2",
+        "p",
+        "h2",
+        "p",
+        "h2",
+        "p",
+        "th",
+        "th",
+        "th",
+        "th"
+      ],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Overview",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "a:Content Queue",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "a:Settings",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "input",
+          "width": 159,
+          "height": 29
+        },
+        {
+          "selector": "button:Save",
+          "width": 60,
+          "height": 31
+        }
+      ],
+      "landmarks": [],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Dashboard"
+        },
+        {
+          "level": 2,
+          "text": "128"
+        },
+        {
+          "level": 2,
+          "text": "14"
+        },
+        {
+          "level": 2,
+          "text": "2304"
+        },
+        {
+          "level": 2,
+          "text": "9"
+        },
+        {
+          "level": 2,
+          "text": "Settings"
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:4345/admin",
+      "title": "Ledger CMS — Dashboard",
+      "horizontalOverflow": true,
+      "overflowingElements": [
+        "h2",
+        "p",
+        "h2",
+        "p",
+        "h2",
+        "p",
+        "th",
+        "th",
+        "th",
+        "th"
+      ],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Overview",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "a:Content Queue",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "a:Settings",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "input",
+          "width": 159,
+          "height": 29
+        },
+        {
+          "selector": "button:Save",
+          "width": 60,
+          "height": 31
+        }
+      ],
+      "landmarks": [],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Dashboard"
+        },
+        {
+          "level": 2,
+          "text": "128"
+        },
+        {
+          "level": 2,
+          "text": "14"
+        },
+        {
+          "level": 2,
+          "text": "2304"
+        },
+        {
+          "level": 2,
+          "text": "9"
+        },
+        {
+          "level": 2,
+          "text": "Settings"
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:4345/admin",
+      "title": "Ledger CMS — Dashboard",
+      "horizontalOverflow": false,
+      "overflowingElements": [],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Overview",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "a:Content Queue",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "a:Settings",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "input",
+          "width": 159,
+          "height": 29
+        },
+        {
+          "selector": "button:Save",
+          "width": 60,
+          "height": 31
+        }
+      ],
+      "landmarks": [],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Dashboard"
+        },
+        {
+          "level": 2,
+          "text": "128"
+        },
+        {
+          "level": 2,
+          "text": "14"
+        },
+        {
+          "level": 2,
+          "text": "2304"
+        },
+        {
+          "level": 2,
+          "text": "9"
+        },
+        {
+          "level": 2,
+          "text": "Settings"
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:4345/admin",
+      "title": "Ledger CMS — Dashboard",
+      "horizontalOverflow": false,
+      "overflowingElements": [],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Overview",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "a:Content Queue",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "a:Settings",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "input",
+          "width": 159,
+          "height": 29
+        },
+        {
+          "selector": "button:Save",
+          "width": 60,
+          "height": 31
+        }
+      ],
+      "landmarks": [],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Dashboard"
+        },
+        {
+          "level": 2,
+          "text": "128"
+        },
+        {
+          "level": 2,
+          "text": "14"
+        },
+        {
+          "level": 2,
+          "text": "2304"
+        },
+        {
+          "level": 2,
+          "text": "9"
+        },
+        {
+          "level": 2,
+          "text": "Settings"
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:4345/admin",
+      "title": "Ledger CMS — Dashboard",
+      "horizontalOverflow": false,
+      "overflowingElements": [],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Overview",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "a:Content Queue",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "a:Settings",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "input",
+          "width": 159,
+          "height": 29
+        },
+        {
+          "selector": "button:Save",
+          "width": 60,
+          "height": 31
+        }
+      ],
+      "landmarks": [],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Dashboard"
+        },
+        {
+          "level": 2,
+          "text": "128"
+        },
+        {
+          "level": 2,
+          "text": "14"
+        },
+        {
+          "level": 2,
+          "text": "2304"
+        },
+        {
+          "level": 2,
+          "text": "9"
+        },
+        {
+          "level": 2,
+          "text": "Settings"
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:4345/admin",
+      "title": "Ledger CMS — Dashboard",
+      "horizontalOverflow": false,
+      "overflowingElements": [],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Overview",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "a:Content Queue",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "a:Settings",
+          "width": 160,
+          "height": 19
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "button:Open",
+          "width": 63,
+          "height": 31
+        },
+        {
+          "selector": "input",
+          "width": 159,
+          "height": 29
+        },
+        {
+          "selector": "button:Save",
+          "width": 60,
+          "height": 31
+        }
+      ],
+      "landmarks": [],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Dashboard"
+        },
+        {
+          "level": 2,
+          "text": "128"
+        },
+        {
+          "level": 2,
+          "text": "14"
+        },
+        {
+          "level": 2,
+          "text": "2304"
+        },
+        {
+          "level": 2,
+          "text": "9"
+        },
+        {
+          "level": 2,
+          "text": "Settings"
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "gate": "G4",
+      "status": "fail",
+      "detail": [
+        "http://127.0.0.1:4345/admin: serious color-contrast on 5 node(s) — Elements must meet minimum color contrast ratio thresholds"
+      ]
+    },
+    {
+      "gate": "G5",
+      "status": "fail",
+      "detail": [
+        "http://127.0.0.1:4345/admin LCP ms: 606 / limit 2500 — ok",
+        "http://127.0.0.1:4345/admin CLS: 0 / limit 0.1 — ok",
+        "http://127.0.0.1:4345/admin TBT ms: 356 / limit 200 — EXCEEDED",
+        "http://127.0.0.1:4345/admin totalBytes: 3979 / limit 500000 — ok"
+      ]
+    }
+  ],
+  "rubricScores": [
+    {
+      "axis": "hierarchy",
+      "score": 3,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/admin/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "composition",
+      "score": 3,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/admin/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "typography",
+      "score": 2,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/admin/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "color-surface",
+      "score": 2,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/admin/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "spacing-rhythm",
+      "score": 3,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/admin/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "motion-interaction",
+      "score": 2,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/admin/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "content-copy",
+      "score": 3,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/admin/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "accessibility",
+      "score": 1,
+      "basis": "measured",
+      "evidence": [
+        "evals/baselines/admin/evidence/axe-0.json"
+      ]
+    },
+    {
+      "axis": "responsive-edge",
+      "score": 1,
+      "basis": "measured",
+      "evidence": [
+        "evals/baselines/admin/evidence/capture.json"
+      ]
+    },
+    {
+      "axis": "consistency-system",
+      "score": 2,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/admin/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "distinctiveness-pov",
+      "score": 2,
+      "basis": "judged",
+      "evidence": [
+        "evals/baselines/admin/page.html"
+      ]
+    },
+    {
+      "axis": "performance",
+      "score": 3,
+      "basis": "measured",
+      "evidence": [
+        "evals/baselines/admin/evidence/budget-table.json"
+      ]
+    }
+  ],
+  "notes": [
+    "acceptanceComposite excluding judged axis: 25/55",
+    "pre-calibration scoring (T0155 owns judge calibration)"
+  ]
+}

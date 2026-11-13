@@ -1,0 +1,550 @@
+{
+  "url": "http://127.0.0.1:4345/admin",
+  "outDir": "/Volumes/SSD/CODES/SUS/evals/baselines/admin/evidence",
+  "combos": [
+    {
+      "viewport": "mobile",
+      "theme": "light",
+      "screenshot": "/Volumes/SSD/CODES/SUS/evals/baselines/admin/evidence/mobile-light.png",
+      "metrics": {
+        "url": "http://127.0.0.1:4345/admin",
+        "title": "Ledger CMS — Dashboard",
+        "horizontalOverflow": true,
+        "overflowingElements": [
+          "h2",
+          "p",
+          "h2",
+          "p",
+          "h2",
+          "p",
+          "th",
+          "th",
+          "th",
+          "th"
+        ],
+        "cls": 0,
+        "lcpMs": 0,
+        "smallTapTargets": [
+          {
+            "selector": "a:Overview",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "a:Content Queue",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "a:Settings",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "input",
+            "width": 159,
+            "height": 29
+          },
+          {
+            "selector": "button:Save",
+            "width": 60,
+            "height": 31
+          }
+        ],
+        "landmarks": [],
+        "headings": [
+          {
+            "level": 1,
+            "text": "Dashboard"
+          },
+          {
+            "level": 2,
+            "text": "128"
+          },
+          {
+            "level": 2,
+            "text": "14"
+          },
+          {
+            "level": 2,
+            "text": "2304"
+          },
+          {
+            "level": 2,
+            "text": "9"
+          },
+          {
+            "level": 2,
+            "text": "Settings"
+          }
+        ]
+      }
+    },
+    {
+      "viewport": "mobile",
+      "theme": "dark",
+      "screenshot": "/Volumes/SSD/CODES/SUS/evals/baselines/admin/evidence/mobile-dark.png",
+      "metrics": {
+        "url": "http://127.0.0.1:4345/admin",
+        "title": "Ledger CMS — Dashboard",
+        "horizontalOverflow": true,
+        "overflowingElements": [
+          "h2",
+          "p",
+          "h2",
+          "p",
+          "h2",
+          "p",
+          "th",
+          "th",
+          "th",
+          "th"
+        ],
+        "cls": 0,
+        "lcpMs": 0,
+        "smallTapTargets": [
+          {
+            "selector": "a:Overview",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "a:Content Queue",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "a:Settings",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "input",
+            "width": 159,
+            "height": 29
+          },
+          {
+            "selector": "button:Save",
+            "width": 60,
+            "height": 31
+          }
+        ],
+        "landmarks": [],
+        "headings": [
+          {
+            "level": 1,
+            "text": "Dashboard"
+          },
+          {
+            "level": 2,
+            "text": "128"
+          },
+          {
+            "level": 2,
+            "text": "14"
+          },
+          {
+            "level": 2,
+            "text": "2304"
+          },
+          {
+            "level": 2,
+            "text": "9"
+          },
+          {
+            "level": 2,
+            "text": "Settings"
+          }
+        ]
+      }
+    },
+    {
+      "viewport": "tablet",
+      "theme": "light",
+      "screenshot": "/Volumes/SSD/CODES/SUS/evals/baselines/admin/evidence/tablet-light.png",
+      "metrics": {
+        "url": "http://127.0.0.1:4345/admin",
+        "title": "Ledger CMS — Dashboard",
+        "horizontalOverflow": false,
+        "overflowingElements": [],
+        "cls": 0,
+        "lcpMs": 0,
+        "smallTapTargets": [
+          {
+            "selector": "a:Overview",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "a:Content Queue",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "a:Settings",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "input",
+            "width": 159,
+            "height": 29
+          },
+          {
+            "selector": "button:Save",
+            "width": 60,
+            "height": 31
+          }
+        ],
+        "landmarks": [],
+        "headings": [
+          {
+            "level": 1,
+            "text": "Dashboard"
+          },
+          {
+            "level": 2,
+            "text": "128"
+          },
+          {
+            "level": 2,
+            "text": "14"
+          },
+          {
+            "level": 2,
+            "text": "2304"
+          },
+          {
+            "level": 2,
+            "text": "9"
+          },
+          {
+            "level": 2,
+            "text": "Settings"
+          }
+        ]
+      }
+    },
+    {
+      "viewport": "tablet",
+      "theme": "dark",
+      "screenshot": "/Volumes/SSD/CODES/SUS/evals/baselines/admin/evidence/tablet-dark.png",
+      "metrics": {
+        "url": "http://127.0.0.1:4345/admin",
+        "title": "Ledger CMS — Dashboard",
+        "horizontalOverflow": false,
+        "overflowingElements": [],
+        "cls": 0,
+        "lcpMs": 0,
+        "smallTapTargets": [
+          {
+            "selector": "a:Overview",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "a:Content Queue",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "a:Settings",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "input",
+            "width": 159,
+            "height": 29
+          },
+          {
+            "selector": "button:Save",
+            "width": 60,
+            "height": 31
+          }
+        ],
+        "landmarks": [],
+        "headings": [
+          {
+            "level": 1,
+            "text": "Dashboard"
+          },
+          {
+            "level": 2,
+            "text": "128"
+          },
+          {
+            "level": 2,
+            "text": "14"
+          },
+          {
+            "level": 2,
+            "text": "2304"
+          },
+          {
+            "level": 2,
+            "text": "9"
+          },
+          {
+            "level": 2,
+            "text": "Settings"
+          }
+        ]
+      }
+    },
+    {
+      "viewport": "desktop",
+      "theme": "light",
+      "screenshot": "/Volumes/SSD/CODES/SUS/evals/baselines/admin/evidence/desktop-light.png",
+      "metrics": {
+        "url": "http://127.0.0.1:4345/admin",
+        "title": "Ledger CMS — Dashboard",
+        "horizontalOverflow": false,
+        "overflowingElements": [],
+        "cls": 0,
+        "lcpMs": 0,
+        "smallTapTargets": [
+          {
+            "selector": "a:Overview",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "a:Content Queue",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "a:Settings",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "input",
+            "width": 159,
+            "height": 29
+          },
+          {
+            "selector": "button:Save",
+            "width": 60,
+            "height": 31
+          }
+        ],
+        "landmarks": [],
+        "headings": [
+          {
+            "level": 1,
+            "text": "Dashboard"
+          },
+          {
+            "level": 2,
+            "text": "128"
+          },
+          {
+            "level": 2,
+            "text": "14"
+          },
+          {
+            "level": 2,
+            "text": "2304"
+          },
+          {
+            "level": 2,
+            "text": "9"
+          },
+          {
+            "level": 2,
+            "text": "Settings"
+          }
+        ]
+      }
+    },
+    {
+      "viewport": "desktop",
+      "theme": "dark",
+      "screenshot": "/Volumes/SSD/CODES/SUS/evals/baselines/admin/evidence/desktop-dark.png",
+      "metrics": {
+        "url": "http://127.0.0.1:4345/admin",
+        "title": "Ledger CMS — Dashboard",
+        "horizontalOverflow": false,
+        "overflowingElements": [],
+        "cls": 0,
+        "lcpMs": 0,
+        "smallTapTargets": [
+          {
+            "selector": "a:Overview",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "a:Content Queue",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "a:Settings",
+            "width": 160,
+            "height": 19
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "button:Open",
+            "width": 63,
+            "height": 31
+          },
+          {
+            "selector": "input",
+            "width": 159,
+            "height": 29
+          },
+          {
+            "selector": "button:Save",
+            "width": 60,
+            "height": 31
+          }
+        ],
+        "landmarks": [],
+        "headings": [
+          {
+            "level": 1,
+            "text": "Dashboard"
+          },
+          {
+            "level": 2,
+            "text": "128"
+          },
+          {
+            "level": 2,
+            "text": "14"
+          },
+          {
+            "level": 2,
+            "text": "2304"
+          },
+          {
+            "level": 2,
+            "text": "9"
+          },
+          {
+            "level": 2,
+            "text": "Settings"
+          }
+        ]
+      }
+    }
+  ]
+}

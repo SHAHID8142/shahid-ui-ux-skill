@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ledger CMS — Dashboard</title>
+    <style>
+      body {
+        font-family: Tahoma, sans-serif;
+        margin: 0;
+        background: #ecf0f5;
+      }
+      .sidebar {
+        position: fixed;
+        width: 200px;
+        background: #34495e;
+        color: white;
+        height: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      .sidebar a {
+        color: #bbb;
+        display: block;
+        margin: 10px 0;
+        text-decoration: none;
+      }
+      .content {
+        margin-left: 220px;
+        padding: 20px;
+      }
+      .kpis {
+        display: flex;
+        gap: 10px;
+      }
+      .kpi {
+        background: white;
+        padding: 15px;
+        border: 1px solid #ddd;
+        flex: 1;
+      }
+      .kpi h2 {
+        margin: 0;
+        font-size: 24px;
+      }
+      table {
+        width: 100%;
+        background: white;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      form {
+        background: white;
+        padding: 15px;
+        border: 1px solid #ddd;
+      }
+      label {
+        display: block;
+        margin-top: 10px;
+      }
+      input,
+      select {
+        padding: 5px;
+      }
+      button {
+        margin-top: 10px;
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <strong>Ledger CMS</strong>
+      <a href="#kpis">Overview</a>
+      <a href="#queue">Content Queue</a>
+      <a href="#settings">Settings</a>
+    </div>
+    <div class="content">
+      <h1>Dashboard</h1>
+      <div id="kpis" class="kpis">
+        <div class="kpi">
+          <h2>128</h2>
+          <p>Published</p>
+        </div>
+        <div class="kpi">
+          <h2>14</h2>
+          <p>In Review</p>
+        </div>
+        <div class="kpi">
+          <h2>2304</h2>
+          <p>Media</p>
+        </div>
+        <div class="kpi">
+          <h2>9</h2>
+          <p>Authors</p>
+        </div>
+      </div>
+      <table id="queue">
+        <tr>
+          <th>Entry</th>
+          <th>Status</th>
+          <th>Editor</th>
+          <th>Updated</th>
+          <th>Actions</th>
+        </tr>
+        <tr>
+          <td>Autumn release notes</td>
+          <td>In review</td>
+          <td>A. Lin</td>
+          <td>2h ago</td>
+          <td><button>Open</button></td>
+        </tr>
+        <tr>
+          <td>Pricing page copy</td>
+          <td>Draft</td>
+          <td>M. Okafor</td>
+          <td>5h ago</td>
+          <td><button>Open</button></td>
+        </tr>
+        <tr>
+          <td>Tea-ware catalog (import)</td>
+          <td>Blocked</td>
+          <td>system</td>
+          <td>1d ago</td>
+          <td><button>Open</button></td>
+        </tr>
+        <tr>
+          <td>Homepage hero variants</td>
+          <td>Scheduled</td>
+          <td>R. Iyer</td>
+          <td>3d ago</td>
+          <td><button>Open</button></td>
+        </tr>
+      </table>
+      <form id="settings">
+        <h2>Settings</h2>
+        <label>Workspace name <input type="text" value="Harbor &amp; Leaf staging" /></label>
+        <label
+          >Publish window
+          <select>
+            <option>09:00</option>
+            <option>13:00</option>
+            <option>17:00</option>
+          </select>
+        </label>
+        <button type="button">Save</button>
+      </form>
+    </div>
+  </body>
+</html>

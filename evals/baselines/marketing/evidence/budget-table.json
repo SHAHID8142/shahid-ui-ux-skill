@@ -1,0 +1,26 @@
+{
+  "budgets": [
+    {
+      "route": "*",
+      "lcpMs": 2500,
+      "cls": 0.1,
+      "totalBlockingMs": 200,
+      "totalByteWeight": 500000
+    }
+  ],
+  "runs": [
+    {
+      "url": "http://127.0.0.1:4345/marketing",
+      "lcpMs": 602,
+      "cls": 0,
+      "totalBlockingMs": 69,
+      "totalByteWeight": 2604
+    }
+  ],
+  "detail": [
+    "http://127.0.0.1:4345/marketing LCP ms: 602 / limit 2500 — ok",
+    "http://127.0.0.1:4345/marketing CLS: 0 / limit 0.1 — ok",
+    "http://127.0.0.1:4345/marketing TBT ms: 69 / limit 200 — ok",
+    "http://127.0.0.1:4345/marketing totalBytes: 2604 / limit 500000 — ok"
+  ]
+}

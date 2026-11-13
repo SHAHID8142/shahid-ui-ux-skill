@@ -1,0 +1,448 @@
+{
+  "subject": "evals/baselines/marketing/page.html",
+  "provenance": "no-skill baseline: builder-agent (GLM via ZCode) unassisted generation from evals/briefs/briefs.md, 2026-11-14",
+  "generatedAt": "2026-11-14T01:30:00Z",
+  "shots": [
+    {
+      "viewport": "mobile",
+      "theme": "light",
+      "path": "evals/baselines/marketing/evidence/mobile-light.png"
+    },
+    {
+      "viewport": "mobile",
+      "theme": "dark",
+      "path": "evals/baselines/marketing/evidence/mobile-dark.png"
+    },
+    {
+      "viewport": "tablet",
+      "theme": "light",
+      "path": "evals/baselines/marketing/evidence/tablet-light.png"
+    },
+    {
+      "viewport": "tablet",
+      "theme": "dark",
+      "path": "evals/baselines/marketing/evidence/tablet-dark.png"
+    },
+    {
+      "viewport": "desktop",
+      "theme": "light",
+      "path": "evals/baselines/marketing/evidence/desktop-light.png"
+    },
+    {
+      "viewport": "desktop",
+      "theme": "dark",
+      "path": "evals/baselines/marketing/evidence/desktop-dark.png"
+    }
+  ],
+  "metrics": [
+    {
+      "url": "http://127.0.0.1:4345/marketing",
+      "title": "Meridian — Notes for Researchers",
+      "horizontalOverflow": false,
+      "overflowingElements": [],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Get Started",
+          "width": 122,
+          "height": 38
+        }
+      ],
+      "landmarks": [
+        "header",
+        "main",
+        "section#features",
+        "section#testimonial",
+        "footer"
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Meridian"
+        },
+        {
+          "level": 2,
+          "text": "Features"
+        },
+        {
+          "level": 3,
+          "text": "Fast Capture"
+        },
+        {
+          "level": 3,
+          "text": "Full-Text Search"
+        },
+        {
+          "level": 3,
+          "text": "Markdown Export"
+        },
+        {
+          "level": 2,
+          "text": "What Users Say"
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:4345/marketing",
+      "title": "Meridian — Notes for Researchers",
+      "horizontalOverflow": false,
+      "overflowingElements": [],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Get Started",
+          "width": 122,
+          "height": 38
+        }
+      ],
+      "landmarks": [
+        "header",
+        "main",
+        "section#features",
+        "section#testimonial",
+        "footer"
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Meridian"
+        },
+        {
+          "level": 2,
+          "text": "Features"
+        },
+        {
+          "level": 3,
+          "text": "Fast Capture"
+        },
+        {
+          "level": 3,
+          "text": "Full-Text Search"
+        },
+        {
+          "level": 3,
+          "text": "Markdown Export"
+        },
+        {
+          "level": 2,
+          "text": "What Users Say"
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:4345/marketing",
+      "title": "Meridian — Notes for Researchers",
+      "horizontalOverflow": false,
+      "overflowingElements": [],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Get Started",
+          "width": 122,
+          "height": 38
+        }
+      ],
+      "landmarks": [
+        "header",
+        "main",
+        "section#features",
+        "section#testimonial",
+        "footer"
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Meridian"
+        },
+        {
+          "level": 2,
+          "text": "Features"
+        },
+        {
+          "level": 3,
+          "text": "Fast Capture"
+        },
+        {
+          "level": 3,
+          "text": "Full-Text Search"
+        },
+        {
+          "level": 3,
+          "text": "Markdown Export"
+        },
+        {
+          "level": 2,
+          "text": "What Users Say"
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:4345/marketing",
+      "title": "Meridian — Notes for Researchers",
+      "horizontalOverflow": false,
+      "overflowingElements": [],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Get Started",
+          "width": 122,
+          "height": 38
+        }
+      ],
+      "landmarks": [
+        "header",
+        "main",
+        "section#features",
+        "section#testimonial",
+        "footer"
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Meridian"
+        },
+        {
+          "level": 2,
+          "text": "Features"
+        },
+        {
+          "level": 3,
+          "text": "Fast Capture"
+        },
+        {
+          "level": 3,
+          "text": "Full-Text Search"
+        },
+        {
+          "level": 3,
+          "text": "Markdown Export"
+        },
+        {
+          "level": 2,
+          "text": "What Users Say"
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:4345/marketing",
+      "title": "Meridian — Notes for Researchers",
+      "horizontalOverflow": false,
+      "overflowingElements": [],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Get Started",
+          "width": 122,
+          "height": 38
+        }
+      ],
+      "landmarks": [
+        "header",
+        "main",
+        "section#features",
+        "section#testimonial",
+        "footer"
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Meridian"
+        },
+        {
+          "level": 2,
+          "text": "Features"
+        },
+        {
+          "level": 3,
+          "text": "Fast Capture"
+        },
+        {
+          "level": 3,
+          "text": "Full-Text Search"
+        },
+        {
+          "level": 3,
+          "text": "Markdown Export"
+        },
+        {
+          "level": 2,
+          "text": "What Users Say"
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:4345/marketing",
+      "title": "Meridian — Notes for Researchers",
+      "horizontalOverflow": false,
+      "overflowingElements": [],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Get Started",
+          "width": 122,
+          "height": 38
+        }
+      ],
+      "landmarks": [
+        "header",
+        "main",
+        "section#features",
+        "section#testimonial",
+        "footer"
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Meridian"
+        },
+        {
+          "level": 2,
+          "text": "Features"
+        },
+        {
+          "level": 3,
+          "text": "Fast Capture"
+        },
+        {
+          "level": 3,
+          "text": "Full-Text Search"
+        },
+        {
+          "level": 3,
+          "text": "Markdown Export"
+        },
+        {
+          "level": 2,
+          "text": "What Users Say"
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "gate": "G4",
+      "status": "pass",
+      "detail": [
+        "zero serious/critical axe violations across recorded scans"
+      ]
+    },
+    {
+      "gate": "G5",
+      "status": "pass",
+      "detail": [
+        "http://127.0.0.1:4345/marketing LCP ms: 602 / limit 2500 — ok",
+        "http://127.0.0.1:4345/marketing CLS: 0 / limit 0.1 — ok",
+        "http://127.0.0.1:4345/marketing TBT ms: 69 / limit 200 — ok",
+        "http://127.0.0.1:4345/marketing totalBytes: 2604 / limit 500000 — ok"
+      ]
+    }
+  ],
+  "rubricScores": [
+    {
+      "axis": "hierarchy",
+      "score": 3,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/marketing/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "composition",
+      "score": 3,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/marketing/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "typography",
+      "score": 2,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/marketing/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "color-surface",
+      "score": 2,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/marketing/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "spacing-rhythm",
+      "score": 3,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/marketing/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "motion-interaction",
+      "score": 2,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/marketing/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "content-copy",
+      "score": 3,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/marketing/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "accessibility",
+      "score": 4,
+      "basis": "measured",
+      "evidence": [
+        "evals/baselines/marketing/evidence/axe-0.json"
+      ]
+    },
+    {
+      "axis": "responsive-edge",
+      "score": 3,
+      "basis": "measured",
+      "evidence": [
+        "evals/baselines/marketing/evidence/capture.json"
+      ]
+    },
+    {
+      "axis": "consistency-system",
+      "score": 2,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/marketing/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "distinctiveness-pov",
+      "score": 2,
+      "basis": "judged",
+      "evidence": [
+        "evals/baselines/marketing/page.html"
+      ]
+    },
+    {
+      "axis": "performance",
+      "score": 4,
+      "basis": "measured",
+      "evidence": [
+        "evals/baselines/marketing/evidence/budget-table.json"
+      ]
+    }
+  ],
+  "notes": [
+    "acceptanceComposite excluding judged axis: 31/55",
+    "pre-calibration scoring (T0155 owns judge calibration)"
+  ]
+}

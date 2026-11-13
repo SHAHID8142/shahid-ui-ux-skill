@@ -409,9 +409,16 @@
       ],
       "risk": "baseline drifts with model updates",
       "rollback": "baselines dated + re-runnable",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0153.md",
+        "evals/briefs/briefs.md",
+        "evals/baselines/"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0153.md"
     },
     {
       "id": "T0154",

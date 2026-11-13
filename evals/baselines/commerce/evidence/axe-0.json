@@ -1,0 +1,12 @@
+{
+  "url": "http://127.0.0.1:4345/commerce",
+  "passes": 12,
+  "violations": [
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "nodes": 6,
+      "help": "Elements must meet minimum color contrast ratio thresholds"
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Harbor &amp; Leaf — Tea Ware</title>
+    <style>
+      body {
+        font-family: Verdana, sans-serif;
+        margin: 0;
+        color: #222;
+      }
+      nav {
+        background: #333;
+        color: #fff;
+        padding: 15px;
+      }
+      nav a {
+        color: #fff;
+        margin-right: 15px;
+      }
+      section {
+        padding: 20px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+      }
+      .product {
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+      .price {
+        color: green;
+        font-weight: bold;
+      }
+      button {
+        background: #2c7be5;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <strong>Harbor &amp; Leaf</strong>
+      <a href="#products">Products</a>
+      <a href="#cart">Cart</a>
+      <a href="#checkout">Checkout</a>
+    </nav>
+    <main>
+      <section id="products">
+        <h1>Our Products</h1>
+        <div class="grid">
+          <div class="product">
+            <h3>Ember Teapot</h3>
+            <p class="price">$42.00</p>
+            <p>A stovetop teapot.</p>
+            <button>Add to Cart</button>
+          </div>
+          <div class="product">
+            <h3>Dune Mug Set</h3>
+            <p class="price">$28.00</p>
+            <p>Four stacked mugs.</p>
+            <button>Add to Cart</button>
+          </div>
+          <div class="product">
+            <h3>Ridge Kettle</h3>
+            <p class="price">$64.00</p>
+            <p>Gooseneck kettle.</p>
+            <button>Add to Cart</button>
+          </div>
+          <div class="product">
+            <h3>Moss Serving Tray</h3>
+            <p class="price">$36.00</p>
+            <p>Felt-lined tray.</p>
+            <button>Add to Cart</button>
+          </div>
+          <div class="product">
+            <h3>Slate Canister</h3>
+            <p class="price">$22.00</p>
+            <p>Airtight canister.</p>
+            <button>Add to Cart</button>
+          </div>
+          <div class="product">
+            <h3>Orbit Scale</h3>
+            <p class="price">$48.00</p>
+            <p>0.1 g precision scale.</p>
+            <button>Add to Cart</button>
+          </div>
+        </div>
+      </section>
+      <section id="cart">
+        <h2>Cart Summary</h2>
+        <table>
+          <tr>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Price</th>
+          </tr>
+          <tr>
+            <td>Ember Teapot</td>
+            <td>1</td>
+            <td>$42.00</td>
+          </tr>
+          <tr>
+            <td>Dune Mug Set</td>
+            <td>1</td>
+            <td>$28.00</td>
+          </tr>
+          <tr>
+            <th>Total</th>
+            <td></td>
+            <td>$70.00</td>
+          </tr>
+        </table>
+      </section>
+      <section id="checkout">
+        <h2>Checkout</h2>
+        <p>Step 1: Address</p>
+        <p>Step 2: Payment (disabled in fixture)</p>
+        <p>Step 3: Review</p>
+      </section>
+    </main>
+  </body>
+</html>

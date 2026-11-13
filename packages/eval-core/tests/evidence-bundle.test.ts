@@ -17,6 +17,7 @@ const complete: EvidenceBundleData = {
   metrics: [
     {
       url: 'http://127.0.0.1:4317/',
+      title: 'Meridian — Notes for Researchers',
       horizontalOverflow: false,
       overflowingElements: [],
       cls: 0,

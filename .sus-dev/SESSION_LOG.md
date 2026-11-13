@@ -133,3 +133,10 @@
   evaluator + registry extension (rubric-score + evidence-bundle JSON Schema committed,
   sync-checked). 5/5 new tests; workspace 57/57. Receipt: VERIFICATION/T0154.md.
   Next: T0153 no-skill baselines on 4 fixtures.
+
+- 2026-11-14T01:40:00+06:00 | ZCode (GLM) | T0153 | No-skill baselines committed for 4
+  surfaces: unassisted pages from briefs, 6 screenshots each + stability rerun + axe +
+  Lighthouse + T0154 bundles (G11 pass). Floor measured: 25-31/55; real gate failures
+  (serious color-contrast x2, TBT exceed) — honest unassisted defects. Metrics schema
+  extended with title (harness parity). Workspace 61/61. Receipt: VERIFICATION/T0153.md.
+  Next: T0155 blind judge protocol + calibration.

@@ -1,0 +1,554 @@
+{
+  "subject": "evals/baselines/portfolio/page.html",
+  "provenance": "no-skill baseline: builder-agent (GLM via ZCode) unassisted generation from evals/briefs/briefs.md, 2026-11-14",
+  "generatedAt": "2026-11-14T01:30:00Z",
+  "shots": [
+    {
+      "viewport": "mobile",
+      "theme": "light",
+      "path": "evals/baselines/portfolio/evidence/mobile-light.png"
+    },
+    {
+      "viewport": "mobile",
+      "theme": "dark",
+      "path": "evals/baselines/portfolio/evidence/mobile-dark.png"
+    },
+    {
+      "viewport": "tablet",
+      "theme": "light",
+      "path": "evals/baselines/portfolio/evidence/tablet-light.png"
+    },
+    {
+      "viewport": "tablet",
+      "theme": "dark",
+      "path": "evals/baselines/portfolio/evidence/tablet-dark.png"
+    },
+    {
+      "viewport": "desktop",
+      "theme": "light",
+      "path": "evals/baselines/portfolio/evidence/desktop-light.png"
+    },
+    {
+      "viewport": "desktop",
+      "theme": "dark",
+      "path": "evals/baselines/portfolio/evidence/desktop-dark.png"
+    }
+  ],
+  "metrics": [
+    {
+      "url": "http://127.0.0.1:4345/portfolio",
+      "title": "Studio Fixture — Portfolio",
+      "horizontalOverflow": true,
+      "overflowingElements": [
+        "code"
+      ],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Work",
+          "width": 39,
+          "height": 19
+        },
+        {
+          "selector": "a:Field Notes",
+          "width": 81,
+          "height": 19
+        },
+        {
+          "selector": "a:Why docs get skipped",
+          "width": 153,
+          "height": 19
+        },
+        {
+          "selector": "a:Structure that survives ",
+          "width": 209,
+          "height": 19
+        }
+      ],
+      "landmarks": [
+        "nav",
+        "main",
+        "section#work"
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Selected Work"
+        },
+        {
+          "level": 3,
+          "text": "Teahouse ordering flow"
+        },
+        {
+          "level": 3,
+          "text": "Regional archive search"
+        },
+        {
+          "level": 3,
+          "text": "Ledger CMS admin"
+        },
+        {
+          "level": 2,
+          "text": "Field Notes: Evaluating Documentation Surfaces"
+        },
+        {
+          "level": 3,
+          "text": "Why documentation gets skipped"
+        },
+        {
+          "level": 3,
+          "text": "Structure that survives reflow"
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:4345/portfolio",
+      "title": "Studio Fixture — Portfolio",
+      "horizontalOverflow": true,
+      "overflowingElements": [
+        "code"
+      ],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Work",
+          "width": 39,
+          "height": 19
+        },
+        {
+          "selector": "a:Field Notes",
+          "width": 81,
+          "height": 19
+        },
+        {
+          "selector": "a:Why docs get skipped",
+          "width": 153,
+          "height": 19
+        },
+        {
+          "selector": "a:Structure that survives ",
+          "width": 209,
+          "height": 19
+        }
+      ],
+      "landmarks": [
+        "nav",
+        "main",
+        "section#work"
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Selected Work"
+        },
+        {
+          "level": 3,
+          "text": "Teahouse ordering flow"
+        },
+        {
+          "level": 3,
+          "text": "Regional archive search"
+        },
+        {
+          "level": 3,
+          "text": "Ledger CMS admin"
+        },
+        {
+          "level": 2,
+          "text": "Field Notes: Evaluating Documentation Surfaces"
+        },
+        {
+          "level": 3,
+          "text": "Why documentation gets skipped"
+        },
+        {
+          "level": 3,
+          "text": "Structure that survives reflow"
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:4345/portfolio",
+      "title": "Studio Fixture — Portfolio",
+      "horizontalOverflow": false,
+      "overflowingElements": [],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Work",
+          "width": 39,
+          "height": 19
+        },
+        {
+          "selector": "a:Field Notes",
+          "width": 81,
+          "height": 19
+        },
+        {
+          "selector": "a:Why docs get skipped",
+          "width": 153,
+          "height": 19
+        },
+        {
+          "selector": "a:Structure that survives ",
+          "width": 209,
+          "height": 19
+        }
+      ],
+      "landmarks": [
+        "nav",
+        "main",
+        "section#work"
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Selected Work"
+        },
+        {
+          "level": 3,
+          "text": "Teahouse ordering flow"
+        },
+        {
+          "level": 3,
+          "text": "Regional archive search"
+        },
+        {
+          "level": 3,
+          "text": "Ledger CMS admin"
+        },
+        {
+          "level": 2,
+          "text": "Field Notes: Evaluating Documentation Surfaces"
+        },
+        {
+          "level": 3,
+          "text": "Why documentation gets skipped"
+        },
+        {
+          "level": 3,
+          "text": "Structure that survives reflow"
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:4345/portfolio",
+      "title": "Studio Fixture — Portfolio",
+      "horizontalOverflow": false,
+      "overflowingElements": [],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Work",
+          "width": 39,
+          "height": 19
+        },
+        {
+          "selector": "a:Field Notes",
+          "width": 81,
+          "height": 19
+        },
+        {
+          "selector": "a:Why docs get skipped",
+          "width": 153,
+          "height": 19
+        },
+        {
+          "selector": "a:Structure that survives ",
+          "width": 209,
+          "height": 19
+        }
+      ],
+      "landmarks": [
+        "nav",
+        "main",
+        "section#work"
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Selected Work"
+        },
+        {
+          "level": 3,
+          "text": "Teahouse ordering flow"
+        },
+        {
+          "level": 3,
+          "text": "Regional archive search"
+        },
+        {
+          "level": 3,
+          "text": "Ledger CMS admin"
+        },
+        {
+          "level": 2,
+          "text": "Field Notes: Evaluating Documentation Surfaces"
+        },
+        {
+          "level": 3,
+          "text": "Why documentation gets skipped"
+        },
+        {
+          "level": 3,
+          "text": "Structure that survives reflow"
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:4345/portfolio",
+      "title": "Studio Fixture — Portfolio",
+      "horizontalOverflow": false,
+      "overflowingElements": [],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Work",
+          "width": 39,
+          "height": 19
+        },
+        {
+          "selector": "a:Field Notes",
+          "width": 81,
+          "height": 19
+        },
+        {
+          "selector": "a:Why docs get skipped",
+          "width": 153,
+          "height": 19
+        },
+        {
+          "selector": "a:Structure that survives ",
+          "width": 209,
+          "height": 19
+        }
+      ],
+      "landmarks": [
+        "nav",
+        "main",
+        "section#work"
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Selected Work"
+        },
+        {
+          "level": 3,
+          "text": "Teahouse ordering flow"
+        },
+        {
+          "level": 3,
+          "text": "Regional archive search"
+        },
+        {
+          "level": 3,
+          "text": "Ledger CMS admin"
+        },
+        {
+          "level": 2,
+          "text": "Field Notes: Evaluating Documentation Surfaces"
+        },
+        {
+          "level": 3,
+          "text": "Why documentation gets skipped"
+        },
+        {
+          "level": 3,
+          "text": "Structure that survives reflow"
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:4345/portfolio",
+      "title": "Studio Fixture — Portfolio",
+      "horizontalOverflow": false,
+      "overflowingElements": [],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Work",
+          "width": 39,
+          "height": 19
+        },
+        {
+          "selector": "a:Field Notes",
+          "width": 81,
+          "height": 19
+        },
+        {
+          "selector": "a:Why docs get skipped",
+          "width": 153,
+          "height": 19
+        },
+        {
+          "selector": "a:Structure that survives ",
+          "width": 209,
+          "height": 19
+        }
+      ],
+      "landmarks": [
+        "nav",
+        "main",
+        "section#work"
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Selected Work"
+        },
+        {
+          "level": 3,
+          "text": "Teahouse ordering flow"
+        },
+        {
+          "level": 3,
+          "text": "Regional archive search"
+        },
+        {
+          "level": 3,
+          "text": "Ledger CMS admin"
+        },
+        {
+          "level": 2,
+          "text": "Field Notes: Evaluating Documentation Surfaces"
+        },
+        {
+          "level": 3,
+          "text": "Why documentation gets skipped"
+        },
+        {
+          "level": 3,
+          "text": "Structure that survives reflow"
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "gate": "G4",
+      "status": "pass",
+      "detail": [
+        "zero serious/critical axe violations across recorded scans"
+      ]
+    },
+    {
+      "gate": "G5",
+      "status": "fail",
+      "detail": [
+        "http://127.0.0.1:4345/portfolio LCP ms: 604 / limit 2500 — ok",
+        "http://127.0.0.1:4345/portfolio CLS: 0 / limit 0.1 — ok",
+        "http://127.0.0.1:4345/portfolio TBT ms: 314 / limit 200 — EXCEEDED",
+        "http://127.0.0.1:4345/portfolio totalBytes: 3607 / limit 500000 — ok"
+      ]
+    }
+  ],
+  "rubricScores": [
+    {
+      "axis": "hierarchy",
+      "score": 3,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/portfolio/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "composition",
+      "score": 3,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/portfolio/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "typography",
+      "score": 2,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/portfolio/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "color-surface",
+      "score": 2,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/portfolio/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "spacing-rhythm",
+      "score": 3,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/portfolio/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "motion-interaction",
+      "score": 2,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/portfolio/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "content-copy",
+      "score": 3,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/portfolio/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "accessibility",
+      "score": 4,
+      "basis": "measured",
+      "evidence": [
+        "evals/baselines/portfolio/evidence/axe-0.json"
+      ]
+    },
+    {
+      "axis": "responsive-edge",
+      "score": 1,
+      "basis": "measured",
+      "evidence": [
+        "evals/baselines/portfolio/evidence/capture.json"
+      ]
+    },
+    {
+      "axis": "consistency-system",
+      "score": 2,
+      "basis": "critic-validated",
+      "evidence": [
+        "evals/baselines/portfolio/evidence/desktop-light.png"
+      ]
+    },
+    {
+      "axis": "distinctiveness-pov",
+      "score": 2,
+      "basis": "judged",
+      "evidence": [
+        "evals/baselines/portfolio/page.html"
+      ]
+    },
+    {
+      "axis": "performance",
+      "score": 3,
+      "basis": "measured",
+      "evidence": [
+        "evals/baselines/portfolio/evidence/budget-table.json"
+      ]
+    }
+  ],
+  "notes": [
+    "acceptanceComposite excluding judged axis: 28/55",
+    "pre-calibration scoring (T0155 owns judge calibration)"
+  ]
+}

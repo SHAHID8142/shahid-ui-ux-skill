@@ -1,0 +1,430 @@
+{
+  "url": "http://127.0.0.1:4345/portfolio",
+  "outDir": "/Volumes/SSD/CODES/SUS/evals/baselines/portfolio/evidence",
+  "combos": [
+    {
+      "viewport": "mobile",
+      "theme": "light",
+      "screenshot": "/Volumes/SSD/CODES/SUS/evals/baselines/portfolio/evidence/mobile-light.png",
+      "metrics": {
+        "url": "http://127.0.0.1:4345/portfolio",
+        "title": "Studio Fixture — Portfolio",
+        "horizontalOverflow": true,
+        "overflowingElements": [
+          "code"
+        ],
+        "cls": 0,
+        "lcpMs": 0,
+        "smallTapTargets": [
+          {
+            "selector": "a:Work",
+            "width": 39,
+            "height": 19
+          },
+          {
+            "selector": "a:Field Notes",
+            "width": 81,
+            "height": 19
+          },
+          {
+            "selector": "a:Why docs get skipped",
+            "width": 153,
+            "height": 19
+          },
+          {
+            "selector": "a:Structure that survives ",
+            "width": 209,
+            "height": 19
+          }
+        ],
+        "landmarks": [
+          "nav",
+          "main",
+          "section#work"
+        ],
+        "headings": [
+          {
+            "level": 1,
+            "text": "Selected Work"
+          },
+          {
+            "level": 3,
+            "text": "Teahouse ordering flow"
+          },
+          {
+            "level": 3,
+            "text": "Regional archive search"
+          },
+          {
+            "level": 3,
+            "text": "Ledger CMS admin"
+          },
+          {
+            "level": 2,
+            "text": "Field Notes: Evaluating Documentation Surfaces"
+          },
+          {
+            "level": 3,
+            "text": "Why documentation gets skipped"
+          },
+          {
+            "level": 3,
+            "text": "Structure that survives reflow"
+          }
+        ]
+      }
+    },
+    {
+      "viewport": "mobile",
+      "theme": "dark",
+      "screenshot": "/Volumes/SSD/CODES/SUS/evals/baselines/portfolio/evidence/mobile-dark.png",
+      "metrics": {
+        "url": "http://127.0.0.1:4345/portfolio",
+        "title": "Studio Fixture — Portfolio",
+        "horizontalOverflow": true,
+        "overflowingElements": [
+          "code"
+        ],
+        "cls": 0,
+        "lcpMs": 0,
+        "smallTapTargets": [
+          {
+            "selector": "a:Work",
+            "width": 39,
+            "height": 19
+          },
+          {
+            "selector": "a:Field Notes",
+            "width": 81,
+            "height": 19
+          },
+          {
+            "selector": "a:Why docs get skipped",
+            "width": 153,
+            "height": 19
+          },
+          {
+            "selector": "a:Structure that survives ",
+            "width": 209,
+            "height": 19
+          }
+        ],
+        "landmarks": [
+          "nav",
+          "main",
+          "section#work"
+        ],
+        "headings": [
+          {
+            "level": 1,
+            "text": "Selected Work"
+          },
+          {
+            "level": 3,
+            "text": "Teahouse ordering flow"
+          },
+          {
+            "level": 3,
+            "text": "Regional archive search"
+          },
+          {
+            "level": 3,
+            "text": "Ledger CMS admin"
+          },
+          {
+            "level": 2,
+            "text": "Field Notes: Evaluating Documentation Surfaces"
+          },
+          {
+            "level": 3,
+            "text": "Why documentation gets skipped"
+          },
+          {
+            "level": 3,
+            "text": "Structure that survives reflow"
+          }
+        ]
+      }
+    },
+    {
+      "viewport": "tablet",
+      "theme": "light",
+      "screenshot": "/Volumes/SSD/CODES/SUS/evals/baselines/portfolio/evidence/tablet-light.png",
+      "metrics": {
+        "url": "http://127.0.0.1:4345/portfolio",
+        "title": "Studio Fixture — Portfolio",
+        "horizontalOverflow": false,
+        "overflowingElements": [],
+        "cls": 0,
+        "lcpMs": 0,
+        "smallTapTargets": [
+          {
+            "selector": "a:Work",
+            "width": 39,
+            "height": 19
+          },
+          {
+            "selector": "a:Field Notes",
+            "width": 81,
+            "height": 19
+          },
+          {
+            "selector": "a:Why docs get skipped",
+            "width": 153,
+            "height": 19
+          },
+          {
+            "selector": "a:Structure that survives ",
+            "width": 209,
+            "height": 19
+          }
+        ],
+        "landmarks": [
+          "nav",
+          "main",
+          "section#work"
+        ],
+        "headings": [
+          {
+            "level": 1,
+            "text": "Selected Work"
+          },
+          {
+            "level": 3,
+            "text": "Teahouse ordering flow"
+          },
+          {
+            "level": 3,
+            "text": "Regional archive search"
+          },
+          {
+            "level": 3,
+            "text": "Ledger CMS admin"
+          },
+          {
+            "level": 2,
+            "text": "Field Notes: Evaluating Documentation Surfaces"
+          },
+          {
+            "level": 3,
+            "text": "Why documentation gets skipped"
+          },
+          {
+            "level": 3,
+            "text": "Structure that survives reflow"
+          }
+        ]
+      }
+    },
+    {
+      "viewport": "tablet",
+      "theme": "dark",
+      "screenshot": "/Volumes/SSD/CODES/SUS/evals/baselines/portfolio/evidence/tablet-dark.png",
+      "metrics": {
+        "url": "http://127.0.0.1:4345/portfolio",
+        "title": "Studio Fixture — Portfolio",
+        "horizontalOverflow": false,
+        "overflowingElements": [],
+        "cls": 0,
+        "lcpMs": 0,
+        "smallTapTargets": [
+          {
+            "selector": "a:Work",
+            "width": 39,
+            "height": 19
+          },
+          {
+            "selector": "a:Field Notes",
+            "width": 81,
+            "height": 19
+          },
+          {
+            "selector": "a:Why docs get skipped",
+            "width": 153,
+            "height": 19
+          },
+          {
+            "selector": "a:Structure that survives ",
+            "width": 209,
+            "height": 19
+          }
+        ],
+        "landmarks": [
+          "nav",
+          "main",
+          "section#work"
+        ],
+        "headings": [
+          {
+            "level": 1,
+            "text": "Selected Work"
+          },
+          {
+            "level": 3,
+            "text": "Teahouse ordering flow"
+          },
+          {
+            "level": 3,
+            "text": "Regional archive search"
+          },
+          {
+            "level": 3,
+            "text": "Ledger CMS admin"
+          },
+          {
+            "level": 2,
+            "text": "Field Notes: Evaluating Documentation Surfaces"
+          },
+          {
+            "level": 3,
+            "text": "Why documentation gets skipped"
+          },
+          {
+            "level": 3,
+            "text": "Structure that survives reflow"
+          }
+        ]
+      }
+    },
+    {
+      "viewport": "desktop",
+      "theme": "light",
+      "screenshot": "/Volumes/SSD/CODES/SUS/evals/baselines/portfolio/evidence/desktop-light.png",
+      "metrics": {
+        "url": "http://127.0.0.1:4345/portfolio",
+        "title": "Studio Fixture — Portfolio",
+        "horizontalOverflow": false,
+        "overflowingElements": [],
+        "cls": 0,
+        "lcpMs": 0,
+        "smallTapTargets": [
+          {
+            "selector": "a:Work",
+            "width": 39,
+            "height": 19
+          },
+          {
+            "selector": "a:Field Notes",
+            "width": 81,
+            "height": 19
+          },
+          {
+            "selector": "a:Why docs get skipped",
+            "width": 153,
+            "height": 19
+          },
+          {
+            "selector": "a:Structure that survives ",
+            "width": 209,
+            "height": 19
+          }
+        ],
+        "landmarks": [
+          "nav",
+          "main",
+          "section#work"
+        ],
+        "headings": [
+          {
+            "level": 1,
+            "text": "Selected Work"
+          },
+          {
+            "level": 3,
+            "text": "Teahouse ordering flow"
+          },
+          {
+            "level": 3,
+            "text": "Regional archive search"
+          },
+          {
+            "level": 3,
+            "text": "Ledger CMS admin"
+          },
+          {
+            "level": 2,
+            "text": "Field Notes: Evaluating Documentation Surfaces"
+          },
+          {
+            "level": 3,
+            "text": "Why documentation gets skipped"
+          },
+          {
+            "level": 3,
+            "text": "Structure that survives reflow"
+          }
+        ]
+      }
+    },
+    {
+      "viewport": "desktop",
+      "theme": "dark",
+      "screenshot": "/Volumes/SSD/CODES/SUS/evals/baselines/portfolio/evidence/desktop-dark.png",
+      "metrics": {
+        "url": "http://127.0.0.1:4345/portfolio",
+        "title": "Studio Fixture — Portfolio",
+        "horizontalOverflow": false,
+        "overflowingElements": [],
+        "cls": 0,
+        "lcpMs": 0,
+        "smallTapTargets": [
+          {
+            "selector": "a:Work",
+            "width": 39,
+            "height": 19
+          },
+          {
+            "selector": "a:Field Notes",
+            "width": 81,
+            "height": 19
+          },
+          {
+            "selector": "a:Why docs get skipped",
+            "width": 153,
+            "height": 19
+          },
+          {
+            "selector": "a:Structure that survives ",
+            "width": 209,
+            "height": 19
+          }
+        ],
+        "landmarks": [
+          "nav",
+          "main",
+          "section#work"
+        ],
+        "headings": [
+          {
+            "level": 1,
+            "text": "Selected Work"
+          },
+          {
+            "level": 3,
+            "text": "Teahouse ordering flow"
+          },
+          {
+            "level": 3,
+            "text": "Regional archive search"
+          },
+          {
+            "level": 3,
+            "text": "Ledger CMS admin"
+          },
+          {
+            "level": 2,
+            "text": "Field Notes: Evaluating Documentation Surfaces"
+          },
+          {
+            "level": 3,
+            "text": "Why documentation gets skipped"
+          },
+          {
+            "level": 3,
+            "text": "Structure that survives reflow"
+          }
+        ]
+      }
+    }
+  ]
+}

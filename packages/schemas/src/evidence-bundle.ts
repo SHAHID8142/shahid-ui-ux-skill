@@ -21,6 +21,7 @@ export const CaptureShot = z
 export const PageMetricsData = z
   .object({
     url: z.string().min(1),
+    title: z.string(),
     horizontalOverflow: z.boolean(),
     overflowingElements: z.array(z.string()),
     cls: z.number(),
