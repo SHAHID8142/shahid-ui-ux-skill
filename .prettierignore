@@ -10,3 +10,6 @@ fixtures/marketing/.next/
 **/dist/
 **/next-env.d.ts
 **/tsconfig.tsbuildinfo
+
+# Generated artifacts are formatter-exempt (dist/ policy); sync enforced by test:sync
+**/json-schema/**

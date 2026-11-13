@@ -73,3 +73,8 @@
   committed after first CI run failed at Format check (pipeline caught real issue);
   a transient push rejection retried. Receipt: .sus-dev/VERIFICATION/T0104.md.
   Next: M1 complete -> M1.5 evaluation spine from T0151.
+
+- 2026-11-13T23:25:00+06:00 | ZCode (GLM) | T0104-fix | Second CI run failed Format
+  check on the two generated json-schema files; excluded **/json-schema/** from
+  prettier (generated-artifact policy, like dist/); sync remains enforced by
+  test:sync. format:check 0, test:sync 0 locally. Receipt updated.
