@@ -1,3 +1,7 @@
+> Current builder entry: `AGENTS.md` and `docs/AGENT_CONTINUE_PROTOCOL.md`.
+> D24–D27 supersede older interim-review, batch-approval and continuous-push instructions below.
+> Build authorization remains closed; product end-user approvals remain required.
+
 # SUS — Roadmap, Dependency Tree and Micro-Task Protocol
 
 **Status:** initial candidate work tree. The implementation agent must inspect the repository and revise/expand before development; this is NOT a completed backlog.

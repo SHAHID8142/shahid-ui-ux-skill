@@ -62,3 +62,22 @@ original handoff bundle: `AGENT_START_PROMPT.md`, `ROADMAP_AND_TASK_PROTOCOL.md`
 `AUDIT_AND_OPEN_DECISIONS.md`, `README_START_HERE.md`
 
 **archive/:** `SUS_Final_PRD_Handoff_v1.0.zip` (byte-identical to the original five)
+
+## 2026-11-13 — continuation protocol adoption (D24–D27)
+
+Source: owner supplied SUS_FINAL_UNIVERSAL_BUILD_CONTINUE_PROMPT.md and explicitly
+instructed “read it and act on it” in Codex. Full text: AGENT_CONTINUE_PROTOCOL.md.
+
+- D24 | Adopt the repository-local continuation contract, full mandatory scope,
+  automatic micro-task verification and durable local commits | approved process.
+- D25 | No new independent audits/review agents between build start and complete
+  private push; historical PRs #1–#7 are evidence only | supersedes D10's pending
+  reviewer request and PRD §18 interim-review steps. No new auditor commissioned.
+- D26 | Local atomic commits; final private push only after complete verified build |
+  supersedes DECISIONS continuous-push entry and older handoff/start instructions.
+- D27 | This adoption does not supply APERIO or approve proposed ADRs. The build
+  gate remains false; no repeated per-micro-task owner approvals after authorization |
+  approval requests reserved for genuinely unresolved consequential decisions.
+
+D24 also confirms mandatory full Studio scope; D23 wording confirmation is no longer
+needed for that scope. It does not approve ADR-003's particular implementation.

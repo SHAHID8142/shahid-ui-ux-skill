@@ -1,9 +1,9 @@
 {
   "meta": {
     "product": "SUS — Shahid UI UX Skill",
-    "version": "planning-v1.1",
+    "version": "planning-v1.2",
     "updated": "2026-11-13",
-    "protocol": "docs/ROADMAP_AND_TASK_PROTOCOL.md §B record format, compacted",
+    "protocol": "docs/AGENT_CONTINUE_PROTOCOL.md; docs/TASK_RECORD_CONTRACT.md",
     "build_gate": "APERIO not yet received — all implementation tasks remain pending",
     "concurrency": 1,
     "note": "statuses reflect planning progress only; no product code exists"
@@ -2174,6 +2174,92 @@
       "rollback": "foundation files versioned",
       "status": "pending",
       "approval": "pending"
+    },
+    {
+      "id": "T0006",
+      "m": "M0",
+      "title": "Durable repository continuation bootstrap",
+      "obj": "Durable repository continuation bootstrap",
+      "deps": [
+        "T0001"
+      ],
+      "files": [
+        "AGENTS.md",
+        "docs/AGENT_CONTINUE_PROTOCOL.md",
+        ".sus-dev/"
+      ],
+      "acc": [
+        "Protocol and state exist; build gate preserved; reports byte-identical"
+      ],
+      "tests": [
+        "Traceable per-task receipt with positive and negative checks where applicable"
+      ],
+      "risk": "False continuity or unsafe resumption",
+      "rollback": "Revert only this task’s known changes; preserve unrelated work",
+      "status": "done",
+      "approval": "D24 planning authorization",
+      "phase": "planning",
+      "owner": null,
+      "lease": null,
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0006.md"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0006.md"
+    },
+    {
+      "id": "T0007",
+      "m": "M0",
+      "title": "Final pre-build historical finding reconciliation",
+      "obj": "Final pre-build historical finding reconciliation",
+      "deps": [
+        "T0006"
+      ],
+      "files": [
+        "docs/REVIEW_RECONCILIATION.md",
+        "TASKS.json"
+      ],
+      "acc": [
+        "All seven reports dispositioned against current main; semantic DAG checked; proposals not approved"
+      ],
+      "tests": [
+        "Traceable per-task receipt with positive and negative checks where applicable"
+      ],
+      "risk": "False continuity or unsafe resumption",
+      "rollback": "Revert only this task’s known changes; preserve unrelated work",
+      "status": "pending",
+      "approval": "D24 planning authorization",
+      "phase": "planning",
+      "owner": null,
+      "lease": null,
+      "evidence": []
+    },
+    {
+      "id": "T0010",
+      "m": "M1",
+      "title": "Executable continuation/status checker",
+      "obj": "Executable continuation/status checker",
+      "deps": [
+        "T0101",
+        "T0007"
+      ],
+      "files": [
+        "scripts/"
+      ],
+      "acc": [
+        "Missing state, invalid task IDs, absent artifacts, false pass, stale lease, dirty/conflicting work fail safely",
+        "Builder resume experiments: before edit, partial edit, failure, commit, stale worktree, changed tools and no remote sync"
+      ],
+      "tests": [
+        "Traceable per-task receipt with positive and negative checks where applicable"
+      ],
+      "risk": "False continuity or unsafe resumption",
+      "rollback": "Revert only this task’s known changes; preserve unrelated work",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "owner": null,
+      "lease": null,
+      "evidence": []
     }
   ]
 }

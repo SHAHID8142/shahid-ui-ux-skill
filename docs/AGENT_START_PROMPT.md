@@ -1,3 +1,7 @@
+> Current builder entry: `AGENTS.md` and `docs/AGENT_CONTINUE_PROTOCOL.md`.
+> D24–D27 supersede older interim-review, batch-approval and continuous-push instructions below.
+> Build authorization remains closed; product end-user approvals remain required.
+
 # SUS — UNIVERSAL DEVELOPMENT AGENT START PROMPT
 
 Copy this entire prompt into **any capable coding agent** (support tier per `COVERAGE_MATRIX.md` §4:

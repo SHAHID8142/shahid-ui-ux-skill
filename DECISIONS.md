@@ -22,3 +22,11 @@ Append-only. Format: `date | decision | rationale | alternatives | approval | sc
 - Licence + public channel (D06 — before any publication)
 - Telemetry/retention policy (none by default proposed)
 - Benchmark thresholds (set in M1.5 from measured baselines, not invented)
+
+## 2026-11-13 — explicit supersession
+
+D24–D27 and docs/AGENT_CONTINUE_PROTOCOL.md supersede continuous commit+push and
+intermediate outside review requirements. Commit locally; final private push after
+verified build, then stop for independent audit. Public release remains separate.
+Full scope remains required; preview-only and automatic scope cuts cannot satisfy it.
+No proposed ADR or architecture choice was approved by this adoption.

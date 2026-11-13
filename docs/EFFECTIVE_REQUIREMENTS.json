@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "updated": "2026-11-13T22:12:16.174483+06:00",
+  "build_permission": false,
+  "authorization_receipt": null,
+  "build_complete_pushed": false,
+  "authority": [
+    "current explicit owner instruction",
+    "OWNER_DECISIONS_LOG latest explicit supersession",
+    "fixed/approved effective requirements",
+    "SUS_MASTER_PRD_v1.0 baseline",
+    "proposals",
+    "task scheduling",
+    "historical reviews"
+  ],
+  "default_clause_status": {
+    "docs/SUS_MASTER_PRD_v1.0.md": "baseline",
+    "docs/PRD_AMENDMENTS_v1.1.md": "proposed",
+    "docs/ADR_DRAFTS.md": "proposed"
+  },
+  "requirements": [
+    {
+      "id": "ER-SCOPE",
+      "status": "fixed",
+      "owner": "project owner",
+      "source": "D02,D14,D18,D24",
+      "statement": "Full web product and mandatory Next.js/Astro Studio; no preview-only substitution"
+    },
+    {
+      "id": "ER-APPROVAL",
+      "status": "fixed",
+      "owner": "project owner",
+      "source": "D05,D24",
+      "statement": "Real end-user approvals for section changes and source edits"
+    },
+    {
+      "id": "ER-EPISTEMIC",
+      "status": "fixed",
+      "owner": "project owner",
+      "source": "D15,D16,D17",
+      "statement": "No preset design templates; evidence-based dissent and learning"
+    },
+    {
+      "id": "ER-CONTINUE",
+      "status": "fixed",
+      "owner": "project owner",
+      "source": "D24",
+      "statement": "Durable continuation with canonical task state"
+    },
+    {
+      "id": "ER-AUDIT",
+      "status": "fixed",
+      "owner": "project owner",
+      "source": "D25",
+      "statement": "No interim independent audits; post-build private-push boundary"
+    },
+    {
+      "id": "ER-SYNC",
+      "status": "fixed",
+      "owner": "project owner",
+      "source": "D26",
+      "statement": "Local commits; no checkpoint push"
+    },
+    {
+      "id": "ER-BUILD",
+      "status": "fixed",
+      "owner": "project owner",
+      "source": "D11,D19,D27",
+      "statement": "Explicit APERIO required; implementation currently prohibited"
+    },
+    {
+      "id": "ER-SECURITY",
+      "status": "fixed",
+      "owner": "project owner",
+      "source": "D24; protocol \u00a72.8",
+      "statement": "Critical security/privacy release gate cannot be waived"
+    },
+    {
+      "id": "ER-LICENCE",
+      "status": "fixed",
+      "owner": "project owner",
+      "source": "D06",
+      "statement": "Owner decides licence and publication channel before publication"
+    }
+  ],
+  "proposals": [
+    {
+      "id": "ADR-001",
+      "status": "proposed",
+      "approval_receipt": null
+    },
+    {
+      "id": "ADR-002",
+      "status": "proposed",
+      "approval_receipt": null
+    },
+    {
+      "id": "ADR-003",
+      "status": "proposed",
+      "approval_receipt": null
+    },
+    {
+      "id": "ADR-004",
+      "status": "proposed",
+      "approval_receipt": null
+    },
+    {
+      "id": "ADR-005",
+      "status": "proposed",
+      "approval_receipt": null
+    },
+    {
+      "id": "ADR-006",
+      "status": "proposed",
+      "approval_receipt": null
+    }
+  ],
+  "supersessions": [
+    {
+      "source": "D25",
+      "supersedes": [
+        "PRD \u00a718 interim independent reviews",
+        "D10 pending reviewer recruitment"
+      ]
+    },
+    {
+      "source": "D26",
+      "supersedes": [
+        "DECISIONS continuous push",
+        "HANDOFF commit+push after every change"
+      ]
+    },
+    {
+      "source": "D24 full scope",
+      "supersedes": [
+        "T0700 preview-only fallback",
+        "amendments A12 automatic breadth cuts"
+      ]
+    }
+  ]
+}
