@@ -1002,9 +1002,17 @@
       ],
       "risk": "schema too rigid",
       "rollback": "optional fields with lint warnings",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0404.md",
+        "packages/schemas/src/playbook.ts",
+        "docs/PLAYBOOK_AUTHORING.md",
+        "scripts/validate-playbooks.mjs"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0404.md"
     },
     {
       "id": "T0405",
@@ -1309,9 +1317,15 @@
       ],
       "risk": "over-formalism",
       "rollback": "schema optional for simple components",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0600.md",
+        "packages/schemas/src/interaction.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0600.md"
     },
     {
       "id": "T0601",

@@ -564,7 +564,7 @@
       "detail": [
         "http://127.0.0.1:4345/admin LCP ms: 603 / limit 2500 — ok",
         "http://127.0.0.1:4345/admin CLS: 0 / limit 0.1 — ok",
-        "http://127.0.0.1:4345/admin TBT ms: 446 / limit 200 — EXCEEDED",
+        "http://127.0.0.1:4345/admin TBT ms: 381 / limit 200 — EXCEEDED",
         "http://127.0.0.1:4345/admin totalBytes: 3979 / limit 500000 — ok"
       ]
     }

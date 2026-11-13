@@ -195,3 +195,9 @@
   committed, G12 fail-closed drift gate (registry updated to implemented), G1 verdict
   from contract + shared rule. 6/6 tests; workspace 116/116. Receipt:
   VERIFICATION/T0401.md. Next: T0404 playbook schema, T0600 state-machine schema.
+
+- 2026-11-14T04:00:00+06:00 | ZCode (GLM) | T0404+T0600 | Playbook contract (decision
+  procedures, D15, provenance-backed authoritative rules, duplicate/missing-source
+  lint wired into check w/ honest not-run) + interaction state-machine schema
+  (motion none w/ reason, reduced-motion parity, interruption/rapid-toggle,
+  reachability). 10/10 schema tests. Receipts: T0404.md, T0600.md. Next: T0406, T0551, T0901, T0700.

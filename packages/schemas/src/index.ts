@@ -81,3 +81,21 @@ export {
   type DtcgToken,
   type DtcgTokenType,
 } from './tokens.js';
+export {
+  ComponentStates,
+  MotionDecision,
+  SusStateMachine,
+  Transition,
+  type ComponentStateMachineData,
+  type MotionDecisionData,
+  type TransitionData,
+  ComponentStateMachine,
+} from './interaction.js';
+export {
+  Playbook,
+  PlaybookRule,
+  RuleKind,
+  SusPlaybook,
+  type PlaybookData,
+  type PlaybookRuleData,
+} from './playbook.js';
