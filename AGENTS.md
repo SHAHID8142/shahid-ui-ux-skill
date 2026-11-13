@@ -7,6 +7,9 @@ worktrees and diffs before edits. Actual files outrank stale summaries.
 
 Obey authorization and task dependencies; choose the next eligible micro-task,
 verify it, save evidence and an atomic local checkpoint, then continue.
+**Before each task, check open GitHub issues** (`gh issue list --state open`):
+triage actionable findings, prioritize them in the task tree (TASKS.json),
+execute bounded fixes, and continue safely (owner rule D32, 2026-11-14).
 Preserve unrelated edits and live leases. TASKS.json alone owns task status.
 The owner's APERIO authorization is recorded (OWNER_DECISIONS_LOG.md D28, 2026-11-13):
 implementation is authorized; do not re-request it. Architecture baseline: ADR-001/

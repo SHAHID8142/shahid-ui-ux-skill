@@ -1,7 +1,7 @@
 {
   "meta": {
     "product": "SUS — Shahid UI UX Skill",
-    "version": "planning-v1.3",
+    "version": "planning-v1.4",
     "updated": "2026-11-13",
     "protocol": "docs/AGENT_CONTINUE_PROTOCOL.md; docs/TASK_RECORD_CONTRACT.md",
     "build_gate": "APERIO received 2026-11-13 (D28): build authorized; statuses below are canonical",
@@ -2549,6 +2549,42 @@
       "owner": null,
       "lease": null,
       "evidence": []
+    },
+    {
+      "id": "T0103b",
+      "m": "M1",
+      "title": "CI verification + fail-closed gates (owner issue #8)",
+      "obj": "Verify private Actions history; make G4/G5 fail closed; add stylelint + browser deps to CI; fresh green CI on exact HEAD; report + close issue",
+      "deps": [
+        "T0103",
+        "T0152b"
+      ],
+      "files": [
+        ".github/workflows/ci.yml",
+        "packages/eval-core/src/harness/a11y-budgets.ts",
+        ".sus-dev/VERIFICATION/CI_ACTIONS_PRIVATE.md"
+      ],
+      "acc": [
+        "all visible CI runs enumerated with run ID/SHA/step and root-cause classification",
+        "G4/G5 fail closed on empty/absent scans, missing budgets, non-finite metrics — negative and positive tests",
+        "stylelint + Playwright chromium install verified in CI; exact HEAD SHA green on Node 22 and 24",
+        "VERIFICATION/CI_ACTIONS_PRIVATE.md factual report; issue #8 updated and closed only when acceptance met"
+      ],
+      "tests": [
+        "gh run list/view enumeration",
+        "vitest fail-closed negatives",
+        "fresh CI run watch"
+      ],
+      "risk": "runner/plan constraints may block full verification",
+      "rollback": "workflow + gate changes are additive; revert only this task's changes",
+      "status": "pending",
+      "approval": "owner issue #8 via D32 open-issue gate",
+      "phase": "build",
+      "owner": null,
+      "lease": null,
+      "evidence": [],
+      "children": [],
+      "results": []
     }
   ]
 }

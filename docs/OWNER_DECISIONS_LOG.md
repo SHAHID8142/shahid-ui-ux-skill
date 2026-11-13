@@ -113,3 +113,19 @@ future sessions must reuse this record, not re-request authorization.
   another master prompt. Work stops only for genuine blockers, irreversible decisions
   requiring authorization, or unavailable resources — and finally at the
   BUILD_COMPLETE_PUSHED audit boundary before the separately commissioned audit.
+
+## 2026-11-14 — issue monitoring rule (D32)
+
+Source: owner instruction to persist a GitHub issue monitoring rule in AGENTS.md
+and docs/AGENT_CONTINUE_PROTOCOL.md so every current or future agent checks open
+issues before each task, prioritizes actionable findings, updates the task tree,
+and continues safely on `continue`.
+
+- D32 | **Open-issue monitoring gate.** Before each task: check open issues
+  (`gh issue list --state open`); triage and prioritize actionable findings;
+  map fixes into TASKS.json as bounded task records; execute with real tests
+  and receipts; update the issue with evidence, closing only when its stated
+  acceptance is met; then resume the previous task. Recorded in AGENTS.md and
+  docs/AGENT_CONTINUE_PROTOCOL.md (Open-issue monitoring gate). Applied
+  immediately: issue #8 (CI verification + fail-open G4/G5 gates) triaged and
+  mapped to T0103b.

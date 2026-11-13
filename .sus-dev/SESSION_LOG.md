@@ -114,3 +114,9 @@
   Astro brace-expression build bug, URL shadowing, orphaned preview servers, Lighthouse
   LCP flake policy, astro-check hang, and a checker-caught stale evidence path all
   resolved and recorded. Receipt: VERIFICATION/T0102b.md. Next: T0153 baselines.
+
+- 2026-11-14T00:45:00+06:00 | ZCode (GLM) | D32 | Owner issue-monitoring rule persisted
+  in AGENTS.md + AGENT_CONTINUE_PROTOCOL.md (Open-issue monitoring gate) + decisions log
+  D32. Dogfooded immediately: issue #8 (CI verification, fail-open G4/G5) triaged ->
+  T0103b added to TASKS.json (planning-v1.4). Finding accepted: evaluateG4([])/G5([])
+  returning pass is a real fail-open defect; fail-closed fix queued first in T0103b.

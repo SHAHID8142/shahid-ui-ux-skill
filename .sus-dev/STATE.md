@@ -9,7 +9,7 @@ amended (D29). Checkpoint pushes to private dev branches permitted (D30).
 Canonical statuses: TASKS.json. Done: T0001-T0007 (M0 complete). No active lease.
 Concurrency 1.
 
-Current task: none (between tasks). Last completed: T0104 + CI green verification (run 43468234662, Node 22+24). M1 done: T0101-T0104, T0010. T0102b (fixtures B/C/D) still pending. Last verified checkpoint: 56270ca.
+Current task: T0103b (owner issue #8 — CI verification + fail-closed G4/G5) per D32 open-issue gate. M1 done incl. T0102b corpus (50/50 tests).
 Next exact steps: run `pnpm check` (must exit 0), then T0151 rubric schema +
 scoring CLI in @sus/eval-core (deps T0104 done). Then T0152 screenshot+DOM
 harness, T0152b axe/Lighthouse budgets, T0102b fixtures B/C/D (needed by T0153

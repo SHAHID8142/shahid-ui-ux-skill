@@ -68,6 +68,27 @@ On your first permitted documentation pass, create or update the following **pla
 
 **Recovery invariants:** one authoritative task state; atomic local commits; no duplicate application; no unknown source overwritten; stale worker cannot write; uncommitted user work preserved; tests traceable to exact code revision; approval never forged; blockers explicit.
 
+**Open-issue monitoring gate (owner rule D32, 2026-11-14).** Every current or
+future agent checks the repository's open GitHub issues **before starting each
+task**: run `gh issue list --state open` (or the host-equivalent read). Then:
+1. **Triage:** classify each open issue — actionable finding, verification
+   request, blocker report, or out-of-scope. An issue opened by the owner or
+   reporting a defect in delivered work outranks the currently chosen task
+   unless it is genuinely blocked.
+2. **Prioritize into the task tree:** actionable findings are mapped into
+   `TASKS.json` as bounded task records (new IDs or child records) with the
+   issue number in `approval`/`evidence`; do not fix informally without a task
+   record — the tree is the canonical work state.
+3. **Execute + verify:** handle issue work as a normal bounded micro-task:
+   real tests (positive and negative), evidence receipt, atomic commit.
+   Do not change scope, merge unfinished work to `main`, or commission
+   auditors while doing it.
+4. **Continue safely:** after resolving (or precisely blocking) issue work,
+   update the issue with evidence links, close only when its own acceptance is
+   met, update STATE/SESSION_LOG, and resume the previously eligible task.
+   If an issue cannot be verified due to plan/runner constraints, record the
+   concrete blocker rather than declaring success.
+
 ## 2. Reconcile existing audits **once before implementation** (not an ongoing audit loop)
 
 Treat all seven existing review submissions (PR #1–#7) as independent historical opinions **pinned to different commits**, NOT patches to merge and NOT binding requirements. Collect only the report Markdown from each PR/branch using Git read-only inspection. Two PRs, **#2 and #4**, have additional changed planning/source-of-truth files in their PR diffs, and #4 is based on a review branch instead of `main`; do not merge either PR wholesale. Preserve original reports, SHA and source links.
