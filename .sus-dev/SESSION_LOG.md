@@ -107,3 +107,10 @@
   negatives: nameless button -> axe catches -> G4 fail; budget exceed -> G5 EXCEEDED.
   Real fixture A: G4 pass, Lighthouse LCP 772ms/CLS 0/TBT 35ms/110KB -> G5 pass.
   LCP-zero flake policy documented. Receipt: VERIFICATION/T0152b.md. Next: T0102b fixtures B/C/D.
+
+- 2026-11-14T00:35:00+06:00 | ZCode (GLM) | T0102b | Fixture corpus complete (4/4):
+  B commerce (Astro), C admin/Operate (Next), D portfolio+full Read/docs route (Astro).
+  9 fixture smoke tests + workspace 50/50 green; typecheck/lint/format clean.
+  Astro brace-expression build bug, URL shadowing, orphaned preview servers, Lighthouse
+  LCP flake policy, astro-check hang, and a checker-caught stale evidence path all
+  resolved and recorded. Receipt: VERIFICATION/T0102b.md. Next: T0153 baselines.

@@ -1,0 +1,91 @@
+---
+/**
+ * Fixture B — commerce storefront (synthetic catalog, invented prices).
+ */
+import Base from '../layouts/Base.astro';
+
+const products = [
+  { id: 'teapot-ember', name: 'Ember Teapot', price: 42, blurb: 'A stovetop teapot with a wide base for even heating.' },
+  { id: 'mug-set-dune', name: 'Dune Mug Set', price: 28, blurb: 'Four stacked mugs in graduated sand tones.' },
+  { id: 'kettle-ridge', name: 'Ridge Kettle', price: 64, blurb: 'Gooseneck kettle with a thermometer window.' },
+  { id: 'tray-moss', name: 'Moss Serving Tray', price: 36, blurb: 'Felt-lined tray for cups and small plates.' },
+  { id: 'canister-slate', name: 'Slate Canister', price: 22, blurb: 'Airtight canister for 250 g of leaves.' },
+  { id: 'scale-orbit', name: 'Orbit Scale', price: 48, blurb: '0.1 g precision scale with a timer.' },
+];
+---
+<Base title="Harbor & Leaf — synthetic commerce fixture">
+  <header id="site-header" class="site-header">
+    <nav aria-label="Store">
+      <a href="/" class="wordmark">Harbor &amp; Leaf</a>
+      <ul>
+        <li><a href="#product-grid">Catalog</a></li>
+        <li><a href="#cart-summary">Cart</a></li>
+        <li><a href="#checkout-steps">Checkout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section id="product-grid" aria-labelledby="grid-title">
+      <h1 id="grid-title">Small-batch tea ware</h1>
+      <p class="lede">Fixture catalog for SUS evaluation. Six invented products; nothing is for sale.</p>
+      <ul class="grid">
+        {products.map((p) => (
+          <li class="card" id={p.id}>
+            <h2><a href={`#product-detail`}>{p.name}</a></h2>
+            <p class="price">${p.price}.00</p>
+            <p>{p.blurb}</p>
+            <button type="button" data-add={p.id}>Add to cart</button>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section id="product-detail" aria-labelledby="detail-title">
+      <h2 id="detail-title">Featured: Ember Teapot</h2>
+      <dl class="spec">
+        <dt>Capacity</dt><dd>900 ml</dd>
+        <dt>Material</dt><dd>Glazed stoneware</dd>
+        <dt>Care</dt><dd>Hand wash; not dishwasher safe</dd>
+      </dl>
+    </section>
+
+    <section id="cart-summary" aria-labelledby="cart-title">
+      <h2 id="cart-title">Cart summary</h2>
+      <table>
+        <thead><tr><th>Item</th><th>Qty</th><th>Price</th></tr></thead>
+        <tbody>
+          <tr><td>Ember Teapot</td><td>1</td><td>$42.00</td></tr>
+          <tr><td>Dune Mug Set</td><td>1</td><td>$28.00</td></tr>
+        </tbody>
+        <tfoot><tr><th scope="row">Total</th><td></td><td>$70.00</td></tr></tfoot>
+      </table>
+    </section>
+
+    <section id="checkout-steps" aria-labelledby="checkout-title">
+      <h2 id="checkout-title">Checkout steps (demo)</h2>
+      <ol class="steps">
+        <li>Address — demo step, no data collected</li>
+        <li>Payment — disabled in this fixture</li>
+        <li>Review — shows the static summary above</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer id="site-footer">
+    <p>Fixture content for SUS evaluation. Synthetic store; no real transactions.</p>
+  </footer>
+</Base>
+
+<style>
+  body { font-family: system-ui, sans-serif; margin: 0; line-height: 1.6; color: #1c2430; }
+  .site-header { border-bottom: 1px solid #e2e6ee; padding: 1rem 1.5rem; }
+  .site-header ul { display: flex; gap: 1rem; list-style: none; margin: 0; padding: 0; }
+  section, footer { max-width: 60rem; margin-inline: auto; padding: 1.5rem; }
+  .grid { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+  .card { border: 1px solid #e2e6ee; border-radius: 0.5rem; padding: 1rem; }
+  .price { font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { border-bottom: 1px solid #e2e6ee; text-align: left; padding: 0.5rem; }
+  .steps li { margin-block: 0.4rem; }
+</style>

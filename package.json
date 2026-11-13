@@ -8,7 +8,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "typecheck": "pnpm -r exec tsc --noEmit",
+    "typecheck": "pnpm -r --if-present run typecheck",
     "check": "node scripts/check-continuation.mjs",
     "test": "vitest run",
     "lint": "eslint .",

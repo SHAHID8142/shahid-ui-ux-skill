@@ -1,0 +1,15 @@
+{
+  "name": "@sus/fixture-portfolio",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Fixture D — portfolio + Read/docs surface (Astro). Synthetic case studies and docs article; never published.",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^5.0.0"
+  }
+}

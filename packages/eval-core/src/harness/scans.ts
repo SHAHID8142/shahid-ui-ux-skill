@@ -50,6 +50,21 @@ export async function runLighthouse(url: string, chromePath?: string): Promise<L
       output: 'json' as const,
       onlyCategories: ['performance'],
     });
+    // Documented flake policy (T0152 rollback note): a trace can come back
+    // effectively empty under load; one internal retry on an empty trace.
+    const audits = result?.lhr?.audits as Record<string, { numericValue?: number }> | undefined;
+    const traceEmpty =
+      !audits ||
+      (Number(audits['total-byte-weight']?.numericValue ?? 0) === 0 &&
+        Number(audits['total-blocking-time']?.numericValue ?? 0) === 0);
+    if (traceEmpty) {
+      result = await lighthouse(url, {
+        port: chrome.port,
+        logLevel: 'error' as const,
+        output: 'json' as const,
+        onlyCategories: ['performance'],
+      });
+    }
   } finally {
     await Promise.resolve(chrome.kill()).catch(() => {});
   }

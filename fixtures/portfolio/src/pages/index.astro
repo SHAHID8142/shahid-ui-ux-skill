@@ -1,0 +1,112 @@
+---
+/**
+ * Fixture D — portfolio grid + full Read/docs route (synthetic case studies).
+ * The docs article exercises: long headings, in-page anchors, code block
+ * reflow, table reflow, TOC navigation, search filter, rem zoom, lang stub.
+ */
+import Base from '../layouts/Base.astro';
+
+const codeSample = `function scoreSection(axes) {
+  // composite is continuity only; acceptance excludes judged axes
+  return axes.filter((a) => a.tier !== 'judged').reduce((sum, a) => sum + a.score, 0);
+}`;
+
+const cases = [
+  { id: 'case-teahouse', title: 'Teahouse ordering flow', year: 2025, tag: 'Commerce' },
+  { id: 'case-archive', title: 'Regional archive search', year: 2024, tag: 'Research tool' },
+  { id: 'case-ledger', title: 'Ledger CMS admin', year: 2026, tag: 'Operate' },
+];
+---
+<Base title="Studio Fixture — synthetic portfolio">
+  <header id="portfolio-nav">
+    <nav aria-label="Portfolio">
+      <a href="/" class="wordmark">Studio Fixture</a>
+      <ul>
+        <li><a href="#case-grid">Work</a></li>
+        <li><a href="#docs-article">Field notes</a></li>
+        <li><a href="/" lang="de" hreflang="de">Deutsch (Stub)</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section id="case-grid" aria-labelledby="cases-title">
+      <h1 id="cases-title">Selected work</h1>
+      <p class="lede">Invented case studies for evaluation. No client data; all results are synthetic.</p>
+      <ul class="cases">
+        {cases.map((c) => (
+          <li id={c.id} class="case-card">
+            <h2>{c.title}</h2>
+            <p class="meta">{c.year} · {c.tag}</p>
+            <p>A two-sentence synthetic summary describing scope, constraint, and outcome without claiming real metrics.</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <article id="docs-article" aria-labelledby="docs-title">
+      <h2 id="docs-title">Field notes: evaluating documentation surfaces</h2>
+      <nav id="docs-toc" aria-label="Article contents">
+        <ol>
+          <li><a href="#docs-why">Why documentation gets skipped</a></li>
+          <li><a href="#docs-structure">Structure that survives reflow</a></li>
+          <li><a href="#docs-code-tables">Code blocks and wide tables</a></li>
+        </ol>
+      </nav>
+      <label id="docs-search-label" for="docs-search">Filter this article</label>
+      <input id="docs-search" type="search" placeholder="Type to highlight headings" />
+
+      <h3 id="docs-why">Why documentation gets skipped</h3>
+      <p>
+        Documentation is usually written last, by people who no longer remember
+        what confused them at the start. This synthetic article exists to give
+        the evaluation corpus a realistic reading surface: nested headings,
+        anchors, long lines, and reference material.
+      </p>
+
+      <h3 id="docs-structure">Structure that survives reflow</h3>
+      <p>
+        Headings should remain readable when the viewport narrows or zoom
+        reaches 200%. This heading is deliberately long so that wrap behaviour,
+        not truncation, is what the screenshot evidence shows.
+      </p>
+
+      <h3 id="docs-code-tables">Code blocks and wide tables</h3>
+      <p>Code must reflow with horizontal scroll inside its own block, never widen the page:</p>
+      <pre><code>{codeSample}</code></pre>
+      <div class="table-scroll" role="region" aria-label="Survey data" tabindex="0">
+        <table>
+          <thead><tr><th>Surface</th><th>Headings</th><th>Anchors</th><th>Code blocks</th><th>Tables</th></tr></thead>
+          <tbody>
+            <tr><td>Docs article (this)</td><td>4</td><td>3</td><td>1</td><td>1</td></tr>
+            <tr><td>Marketing page</td><td>3</td><td>6</td><td>0</td><td>0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </main>
+
+  <footer id="portfolio-footer">
+    <p>Synthetic portfolio for SUS evaluation. No real clients or metrics.</p>
+  </footer>
+</Base>
+
+<style>
+  body { font-family: Georgia, 'Times New Roman', serif; margin: 0; line-height: 1.7; color: #23282f; font-size: 1rem; }
+  #portfolio-nav { font-family: system-ui, sans-serif; border-bottom: 1px solid #dfe3ea; padding: 1rem 1.5rem; }
+  #portfolio-nav ul { display: flex; gap: 1.25rem; list-style: none; margin: 0; padding: 0; }
+  section, article, footer { max-width: 46rem; margin-inline: auto; padding: 1.5rem; }
+  .lede { color: #5d6570; }
+  .cases { list-style: none; padding: 0; display: grid; gap: 1rem; }
+  .case-card { border: 1px solid #dfe3ea; border-radius: 0.5rem; padding: 1.25rem; }
+  .meta { color: #5d6570; font-size: 0.875rem; }
+  #docs-toc ol { color: #5d6570; }
+  #docs-toc a { color: #14406b; }
+  pre { background: #f3f5f8; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; max-width: 100%; }
+  code { font-family: ui-monospace, monospace; font-size: 0.875rem; }
+  .table-scroll { overflow-x: auto; border: 1px solid #dfe3ea; border-radius: 0.5rem; }
+  table { border-collapse: collapse; min-width: 40rem; }
+  th, td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #e7eaef; text-align: left; font-size: 0.9375rem; }
+  #docs-search { font: inherit; padding: 0.4rem 0.6rem; margin: 0.5rem 0 1.5rem; }
+  #docs-search-label { font-family: system-ui, sans-serif; font-size: 0.875rem; color: #5d6570; }
+</style>

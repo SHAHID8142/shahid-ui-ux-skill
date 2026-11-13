@@ -213,9 +213,12 @@
         ".sus-dev/VERIFICATION/T0102.md",
         "fixtures/marketing/",
         "vitest.config.mts",
-        "packages/eval-core/tests/smoke.test.ts"
+        "fixtures/marketing/tests/smoke.test.tsx"
       ],
-      "commit": "same commit as .sus-dev/VERIFICATION/T0102.md"
+      "commit": "same commit as .sus-dev/VERIFICATION/T0102.md",
+      "results": [
+        "runner smoke superseded by real scoring tests in T0151 (see VERIFICATION/T0151.md)"
+      ]
     },
     {
       "id": "T0103",
@@ -2034,9 +2037,17 @@
       ],
       "risk": "maintenance burden",
       "rollback": "fixtures isolated per directory",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D28/D29 build authorization (self-verified per protocol)",
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0102b.md",
+        "fixtures/commerce/",
+        "fixtures/admin/",
+        "fixtures/portfolio/"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0102b.md"
     },
     {
       "id": "T0158",
