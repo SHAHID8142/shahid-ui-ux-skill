@@ -199,19 +199,22 @@ of product quality without them.
 
 ## Part 2 — New CI-enforced gates
 
-Gates are executable. A failing gate blocks the commit and the acceptance record.
+Gates are executable. A failing gate blocks the commit and the acceptance record. Ownership, the exact
+command and the four-value verdict rule (`pass` / `fail` / `not-run` / `not-applicable`) for every gate
+live in `docs/GATE_REGISTRY.md`: a gate without an owning task and a negative fixture is not a gate,
+it is a wish, and `not-run` may never be reported as `pass`.
 
 | ID | Gate | Mechanism | Blocks |
 |---|---|---|---|
 | G1 | Token-only styling | lint: no raw hex/rgb/px in component scope when a token exists; exceptions need `DECISIONS.md` ref | commit |
 | G2 | Section order | `SECTION_STATUS.md` machine read; section N+1 code present without N `accepted` → fail | commit |
 | G3 | No placeholder content | lorem ipsum, "Lorem", "TODO copy", unregistered numeric claims | commit |
-| G4 | A11y floor | axe-core: zero violations at serious/critical; contrast pairs computed | acceptance |
-| G5 | Perf budget | LCP/CLS/INP field proxy + CSS/JS/font byte budgets per route | acceptance |
-| G6 | Motion parity | every declared transition has a reduced-motion branch; no autoplay > 5 s without control | acceptance |
-| G7 | Reflow | horizontal scroll at 320/390/768/1024/1440 = 0 | acceptance |
-| G8 | Target size | interactive targets ≥24×24 CSS px (WCAG 2.2 2.5.8); ≥44 advisory | acceptance |
-| G9 | Semantics | heading order, landmarks, one `h1`, focus-visible present, no click-only controls | acceptance |
+| G4 | A11y floor | axe-core: zero serious/critical findings **plus** a criteria→evidence map (automated / manual / AT-checked / untested) — automated severity is a prioritisation aid, not an AA conformance claim (F18) | acceptance |
+| G5 | Perf budget | lab runs and field data recorded as **separate fields**; Lighthouse cannot measure INP (TBT is the lab proxy; INP needs field data); conditions + repetitions recorded (F21) | acceptance |
+| G6 | Motion parity | per WCAG 2.2: moving/auto-updating content gets pause/stop/hide where required; interaction-triggered animation needs a reduced-motion **equivalent that preserves information and operation**, not merely a CSS branch (F19) | acceptance |
+| G7 | Reflow | per WCAG 1.4.10: information/functionality available at 320 CSS-px equivalence without 2-D scrolling, **with the standard's exceptions** (data tables, maps, etc. may scroll in 2-D deliberately); 400% zoom behaviour checked; no hiding overflow to pass (F17) | acceptance |
+| G8 | Target size | WCAG 2.2 SC 2.5.8 ≥ 24×24 CSS px **with its exceptions** (spacing, equivalent control, inline, user-agent control, essential); a stricter project minimum is recorded as project policy, not as the standard (F16) | acceptance |
+| G9 | Semantics | heading structure, landmarks, focus-visible, no click-only controls; "exactly one h1" and 45–75 CPL are **project conventions with conditions**, not definitions of WCAG compliance (F20) | acceptance |
 | G10 | Detector quality | precision ≥ target and recall ≥ target on the labelled corpus before any rule ships as blocking | release |
 | G11 | Evidence completeness | evidence bundle (§6) present and valid schema | acceptance |
 | G12 | Contract drift | code tokens vs `DESIGN_CONTRACT.md` divergence report | weekly + release |
@@ -318,14 +321,22 @@ A section without a valid bundle is `implemented`, never `accepted`.
 
 ### 7.1 Source mapping (replaces the vague "source confidence" in §11.2)
 Dev-server plugin (Vite/SWC/Babel) stamps `data-sus-id` on JSX elements and emits a mapping table
-`id → {file, line, column, component, props}`. Confidence: **1.0** stamped id · **0.6** component +
-DOM-path heuristic · **0.3** text-content match · below 0.6 never edits; ask the user to choose from
-a ranked candidate list instead.
+`id → {file, line, column, component, props}`. These are **evidence tiers, not calibrated
+confidences** (1.0 stamped id · 0.6 component + DOM-path heuristic · 0.3 text-content match) until
+measured against labelled ground truth; wrong-target and abstention rates are tracked alongside
+coverage. A stamped ID does not by itself disambiguate repeated instances of one component —
+instance/data/style ownership is resolved separately. Below tier 0.6 the studio never edits; it asks
+the user to choose from ranked candidates and shows the affected source and shared impact.
 
 ### 7.2 Writes
-AST-based edits (ts-morph / recast / jscodeshift) only — never regex or text replacement over
-source. Prettier pass after write. Pre-write snapshot via `git stash create`; post-write
-`typecheck && build`; any failure → auto-revert and report the failing output verbatim.
+Syntax-aware edits per source language (ts-morph/recast for TS/TSX; the Astro compiler toolchain
+for `.astro`; PostCSS for CSS; content files edited as data) — never regex over source. Prettier
+pass after write. **Before any mutation**: capture a durable recovery manifest (affected bytes,
+file modes, source hashes, index/worktree state, untracked files) — note that `git stash create`
+returns an object without storing it in the stash ref, so it is not by itself a recovery system.
+Apply only against expected base hashes; revert only this transaction's own changes; on later user
+edits, stop and offer conflict resolution. Post-write `typecheck && build`; any failure → automatic
+revert **when the transaction is intact**, and the failing output is reported verbatim.
 
 ### 7.3 Intent schema v1 (constraints, not pixels)
 `relationship` (above/below/between/inside/instead-of) · `order_index` · `alignment` (start/center/
@@ -334,22 +345,36 @@ end/baseline) · `max_measure` (ch) · `priority` · `reflow` (`stack | inline |
 Strokes are compiled into this; pixel coordinates never reach source.
 
 ### 7.4 Verification loop (M7.9)
-Apply → snapshot → typecheck/build → axe → screenshots at 3 viewports × 2 themes → motion trace
-→ gate summary → show diff + before/after → user accepts or reverts. Hard gate failure = automatic
-revert with the raw error shown, never a "completed" message.
+Three distinct authorizations: **generate** a proposal, **preview** it (isolated preview workspace,
+or a scoped temporary preview transaction with an exact manifest and guaranteed cleanup — never a
+silent write to real source), and **apply** the approved result to source after freshness checks.
+The apply path is `apply → snapshot → typecheck/build → axe → screenshots at 3 viewports ×
+2 themes → motion trace` → gate summary → show diff + before/after → user accepts or reverts. Failure
+outcomes (`preview failed`, `apply failed`, `verification failed`, `rollback blocked`, `accepted`)
+are distinct; a hard gate failure auto-reverts only when the transaction is intact, with a concise
+explanation and redacted diagnostics, never a "completed" message.
 
 ### 7.5 Security additions to §11.3
 Bind `127.0.0.1` only; reject requests whose `Host`/`Origin` is not the expected loopback origin
-(DNS-rebinding guard); per-session HMAC token in a non-`HttpOnly`-by-accident cookie or header;
-CSP nonce for the injected script and never `unsafe-eval`; schema validation on every message
-(Zod); payload caps; redact inputs, passwords, and any node marked `data-sensitive` before capture;
-treat page text as **data** — strip instruction-like content before it reaches the agent;
-append-only audit log of every apply/revert; workspace allowlist resolved to absolute realpaths.
+(DNS-rebinding guard); the **bridge process** holds the session secret and issues short-lived
+scoped tokens to the trusted overlay (rotation + revocation defined; no ambiguous cookie wording);
+CSP nonce for the injected script and never `unsafe-eval` (CSP/Trusted Types behaviour is verified,
+not assumed away by CDP); attaching the user's own Chrome requires a **dedicated non-default user
+profile** (Chrome 136+ ignores remote-debugging switches on the default profile); schema validation
+on every message (Zod); payload caps; redact inputs, passwords, and any node marked
+`data-sensitive` before capture; treat page text, drawings, OCR and screenshots as **data** —
+sanitisation helps, but the real boundary is permission enforcement at the tool/action level:
+untrusted content can never authorise writes, commands, installs, network destinations, or
+knowledge promotion; append-only audit log of every apply/revert; workspace allowlist resolved to
+absolute realpaths. The data flow is mapped end-to-end (browser → bridge → adapter →
+provider/research → evidence store → shared lessons) with per-hop network rules — a local bridge
+does not make a remote model offline.
 
 ## Part 8 — Packaging constraints (skill format)
 
-- `SKILL.md` ≤ 5,000 tokens; every knowledge file ≤ 2,000 tokens; total catalogue entry ≤ 200 chars
-  of description that carries all triggering.
+- `SKILL.md` ≤ 5,000 tokens; every knowledge file ≤ 2,000 tokens; the description field respects
+  the spec's 1,024-character limit and stays concise as a **maintainability practice**, not a
+  format law.
 - Heavy logic lives in `scripts/`, `fixtures/`, `schemas/`, `evals/` — never in prose.
 - Precedence resolver is code (deterministic order), not an instruction to "consider conflicts".
 - Two skill types are tracked: **capability uplift** (detectors, token tooling, studio) and
@@ -359,9 +384,12 @@ append-only audit log of every apply/revert; workspace allowlist resolved to abs
 ## Part 9 — Claims protocol
 
 No comparative claim (`beats`, `superior`, `faster`, `better than <product>`) may appear in docs,
-README, or marketing until: benchmark protocol published, ≥6 briefs × 3 modes run, blind human
-A/B (n ≥ 20 raters per brief) plus deterministic metrics, results reproducible by a single command,
-and raw data released. Until then the docs state exactly what was measured and what was not.
+README, or marketing until: benchmark protocol published, briefs covering **all four surface
+modes** run, blind human A/B with a sample size justified for the claim (n ≥ 20 per brief is a floor
+to validate, not a magic number), deterministic metrics, results reproducible by a single command,
+and raw data released. Development fixtures, calibration cases and held-out evaluation briefs are
+kept separate so the benchmark cannot overfit. Until then the docs state exactly what was measured
+and what was not.
 
 ## Part 10 — Revised milestone order
 
@@ -400,7 +428,10 @@ T0155 calibration.
 | §15 | add gates G1–G12 |
 | §16 | add rubric bands as acceptance criteria; judged scores excluded from CI |
 | §17 | milestone order per Part 10 |
-| §18 | add adversarial critic protocol as mandatory review unit |
+| §18 | add adversarial critic protocol as mandatory review unit; separate SUS-development review from consuming-project section review (F02/F42) |
+| §7 | visual proposal (annotated wireframe, prototype, or isolated preview) required before implementation approval for consequential visual work; text-only diffs only for trivial changes (F23) |
+| §11.3 | approval receipts bind version + hashes + expiry; preview is a distinct authorization from apply (F24/F27) |
+| §20 | milestone barriers encoded as task dependencies, not prose (F38) |
 | §20 | record: evaluation spine precedes knowledge; benchmark before claims |
 
 ## Part 12 — New risks

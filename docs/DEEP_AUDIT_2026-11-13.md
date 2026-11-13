@@ -2,6 +2,8 @@
 
 Date: 2026-11-13, Asia/Dhaka. Baseline examined: Git commit `7c9975a`.
 Status: audit and proposed refinements; recommendations are not approved requirements.
+Reconciliation: cross-checked and dispositioned in `PRD_AMENDMENTS_v1.1.md` Part 13 and
+`TEST_EVIDENCE.md`; findings remain proposals until the owner approves them.
 
 ## 1. Intent and conclusion
 
