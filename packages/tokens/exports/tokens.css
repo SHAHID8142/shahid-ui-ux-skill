@@ -1,0 +1,20 @@
+:root {
+  --sus-$schema: undefined;
+  --sus-color-accent-default: #2743c7;
+  --sus-color-accent-on: #ffffff;
+  --sus-color-fg-default: #1a1d21;
+  --sus-color-fg-muted: #5c6470;
+  --sus-color-line-default: #dfe3ea;
+  --sus-color-surface-base: #ffffff;
+  --sus-color-surface-raised: #f4f6fa;
+  --sus-motion-duration-base: 240ms;
+  --sus-motion-duration-fast: 120ms;
+  --sus-motion-easing-standard: [0.2, 0, 0, 1];
+  --sus-radius-card: 10px;
+  --sus-radius-pill: 999px;
+  --sus-space-group: 1rem;
+  --sus-space-section: 3rem;
+  --sus-typography-lineHeight-body: 1.6;
+  --sus-typography-size-body: 1rem;
+  --sus-typography-size-h1: 2.25rem;
+}

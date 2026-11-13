@@ -914,13 +914,22 @@
       ],
       "risk": "semantic layer bikeshed",
       "rollback": "roles minimal at v1",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
       "gates": [
         "G1",
         "G12"
-      ]
+      ],
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0401.md",
+        ".sus/tokens.json",
+        "packages/tokens/src/pipeline.ts",
+        "packages/tokens/exports/",
+        "docs/GATE_REGISTRY.json"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0401.md"
     },
     {
       "id": "T0402",

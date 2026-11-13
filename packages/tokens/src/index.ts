@@ -1,6 +1,13 @@
 /**
  * @sus/tokens — DTCG token pipeline: validate, resolve, export (ADR-004).
- * T0101 skeleton stub. Implemented from T0401 onward (semantic roles,
- * derived exports, drift gate G12 support).
+ * T0401: semantic-layer validation + derived exports + G1/G12 verdicts.
  */
-export const SUS_TOKENS_PACKAGE = '0.0.0' as const;
+export {
+  loadTokens,
+  generateCss,
+  generateTs,
+  evaluateG1,
+  evaluateG12,
+  type TokenPipelineResult,
+  type GateResult,
+} from './pipeline.js';

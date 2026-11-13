@@ -11,16 +11,16 @@
   "runs": [
     {
       "url": "http://127.0.0.1:4345/commerce",
-      "lcpMs": 606,
+      "lcpMs": 601,
       "cls": 0,
-      "totalBlockingMs": 450,
+      "totalBlockingMs": 342,
       "totalByteWeight": 3740
     }
   ],
   "detail": [
-    "http://127.0.0.1:4345/commerce LCP ms: 606 / limit 2500 — ok",
+    "http://127.0.0.1:4345/commerce LCP ms: 601 / limit 2500 — ok",
     "http://127.0.0.1:4345/commerce CLS: 0 / limit 0.1 — ok",
-    "http://127.0.0.1:4345/commerce TBT ms: 450 / limit 200 — EXCEEDED",
+    "http://127.0.0.1:4345/commerce TBT ms: 342 / limit 200 — EXCEEDED",
     "http://127.0.0.1:4345/commerce totalBytes: 3740 / limit 500000 — ok"
   ]
 }

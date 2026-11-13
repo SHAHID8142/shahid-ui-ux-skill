@@ -13,9 +13,17 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "vitest run",
+    "pipeline": "tsc && node dist/cli.js"
   },
   "devDependencies": {
-    "typescript": "^5.9.2"
+    "@types/node": "^20.17.6",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.7"
+  },
+  "dependencies": {
+    "@sus/schemas": "workspace:*",
+    "zod": "^4.6.7"
   }
 }

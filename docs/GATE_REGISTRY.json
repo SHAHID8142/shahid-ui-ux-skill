@@ -142,9 +142,10 @@
       "ownerTasks": [
         "T0401"
       ],
-      "check": null,
-      "checkStatus": "not-run",
-      "waivable": true
+      "check": "packages/tokens evaluateG12 (fail-closed drift gate) + sus-tokens gates CLI",
+      "checkStatus": "implemented",
+      "waivable": true,
+      "badFixture": "packages/tokens/tests/pipeline.test.ts (drifting committed export negative)"
     },
     {
       "id": "G13",

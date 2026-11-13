@@ -19,7 +19,7 @@ reconciliation requirement that the critical security gate is non-waivable
 | G9 | Semantics | acceptance | T0807, T0403 | not-run |
 | G10 | Detector quality | release | T0305 | not-run |
 | G11 | Evidence completeness | acceptance | T0154 | implemented (fail-closed evaluator + CLI) |
-| G12 | Contract drift | weekly+release | T0401 | not-run |
+| G12 | Contract drift | weekly+release | T0401 | implemented (fail-closed drift gate + negatives) |
 | G13 | Critical security/privacy | release | T0806 | not-run — **never waivable** |
 
 Rules (ER-SECURITY + amendments): unimplemented checks report **not-run**,

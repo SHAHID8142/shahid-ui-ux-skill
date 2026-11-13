@@ -189,3 +189,9 @@
   codes documented), labelled corpus P/R = 1.0/1.0 (blocking rules), trend loop
   (stale volatile flagged, reuse blocked). 16/16 scanner tests; workspace
   110/110. Receipts: VERIFICATION/T0301..T0310.md. Next: M4 design intelligence.
+
+- 2026-11-14T03:50:00+06:00 | ZCode (GLM) | T0401 | Token pipeline live: canonical
+  .sus/tokens.json (20 DTCG tokens, 10 semantic roles), deterministic CSS/TS exports
+  committed, G12 fail-closed drift gate (registry updated to implemented), G1 verdict
+  from contract + shared rule. 6/6 tests; workspace 116/116. Receipt:
+  VERIFICATION/T0401.md. Next: T0404 playbook schema, T0600 state-machine schema.

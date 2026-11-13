@@ -71,3 +71,13 @@ export {
   type SourceData,
 } from './research-evidence.js';
 export { SusSlopTaxonomy, TAXONOMY, type SlopCategoryData } from './slop-taxonomy.js';
+export {
+  REQUIRED_SEMANTIC_ROLES,
+  SusTokens,
+  SusTokensFile,
+  flattenTokens,
+  missingSemanticRoles,
+  type DtcgGroup,
+  type DtcgToken,
+  type DtcgTokenType,
+} from './tokens.js';
