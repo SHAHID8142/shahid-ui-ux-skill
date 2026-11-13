@@ -59,7 +59,13 @@
           "height": 19
         }
       ],
-      "landmarks": ["nav", "main", "section#products", "section#cart", "section#checkout"],
+      "landmarks": [
+        "nav",
+        "main",
+        "section#products",
+        "section#cart",
+        "section#checkout"
+      ],
       "headings": [
         {
           "level": 1,
@@ -123,101 +129,13 @@
           "height": 19
         }
       ],
-      "landmarks": ["nav", "main", "section#products", "section#cart", "section#checkout"],
-      "headings": [
-        {
-          "level": 1,
-          "text": "Our Products"
-        },
-        {
-          "level": 3,
-          "text": "Ember Teapot"
-        },
-        {
-          "level": 3,
-          "text": "Dune Mug Set"
-        },
-        {
-          "level": 3,
-          "text": "Ridge Kettle"
-        },
-        {
-          "level": 3,
-          "text": "Moss Serving Tray"
-        },
-        {
-          "level": 3,
-          "text": "Slate Canister"
-        },
-        {
-          "level": 3,
-          "text": "Orbit Scale"
-        },
-        {
-          "level": 2,
-          "text": "Cart Summary"
-        },
-        {
-          "level": 2,
-          "text": "Checkout"
-        }
-      ]
-    },
-    {
-      "url": "http://127.0.0.1:4345/commerce",
-      "title": "Harbor & Leaf — Tea Ware",
-      "horizontalOverflow": false,
-      "overflowingElements": [],
-      "cls": 0,
-      "lcpMs": 0,
-      "smallTapTargets": [
-        {
-          "selector": "a:Products",
-          "width": 69,
-          "height": 19
-        },
-        {
-          "selector": "a:Cart",
-          "width": 34,
-          "height": 19
-        },
-        {
-          "selector": "a:Checkout",
-          "width": 75,
-          "height": 19
-        },
-        {
-          "selector": "button:Add to Cart",
-          "width": 91,
-          "height": 31
-        },
-        {
-          "selector": "button:Add to Cart",
-          "width": 91,
-          "height": 31
-        },
-        {
-          "selector": "button:Add to Cart",
-          "width": 91,
-          "height": 31
-        },
-        {
-          "selector": "button:Add to Cart",
-          "width": 91,
-          "height": 31
-        },
-        {
-          "selector": "button:Add to Cart",
-          "width": 91,
-          "height": 31
-        },
-        {
-          "selector": "button:Add to Cart",
-          "width": 91,
-          "height": 31
-        }
+      "landmarks": [
+        "nav",
+        "main",
+        "section#products",
+        "section#cart",
+        "section#checkout"
       ],
-      "landmarks": ["nav", "main", "section#products", "section#cart", "section#checkout"],
       "headings": [
         {
           "level": 1,
@@ -311,7 +229,13 @@
           "height": 31
         }
       ],
-      "landmarks": ["nav", "main", "section#products", "section#cart", "section#checkout"],
+      "landmarks": [
+        "nav",
+        "main",
+        "section#products",
+        "section#cart",
+        "section#checkout"
+      ],
       "headings": [
         {
           "level": 1,
@@ -405,7 +329,13 @@
           "height": 31
         }
       ],
-      "landmarks": ["nav", "main", "section#products", "section#cart", "section#checkout"],
+      "landmarks": [
+        "nav",
+        "main",
+        "section#products",
+        "section#cart",
+        "section#checkout"
+      ],
       "headings": [
         {
           "level": 1,
@@ -499,7 +429,113 @@
           "height": 31
         }
       ],
-      "landmarks": ["nav", "main", "section#products", "section#cart", "section#checkout"],
+      "landmarks": [
+        "nav",
+        "main",
+        "section#products",
+        "section#cart",
+        "section#checkout"
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Our Products"
+        },
+        {
+          "level": 3,
+          "text": "Ember Teapot"
+        },
+        {
+          "level": 3,
+          "text": "Dune Mug Set"
+        },
+        {
+          "level": 3,
+          "text": "Ridge Kettle"
+        },
+        {
+          "level": 3,
+          "text": "Moss Serving Tray"
+        },
+        {
+          "level": 3,
+          "text": "Slate Canister"
+        },
+        {
+          "level": 3,
+          "text": "Orbit Scale"
+        },
+        {
+          "level": 2,
+          "text": "Cart Summary"
+        },
+        {
+          "level": 2,
+          "text": "Checkout"
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:4345/commerce",
+      "title": "Harbor & Leaf — Tea Ware",
+      "horizontalOverflow": false,
+      "overflowingElements": [],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Products",
+          "width": 69,
+          "height": 19
+        },
+        {
+          "selector": "a:Cart",
+          "width": 34,
+          "height": 19
+        },
+        {
+          "selector": "a:Checkout",
+          "width": 75,
+          "height": 19
+        },
+        {
+          "selector": "button:Add to Cart",
+          "width": 91,
+          "height": 31
+        },
+        {
+          "selector": "button:Add to Cart",
+          "width": 91,
+          "height": 31
+        },
+        {
+          "selector": "button:Add to Cart",
+          "width": 91,
+          "height": 31
+        },
+        {
+          "selector": "button:Add to Cart",
+          "width": 91,
+          "height": 31
+        },
+        {
+          "selector": "button:Add to Cart",
+          "width": 91,
+          "height": 31
+        },
+        {
+          "selector": "button:Add to Cart",
+          "width": 91,
+          "height": 31
+        }
+      ],
+      "landmarks": [
+        "nav",
+        "main",
+        "section#products",
+        "section#cart",
+        "section#checkout"
+      ],
       "headings": [
         {
           "level": 1,
@@ -552,9 +588,9 @@
       "gate": "G5",
       "status": "fail",
       "detail": [
-        "http://127.0.0.1:4345/commerce LCP ms: 605 / limit 2500 — ok",
+        "http://127.0.0.1:4345/commerce LCP ms: 601 / limit 2500 — ok",
         "http://127.0.0.1:4345/commerce CLS: 0 / limit 0.1 — ok",
-        "http://127.0.0.1:4345/commerce TBT ms: 1244 / limit 200 — EXCEEDED",
+        "http://127.0.0.1:4345/commerce TBT ms: 332 / limit 200 — EXCEEDED",
         "http://127.0.0.1:4345/commerce totalBytes: 3740 / limit 500000 — ok"
       ]
     }
@@ -564,73 +600,97 @@
       "axis": "hierarchy",
       "score": 3,
       "basis": "critic-validated",
-      "evidence": ["evals/baselines/commerce/evidence/desktop-light.png"]
+      "evidence": [
+        "evals/baselines/commerce/evidence/desktop-light.png"
+      ]
     },
     {
       "axis": "composition",
       "score": 3,
       "basis": "critic-validated",
-      "evidence": ["evals/baselines/commerce/evidence/desktop-light.png"]
+      "evidence": [
+        "evals/baselines/commerce/evidence/desktop-light.png"
+      ]
     },
     {
       "axis": "typography",
       "score": 2,
       "basis": "critic-validated",
-      "evidence": ["evals/baselines/commerce/evidence/desktop-light.png"]
+      "evidence": [
+        "evals/baselines/commerce/evidence/desktop-light.png"
+      ]
     },
     {
       "axis": "color-surface",
       "score": 2,
       "basis": "critic-validated",
-      "evidence": ["evals/baselines/commerce/evidence/desktop-light.png"]
+      "evidence": [
+        "evals/baselines/commerce/evidence/desktop-light.png"
+      ]
     },
     {
       "axis": "spacing-rhythm",
       "score": 3,
       "basis": "critic-validated",
-      "evidence": ["evals/baselines/commerce/evidence/desktop-light.png"]
+      "evidence": [
+        "evals/baselines/commerce/evidence/desktop-light.png"
+      ]
     },
     {
       "axis": "motion-interaction",
       "score": 2,
       "basis": "critic-validated",
-      "evidence": ["evals/baselines/commerce/evidence/desktop-light.png"]
+      "evidence": [
+        "evals/baselines/commerce/evidence/desktop-light.png"
+      ]
     },
     {
       "axis": "content-copy",
       "score": 3,
       "basis": "critic-validated",
-      "evidence": ["evals/baselines/commerce/evidence/desktop-light.png"]
+      "evidence": [
+        "evals/baselines/commerce/evidence/desktop-light.png"
+      ]
     },
     {
       "axis": "accessibility",
       "score": 1,
       "basis": "measured",
-      "evidence": ["evals/baselines/commerce/evidence/axe-0.json"]
+      "evidence": [
+        "evals/baselines/commerce/evidence/axe-0.json"
+      ]
     },
     {
       "axis": "responsive-edge",
       "score": 3,
       "basis": "measured",
-      "evidence": ["evals/baselines/commerce/evidence/capture.json"]
+      "evidence": [
+        "evals/baselines/commerce/evidence/capture.json"
+      ]
     },
     {
       "axis": "consistency-system",
       "score": 2,
       "basis": "critic-validated",
-      "evidence": ["evals/baselines/commerce/evidence/desktop-light.png"]
+      "evidence": [
+        "evals/baselines/commerce/evidence/desktop-light.png"
+      ]
     },
     {
       "axis": "distinctiveness-pov",
       "score": 2,
       "basis": "judged",
-      "evidence": ["evals/baselines/commerce/page.html"]
+      "evidence": [
+        "evals/baselines/commerce/page.html"
+      ]
     },
     {
       "axis": "performance",
       "score": 3,
       "basis": "measured",
-      "evidence": ["evals/baselines/commerce/evidence/budget-table.json"]
+      "evidence": [
+        "evals/baselines/commerce/evidence/budget-table.json"
+      ]
     }
   ],
   "notes": [

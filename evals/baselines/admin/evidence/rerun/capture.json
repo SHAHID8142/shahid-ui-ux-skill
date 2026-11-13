@@ -10,7 +10,18 @@
         "url": "http://127.0.0.1:4345/admin",
         "title": "Ledger CMS — Dashboard",
         "horizontalOverflow": true,
-        "overflowingElements": ["h2", "p", "h2", "p", "h2", "p", "th", "th", "th", "th"],
+        "overflowingElements": [
+          "h2",
+          "p",
+          "h2",
+          "p",
+          "h2",
+          "p",
+          "th",
+          "th",
+          "th",
+          "th"
+        ],
         "cls": 0,
         "lcpMs": 0,
         "smallTapTargets": [
@@ -97,7 +108,18 @@
         "url": "http://127.0.0.1:4345/admin",
         "title": "Ledger CMS — Dashboard",
         "horizontalOverflow": true,
-        "overflowingElements": ["h2", "p", "h2", "p", "h2", "p", "th", "th", "th", "th"],
+        "overflowingElements": [
+          "h2",
+          "p",
+          "h2",
+          "p",
+          "h2",
+          "p",
+          "th",
+          "th",
+          "th",
+          "th"
+        ],
         "cls": 0,
         "lcpMs": 0,
         "smallTapTargets": [

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "note": "Triggering evals (T0205 expands this to the full should/should-not suite with recorded results).",
+  "shouldTrigger": [
+    "Build a marketing landing page for my research tool",
+    "Review this admin dashboard for usability and accessibility",
+    "Redesign the checkout flow of my e-commerce site",
+    "Create a portfolio case-study page with a docs article"
+  ],
+  "shouldNotTrigger": [
+    "Fix a Python import error in my data pipeline",
+    "Write a Rust CLI for log parsing",
+    "Summarize this PDF contract"
+  ]
+}

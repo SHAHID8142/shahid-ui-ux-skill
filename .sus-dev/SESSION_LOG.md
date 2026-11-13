@@ -161,3 +161,9 @@
   semantic prerequisites + removal negatives, structural negatives. 9 gates not-run
   (never pass). M1.5 COMPLETE (T0151-T0159). Receipt: VERIFICATION/T0159.md.
   Next: M2 skill core from T0201.
+
+- 2026-11-14T02:45:00+06:00 | ZCode (GLM) | T0201 | Canonical skill bundle v0.1:
+  SKILL.md (real execution rules, 673/1024-char description, ~942 est. tokens),
+  precedence + surfaces references (honest status), evals.json seed, validator
+  wired into pnpm check (frontmatter/budgets/evals/G3 + 4 negative fixtures, 5/5).
+  Workspace 76/76. Receipt: VERIFICATION/T0201.md. Next: T0202 intent schema + router.

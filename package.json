@@ -9,7 +9,7 @@
   },
   "scripts": {
     "typecheck": "pnpm run --silent build && pnpm -r --if-present run typecheck",
-    "check": "node scripts/check-continuation.mjs && node scripts/check-gates.mjs",
+    "check": "node scripts/check-continuation.mjs && node scripts/check-gates.mjs && node scripts/validate-skill.mjs",
     "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -17,7 +17,8 @@
     "format:check": "prettier --check .",
     "stylelint": "stylelint \"**/*.css\"",
     "build": "pnpm -r --if-present run build",
-    "gates": "node scripts/check-gates.mjs"
+    "gates": "node scripts/check-gates.mjs",
+    "skill": "node scripts/validate-skill.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

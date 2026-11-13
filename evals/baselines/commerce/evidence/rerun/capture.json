@@ -30,7 +30,13 @@
             "height": 19
           }
         ],
-        "landmarks": ["nav", "main", "section#products", "section#cart", "section#checkout"],
+        "landmarks": [
+          "nav",
+          "main",
+          "section#products",
+          "section#cart",
+          "section#checkout"
+        ],
         "headings": [
           {
             "level": 1,
@@ -99,7 +105,13 @@
             "height": 19
           }
         ],
-        "landmarks": ["nav", "main", "section#products", "section#cart", "section#checkout"],
+        "landmarks": [
+          "nav",
+          "main",
+          "section#products",
+          "section#cart",
+          "section#checkout"
+        ],
         "headings": [
           {
             "level": 1,
@@ -198,7 +210,13 @@
             "height": 31
           }
         ],
-        "landmarks": ["nav", "main", "section#products", "section#cart", "section#checkout"],
+        "landmarks": [
+          "nav",
+          "main",
+          "section#products",
+          "section#cart",
+          "section#checkout"
+        ],
         "headings": [
           {
             "level": 1,
@@ -297,7 +315,13 @@
             "height": 31
           }
         ],
-        "landmarks": ["nav", "main", "section#products", "section#cart", "section#checkout"],
+        "landmarks": [
+          "nav",
+          "main",
+          "section#products",
+          "section#cart",
+          "section#checkout"
+        ],
         "headings": [
           {
             "level": 1,
@@ -396,7 +420,13 @@
             "height": 31
           }
         ],
-        "landmarks": ["nav", "main", "section#products", "section#cart", "section#checkout"],
+        "landmarks": [
+          "nav",
+          "main",
+          "section#products",
+          "section#cart",
+          "section#checkout"
+        ],
         "headings": [
           {
             "level": 1,
@@ -495,7 +525,13 @@
             "height": 31
           }
         ],
-        "landmarks": ["nav", "main", "section#products", "section#cart", "section#checkout"],
+        "landmarks": [
+          "nav",
+          "main",
+          "section#products",
+          "section#cart",
+          "section#checkout"
+        ],
         "headings": [
           {
             "level": 1,

@@ -561,9 +561,17 @@
       ],
       "risk": "host quirks",
       "rollback": "generated host entries isolated",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0201.md",
+        "skill/SKILL.md",
+        "skill/references/",
+        "scripts/validate-skill.mjs"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0201.md"
     },
     {
       "id": "T0202",
