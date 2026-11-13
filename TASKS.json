@@ -1420,9 +1420,16 @@
       ],
       "risk": "token values dogma",
       "rollback": "values are project choices",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0601.md",
+        "packages/schemas/src/motion.ts",
+        "packages/adapters/tests/motion.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0601.md"
     },
     {
       "id": "T0602",

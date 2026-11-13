@@ -140,3 +140,12 @@ export {
   type ChangePlanData,
   type SectionStateData,
 } from './progressive.js';
+export {
+  MotionTokens,
+  SusMotionTokens,
+  SusTransitionSpec,
+  TRANSITION_SPEC_FIELDS,
+  TransitionSpec,
+  type MotionTokensData,
+  type TransitionSpecData,
+} from './motion.js';

@@ -255,3 +255,9 @@
   First successful issue-#9 parallel pattern: sub-agent scope respected (scripts/
   install/* + one test file only), lease cleared. CI build-order fix (dist before
   check) pushed. Receipt: VERIFICATION/T0904.md.
+
+- 2026-11-14T06:00:00+06:00 | ZCode (GLM) | T0601 | Motion taxonomy: MotionTokens
+  (required fast/base/slow + standard easing) + 12-field TransitionSpec with
+  exhaustive field-removal negatives, motion:none intent discipline, required
+  reduced-motion parity. 5/5 tests. Receipt: VERIFICATION/T0601.md. Next: T0702
+  CDP attach; then T0602/T0603 playbooks+interruption suite.

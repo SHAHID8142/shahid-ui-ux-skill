@@ -9,9 +9,9 @@ amended (D29). Checkpoint pushes to private dev branches permitted (D30).
 Canonical statuses: TASKS.json. Done: T0001-T0007 (M0 complete). No active lease.
 Concurrency 1.
 
-Current task: T0601 (motion tokens — main agent, pending). No active leases.
+Current task: none (between tasks). No active leases.
 Next exact steps: `pnpm check` (exit 0 verified). Then ready set: T0601
-(motion tokens + reduced-motion semantics), T0702 (CDP attach + overlay
+T0602/T0603 (motion playbooks + interruption suite), T0702 (CDP attach + overlay
 injection — bridge server done), T0506b fixture-deep + T0703-T0709 chain.
 Then T0402b fixtures-deep + T0703-T0709 chain -> T0700w -> T0400/T0405
 playbooks -> M8/M9/M10.
