@@ -181,3 +181,33 @@ commit; it is committed now with provenance intact.
 | Gate registry ↔ TASKS.json owner consistency | PASS (12/12) |
 
 Still no SUS implementation exists and no build approval was inferred.
+
+## Third-pass reconciliation: kilo + zcode-glm reviews (2026-11-13, assistant)
+
+Reviews of `92f3e5c` (kilo) and `cda9d9d` (zcode-glm) were read from their own branches
+(`review/kilo-2026-11-13`, `review/independent-zcode-glm-2026-11-13-cda9d9d`). Findings already
+resolved by earlier commits were verified as resolved, not re-fixed.
+
+### New findings verified and fixed
+| Finding | Verdict | Fix |
+|---|---|---|
+| zcode H5: AGENT_START_PROMPT loaded 3 files, none containing the `APERIO` build gate or epistemic contract; 3 divergent entry paths | **Confirmed, live** | start prompt rewritten: authority order begins with OWNER_DECISIONS_LOG (build gate first), host-tier vocabulary; README resume order aligned |
+| kilo H3: Studio overlay a11y deferred to M8 | **Confirmed** | T0702 requires keyboard + axe in the M7 slice; T0708 demo requires it |
+| kilo C8: evidence bundle 3 viewports vs G7/T0551 5 viewports | **Confirmed** | harness now 5 viewports × 2 themes incl. 320-equivalence + 400% states |
+| kilo H4: task accs lacked WCAG-exception semantics | **Confirmed** | T0807 emits `not-applicable` with reason on exceptional fixtures |
+| kilo M4 + unfalsifiable-reqs: no numeric targets (token budget, precision/recall) | **Confirmed** | T0156 proposes owner-approved budget target; T0305 publishes numeric targets before blocking |
+| kilo M5: `.sus/` migration untasked | **Confirmed** | T0904: migration fixture v1→v2 + supported-upgrade policy |
+| kilo M3: i18n foundations beyond string growth | **Confirmed** | T0402b: logical properties, mirrored icons, script stacks, ≥2 non-Latin scripts in matrix |
+| kilo C1/M1: banned-defaults vs no-dogma tension | **Confirmed** | T0404: banned defaults advisory; preserving established/requested style is valid |
+| kilo M2: motion decision record | **Confirmed** | T0602: per-playbook motion decision incl. "none, with reason" |
+| zcode H4: release ancestry gaps | **Resolved earlier** (T1001 = all non-M10; T1005 reaches 87/88); rule now asserted as a test in T0159 |
+| zcode H1/M1/M3/L1: reconciliation gaps, F28, F05, untracked registry | **Resolved by 7ad3d8d + a878b71** (verified in current tree) |
+| zcode H3: historical count entries read as current | **Noted** — entries dated; current count is stated in each pass header |
+| zcode L3: secondary sourcing in research doc | **Accepted as standing rule** — primary-source re-verification before any detector/claim ships (already promised in doc) |
+
+### Post-fix validation
+88 tasks · 0 unresolved / 0 cycles / 0 backward · T1001 ancestry 83/83 non-M10 · T1005 87/87 ·
+gate registry owners 12/12 valid · all four reviews (deep audit, antigravity, opencode, kilo,
+zcode) now dispositioned.
+
+Still no SUS implementation exists and no build approval was inferred.

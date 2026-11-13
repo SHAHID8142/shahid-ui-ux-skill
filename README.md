@@ -83,7 +83,9 @@ M8 Studio hardening → M9 multi-agent adapters → M10 benchmarks & release.
 
 ## How to resume in a fresh session
 
-1. Read `docs/SUS_MASTER_PRD_v1.0.md`, then `docs/ROADMAP_AND_TASK_PROTOCOL.md`.
-2. Read `docs/AGENT_START_PROMPT.md` for the required first-response output format.
+1. Read `docs/OWNER_DECISIONS_LOG.md` first (owner instructions + the `APERIO` build gate),
+   then `docs/SUS_MASTER_PRD_v1.0.md` and `docs/PRD_AMENDMENTS_v1.1.md`.
+2. Read `docs/AGENT_START_PROMPT.md` for the required first-response output format and the
+   canonical authority order (it must name the build gate — review H5).
 3. Inspect the workspace before proposing anything; do not start implementation
    without explicit user approval of the architecture and first 3–5 micro-tasks.

@@ -128,8 +128,9 @@ accuracy is a believer by definition.
 Rationale: a "robust and heavy" product cannot be written blind. Measurement must exist before
 the knowledge library, so every later module is graded, not asserted.
 
-Deliverables: `evals/` runner; rubric schema + scoring CLI; screenshot harness (3 viewports ×
-2 themes); axe-core + Lighthouse budgets; evidence store; fixture corpus v1 (**4 apps**, one per
+Deliverables: `evals/` runner; rubric schema + scoring CLI; screenshot harness (5 viewports ×
+2 themes — the same viewport set the hardening matrix and G7 use, including the 320 CSS-px
+equivalence and 400% zoom states, so the evidence bundle and the gates cannot disagree);
 surface mode: marketing (Persuade), e-commerce (Persuade+Operate), CRM/CMS-admin dashboard
 (Operate), portfolio (Experience/Read)); blind A/B judge protocol; no-skill baseline record.
 Exit evidence: baseline scores for unassisted agent on all 4 fixtures, reproducible by command.

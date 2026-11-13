@@ -1,12 +1,18 @@
 # SUS — UNIVERSAL DEVELOPMENT AGENT START PROMPT
 
-Copy this entire prompt into **any capable coding agent** (FreePi CLI, Codex, ZCode, etc.). Place or attach the companion files in its accessible workspace:
+Copy this entire prompt into **any capable coding agent** (support tier per `COVERAGE_MATRIX.md` §4:
+supported / experimental / untested — never claim a host works until verified). Place or attach the
+companion files in its accessible workspace, **in this authority order**:
 
-1. `SUS_MASTER_PRD_v1.0.md`
-2. `ROADMAP_AND_TASK_PROTOCOL.md`
-3. `AUDIT_AND_OPEN_DECISIONS.md`
+1. `OWNER_DECISIONS_LOG.md` — every owner instruction; **includes the build gate: no
+   implementation until the owner sends `APERIO`** (D19)
+2. `SUS_MASTER_PRD_v1.0.md` — requirements of record
+3. `PRD_AMENDMENTS_v1.1.md` — amendments, epistemic contract, gates, rubric, Studio spec
+4. `ROADMAP_AND_TASK_PROTOCOL.md` — micro-task workflow
+5. `AUDIT_AND_OPEN_DECISIONS.md` — open decisions
 
-Do not pretend to have read these files if they are absent. Ask for them before making implementation decisions.
+Do not pretend to have read these files if they are absent. Ask for them before making implementation
+decisions. If any instruction here conflicts with a later owner decision, the owner decision wins.
 
 ---
 

@@ -397,7 +397,8 @@
         "evals/"
       ],
       "acc": [
-        "p50/p95 tokens per section recorded"
+        "p50/p95 tokens per section recorded",
+        "budget target proposed to the owner after baselines; sections exceeding it flagged, never silently accepted (kilo M4)"
       ],
       "tests": [
         "re-measured each milestone"
@@ -631,7 +632,8 @@
       "acc": [
         "precision/recall published per rule",
         "advisory vs blocking decided by numbers",
-        "gate ownership: emits the verdict for G10 (see docs/GATE_REGISTRY.md)"
+        "gate ownership: emits the verdict for G10 (see docs/GATE_REGISTRY.md)",
+        "numeric precision/recall targets are recorded and published before any rule ships as blocking; corpus size stated (kilo unfalsifiable-requirements)"
       ],
       "tests": [
         "corpus runner in CI"
@@ -746,7 +748,8 @@
         "skill/playbooks/"
       ],
       "acc": [
-        "lint rejects duplicate authoritative rules + missing sources"
+        "lint rejects duplicate authoritative rules + missing sources",
+        "banned-defaults list informs direction choice and is advisory; preserving an established design system or an explicitly requested style is a valid, recorded decision (kilo C1/M1)"
       ],
       "tests": [
         "lint on seed playbook"
@@ -1077,7 +1080,8 @@
       ],
       "acc": [
         "no click duplication",
-        "focus preserved across animated change"
+        "focus preserved across animated change",
+        "every launch playbook carries a motion decision record — including \"none, with reason\" — and reduced-motion equivalence preserves information and operation, not just a CSS branch (kilo M2)"
       ],
       "tests": [
         "fixture interaction tests"
@@ -1171,7 +1175,8 @@
       ],
       "acc": [
         "overlay loads without app modification",
-        "reconnect after dev-server restart"
+        "reconnect after dev-server restart",
+        "overlay is keyboard-navigable and axe-clean inside the M7 slice; accessibility is not deferred to hardening (kilo H3)"
       ],
       "tests": [
         "E2E attach/detach/reconnect"
@@ -1308,7 +1313,8 @@
         "evals/"
       ],
       "acc": [
-        "demo reproducible by command; video + evidence bundle"
+        "demo reproducible by command; video + evidence bundle",
+        "demo requires the overlay keyboard path + axe pass, not only the section under test (kilo H3)"
       ],
       "tests": [
         "E2E suite"
@@ -1492,7 +1498,8 @@
       ],
       "acc": [
         "overlay passes axe; full keyboard path documented",
-        "gate ownership: emits the verdict for G7, G8 (see docs/GATE_REGISTRY.md)"
+        "gate ownership: emits the verdict for G7, G8 (see docs/GATE_REGISTRY.md)",
+        "gate checks apply the WCAG exceptions; exceptional fixtures produce not-applicable with a recorded reason, not fail (kilo H4)"
       ],
       "tests": [
         "axe + manual keyboard protocol"
@@ -1582,7 +1589,8 @@
       ],
       "acc": [
         "uninstall restores prior state; doctor reports drift",
-        "installed dir name + generated host entries tested: long paths, update, uninstall preserves user files (DA-45)"
+        "installed dir name + generated host entries tested: long paths, update, uninstall preserves user files (DA-45)",
+        "`.sus/` migration fixture v1→v2 passes via doctor; supported-upgrade policy stated in release docs (kilo M5)"
       ],
       "tests": [
         "installer E2E on clean dirs"
@@ -2085,7 +2093,8 @@
       "acc": [
         "validator fails if a gate lacks owner task or check",
         "unimplemented checks reported as not-run, never pass",
-        "each landed gate ships a bad fixture proving failure"
+        "each landed gate ships a bad fixture proving failure",
+        "assertion shipped as a test: ancestry(T1001) ⊇ every non-M10 task; ancestry(T1005) ⊇ every task; measurement tasks (T0156, T0158) are not orphans (review H4/M2)"
       ],
       "tests": [
         "validator run + negative fixtures"
@@ -2155,7 +2164,8 @@
         "flow map per surface mode (entry → task → success)",
         "heuristic evaluation checklist applied to each accepted section",
         "navigation/IA decisions recorded with rationale",
-        "validation method named (unmoderated test, click-through, or explicit not-run)"
+        "validation method named (unmoderated test, click-through, or explicit not-run)",
+        "i18n foundations included: logical CSS properties, mirrored icons, script-specific type stacks; hardening matrix covers ≥2 non-Latin scripts and mixed-direction content (kilo M3)"
       ],
       "tests": [
         "foundation lint + fixture walkthrough"
