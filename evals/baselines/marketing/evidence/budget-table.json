@@ -11,16 +11,16 @@
   "runs": [
     {
       "url": "http://127.0.0.1:4345/marketing",
-      "lcpMs": 602,
+      "lcpMs": 605,
       "cls": 0,
-      "totalBlockingMs": 14,
+      "totalBlockingMs": 19,
       "totalByteWeight": 2604
     }
   ],
   "detail": [
-    "http://127.0.0.1:4345/marketing LCP ms: 602 / limit 2500 — ok",
+    "http://127.0.0.1:4345/marketing LCP ms: 605 / limit 2500 — ok",
     "http://127.0.0.1:4345/marketing CLS: 0 / limit 0.1 — ok",
-    "http://127.0.0.1:4345/marketing TBT ms: 14 / limit 200 — ok",
+    "http://127.0.0.1:4345/marketing TBT ms: 19 / limit 200 — ok",
     "http://127.0.0.1:4345/marketing totalBytes: 2604 / limit 500000 — ok"
   ]
 }

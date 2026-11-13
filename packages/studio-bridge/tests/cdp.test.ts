@@ -55,7 +55,6 @@ beforeAll(async () => {
   attachResult = launched.result;
 }, 120000);
 
-
 afterAll(async () => {
   await browser?.close();
   if (server?.pid) {
