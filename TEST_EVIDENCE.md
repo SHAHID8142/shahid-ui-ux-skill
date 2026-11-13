@@ -105,3 +105,42 @@ No SUS product implementation was created and no build approval was inferred.
 | Root file counts | Updated to 84 in README/ROADMAP/HANDOFF |
 
 No SUS product implementation was created and no build approval was inferred.
+
+## Second self-audit pass (2026-11-13, assistant)
+
+Scope: all 19 Markdown files (2,680 lines) + TASKS.json after the deep-audit reconciliation.
+Method: mechanical sweeps (stale claims, link targets, index vs files, task hygiene, milestone
+ranges, gate ownership, coverage promises) + content reading. No implementation code touched.
+
+### Defects found and fixed
+| # | Finding | Evidence | Fix |
+|---|---|---|---|
+| 1 | 9 of 12 gates had **no owning task** (G4, G5, G6, G9, G10, G11, G12 referenced by zero task acceptance criteria) | gate-reference count over `TASKS.json` | new `docs/GATE_REGISTRY.md` (gate → owning task → command → four-value verdict) + task **T0159** (registry validator; drift fails CI) + pointer in amendments Part 2 |
+| 2 | Coverage matrix promised 20 second-wave components; only 6 had tasks | matrix vs WBS comparison | tasks **T0811** (primitives A) + **T0812** (primitives B: file upload, date picker, command palette) |
+| 3 | ROADMAP milestone task ranges stale (missed T0102b, T0158, T0310, T0405b/c, T0506, T0508, T0709, T0809–T0812, T0906) | ROADMAP vs milestone grouping | all ranges rewritten |
+| 4 | `T1002` still required "6 briefs × 3 modes" while Part 9 now requires all four surface modes | TASKS.json vs amendments Part 9 | T1002 objective corrected |
+| 5 | RISKS R7 said "73 tasks" | RISKS.md:13 | 87 |
+| 6 | README said "R1–R14" and "D01–D22" | README.md:29,39 | R1–R18, D01–D23 |
+| 7 | No risks for benchmark overfit, absent field data, browser attach changes, standards drift | risk register | added R15–R18 |
+| 8 | D23 still marked "pending reconciliation" | OWNER_DECISIONS_LOG.md | marked reconciled, owner confirmation still requested |
+| 9 | Deep-audit report had no reconciliation pointer | DEEP_AUDIT_2026-11-13.md header | status line added |
+
+### Verified as correct (not defects)
+- Launch playbook list: all 15 promised components map to T0405 / T0405b / T0405c / T0407.
+- Rubric declares 12 axes; table contains exactly 12 rows.
+- All 19 Markdown files are referenced in README; no broken internal `.md` links.
+- Owner decisions D01–D23 and risks R1–R18 are contiguous with no gaps.
+- `T0001` having no dependencies is correct — it is the design root, not a missing edge.
+- ZIP archive still 5/5 byte-identical.
+
+### Post-fix validation
+| Check | Result |
+|---|---|
+| JSON parse / task count | OK, **87 tasks** |
+| Unresolved dependency refs (strict) | 0 |
+| Cycles / backward dependencies | 0 / 0 |
+| Gate registry: 12 gates, all owner tasks exist in TASKS.json | PASS |
+| Second-wave coverage promises | 20/20 mapped |
+| Count consistency README/ROADMAP/HANDOFF | 87 / 87 / 87 |
+
+Still no SUS implementation exists and no build approval was inferred.
