@@ -4,5 +4,5 @@
 export default {
   extends: ['stylelint-config-standard'],
   files: ['**/*.css'],
-  ignoreFiles: ['**/node_modules/**', '**/dist/**', '**/.next/**'],
+  ignoreFiles: ['**/node_modules/**', '**/dist/**', '**/.next/**', '**/exports/**'],
 };
