@@ -1,6 +1,6 @@
 # ROADMAP — SUS (living file)
 
-**Authoritative task list:** `TASKS.json` (88 tasks, machine-checked: unique IDs, acyclic deps, no unresolved references).
+**Authoritative task list:** `TASKS.json` (counts and statuses computed from TASKS.json; current receipt in .sus-dev/VERIFICATION/).
 **Requirements:** `docs/SUS_MASTER_PRD_v1.0.md` + `docs/PRD_AMENDMENTS_v1.1.md` (proposed).
 **Build gate:** planning only until owner sends `APERIO` (see `docs/OWNER_DECISIONS_LOG.md`).
 
@@ -20,7 +20,7 @@
 | M9 | Adapters + installer + support matrix + dogfood sites | T0901–T0906 | pending |
 | M10 | Regression, benchmark, independent review, docs, release | T1001–T1005 | pending |
 
-## First unlocked batch (needs owner approval before any of it runs)
+## Proposed first implementation batch (blocked on recorded authorization and effective architecture)
 
 `T0101 → T0102 → T0103 → T0104 → T0151` (repo skeleton, fixture A, CI, schemas, rubric CLI)
 
@@ -28,5 +28,11 @@
 
 1. Evaluation spine moved **before** knowledge library — quality must be measurable from day one.
 2. Direction Reasoning is the first M4 task — it is the biggest lever against AI-typical output.
-3. Studio spike runs early and can re-scope the plan; it does not gate knowledge work.
-4. Motion gets a formal state-machine schema first, so tests are generated, not hand-written.
+3. Read-only dual-stack mapping precedes bridge work; trusted safe-write experiment T0700w gates production direction/playbook investment. Full Studio cannot be silently reduced.
+4. Motion gets a formal state contract; independent behavioral tests verify generated transitions.
+
+## Current continuation and phase boundaries
+
+T0006 bootstrap → T0007 final reconciliation; T0010 executable resume checker after
+authorization. T1006 is final verified private push; T1003 is the separate post-build
+audit, and T1005 is later owner-approved publication. No new interim auditors.

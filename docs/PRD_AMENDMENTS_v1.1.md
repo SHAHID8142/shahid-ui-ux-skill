@@ -1,3 +1,8 @@
+> 2026-11-13 reconciliation: see REVIEW_RECONCILIATION.md and STUDIO_SAFETY_CONTRACT.md.
+> Historical confidence cutoffs, real-source preview wording and automatic scope cuts below
+> are superseded by D24 scope/security requirements and the recorded planning corrections.
+> All six ADR implementation choices remain proposed; no architecture approval inferred.
+
 # SUS — PRD Amendments v1.1 (Proposed)
 
 **Amends:** `SUS_MASTER_PRD_v1.0.md` · `ROADMAP_AND_TASK_PROTOCOL.md`

@@ -1,3 +1,8 @@
+> 2026-11-13 reconciliation: see REVIEW_RECONCILIATION.md and STUDIO_SAFETY_CONTRACT.md.
+> Historical confidence cutoffs, real-source preview wording and automatic scope cuts below
+> are superseded by D24 scope/security requirements and the recorded planning corrections.
+> All six ADR implementation choices remain proposed; no architecture approval inferred.
+
 # SUS — Architecture Decision Records (Drafts for approval)
 
 **Status:** all six are **proposed**. None is final until the owner approves; each lists what would

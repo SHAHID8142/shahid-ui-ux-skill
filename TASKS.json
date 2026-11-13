@@ -30,7 +30,8 @@
       "approval": "n/a",
       "evidence": [
         "session log; workspace reorganised into docs/ + archive/"
-      ]
+      ],
+      "phase": "planning"
     },
     {
       "id": "T0002",
@@ -56,7 +57,8 @@
       "approval": "pending",
       "evidence": [
         "PRD_GAP_ANALYSIS.md"
-      ]
+      ],
+      "phase": "planning"
     },
     {
       "id": "T0003",
@@ -84,7 +86,8 @@
       "evidence": [
         "RISKS.md",
         "COVERAGE_MATRIX.md"
-      ]
+      ],
+      "phase": "planning"
     },
     {
       "id": "T0004",
@@ -110,7 +113,8 @@
       "approval": "pending",
       "evidence": [
         "ADR_DRAFTS.md"
-      ]
+      ],
+      "phase": "planning"
     },
     {
       "id": "T0005",
@@ -119,7 +123,8 @@
       "obj": "Complete dependency-ordered task tree with stable IDs",
       "deps": [
         "T0003",
-        "T0004"
+        "T0004",
+        "T0007"
       ],
       "files": [
         "TASKS.json",
@@ -138,7 +143,8 @@
       "approval": "pending",
       "evidence": [
         "TASKS.json"
-      ]
+      ],
+      "phase": "planning"
     },
     {
       "id": "T0101",
@@ -164,7 +170,8 @@
       "risk": "layout churn later",
       "rollback": "git revert; layout is cheap pre-code",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0102",
@@ -180,7 +187,8 @@
       ],
       "acc": [
         "fixture builds + serves",
-        "one smoke test passes in CI"
+        "one smoke test passes in CI",
+        "Runnable Next.js App Router marketing fixture; synthetic/licensed inputs and smoke evidence"
       ],
       "tests": [
         "pnpm test",
@@ -189,7 +197,8 @@
       "risk": "fixture maintenance burden",
       "rollback": "fixtures isolated per directory",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0103",
@@ -213,7 +222,8 @@
       "risk": "over-strict lint slows iteration",
       "rollback": "rule tiers: error/warn/advisory",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0104",
@@ -238,7 +248,8 @@
       "risk": "migration complexity creep",
       "rollback": "migrations are additive-only v1",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0151",
@@ -262,7 +273,8 @@
       "risk": "rubric inflation",
       "rollback": "calibration (T0155) can retire axes",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0152",
@@ -285,7 +297,8 @@
       "risk": "flaky screenshots",
       "rollback": "masking + retry policy documented",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0152b",
@@ -309,7 +322,8 @@
       "risk": "axe covers ~1/3 of WCAG — manual protocol needed",
       "rollback": "manual checklist generated per section",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0153",
@@ -320,7 +334,8 @@
         "T0151",
         "T0152",
         "T0152b",
-        "T0154"
+        "T0154",
+        "T0102b"
       ],
       "files": [
         "evals/baselines/"
@@ -334,7 +349,8 @@
       "risk": "baseline drifts with model updates",
       "rollback": "baselines dated + re-runnable",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0154",
@@ -359,7 +375,8 @@
       "risk": "bundle bloat",
       "rollback": "retention policy in schema",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0155",
@@ -383,7 +400,8 @@
       "risk": "no human raters available → owner rates",
       "rollback": "judged tier stays advisory",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0156",
@@ -406,7 +424,8 @@
       "risk": "budget too tight reduces quality",
       "rollback": "budget advisory first",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0201",
@@ -415,7 +434,10 @@
       "obj": "Spec-compliant entry skill; sus doctor validates",
       "deps": [
         "T0104",
-        "T0155"
+        "T0155",
+        "T0156",
+        "T0158",
+        "T0159"
       ],
       "files": [
         "skill/SKILL.md",
@@ -432,7 +454,8 @@
       "risk": "host quirks",
       "rollback": "generated host entries isolated",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0202",
@@ -456,7 +479,8 @@
       "risk": "intent overlap (unslop vs audit)",
       "rollback": "router table is data, editable",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0203",
@@ -480,7 +504,8 @@
       "risk": "loader complexity",
       "rollback": "static manifest fallback",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0204",
@@ -502,7 +527,8 @@
       "risk": "CLI/skill drift",
       "rollback": "shared contract tests",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0205",
@@ -524,7 +550,8 @@
       "risk": "description churn",
       "rollback": "description changes require eval rerun",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0301",
@@ -532,7 +559,11 @@
       "title": "Evidence schema + provenance catalog + offline mode",
       "obj": "Citations with URL/date/classification; offline → unverified",
       "deps": [
-        "T0104"
+        "T0104",
+        "T0155",
+        "T0156",
+        "T0158",
+        "T0159"
       ],
       "files": [
         "packages/schemas/",
@@ -541,7 +572,8 @@
       "acc": [
         "no fabricated citation passes validation",
         "research plan contract: questions, budget, stop rule, revisit trigger (DA-09)",
-        "claim→source map with quoted supporting passage, primary/secondary distinction, conflict-of-interest note; no unsourced specific counts (DA-08)"
+        "claim→source map with quoted supporting passage, primary/secondary distinction, conflict-of-interest note; no unsourced specific counts (DA-08)",
+        "Research synthesis is planning hypotheses until claim-to-inspected-passage provenance supports each load-bearing assertion; unreachable sources remain unverified"
       ],
       "tests": [
         "provenance fixtures"
@@ -549,7 +581,8 @@
       "risk": "link rot",
       "rollback": "archived excerpts with dates",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0302",
@@ -571,7 +604,8 @@
       "risk": "taxonomy dogma",
       "rollback": "advisory tier by default",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0303",
@@ -593,7 +627,8 @@
       "risk": "rule quality sets precedent",
       "rollback": "single rule, easily revised",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0304",
@@ -616,7 +651,8 @@
       "risk": "output churn breaks CI consumers",
       "rollback": "versioned output schema",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0305",
@@ -641,7 +677,8 @@
       "risk": "corpus licensing",
       "rollback": "synthetic + licensed-only pages",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0400",
@@ -650,7 +687,8 @@
       "obj": "Derive direction from brief: 3 candidates → thesis → anti-references",
       "deps": [
         "T0203",
-        "T0301"
+        "T0301",
+        "T0700w"
       ],
       "files": [
         "skill/references/direction.md"
@@ -665,7 +703,8 @@
       "risk": "library converges into new defaults",
       "rollback": "taxonomy stays small + audited",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0401",
@@ -673,7 +712,11 @@
       "title": "Token format + semantic roles + validation",
       "obj": "Implements ADR-004; .sus/tokens.json pipeline",
       "deps": [
-        "T0104"
+        "T0104",
+        "T0155",
+        "T0156",
+        "T0158",
+        "T0159"
       ],
       "files": [
         "packages/tokens/"
@@ -688,7 +731,8 @@
       "risk": "semantic layer bikeshed",
       "rollback": "roles minimal at v1",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0402",
@@ -703,7 +747,7 @@
       ],
       "acc": [
         "blur-test + CPL checks machine-runnable",
-        "gate ownership: emits the verdict for G9 (see docs/GATE_REGISTRY.md)"
+        "CPL/typography metrics are supporting measurements, not authoritative G9 verdicts"
       ],
       "tests": [
         "foundation fixtures"
@@ -711,7 +755,8 @@
       "risk": "prose bloat",
       "rollback": "≤2k tokens per file enforced",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0403",
@@ -733,7 +778,8 @@
       "risk": "over-prescriptive rules",
       "rollback": "rules cite standards, advisory unless gate",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0404",
@@ -757,7 +803,8 @@
       "risk": "schema too rigid",
       "rollback": "optional fields with lint warnings",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0405",
@@ -767,14 +814,15 @@
       "deps": [
         "T0402",
         "T0403",
-        "T0404"
+        "T0404",
+        "T0700w"
       ],
       "files": [
         "skill/playbooks/"
       ],
       "acc": [
         "variant-vs-state matrix complete",
-        "every state has motion + reduced-motion",
+        "every relevant transition has an explicit motion decision (none with reason allowed) and information-preserving reduced-motion behavior",
         "state matrices forward-compatible with T0600 state-machine schema"
       ],
       "tests": [
@@ -783,7 +831,8 @@
       "risk": "playbook drift from code",
       "rollback": "fixtures bind playbooks to reality",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0406",
@@ -808,7 +857,8 @@
       "risk": "SEO overclaim",
       "rollback": "cite Google guidance only",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0407",
@@ -830,7 +880,8 @@
       "risk": "dashboard scope creep",
       "rollback": "second-wave list respected",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0408",
@@ -852,7 +903,8 @@
       "risk": "licensing mistakes",
       "rollback": "licensing field mandatory",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0409",
@@ -874,7 +926,8 @@
       "risk": "lint maintenance",
       "rollback": "warnings first month",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0501",
@@ -898,7 +951,8 @@
       "risk": "contract rigidity",
       "rollback": "optional fields + migration path",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0502",
@@ -923,7 +977,8 @@
       "risk": "lock deadlock after crash",
       "rollback": "expiry + manual override logged",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0503",
@@ -945,7 +1000,8 @@
       "risk": "plan ceremony fatigue",
       "rollback": "small-change fast path with logging",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0504",
@@ -969,7 +1025,8 @@
       "risk": "journal growth",
       "rollback": "compaction with hash chain",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0505",
@@ -986,7 +1043,9 @@
       ],
       "acc": [
         "violation attempt fails CI with clear message (DA-18 UX)",
-        "shared-dependency impact recorded; material change to shared code reopens affected acceptances (DA-25)"
+        "shared-dependency impact recorded; material change to shared code reopens affected acceptances (DA-25)",
+        "Stable section IDs and explicit source/component/token impact graph; existing pages and multiple sections per file are supported",
+        "Managed adapters prevent unapproved writes; bypassed host-tool writes are detected and block acceptance, never claimed prevented"
       ],
       "tests": [
         "negative test: out-of-order edit attempt"
@@ -994,7 +1053,8 @@
       "risk": "gate blocks legitimate fixes",
       "rollback": "fix-tier fast path",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0551",
@@ -1017,7 +1077,8 @@
       "risk": "runtime cost",
       "rollback": "advisory until M8, blocking at GA",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0600",
@@ -1040,7 +1101,8 @@
       "risk": "over-formalism",
       "rollback": "schema optional for simple components",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0601",
@@ -1064,7 +1126,8 @@
       "risk": "token values dogma",
       "rollback": "values are project choices",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0602",
@@ -1089,7 +1152,8 @@
       "risk": "motion perf on low-end devices",
       "rollback": "compositor-friendly property rule",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0603",
@@ -1105,7 +1169,8 @@
       "acc": [
         "no flash-as-only-feedback violations",
         "state converges after interruption",
-        "gate ownership: emits the verdict for G6 (see docs/GATE_REGISTRY.md)"
+        "gate ownership: emits the verdict for G6 (see docs/GATE_REGISTRY.md)",
+        "Behavioral transition oracles independent of state-machine generator; test keyboard/touch/no-hover, interruption, rapid toggles, cancel, stale async and reduced-motion information parity"
       ],
       "tests": [
         "Playwright interaction specs"
@@ -1113,31 +1178,37 @@
       "risk": "flaky timing tests",
       "rollback": "deterministic virtual clock where possible",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0700",
       "m": "M7",
       "title": "Dual-stack mapping spike — GO/NO-GO",
-      "obj": "DOM→source mapping on Next.js AND Astro (A2b); confidence distribution recorded",
+      "obj": "Read-only dual-stack target/edit-owner mapping feasibility; writes deferred to safe-write experiment T0700w",
       "deps": [
-        "T0102"
+        "T0102",
+        "T0102b",
+        "T0104"
       ],
       "files": [
         "fixtures/",
         "packages/adapters/"
       ],
       "acc": [
-        "≥90% single-node mapping at confidence ≥0.8 on ≥1 stack, else re-scope",
-        "write-path probed per source language (.tsx/.astro/.css/content): selection → edit-owner resolution → preview → apply → cleanup → undo, incl. repeated instances + shared components (DA-29)"
+        "Both Next.js and Astro evaluated on labelled target and edit-owner ground truth; repeated/shared components, CSS/content ownership, responsive variants, HMR and mixed source languages",
+        "Pre-register sampling, denominators and acceptance criteria before evaluation; report target correctness, owner correctness, coverage, abstention and uncertainty separately",
+        "No evidence-tier score is treated as calibrated probability; unknown owners abstain; wrong-owner cases fail supported-write eligibility",
+        "Full draw → intent → preview → approve → apply → undo proof is T0700w; this read-only spike alone cannot authorize source writes"
       ],
       "tests": [
         "spike report with numbers, committed"
       ],
       "risk": "this is the highest-risk technical bet in SUS",
-      "rollback": "no-go → Studio re-scoped to variant-preview-only, knowledge product continues",
+      "rollback": "Explore framework instrumentation, framework-specific adapters, then scoped style/token alternatives without declaring missing mandatory component editing complete. Exhausted options block Studio pending owner decision; preview-only cannot pass.",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0701",
@@ -1151,7 +1222,9 @@
         "packages/studio-bridge/"
       ],
       "acc": [
-        "rebind/CSRF/rebinding attempts blocked in tests"
+        "rebind/CSRF/rebinding attempts blocked in tests",
+        "Trusted-control isolation experiment precedes privileged UI use; page cannot access tokens, mint approvals, invoke commands or impersonate trusted approval surface",
+        "Loopback-only binding, exact Host/Origin allowlists, tab/frame/session binding, scoped expiring one-operation capability receipts; fail closed on navigation/reconnect"
       ],
       "tests": [
         "security unit tests"
@@ -1159,7 +1232,8 @@
       "risk": "auth bypass",
       "rollback": "fail-closed default",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0702",
@@ -1184,7 +1258,8 @@
       "risk": "browser version drift",
       "rollback": "pinned Playwright chromium default",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0703",
@@ -1206,7 +1281,8 @@
       "risk": "selector fragility across renders",
       "rollback": "anchor on stable attributes first",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0704",
@@ -1229,7 +1305,8 @@
       "risk": "coordinate spaces across zoom/scroll",
       "rollback": "store in viewport space + transforms",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0705",
@@ -1252,7 +1329,8 @@
       "risk": "over-constrained layouts",
       "rollback": "constraints advisory in preview",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0706",
@@ -1267,7 +1345,8 @@
         "packages/studio-bridge/"
       ],
       "acc": [
-        "no write occurs without explicit approval"
+        "no write occurs without explicit approval",
+        "Isolated disposable preview workspace/server only; proposal generation and preview do not write consuming-project source; apply needs separate fresh approval"
       ],
       "tests": [
         "E2E: propose→reject leaves tree clean"
@@ -1275,7 +1354,8 @@
       "risk": "diff readability",
       "rollback": "unified + split views",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0707",
@@ -1284,13 +1364,22 @@
       "obj": "ts-morph/recast edits; git snapshot; typecheck+build verify; auto-revert on failure (§7.2)",
       "deps": [
         "T0706",
-        "T0503"
+        "T0503",
+        "T0502",
+        "T0504",
+        "T0508",
+        "T0709",
+        "T0805",
+        "T0806",
+        "T0807"
       ],
       "files": [
         "packages/studio-bridge/"
       ],
       "acc": [
-        "uncommitted user edits never overwritten; conflict detected"
+        "uncommitted user edits never overwritten; conflict detected",
+        "Reject stale/forged approval, duplicate/replayed operations, expired worker and ambiguous section/edit owner before mutation",
+        "Transaction-specific undo refuses concurrent user changes; no blanket Git reset or overwrite"
       ],
       "tests": [
         "apply/revert/conflict E2E"
@@ -1298,7 +1387,8 @@
       "risk": "AST rewrite breaks unusual syntax",
       "rollback": "refuse + report on unknown syntax",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0708",
@@ -1307,7 +1397,8 @@
       "obj": "Full loop on fixture: annotate→intent→diff→approve→apply→verify→undo",
       "deps": [
         "T0707",
-        "T0790"
+        "T0790",
+        "T0700w"
       ],
       "files": [
         "evals/"
@@ -1322,7 +1413,8 @@
       "risk": "demo-only polish",
       "rollback": "demo is the acceptance test, not marketing",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0790",
@@ -1347,7 +1439,8 @@
       "risk": "loop latency",
       "rollback": "async verification with status surface",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0801",
@@ -1369,7 +1462,8 @@
       "risk": "ordering ambiguity",
       "rollback": "explicit index confirmation",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0802",
@@ -1391,7 +1485,8 @@
       "risk": "silent wrong-file edits",
       "rollback": "fail-closed is the default",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0803",
@@ -1413,7 +1508,8 @@
       "risk": "HMR state loss",
       "rollback": "full-page reload fallback",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0804",
@@ -1436,7 +1532,8 @@
       "risk": "alert fatigue",
       "rollback": "severity filter default",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0805",
@@ -1445,14 +1542,19 @@
       "obj": "Annotations + intent + session survive restart; stale state detected",
       "deps": [
         "T0704",
-        "T0504"
+        "T0504",
+        "T0709",
+        "T0502",
+        "T0508"
       ],
       "files": [
         "packages/studio-bridge/"
       ],
       "acc": [
         "kill -9 mid-session → recovery without data loss",
-        "multi-file apply is one transaction with durable recovery manifest; atomic rename alone is insufficient (DA-35)"
+        "multi-file apply is one transaction with durable recovery manifest; atomic rename alone is insufficient (DA-35)",
+        "Persist typed operation ID, preimages, file modes, hashes and multi-file manifest before first mutation; state machine has explicit crash points",
+        "Use disposable transaction fixtures before production writer exists; kill at every step, recover exactly or stop on conflict; preserve index and untracked user bytes"
       ],
       "tests": [
         "crash-injection tests"
@@ -1460,7 +1562,8 @@
       "risk": "corrupt journal",
       "rollback": "append-only + hash chain",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0806",
@@ -1475,7 +1578,10 @@
         "packages/studio-bridge/"
       ],
       "acc": [
-        "threat-model doc + passing suite; no critical open; indirect injection via drawings, OCR, screenshots, recalled lessons rejected at the action boundary — untrusted content never authorizes writes/commands/network (DA-31)"
+        "threat-model doc + passing suite; no critical open; indirect injection via drawings, OCR, screenshots, recalled lessons rejected at the action boundary — untrusted content never authorizes writes/commands/network (DA-31)",
+        "G13 authoritative owner: non-waivable critical security/privacy check with negative fixtures",
+        "Hostile page attempts token reads, synthetic approval, UI replacement, cross-frame confusion, navigation/reconnect replay, direct commands, DNS rebinding and path escape; all denied",
+        "Unmarked sensitive CRM text, screenshots, logs and outbound payloads: minimize/redact before consented capture; retention/deletion tested"
       ],
       "tests": [
         "dedicated security CI job"
@@ -1483,7 +1589,8 @@
       "risk": "unknown unknowns",
       "rollback": "external review at T1003",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0807",
@@ -1499,7 +1606,8 @@
       "acc": [
         "overlay passes axe; full keyboard path documented",
         "gate ownership: emits the verdict for G7, G8 (see docs/GATE_REGISTRY.md)",
-        "gate checks apply the WCAG exceptions; exceptional fixtures produce not-applicable with a recorded reason, not fail (kilo H4)"
+        "gate checks apply the WCAG exceptions; exceptional fixtures produce not-applicable with a recorded reason, not fail (kilo H4)",
+        "G9 authoritative co-owner with T0406; G4 co-owner with T0152b; manual assistive-technology evidence is distinct from axe and keyboard checks"
       ],
       "tests": [
         "axe + manual keyboard protocol"
@@ -1507,7 +1615,8 @@
       "risk": "canvas a11y limits",
       "rollback": "DOM panel as equal-power alternative",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0901",
@@ -1529,7 +1638,8 @@
       "risk": "adapter sprawl",
       "rollback": "interface frozen before third adapter",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0902",
@@ -1538,7 +1648,8 @@
       "obj": "Install/load/invoke/uninstall on two hosts, evidence recorded",
       "deps": [
         "T0901",
-        "T0205"
+        "T0205",
+        "T0904"
       ],
       "files": [
         "evals/hosts/"
@@ -1552,7 +1663,8 @@
       "risk": "host API changes",
       "rollback": "version-pinned verification",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0903",
@@ -1574,7 +1686,8 @@
       "risk": "maintaining many hosts",
       "rollback": "tier system caps promises",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0904",
@@ -1590,7 +1703,8 @@
       "acc": [
         "uninstall restores prior state; doctor reports drift",
         "installed dir name + generated host entries tested: long paths, update, uninstall preserves user files (DA-45)",
-        "`.sus/` migration fixture v1→v2 passes via doctor; supported-upgrade policy stated in release docs (kilo M5)"
+        "`.sus/` migration fixture v1→v2 passes via doctor; supported-upgrade policy stated in release docs (kilo M5)",
+        "Doctor/install cover absent browser cache, consented browser acquisition, download size/version/licence, offline and interrupted download, read-only directories; uninstall preserves unrelated caches/profiles"
       ],
       "tests": [
         "installer E2E on clean dirs"
@@ -1598,7 +1712,8 @@
       "risk": "partial installs",
       "rollback": "transactional install with manifest",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0905",
@@ -1606,14 +1721,17 @@
       "title": "Generated support matrix (A9)",
       "obj": "compatibility.json → docs page + CLI status output",
       "deps": [
-        "T0902"
+        "T0902",
+        "T0903",
+        "T0904"
       ],
       "files": [
         "packages/adapters/",
         "docs/"
       ],
       "acc": [
-        "docs generated, never hand-edited"
+        "docs generated, never hand-edited",
+        "Support rows bind installer/adapter artifact hashes, host/version, browser, framework and OS; changed artifacts invalidate old smoke evidence"
       ],
       "tests": [
         "generation snapshot test"
@@ -1621,7 +1739,8 @@
       "risk": "stale claims",
       "rollback": "CI fails if docs differ from data",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T1001",
@@ -1711,7 +1830,11 @@
         "T0159",
         "T0811",
         "T0812",
-        "T0402b"
+        "T0402b",
+        "T0006",
+        "T0007",
+        "T0010",
+        "T0700w"
       ],
       "files": [
         "evals/",
@@ -1727,7 +1850,8 @@
       "risk": "suite fragility",
       "rollback": "tiered: blocking vs nightly",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T1002",
@@ -1744,7 +1868,9 @@
       "acc": [
         "raw data released; no claim without this",
         "held-out briefs never inspected during tuning; sampling/power rationale recorded (DA-43)",
-        "separation of dev fixtures, calibration cases and held-out evaluation sets"
+        "separation of dev fixtures, calibration cases and held-out evaluation sets",
+        "Pin competitor version and conditions; no-skill baseline, held-out separation, uncertainty and real participant availability stated; no invented human result",
+        "Raw data remains private absent rights/consent; aggregate-only publication where needed is explicitly disclosed"
       ],
       "tests": [
         "benchmark artifacts committed"
@@ -1752,17 +1878,16 @@
       "risk": "recruiting raters",
       "rollback": "owner + recruited designers; protocol published regardless",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T1003",
       "m": "M10",
       "title": "Independent security/a11y/licence review",
-      "obj": "Fresh-context review of shipped code + dependency licence audit",
+      "obj": "Separately commissioned independent security/accessibility/licence audit of the verified privately pushed SHA; builder stops before this task",
       "deps": [
-        "T0806",
-        "T0904",
-        "T1001"
+        "T1006"
       ],
       "files": [],
       "acc": [
@@ -1773,9 +1898,10 @@
         "review report"
       ],
       "risk": "no independent reviewer available",
-      "rollback": "deterministic gates may grant provisional acceptance; a GA claim is blocked and recorded as `independent review: not-run` (DA-42)",
+      "rollback": "Do not self-author an independent audit; report audit not-run until commissioned after private push",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "post-build-audit"
     },
     {
       "id": "T1004",
@@ -1800,7 +1926,8 @@
       "risk": "marketing creep",
       "rollback": "claim-checker in CI",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T1005",
@@ -1811,7 +1938,8 @@
         "T1001",
         "T1002",
         "T1003",
-        "T1004"
+        "T1004",
+        "T1006"
       ],
       "files": [],
       "acc": [
@@ -1823,7 +1951,8 @@
       "risk": "premature announcement",
       "rollback": "publish is the last action, always",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "publication"
     },
     {
       "id": "T0102b",
@@ -1838,7 +1967,9 @@
       ],
       "acc": [
         "all four fixtures build + serve",
-        "provenance/licensing recorded"
+        "provenance/licensing recorded",
+        "Runnable Astro fixture plus commerce/admin/portfolio corpus; framework-specific smoke evidence",
+        "Full Read/docs route: long headings, anchors, code/table reflow, search, navigation, zoom and localization"
       ],
       "tests": [
         "build + smoke per fixture"
@@ -1846,7 +1977,8 @@
       "risk": "maintenance burden",
       "rollback": "fixtures isolated per directory",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0158",
@@ -1868,7 +2000,8 @@
       "risk": "subjective scoring drift",
       "rollback": "rubric anchors calibrated per T0155",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0310",
@@ -1891,7 +2024,8 @@
       "risk": "trend churn",
       "rollback": "adopted trends pinned until reviewed change approved",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0405b",
@@ -1913,7 +2047,8 @@
       "risk": "breadth over depth",
       "rollback": "coverage matrix governs scope",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0405c",
@@ -1935,7 +2070,8 @@
       "risk": "commerce complexity",
       "rollback": "per-playbook acceptance",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0506",
@@ -1951,7 +2087,8 @@
       ],
       "acc": [
         "counterexample narrows/retires a rule with history intact",
-        "customer data/credentials never leave project without consent flow"
+        "customer data/credentials never leave project without consent flow",
+        "Separate deterministic assertions from uncertain outcome predictions; preregister confidence, baseline and method; held-out cases and high-confidence failures cannot be hidden by easy predictions"
       ],
       "tests": [
         "lifecycle + sanitization fixtures"
@@ -1959,7 +2096,8 @@
       "risk": "accidental rule promotion",
       "rollback": "promotion requires reviewed scope + expiry",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0508",
@@ -1983,7 +2121,8 @@
       "risk": "UX friction",
       "rollback": "one-click confirm with visible scope",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0709",
@@ -2007,7 +2146,8 @@
       "risk": "state machine complexity",
       "rollback": "fail-closed on unknown state",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0809",
@@ -2029,7 +2169,8 @@
       "risk": "scope creep",
       "rollback": "matrix governs",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0810",
@@ -2051,7 +2192,8 @@
       "risk": "scope creep",
       "rollback": "matrix governs",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0906",
@@ -2067,7 +2209,8 @@
         "evals/"
       ],
       "acc": [
-        "evidence bundles public; failures documented like user-reported issues"
+        "evidence bundles public; failures documented like user-reported issues",
+        "Keep demo evidence private until separate artifact-level consent, licensing and PII/secret checks; synthetic data preferred; no public deployment required for private completion"
       ],
       "tests": [
         "full gate suite per site"
@@ -2075,7 +2218,8 @@
       "risk": "dogfood time cost",
       "rollback": "sites are fixtures, not marketing",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0159",
@@ -2094,7 +2238,10 @@
         "validator fails if a gate lacks owner task or check",
         "unimplemented checks reported as not-run, never pass",
         "each landed gate ships a bad fixture proving failure",
-        "assertion shipped as a test: ancestry(T1001) ⊇ every non-M10 task; ancestry(T1005) ⊇ every task; measurement tasks (T0156, T0158) are not orphans (review H4/M2)"
+        "assertion shipped as a test: ancestry(T1001) ⊇ every non-M10 task; ancestry(T1005) ⊇ every task; measurement tasks (T0156, T0158) are not orphans (review H4/M2)",
+        "Exact bidirectional gate ownership comparison; missing/extra/duplicate owners fail",
+        "check_verdict is pass/fail/not-run/not-applicable; acceptance_disposition is separate; exceptions cannot turn failure into pass",
+        "Semantic DAG negative fixtures remove fixture, evaluation and safe-write prerequisites; all must fail; include G13 and T1006 private-build closure"
       ],
       "tests": [
         "validator run + negative fixtures"
@@ -2102,7 +2249,8 @@
       "risk": "gates become paperwork",
       "rollback": "registry is a checked mapping, not prose",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0811",
@@ -2124,7 +2272,8 @@
       "risk": "breadth over depth",
       "rollback": "per-playbook acceptance",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0812",
@@ -2147,7 +2296,8 @@
       "risk": "complex state matrices",
       "rollback": "per-playbook acceptance",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0402b",
@@ -2165,7 +2315,8 @@
         "heuristic evaluation checklist applied to each accepted section",
         "navigation/IA decisions recorded with rationale",
         "validation method named (unmoderated test, click-through, or explicit not-run)",
-        "i18n foundations included: logical CSS properties, mirrored icons, script-specific type stacks; hardening matrix covers ≥2 non-Latin scripts and mixed-direction content (kilo M3)"
+        "i18n foundations included: logical CSS properties, mirrored icons, script-specific type stacks; hardening matrix covers ≥2 non-Latin scripts and mixed-direction content (kilo M3)",
+        "Representative user-task journeys for commerce/admin/onboarding and Read: success, error recovery and comprehension; simulated results never count as participant evidence"
       ],
       "tests": [
         "foundation lint + fixture walkthrough"
@@ -2173,7 +2324,8 @@
       "risk": "breadth over depth",
       "rollback": "foundation files versioned",
       "status": "pending",
-      "approval": "pending"
+      "approval": "pending",
+      "phase": "build"
     },
     {
       "id": "T0006",
@@ -2226,12 +2378,16 @@
       ],
       "risk": "False continuity or unsafe resumption",
       "rollback": "Revert only this task’s known changes; preserve unrelated work",
-      "status": "pending",
+      "status": "review",
       "approval": "D24 planning authorization",
       "phase": "planning",
       "owner": null,
       "lease": null,
-      "evidence": []
+      "evidence": [
+        "docs/REVIEW_RECONCILIATION.md",
+        ".sus-dev/VERIFICATION/T0007.md"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0007.md"
     },
     {
       "id": "T0010",
@@ -2254,6 +2410,66 @@
       ],
       "risk": "False continuity or unsafe resumption",
       "rollback": "Revert only this task’s known changes; preserve unrelated work",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "owner": null,
+      "lease": null,
+      "evidence": []
+    },
+    {
+      "id": "T0700w",
+      "m": "M7",
+      "title": "Dual-stack trusted safe-write feasibility experiment",
+      "obj": "Dual-stack trusted safe-write feasibility experiment",
+      "deps": [
+        "T0707"
+      ],
+      "files": [
+        "docs/",
+        "fixtures/",
+        "packages/"
+      ],
+      "acc": [
+        "Both stacks prove selection → correct owner → isolated preview → authentic approval → apply → verification → undo on disposable fixtures",
+        "Zero observed harmful wrong-owner writes; unknown ownership refuses; security and recovery negatives pass before promotion",
+        "Do not proceed with expensive production knowledge acceptance until this feasibility evidence exists"
+      ],
+      "tests": [
+        "Task-specific positive, denial and recovery receipts"
+      ],
+      "risk": "Unsupported completion or unsafe mutation",
+      "rollback": "Preserve original sources; block on failure",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "owner": null,
+      "lease": null,
+      "evidence": []
+    },
+    {
+      "id": "T1006",
+      "m": "M10",
+      "title": "Complete build and verified final private push",
+      "obj": "Complete build and verified final private push",
+      "deps": [
+        "T1001",
+        "T1002",
+        "T1004"
+      ],
+      "files": [
+        "docs/BUILD_COMPLETION_HANDOFF.md"
+      ],
+      "acc": [
+        "Every mandatory build/planning deliverable and receipt complete; no unresolved P0/P1 blockers; local full regression/security/privacy/a11y/motion/install checks tied to exact revision",
+        "Builder verifies remote visibility private, target branch, clean status, secrets and dependency licences before push; no public release",
+        "Actual remote SHA equals pushed commit; BUILD_COMPLETION_HANDOFF scope/commands/limitations truthful; set BUILD_COMPLETE_PUSHED only then; stop before T1003"
+      ],
+      "tests": [
+        "Task-specific positive, denial and recovery receipts"
+      ],
+      "risk": "Unsupported completion or unsafe mutation",
+      "rollback": "Preserve original sources; block on failure",
       "status": "pending",
       "approval": "pending",
       "phase": "build",

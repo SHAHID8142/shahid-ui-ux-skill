@@ -31,8 +31,8 @@ never reported as `pass`.
   classes inside G4/G7/G8/G9 that map to WCAG 2.2 A/AA criteria in scope. This is the owner's
   bargaining path (D16): the agent must state the criterion, offer the closest compliant
   alternative, and if the owner still insists, the exception is signed in `DECISIONS.md` with an
-  expiry, disclosed in the evidence bundle, and the verdict becomes `non-conformant-accepted`.
-  That verdict blocks any "AA compliant" or GA claim. A gate is never simply switched off or
+  expiry, disclosed in the evidence bundle, and `acceptance_disposition` becomes `non-conformant-accepted`; the original `check_verdict` remains `fail`.
+  That disposition blocks any "AA compliant" or GA claim. A gate is never simply switched off or
   silently skipped — this replaces the earlier wording that made these gates "non-waivable" and
   contradicted amendments Part 1 item 3 (review H4 / C-1).
 - **Waivable with a recorded, expiring exception:** G5 budgets (temporary overage with owner
@@ -48,3 +48,15 @@ reviewed at acceptance.
 A new gate requires: id, name, owning task (must exist in `TASKS.json`), executable check producing
 one of the four verdicts, a negative fixture, and an entry in the amendments Part 2 table. Anything
 less is a design opinion, and design opinions belong in the rubric, not in the gate list.
+
+## 2026-11-13 reconciliation — critical security/privacy
+
+G13 | Critical security/privacy | T0806 | auth, capability, trusted-UI isolation,
+source ownership, data minimization and crash/conflict negative fixtures | first
+mutating slice and final private build/release | not implemented.
+
+G13 critical failures are non-waivable. No exception or auditor substitution can
+turn missing/failed evidence into release eligibility. Critical privacy/data-loss
+issues block private build completion and public release. G9 authoritative owners
+are exactly T0406 and T0807; T0402 supplies typography metrics only.
+Test outcome and acceptance disposition are separate fields, including for G5/G6/G12.

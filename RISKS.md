@@ -4,14 +4,14 @@ Living register. `impact × likelihood` rated low/med/high. Review at each miles
 
 | ID | Risk | I | L | Mitigation | Trigger to escalate |
 |---|---|---|---|---|---|
-| R1 | Studio DOM→source mapping unreliable on real apps | high | med | T0700 dual-stack spike with numeric go/no-go before investment | confidence <0.8 on both stacks |
+| R1 | Studio DOM→source mapping unreliable on real apps | high | med | T0700 dual-stack spike with numeric go/no-go before investment | wrong edit-owner, unsupported coverage, or unproven safe-write round trip on either stack |
 | R2 | Rubric/detector sycophancy — scores inflate | high | high | fresh-context critic; human calibration ≥80% ±1; judged never gates CI | agreement drop between runs |
 | R3 | Gates become bureaucratic, slow the loop | med | med | every gate must justify runtime; overhead measured per section | section loop > 2× baseline |
 | R4 | Anti-slop rules punish valid design | high | med | labelled negative corpus; blocking requires measured precision (G10) | false-positive rate above target |
 | R5 | Knowledge library drifts into contradictions | med | high | knowledge-lint in CI; single-source foundations; ≤2k token files | lint violations rising |
 | R6 | Direction taxonomy becomes a new template source | high | med | derivation record mandatory; uniqueness check; owner brief overrides | repeated identical directions |
-| R7 | Scope explosion across 87 tasks | med | high | one task at a time; milestone gates; WBS revisable | any milestone slipping 2× |
-| R8 | Security hole in Studio bridge | high | med | fail-closed, localhost-only, threat model, dedicated suite (T0806), external review | any auth/origin test failure |
+| R7 | Scope expansion across the canonical task backlog | med | high | one task at a time; milestone gates; WBS revisable | any milestone slipping 2× |
+| R8 | Security hole in Studio bridge | high | med | fail-closed, localhost-only, threat model, dedicated suite (T0806), post-push independent review | any auth/origin test failure |
 | R9 | AST writes corrupt user code | high | low | snapshot + build verify + auto-revert; refuse unknown syntax | any revert without clean restore |
 | R10 | Owner context loss between sessions | med | med | durable files (this set) updated every session; HANDOFF.md maintained | handoff older than last change |
 | R11 | No independent reviewer available | med | high | deterministic gates + labelled `not-run`; separate-session review offered | any GA-adjacent task |

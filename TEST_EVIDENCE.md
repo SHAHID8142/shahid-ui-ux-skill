@@ -211,3 +211,18 @@ gate registry owners 12/12 valid · all four reviews (deep audit, antigravity, o
 zcode) now dispositioned.
 
 Still no SUS implementation exists and no build approval was inferred.
+
+
+## 2026-11-13 — continuation/reconciliation evidence correction
+
+Current receipts: .sus-dev/VERIFICATION/T0006.md and T0007.md. Historical task counts
+above describe prior revisions; TASKS.json owns current status. Prior claims that
+all gate owners matched proved existence, not exact bidirectional ownership: G9
+was inconsistent at main 6ea7fb7. Current plan removes T0402 as a verdict owner and
+adds T0807's G9 responsibility; executable negative registry tests remain not-run.
+Seven historical reports now exist locally with immutable source/hash manifest;
+older “independent cross-check not-run” entries remain historical, not current inventory.
+No new independent review was commissioned. No product test passed: none exists.
+Bootstrap staged whitespace check failed initially and was corrected; see T0006.
+Final reconciliation: 93 tasks, 4 done / 3 review / 86 pending; zero unresolved
+references/cycles; semantic and missing-prerequisite checks in T0007 receipt.

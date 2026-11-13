@@ -15,3 +15,6 @@ choices before affected implementation. Preserve full Studio and privacy guarant
 Licence/channel and public-data release consent remain unresolved. Private completion
 push is distinct from public publication. No credentials, paid services or public
 release authorized by the continuation protocol.
+
+Concrete B001/B002 decision packet: docs/OWNER_REVIEW_PACKET.md. Planning remedies
+and tests are specified; architecture/retention approvals are not inferred.
