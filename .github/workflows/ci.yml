@@ -23,6 +23,8 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Build (dist for cross-package gates/typecheck)
+        run: pnpm build
       - name: Continuation checker
         run: pnpm check
       - name: Lint

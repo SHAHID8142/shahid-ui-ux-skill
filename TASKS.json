@@ -2041,19 +2041,18 @@
       ],
       "risk": "partial installs",
       "rollback": "transactional install with manifest",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "owner": "subagent-t0904",
-      "lease": {
-        "session": "zcode-subagent-t0904",
-        "task": "T0904",
-        "branch": "chore/continuation-reconciliation",
-        "baseSha": "worktree-main",
-        "acquired": "2026-11-14T05:10:00Z",
-        "expires": "2026-11-14T07:10:00Z",
-        "fencingGeneration": 1
-      }
+      "owner": "zcode-glm-2026-11-13 (implemented by subagent-t0904)",
+      "lease": null,
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0904.md",
+        "scripts/install/install.mjs",
+        "scripts/install/doctor.mjs",
+        "packages/adapters/tests/installer.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0904.md"
     },
     {
       "id": "T0905",

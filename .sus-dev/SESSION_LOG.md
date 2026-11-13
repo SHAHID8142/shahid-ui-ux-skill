@@ -249,3 +249,9 @@
   + knowledge lint wired into pnpm check (3/3 negatives). 166/166 tests.
   Receipts: T0402.md, T0403.md, T0409.md. Next: T0601 motion tokens; sub-agent T0904
   integration pending.
+
+- 2026-11-14T05:50:00+06:00 | ZCode (GLM) | T0904 | Sub-agent implementation integrated
+  after independent verification (9/9 re-run, 51/51 adapters, CLI exits manual).
+  First successful issue-#9 parallel pattern: sub-agent scope respected (scripts/
+  install/* + one test file only), lease cleared. CI build-order fix (dist before
+  check) pushed. Receipt: VERIFICATION/T0904.md.
