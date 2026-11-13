@@ -18,3 +18,18 @@ export {
   Milestone,
   migrateTaskRecordV1toV2,
 } from './task-record.js';
+export {
+  AXIS_TIERS,
+  JUDGED_AXES,
+  RUBRIC_AXES,
+  RUBRIC_TIERS,
+  RubricScore,
+  AxisScore,
+  ScoreValue,
+  ScoringVerdict,
+  SusRubricScore,
+  SusScoringVerdict,
+  type AxisScoreData,
+  type RubricScoreData,
+  type ScoringVerdictData,
+} from './rubric.js';

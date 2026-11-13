@@ -87,3 +87,10 @@
   authorization recorded (D28-D31), M0 closed, T0101/T0010/T0102/T0103/T0104 done with
   receipts, remote CI green (Node 22+24). 8 commits pushed to private dev branch
   (3405106..56270ca). Checker verdict: SAFE TO CONTINUE. Next session: T0151.
+
+- 2026-11-14T00:00:00+06:00 | ZCode (GLM) | T0151 | Rubric contract v1 (12 axes,
+  tiers per Part 3, basis-must-match-tier) + scoreSection (composite /60, acceptance
+  /55 excluding judged axis, 4 bands) + sus-eval CLI. 28/28 tests; judged-axis
+  exclusion asserted; tier mismatch + duplicate/missing axes rejected. Test-bug fix
+  (duplicate construction) + stale T0102 smoke superseded/removed. Receipt:
+  VERIFICATION/T0151.md. Next: T0152 Playwright harness.

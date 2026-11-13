@@ -306,9 +306,17 @@
       ],
       "risk": "rubric inflation",
       "rollback": "calibration (T0155) can retire axes",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D28/D29 build authorization (self-verified per protocol)",
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0151.md",
+        "packages/schemas/src/rubric.ts",
+        "packages/eval-core/src/scoring.ts",
+        "packages/eval-core/src/cli.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0151.md"
     },
     {
       "id": "T0152",

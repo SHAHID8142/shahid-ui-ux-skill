@@ -1,5 +1,5 @@
 /**
  * @sus/eval-core — rubric runner, evidence bundles, calibration (M1.5).
- * T0101 skeleton stub. Implemented from T0151 onward.
+ * T0151: scoring library + CLI. Harness pieces land with T0152/T0152b/T0154.
  */
-export const SUS_EVAL_CORE_PACKAGE = '0.0.0' as const;
+export { scoreSection } from './scoring.js';
