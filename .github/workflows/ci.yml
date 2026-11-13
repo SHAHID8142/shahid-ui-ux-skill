@@ -29,7 +29,17 @@ jobs:
         run: pnpm lint
       - name: Format check
         run: pnpm format:check
+      - name: CSS lint (stylelint)
+        run: pnpm stylelint
       - name: Typecheck
         run: pnpm typecheck
+      - name: Install Playwright chromium (browser-dependent tests)
+        run: pnpm --filter @sus/eval-core exec playwright install --with-deps chromium
       - name: Tests
         run: pnpm test
+      - name: Build fixtures (corpus smoke)
+        run: |
+          pnpm --filter @sus/fixture-commerce build
+          pnpm --filter @sus/fixture-admin build
+          pnpm --filter @sus/fixture-portfolio build
+          pnpm --filter @sus/fixture-marketing build

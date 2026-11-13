@@ -6,9 +6,11 @@
   --accent: #14508c;
   --line: #dcdfe7;
 }
+
 * {
   box-sizing: border-box;
 }
+
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
@@ -16,37 +18,45 @@ body {
   color: var(--fg);
   background: var(--bg);
 }
+
 #admin-shell {
   display: grid;
   grid-template-columns: 14rem 1fr;
   min-height: 100vh;
 }
+
 #admin-sidebar {
   background: #20242c;
   color: #e8eaf0;
   padding: 1.25rem;
 }
+
 #admin-sidebar .wordmark {
   font-weight: 700;
   margin-top: 0;
 }
+
 #admin-sidebar ul {
   list-style: none;
   padding: 0;
   display: grid;
   gap: 0.4rem;
 }
+
 #admin-sidebar a {
   color: #c3c9d6;
   text-decoration: none;
 }
+
 #admin-sidebar a:hover {
   color: #fff;
   text-decoration: underline;
 }
+
 #admin-content {
   padding: 1.25rem 2rem;
 }
+
 #admin-topbar {
   display: flex;
   align-items: baseline;
@@ -54,43 +64,52 @@ body {
   border-bottom: 1px solid var(--line);
   padding-bottom: 0.75rem;
 }
+
 #admin-topbar h1 {
   margin: 0;
   font-size: 1.375rem;
 }
+
 .env-note {
   color: #6a7284;
   font-size: 0.8125rem;
 }
+
 #kpi-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
   gap: 1rem;
   margin-block: 1.25rem;
 }
+
 .kpi {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 0.5rem;
   padding: 1rem;
 }
+
 .kpi p {
   margin: 0.15rem 0;
 }
+
 .kpi-value {
   font-size: 1.75rem;
   font-weight: 700;
 }
+
 .kpi-delta {
   color: #6a7284;
   font-size: 0.8125rem;
 }
+
 #content-queue table {
   width: 100%;
   border-collapse: collapse;
   background: var(--panel);
   border: 1px solid var(--line);
 }
+
 #content-queue th,
 #content-queue td {
   padding: 0.55rem 0.75rem;
@@ -98,21 +117,25 @@ body {
   text-align: left;
   font-size: 0.9375rem;
 }
+
 .status {
   padding: 0.1rem 0.5rem;
   border-radius: 999px;
   font-size: 0.75rem;
   background: #eef1f6;
 }
+
 .status.review,
 .status.scheduled {
   background: #e3eefb;
   color: #14508c;
 }
+
 .status.blocked {
   background: #fbeae3;
   color: #8c3a14;
 }
+
 #settings-form form {
   display: grid;
   gap: 0.5rem;
@@ -122,10 +145,12 @@ body {
   padding: 1rem;
   border-radius: 0.5rem;
 }
+
 .row-action {
   font: inherit;
   padding: 0.25rem 0.6rem;
 }
+
 #admin-footer {
   color: #6a7284;
   font-size: 0.8125rem;

@@ -44,10 +44,11 @@ export const FIXTURE_BUDGETS: BudgetSpec[] = [
 
 export interface LighthouseSummary {
   url: string;
-  lcpMs: number;
-  cls: number;
-  totalBlockingMs: number;
-  totalByteWeight: number;
+  /** null = metric absent from the report (fail-closed: never treated as 0). */
+  lcpMs: number | null;
+  cls: number | null;
+  totalBlockingMs: number | null;
+  totalByteWeight: number | null;
 }
 
 export type GateStatus = 'pass' | 'fail';
@@ -59,13 +60,40 @@ export interface GateVerdict {
   evidence: string[];
 }
 
-/** G4: zero serious/critical violations anywhere. */
+/**
+ * G4: zero serious/critical violations anywhere.
+ * FAILS CLOSED (issue #8): no scans, malformed scans, or non-finite node
+ * counts fail the gate — missing measurement never satisfies a gate.
+ */
 export function evaluateG4(scans: AxeScanResult[], evidenceDir?: string): GateVerdict {
   const failing: string[] = [];
+  if (scans.length === 0) {
+    failing.push('no axe scans recorded — G4 fails closed without evidence');
+  }
   for (const scan of scans) {
+    if (!scan.url) failing.push('axe scan without a URL — invalid evidence');
+    if (!Array.isArray(scan.violations)) {
+      failing.push(`${scan.url ?? '(no url)'}: malformed violations array — invalid evidence`);
+      continue;
+    }
     for (const v of scan.violations) {
-      if (v.impact === 'serious' || v.impact === 'critical') {
+      if (
+        (v.impact === 'serious' || v.impact === 'critical') &&
+        Number.isFinite(v.nodes) &&
+        v.nodes >= 0
+      ) {
         failing.push(`${scan.url}: ${v.impact} ${v.id} on ${v.nodes} node(s) — ${v.help}`);
+      } else if (
+        v.impact !== null &&
+        !['minor', 'moderate', 'serious', 'critical'].includes(v.impact)
+      ) {
+        failing.push(
+          `${scan.url}: unknown impact "${String(v.impact)}" on ${v.id} — invalid evidence`,
+        );
+      } else if ((v.impact === 'serious' || v.impact === 'critical') && !Number.isFinite(v.nodes)) {
+        failing.push(
+          `${scan.url}: ${v.impact} ${v.id} with non-finite node count — invalid evidence`,
+        );
       }
     }
   }
@@ -81,12 +109,20 @@ export function evaluateG4(scans: AxeScanResult[], evidenceDir?: string): GateVe
   return {
     gate: 'G4',
     status: failing.length === 0 ? 'pass' : 'fail',
-    detail: failing.length === 0 ? ['zero serious/critical axe violations'] : failing,
+    detail:
+      failing.length === 0
+        ? ['zero serious/critical axe violations across recorded scans']
+        : failing,
     evidence,
   };
 }
 
-/** G5: per-route budgets vs Lighthouse summary. */
+/**
+ * G5: per-route budgets vs Lighthouse summaries.
+ * FAILS CLOSED (issue #8): no runs, no matching budget for a route, and
+ * absent/non-finite metrics all fail the gate. Lighthouse reports null for
+ * unmeasured metrics — nulls are invalid evidence, never zeroes.
+ */
 export function evaluateG5(
   lh: LighthouseSummary[],
   budgets: BudgetSpec[] = FIXTURE_BUDGETS,
@@ -94,18 +130,33 @@ export function evaluateG5(
 ): GateVerdict {
   const detail: string[] = [];
   let failed = false;
+  if (lh.length === 0) {
+    failed = true;
+    detail.push('no Lighthouse runs recorded — G5 fails closed without evidence');
+  }
   for (const run of lh) {
     const budget =
       budgets.find((b) => run.url.includes(b.route) && b.route !== '*') ??
       budgets.find((b) => b.route === '*');
-    if (!budget) continue;
-    const rows: Array<[string, number, number]> = [
+    if (!budget) {
+      failed = true;
+      detail.push(`${run.url}: no matching budget — G5 fails closed`);
+      continue;
+    }
+    const rows: Array<[string, number | null, number]> = [
       ['LCP ms', run.lcpMs, budget.lcpMs],
       ['CLS', run.cls, budget.cls],
       ['TBT ms', run.totalBlockingMs, budget.totalBlockingMs],
       ['totalBytes', run.totalByteWeight, budget.totalByteWeight],
     ];
     for (const [metric, actual, limit] of rows) {
+      if (actual === null || !Number.isFinite(actual)) {
+        failed = true;
+        detail.push(
+          `${run.url} ${metric}: MISSING/INVALID (got ${String(actual)}) / limit ${limit} — FAIL CLOSED`,
+        );
+        continue;
+      }
       const ok = actual <= limit;
       if (!ok) failed = true;
       detail.push(`${run.url} ${metric}: ${actual} / limit ${limit} — ${ok ? 'ok' : 'EXCEEDED'}`);

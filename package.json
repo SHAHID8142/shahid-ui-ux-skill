@@ -8,14 +8,15 @@
     "node": ">=22"
   },
   "scripts": {
-    "typecheck": "pnpm -r --if-present run typecheck",
+    "typecheck": "pnpm run --silent build && pnpm -r --if-present run typecheck",
     "check": "node scripts/check-continuation.mjs",
     "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "stylelint": "stylelint \"**/*.css\""
+    "stylelint": "stylelint \"**/*.css\"",
+    "build": "pnpm -r --if-present run build"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

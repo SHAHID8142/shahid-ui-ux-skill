@@ -101,6 +101,24 @@ describe('G4/G5 evaluators (T0152b)', () => {
     expect(evaluateG4([cleanScan, bad], evidenceDir).status).toBe('fail');
   });
 
+  it('G4 fails closed: no scans, malformed scans, unknown impact (issue #8)', () => {
+    expect(evaluateG4([]).status).toBe('fail');
+    expect(evaluateG4([]).detail.join(' ')).toMatch(/fails closed/);
+    const malformed = {
+      url: URL,
+      passes: 0,
+      violations: 'not-an-array',
+    } as unknown as AxeScanResult;
+    expect(evaluateG4([malformed]).status).toBe('fail');
+    const unknownImpact = {
+      url: URL,
+      passes: 0,
+      violations: [{ id: 'z', impact: 'catastrophic', nodes: 1, help: '?' }],
+    } as unknown as AxeScanResult;
+    expect(evaluateG4([unknownImpact]).status).toBe('fail');
+    expect(evaluateG4([unknownImpact]).detail.join(' ')).toMatch(/invalid evidence/);
+  });
+
   it('G4 ignores minor/moderate but not critical', () => {
     const moderate: AxeScanResult = {
       url: URL,
@@ -121,6 +139,33 @@ describe('G4/G5 evaluators (T0152b)', () => {
     expect(verdict.status).toBe('pass');
     expect(verdict.detail.length).toBeGreaterThanOrEqual(4);
     expect(existsSync(join(evidenceDir, 'budget-table.json'))).toBe(true);
+  });
+
+  it('G5 fails closed: no runs, missing budgets, absent metrics (issue #8)', () => {
+    const noRuns = evaluateG5([], FIXTURE_BUDGETS);
+    expect(noRuns.status).toBe('fail');
+    expect(noRuns.detail.join(' ')).toMatch(/fails closed/);
+    const noBudget = evaluateG5([cleanLh], []);
+    expect(noBudget.status).toBe('fail');
+    expect(noBudget.detail.join(' ')).toMatch(/no matching budget/);
+    const missing: LighthouseSummary = {
+      url: URL,
+      lcpMs: null,
+      cls: null,
+      totalBlockingMs: null,
+      totalByteWeight: null,
+    };
+    const withMissing = evaluateG5([missing], FIXTURE_BUDGETS);
+    expect(withMissing.status).toBe('fail');
+    expect(withMissing.detail.join(' ')).toMatch(/FAIL CLOSED/);
+    const nonFinite = {
+      url: URL,
+      lcpMs: Number.NaN,
+      cls: 0,
+      totalBlockingMs: 40,
+      totalByteWeight: 120_000,
+    } as unknown as LighthouseSummary;
+    expect(evaluateG5([nonFinite], FIXTURE_BUDGETS).status).toBe('fail');
   });
 
   it('G5 fails when any budget is exceeded (negative)', () => {
@@ -178,13 +223,15 @@ describe('real fixture A scans (T0152b integration)', () => {
 
   it('real Lighthouse run judged by G5', async () => {
     const chrome = chromeForTestingPath();
-    // LCP is documented flaky on fast cold loads (trace may miss the entry;
-    // the runner retries once on an empty trace). Byte weight is the
-    // deterministic proof that the trace captured the page.
+    // Flake policy (T0152 rollback note): the runner retries (max 3) while a
+    // required metric is absent; if LCP still cannot be measured under load
+    // it arrives as null, which G5 then fails closed on — the gate owns the
+    // verdict, never a silent zero. Byte weight is the deterministic proof
+    // that the trace captured the page.
     const summary = await runLighthouse(URL, chrome);
     expect(summary.url).toBe(URL);
-    expect(summary.lcpMs).toBeGreaterThanOrEqual(0);
-    expect(summary.totalByteWeight).toBeGreaterThan(0);
+    expect(summary.lcpMs === null || summary.lcpMs >= 0).toBe(true);
+    expect(summary.totalByteWeight === null || summary.totalByteWeight > 0).toBe(true);
     const verdict = evaluateG5([summary], FIXTURE_BUDGETS, evidenceDir);
     expect(['pass', 'fail']).toContain(verdict.status);
     expect(verdict.detail.join(' ')).toContain('totalBytes');

@@ -44,44 +44,45 @@ export async function runLighthouse(url: string, chromePath?: string): Promise<L
   });
   let result;
   try {
-    result = await lighthouse(url, {
-      port: chrome.port,
-      logLevel: 'error' as const,
-      output: 'json' as const,
-      onlyCategories: ['performance'],
-    });
-    // Documented flake policy (T0152 rollback note): a trace can come back
-    // effectively empty under load; one internal retry on an empty trace.
-    const audits = result?.lhr?.audits as Record<string, { numericValue?: number }> | undefined;
-    const traceEmpty =
-      !audits ||
-      (Number(audits['total-byte-weight']?.numericValue ?? 0) === 0 &&
-        Number(audits['total-blocking-time']?.numericValue ?? 0) === 0);
-    if (traceEmpty) {
+    // Documented flake policy (T0152 rollback note): under load a trace can
+    // come back empty or miss required metrics; retry up to 3 attempts while
+    // a required metric (byte weight, LCP) is absent from the report.
+    const MAX_ATTEMPTS = 3;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
       result = await lighthouse(url, {
         port: chrome.port,
         logLevel: 'error' as const,
         output: 'json' as const,
         onlyCategories: ['performance'],
       });
+      const audits = result?.lhr?.audits as Record<string, { numericValue?: number }> | undefined;
+      const has = (id: string): boolean => {
+        const v = audits?.[id]?.numericValue;
+        return typeof v === 'number' && Number.isFinite(v);
+      };
+      if (audits && has('total-byte-weight') && has('largest-contentful-paint')) break;
+      if (attempt < MAX_ATTEMPTS) continue;
     }
   } finally {
     await Promise.resolve(chrome.kill()).catch(() => {});
   }
   if (!result?.lhr) throw new Error('lighthouse produced no report');
-  const num = (id: string): number => {
+  // Fail-closed metric extraction (issue #8): an absent/non-finite numeric
+  // value becomes null — never a silent zero. G5 treats nulls as invalid.
+  const num = (id: string): number | null => {
     const audit = result.lhr.audits[id] as { numericValue?: number } | undefined;
-    return Math.round(audit?.numericValue ?? 0);
+    const v = audit?.numericValue;
+    return typeof v === 'number' && Number.isFinite(v) ? Math.round(v) : null;
   };
-  const totalBytes = result.lhr.audits['total-byte-weight'] as
-    { numericValue?: number } | undefined;
+  const clsRaw = result.lhr.audits['cumulative-layout-shift']?.numericValue;
   return {
     url,
     lcpMs: num('largest-contentful-paint'),
-    cls: result.lhr.audits['cumulative-layout-shift']?.numericValue
-      ? Math.round(result.lhr.audits['cumulative-layout-shift'].numericValue! * 1000) / 1000
-      : 0,
+    cls:
+      typeof clsRaw === 'number' && Number.isFinite(clsRaw)
+        ? Math.round(clsRaw * 1000) / 1000
+        : null,
     totalBlockingMs: num('total-blocking-time'),
-    totalByteWeight: Math.round(totalBytes?.numericValue ?? 0),
+    totalByteWeight: num('total-byte-weight'),
   };
 }
