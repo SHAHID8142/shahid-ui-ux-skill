@@ -46,7 +46,13 @@ export interface SessionState {
 
 export interface AuditEntry {
   at: string;
-  event: 'session-open' | 'message-ok' | 'message-rejected' | 'origin-denied' | 'auth-denied' | 'payload-too-large';
+  event:
+    | 'session-open'
+    | 'message-ok'
+    | 'message-rejected'
+    | 'origin-denied'
+    | 'auth-denied'
+    | 'payload-too-large';
   detail: string;
 }
 
@@ -116,23 +122,44 @@ export class BridgeServer {
     if (session) session.status = 'closed';
   }
 
-  private checkGuards(req: IncomingMessage, body: string): { ok: boolean; status?: number; event?: AuditEntry['event']; detail?: string } {
+  private checkGuards(
+    req: IncomingMessage,
+    body: string,
+  ): { ok: boolean; status?: number; event?: AuditEntry['event']; detail?: string } {
     const origin = req.headers.origin ?? '';
     if (origin && !this.options.allowedOrigins.includes(origin)) {
-      return { ok: false, status: 403, event: 'origin-denied', detail: `Origin ${origin} not allowlisted` };
+      return {
+        ok: false,
+        status: 403,
+        event: 'origin-denied',
+        detail: `Origin ${origin} not allowlisted`,
+      };
     }
     const host = (req.headers.host ?? '').split(':')[0]!;
     if (!this.options.allowedHosts.includes(host)) {
-      return { ok: false, status: 403, event: 'origin-denied', detail: `Host ${host} not allowlisted (DNS-rebinding guard)` };
+      return {
+        ok: false,
+        status: 403,
+        event: 'origin-denied',
+        detail: `Host ${host} not allowlisted (DNS-rebinding guard)`,
+      };
     }
     if (body.length > MAX_PAYLOAD_BYTES) {
-      return { ok: false, status: 413, event: 'payload-too-large', detail: `${body.length} bytes > cap ${MAX_PAYLOAD_BYTES}` };
+      return {
+        ok: false,
+        status: 413,
+        event: 'payload-too-large',
+        detail: `${body.length} bytes > cap ${MAX_PAYLOAD_BYTES}`,
+      };
     }
     return { ok: true };
   }
 
   /** Handles a validated message POST. Returns the response payload or error status. */
-  handleMessage(req: IncomingMessage, body: string): { status: number; body: Record<string, unknown> } {
+  handleMessage(
+    req: IncomingMessage,
+    body: string,
+  ): { status: number; body: Record<string, unknown> } {
     const guards = this.checkGuards(req, body);
     if (!guards.ok) {
       this.audit.record(guards.event!, guards.detail!);
@@ -153,8 +180,14 @@ export class BridgeServer {
     }
     const validated = MessageEnvelope.safeParse(parsed);
     if (!validated.success) {
-      this.audit.record('message-rejected', validated.error.issues.map(String).join('; ').slice(0, 200));
-      return { status: 400, body: { error: 'invalid-envelope', issues: validated.error.issues.map((i) => i.message) } };
+      this.audit.record(
+        'message-rejected',
+        validated.error.issues.map(String).join('; ').slice(0, 200),
+      );
+      return {
+        status: 400,
+        body: { error: 'invalid-envelope', issues: validated.error.issues.map((i) => i.message) },
+      };
     }
     const domData = validated.data.domData;
     this.audit.record(

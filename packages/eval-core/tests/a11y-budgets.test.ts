@@ -21,7 +21,7 @@ import {
 } from '../src/harness/a11y-budgets.js';
 import { chromeForTestingPath, runLighthouse, scanA11y } from '../src/harness/scans.js';
 
-const PORT = 4317;
+const PORT = 4330;
 const URL = `http://127.0.0.1:${PORT}/`;
 const FIXTURE = join(__dirname, '..', '..', '..', 'fixtures', 'marketing');
 let server: ChildProcess | undefined;

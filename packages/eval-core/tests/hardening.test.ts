@@ -9,7 +9,7 @@ import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { runHardeningMatrix, type HardeningResult } from '../src/index.js';
 
-const PORT = 4317;
+const PORT = 4331;
 const URL = `http://127.0.0.1:${PORT}/`;
 const FIXTURE = join(__dirname, '..', '..', '..', 'fixtures', 'marketing');
 let server: ChildProcess | undefined;

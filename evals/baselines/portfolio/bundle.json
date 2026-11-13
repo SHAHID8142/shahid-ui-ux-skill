@@ -444,7 +444,7 @@
       "detail": [
         "http://127.0.0.1:4345/portfolio LCP ms: 604 / limit 2500 — ok",
         "http://127.0.0.1:4345/portfolio CLS: 0 / limit 0.1 — ok",
-        "http://127.0.0.1:4345/portfolio TBT ms: 367 / limit 200 — EXCEEDED",
+        "http://127.0.0.1:4345/portfolio TBT ms: 401 / limit 200 — EXCEEDED",
         "http://127.0.0.1:4345/portfolio totalBytes: 3607 / limit 500000 — ok"
       ]
     }

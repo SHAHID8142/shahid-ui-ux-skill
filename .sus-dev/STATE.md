@@ -9,7 +9,7 @@ amended (D29). Checkpoint pushes to private dev branches permitted (D30).
 Canonical statuses: TASKS.json. Done: T0001-T0007 (M0 complete). No active lease.
 Concurrency 1.
 
-Current task: none (between tasks). Ready set: T0402, T0403, T0409, T0601, T0701, T0904 (all pending).
+Current task: T0701 (bridge server, main agent) with T0904 leased to subagent-t0904 (isolated scripts/install/ scope; integration owner: main agent).
 Next exact steps: `pnpm check` (exit 0 verified). Then ready set: T0402
 (color/typography foundations), T0403 (layout/responsive/a11y foundations),
 T0409 (knowledge lint in CI — validates skill refs + playbooks + provenance
