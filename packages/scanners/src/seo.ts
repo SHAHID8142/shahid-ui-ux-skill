@@ -57,7 +57,7 @@ export function checkSeo(html: string): SeoResult {
   if (skipFound) g9detail.push('heading ladder skips a level');
 
   const imgs = [...html.matchAll(/<img\b([^>]*)>/gi)];
-  const noAlt = imgs.filter((m) => !/\balt=/i.test(m[1]));
+  const noAlt = imgs.filter((m) => !/\balt=/i.test(String(m[1])));
   checks.push({
     id: 'img-alt',
     status: noAlt.length === 0 ? 'pass' : 'fail',

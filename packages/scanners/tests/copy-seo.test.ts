@@ -7,7 +7,6 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { ClaimsRegister, DomainBehaviorContract, type ClaimsRegisterEntryData } from '@sus/schemas';
 import { checkSeo } from '../src/seo.js';
-import { scanText } from '../src/engine.js';
 
 describe('SEO structural checks (T0406)', () => {
   const good = `<!doctype html><html><head><title>Meridian — Notes for Researchers</title>

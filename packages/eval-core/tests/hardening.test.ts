@@ -3,7 +3,7 @@
  * the evidence shape; locale set prioritized per brief (recorded, not
  * universal).
  */
-import { spawn, type ChildProcess } from 'node:child_process';
+import { execSync, spawn, type ChildProcess } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -29,7 +29,6 @@ async function waitForReady(url: string, timeoutMs = 30000): Promise<void> {
 
 beforeAll(async () => {
   if (!existsSync(join(FIXTURE, '.next', 'BUILD_ID'))) {
-    const { execSync } = require('node:child_process') as typeof import('node:child_process');
     execSync('pnpm exec next build', { cwd: FIXTURE, stdio: 'ignore' });
   }
   server = spawn('pnpm', ['exec', 'next', 'start', '-p', String(PORT)], {

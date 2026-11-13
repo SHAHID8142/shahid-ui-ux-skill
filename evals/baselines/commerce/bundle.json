@@ -590,7 +590,7 @@
       "detail": [
         "http://127.0.0.1:4345/commerce LCP ms: 602 / limit 2500 — ok",
         "http://127.0.0.1:4345/commerce CLS: 0 / limit 0.1 — ok",
-        "http://127.0.0.1:4345/commerce TBT ms: 404 / limit 200 — EXCEEDED",
+        "http://127.0.0.1:4345/commerce TBT ms: 284 / limit 200 — EXCEEDED",
         "http://127.0.0.1:4345/commerce totalBytes: 3740 / limit 500000 — ok"
       ]
     }
