@@ -153,3 +153,11 @@
   owner; advisory flagging (never silent). Eval infra: 3 held-out briefs + matched-
   conditions record with skill arm NOT-RUN (impossible to fabricate). 71/71 tests.
   Receipts: VERIFICATION/T0156.md, T0158.md. Next: T0159 gate registry.
+
+- 2026-11-14T02:30:00+06:00 | ZCode (GLM) | T0159 | GATE_REGISTRY.json/md (G1-G13,
+  semanticPrerequisites register) + scripts/check-gates.mjs wired into pnpm check:
+  bidirectional ownership (additive gates field on 14 records), G1 shared-rule bad
+  fixture, G4/G5/G11 fail-closed proofs, ancestry assertions (T1001+T0103b fix),
+  semantic prerequisites + removal negatives, structural negatives. 9 gates not-run
+  (never pass). M1.5 COMPLETE (T0151-T0159). Receipt: VERIFICATION/T0159.md.
+  Next: M2 skill core from T0201.

@@ -1,62 +1,30 @@
-# GATE REGISTRY — G1–G12 ownership and executable checks
+# Gate registry (T0159)
 
-Status: **proposed** (M0 review artefact, part of architecture approval).
+Machine-readable source of truth: `docs/GATE_REGISTRY.json` (validated by
+`node scripts/check-gates.mjs`). Gate definitions G1–G12 come from the
+amendments gates table; G13 (critical security/privacy) comes from the
+reconciliation requirement that the critical security gate is non-waivable
+(ER-SECURITY).
 
-Rule: a gate exists only when it has (1) an owning task that implements its check, (2) a command
-that produces a machine-readable verdict, and (3) a test proving the check fails on a deliberately
-bad fixture. A gate without an owner is not a gate — it is a wish. The validator in
-`scripts/check_gate_registry.*` (task T0159) fails CI if this table and `TASKS.json` disagree.
+| ID | Gate | Blocks | Owner task(s) | Check status |
+|---|---|---|---|---|
+| G1 | Token-only styling | commit | T0103, T0401 | implemented (eslint rule + bad fixture) |
+| G2 | Section order | commit | T0502, T0503 | not-run |
+| G3 | No placeholder content | commit | T0303, T0305 | not-run |
+| G4 | A11y floor | acceptance | T0152b | implemented (fail-closed evaluator + negatives) |
+| G5 | Perf budget | acceptance | T0152b | implemented (fail-closed evaluator + negatives) |
+| G6 | Motion parity | acceptance | T0603 | not-run |
+| G7 | Reflow | acceptance | T0551, T0152 | not-run (harness fields exist) |
+| G8 | Target size | acceptance | T0152, T0152b | not-run (harness fields exist) |
+| G9 | Semantics | acceptance | T0807, T0403 | not-run |
+| G10 | Detector quality | release | T0305 | not-run |
+| G11 | Evidence completeness | acceptance | T0154 | implemented (fail-closed evaluator + CLI) |
+| G12 | Contract drift | weekly+release | T0401 | not-run |
+| G13 | Critical security/privacy | release | T0806 | not-run — **never waivable** |
 
-Verdicts are exactly: `pass` · `fail` · `not-run` · `not-applicable` (with reason). `not-run` is
-never reported as `pass`.
-
-| Gate | Name | Owning task | Check (command → verdict) | Enforced at | Status |
-|---|---|---|---|---|---|
-| G1 | Token-only styling | T0401 | token lint over component scope → `pass/fail` + exempted refs | commit | not implemented |
-| G2 | Section order | T0505 | read `.sus/SECTION_STATUS.md`, compare to changed files → `pass/fail` | commit | not implemented |
-| G3 | No placeholder content | T0406 | content lint (lorem/TODO/unregistered numeric claim) → `pass/fail` | commit | not implemented |
-| G4 | A11y floor | T0152b + T0807 | axe run → `fail` on serious/critical; criteria→evidence map completeness reported separately | acceptance | not implemented |
-| G5 | Perf budget | T0152b | per-route lab run vs budget table; field data stored as its own field, never inferred | acceptance | not implemented |
-| G6 | Motion parity | T0603 (+T0602) | motion trace + reduced-motion equivalent walkthrough → `pass/fail` | acceptance | not implemented |
-| G7 | Reflow | T0807 | 320 CSS-px equivalence + 400% zoom, with WCAG 1.4.10 exceptions recorded | acceptance | not implemented |
-| G8 | Target size | T0807 | measured target sizes vs SC 2.5.8 + recorded exceptions | acceptance | not implemented |
-| G9 | Semantics | T0406 + T0807 | heading/landmark/focus audit → `pass/fail`; conventions listed separately from WCAG | acceptance | not implemented |
-| G10 | Detector quality | T0305 | precision/recall on labelled corpus vs published targets | release | not implemented |
-| G11 | Evidence completeness | T0154 | schema validation of the evidence bundle → `pass/fail` | acceptance | not implemented |
-| G12 | Contract drift | T0401 (+T0503) | token diff: code tokens vs `DESIGN_CONTRACT.md` → divergence report | weekly + release | not implemented |
-
-## Non-waivable vs waivable
-
-- **Blocking by default, waivable only by signed exception:** G1, G2, G3, G11, and the violation
-  classes inside G4/G7/G8/G9 that map to WCAG 2.2 A/AA criteria in scope. This is the owner's
-  bargaining path (D16): the agent must state the criterion, offer the closest compliant
-  alternative, and if the owner still insists, the exception is signed in `DECISIONS.md` with an
-  expiry, disclosed in the evidence bundle, and `acceptance_disposition` becomes `non-conformant-accepted`; the original `check_verdict` remains `fail`.
-  That disposition blocks any "AA compliant" or GA claim. A gate is never simply switched off or
-  silently skipped — this replaces the earlier wording that made these gates "non-waivable" and
-  contradicted amendments Part 1 item 3 (review H4 / C-1).
-- **Waivable with a recorded, expiring exception:** G5 budgets (temporary overage with owner
-  sign-off and expiry), G6 (documented, equivalent alternative), G12 (planned migration window).
-- **Never waivable:** a `not-run` verdict recorded as `pass`, and an exception that has no expiry,
-  no recorded criterion, or no entry in the evidence bundle.
-
-Applicability follows amendments Part 2: `not-applicable` requires a one-line reason and is
-reviewed at acceptance.
-
-## Adding a gate
-
-A new gate requires: id, name, owning task (must exist in `TASKS.json`), executable check producing
-one of the four verdicts, a negative fixture, and an entry in the amendments Part 2 table. Anything
-less is a design opinion, and design opinions belong in the rubric, not in the gate list.
-
-## 2026-11-13 reconciliation — critical security/privacy
-
-G13 | Critical security/privacy | T0806 | auth, capability, trusted-UI isolation,
-source ownership, data minimization and crash/conflict negative fixtures | first
-mutating slice and final private build/release | not implemented.
-
-G13 critical failures are non-waivable. No exception or auditor substitution can
-turn missing/failed evidence into release eligibility. Critical privacy/data-loss
-issues block private build completion and public release. G9 authoritative owners
-are exactly T0406 and T0807; T0402 supplies typography metrics only.
-Test outcome and acceptance disposition are separate fields, including for G5/G6/G12.
+Rules (ER-SECURITY + amendments): unimplemented checks report **not-run**,
+never pass; each landed gate ships a bad fixture proving failure;
+`check_verdict` is pass/fail/not-run/not-applicable and is separate from any
+acceptance disposition; exceptions cannot turn a failure into a pass; a gate
+may be relaxed only by a DECISIONS.md entry (approver, reason, expiry) —
+except G13, which is never waivable.

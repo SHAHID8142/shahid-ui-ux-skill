@@ -252,7 +252,10 @@
         ".github/workflows/ci.yml",
         ".prettierrc.json"
       ],
-      "commit": "same commit as .sus-dev/VERIFICATION/T0103.md"
+      "commit": "same commit as .sus-dev/VERIFICATION/T0103.md",
+      "gates": [
+        "G1"
+      ]
     },
     {
       "id": "T0104",
@@ -351,7 +354,11 @@
         "packages/eval-core/src/harness/capture.ts",
         "packages/eval-core/tests/harness.test.ts"
       ],
-      "commit": "same commit as .sus-dev/VERIFICATION/T0152.md"
+      "commit": "same commit as .sus-dev/VERIFICATION/T0152.md",
+      "gates": [
+        "G7",
+        "G8"
+      ]
     },
     {
       "id": "T0152b",
@@ -384,7 +391,12 @@
         "packages/eval-core/src/harness/scans.ts",
         "packages/eval-core/tests/a11y-budgets.test.ts"
       ],
-      "commit": "same commit as .sus-dev/VERIFICATION/T0152b.md"
+      "commit": "same commit as .sus-dev/VERIFICATION/T0152b.md",
+      "gates": [
+        "G4",
+        "G5",
+        "G8"
+      ]
     },
     {
       "id": "T0153",
@@ -451,7 +463,10 @@
         "packages/schemas/src/evidence-bundle.ts",
         "packages/eval-core/tests/evidence-bundle.test.ts"
       ],
-      "commit": "same commit as .sus-dev/VERIFICATION/T0154.md"
+      "commit": "same commit as .sus-dev/VERIFICATION/T0154.md",
+      "gates": [
+        "G11"
+      ]
     },
     {
       "id": "T0155",
@@ -721,7 +736,10 @@
       "rollback": "single rule, easily revised",
       "status": "pending",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "gates": [
+        "G3"
+      ]
     },
     {
       "id": "T0304",
@@ -771,7 +789,11 @@
       "rollback": "synthetic + licensed-only pages",
       "status": "pending",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "gates": [
+        "G3",
+        "G10"
+      ]
     },
     {
       "id": "T0400",
@@ -825,7 +847,11 @@
       "rollback": "roles minimal at v1",
       "status": "pending",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "gates": [
+        "G1",
+        "G12"
+      ]
     },
     {
       "id": "T0402",
@@ -872,7 +898,10 @@
       "rollback": "rules cite standards, advisory unless gate",
       "status": "pending",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "gates": [
+        "G9"
+      ]
     },
     {
       "id": "T0404",
@@ -1071,7 +1100,10 @@
       "rollback": "expiry + manual override logged",
       "status": "pending",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "gates": [
+        "G2"
+      ]
     },
     {
       "id": "T0503",
@@ -1094,7 +1126,10 @@
       "rollback": "small-change fast path with logging",
       "status": "pending",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "gates": [
+        "G2"
+      ]
     },
     {
       "id": "T0504",
@@ -1171,7 +1206,10 @@
       "rollback": "advisory until M8, blocking at GA",
       "status": "pending",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "gates": [
+        "G7"
+      ]
     },
     {
       "id": "T0600",
@@ -1272,7 +1310,10 @@
       "rollback": "deterministic virtual clock where possible",
       "status": "pending",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "gates": [
+        "G6"
+      ]
     },
     {
       "id": "T0700",
@@ -1683,7 +1724,10 @@
       "rollback": "external review at T1003",
       "status": "pending",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "gates": [
+        "G13"
+      ]
     },
     {
       "id": "T0807",
@@ -1709,7 +1753,10 @@
       "rollback": "DOM panel as equal-power alternative",
       "status": "pending",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "gates": [
+        "G9"
+      ]
     },
     {
       "id": "T0901",
@@ -1927,7 +1974,8 @@
         "T0006",
         "T0007",
         "T0010",
-        "T0700w"
+        "T0700w",
+        "T0103b"
       ],
       "files": [
         "evals/",
@@ -2359,9 +2407,18 @@
       ],
       "risk": "gates become paperwork",
       "rollback": "registry is a checked mapping, not prose",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0159.md",
+        "docs/GATE_REGISTRY.json",
+        "docs/GATE_REGISTRY.md",
+        "scripts/check-gates.mjs",
+        "scripts/lint-rules/no-raw-style-values.mjs"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0159.md"
     },
     {
       "id": "T0811",

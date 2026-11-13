@@ -9,14 +9,15 @@
   },
   "scripts": {
     "typecheck": "pnpm run --silent build && pnpm -r --if-present run typecheck",
-    "check": "node scripts/check-continuation.mjs",
+    "check": "node scripts/check-continuation.mjs && node scripts/check-gates.mjs",
     "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "stylelint": "stylelint \"**/*.css\"",
-    "build": "pnpm -r --if-present run build"
+    "build": "pnpm -r --if-present run build",
+    "gates": "node scripts/check-gates.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -9,7 +9,7 @@ amended (D29). Checkpoint pushes to private dev branches permitted (D30).
 Canonical statuses: TASKS.json. Done: T0001-T0007 (M0 complete). No active lease.
 Concurrency 1.
 
-Current task: none (between tasks). Issue #8 resolved + closed via T0103b (CI green on e5ce983f). Next: T0154 (in progress: evidence-bundle schema written, needs validator CLI + tests), then T0153 baselines.
+Current task: none (between tasks). M1 + M1.5 COMPLETE (T0101-T0104, T0010, T0102b, T0103b, T0151-T0159). Next: M2 skill core — T0201 minimal SKILL.md + frontmatter validator.
 Next exact steps: run `pnpm check` (must exit 0), then T0151 rubric schema +
 scoring CLI in @sus/eval-core (deps T0104 done). Then T0152 screenshot+DOM
 harness, T0152b axe/Lighthouse budgets, T0102b fixtures B/C/D (needed by T0153

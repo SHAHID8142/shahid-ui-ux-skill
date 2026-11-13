@@ -1,0 +1,188 @@
+{
+  "version": 1,
+  "updated": "2026-11-14",
+  "source": "docs/PRD_AMENDMENTS_v1.1.md gates table (G1–G12) + reconciliation G13",
+  "rule": "A gate may only be relaxed by a DECISIONS.md entry naming approver, reason, expiry. Silent gate removal is a policy violation. G13 is NEVER waivable.",
+  "gates": [
+    {
+      "id": "G1",
+      "purpose": "Token-only styling",
+      "blocks": "commit",
+      "ownerTasks": [
+        "T0103",
+        "T0401"
+      ],
+      "check": "eslint rule sus/no-raw-style-values (shared impl scripts/lint-rules/no-raw-style-values.mjs)",
+      "checkStatus": "implemented",
+      "waivable": true,
+      "badFixture": "scripts/gates/fixtures/g1-bad.ts"
+    },
+    {
+      "id": "G2",
+      "purpose": "Section order (N+1 without N accepted fails)",
+      "blocks": "commit",
+      "ownerTasks": [
+        "T0502",
+        "T0503"
+      ],
+      "check": null,
+      "checkStatus": "not-run",
+      "waivable": true
+    },
+    {
+      "id": "G3",
+      "purpose": "No placeholder content / unregistered numeric claims",
+      "blocks": "commit",
+      "ownerTasks": [
+        "T0303",
+        "T0305"
+      ],
+      "check": null,
+      "checkStatus": "not-run",
+      "waivable": true
+    },
+    {
+      "id": "G4",
+      "purpose": "A11y floor: zero serious/critical axe + criteria-to-evidence map (not an AA conformance claim)",
+      "blocks": "acceptance",
+      "ownerTasks": [
+        "T0152b"
+      ],
+      "check": "packages/eval-core evaluateG4 (fail-closed) + tests",
+      "checkStatus": "implemented",
+      "waivable": true,
+      "badFixture": "packages/eval-core/tests/a11y-budgets.test.ts (serious-violation negative)"
+    },
+    {
+      "id": "G5",
+      "purpose": "Perf budgets: lab vs field as separate fields; TBT is the INP lab proxy",
+      "blocks": "acceptance",
+      "ownerTasks": [
+        "T0152b"
+      ],
+      "check": "packages/eval-core evaluateG5 (fail-closed) + tests",
+      "checkStatus": "implemented",
+      "waivable": true,
+      "badFixture": "packages/eval-core/tests/a11y-budgets.test.ts (null-metric negative)"
+    },
+    {
+      "id": "G6",
+      "purpose": "Motion parity: reduced-motion equivalence preserving information/operation",
+      "blocks": "acceptance",
+      "ownerTasks": [
+        "T0603"
+      ],
+      "check": null,
+      "checkStatus": "not-run",
+      "waivable": true
+    },
+    {
+      "id": "G7",
+      "purpose": "Reflow: 320px equivalence, 400% zoom, standard exceptions; no overflow-hiding",
+      "blocks": "acceptance",
+      "ownerTasks": [
+        "T0551",
+        "T0152"
+      ],
+      "check": "harness emits overflow fields (partial); full gate not-run",
+      "checkStatus": "not-run",
+      "waivable": true
+    },
+    {
+      "id": "G8",
+      "purpose": "Target size >= 24x24 with standard exceptions (project minimums are policy, not the standard)",
+      "blocks": "acceptance",
+      "ownerTasks": [
+        "T0152",
+        "T0152b"
+      ],
+      "check": "harness emits smallTapTargets fields (partial); full gate not-run",
+      "checkStatus": "not-run",
+      "waivable": true
+    },
+    {
+      "id": "G9",
+      "purpose": "Semantics: headings, landmarks, focus-visible, no click-only controls",
+      "blocks": "acceptance",
+      "ownerTasks": [
+        "T0807",
+        "T0403"
+      ],
+      "check": null,
+      "checkStatus": "not-run",
+      "waivable": true
+    },
+    {
+      "id": "G10",
+      "purpose": "Detector precision/recall >= target before any rule ships as blocking",
+      "blocks": "release",
+      "ownerTasks": [
+        "T0305"
+      ],
+      "check": null,
+      "checkStatus": "not-run",
+      "waivable": true
+    },
+    {
+      "id": "G11",
+      "purpose": "Evidence completeness: bundle present and schema-valid",
+      "blocks": "acceptance",
+      "ownerTasks": [
+        "T0154"
+      ],
+      "check": "packages/schemas evaluateG11 (fail-closed) + sus-eval evidence CLI",
+      "checkStatus": "implemented",
+      "waivable": true,
+      "badFixture": "packages/eval-core/tests/evidence-bundle.test.ts (empty-gates negative)"
+    },
+    {
+      "id": "G12",
+      "purpose": "Contract drift: code tokens vs DESIGN_CONTRACT.md divergence report",
+      "blocks": "weekly+release",
+      "ownerTasks": [
+        "T0401"
+      ],
+      "check": null,
+      "checkStatus": "not-run",
+      "waivable": true
+    },
+    {
+      "id": "G13",
+      "purpose": "Critical security/privacy: fail-closed denial, injection quarantine, privacy defaults — NEVER waivable",
+      "blocks": "release",
+      "ownerTasks": [
+        "T0806"
+      ],
+      "check": null,
+      "checkStatus": "not-run",
+      "waivable": false
+    }
+  ],
+  "semanticPrerequisites": [
+    {
+      "from": "T0700",
+      "to": "T0102b",
+      "why": "dual-stack mapping spike needs both framework fixtures (Next + Astro)"
+    },
+    {
+      "from": "T0153",
+      "to": "T0154",
+      "why": "baselines need the evidence-bundle schema they are recorded with"
+    },
+    {
+      "from": "T0707",
+      "to": "T0709",
+      "why": "first mutating Studio slice needs request replay/idempotence contract"
+    },
+    {
+      "from": "T0707",
+      "to": "T0805",
+      "why": "first mutating Studio slice needs crash/restart recovery"
+    },
+    {
+      "from": "T1006",
+      "to": "T1001",
+      "why": "final private push follows the full regression sweep"
+    }
+  ]
+}

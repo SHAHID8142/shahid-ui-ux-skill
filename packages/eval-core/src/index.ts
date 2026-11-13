@@ -22,3 +22,12 @@ export {
   type AgreementReport,
   type AxisAgreement,
 } from './judge.js';
+export {
+  evaluateG4,
+  evaluateG5,
+  type GateVerdict,
+  type AxeScanResult,
+  type LighthouseSummary,
+  type BudgetSpec,
+  type GateStatus,
+} from './harness/a11y-budgets.js';

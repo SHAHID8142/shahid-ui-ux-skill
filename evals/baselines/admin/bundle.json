@@ -39,18 +39,7 @@
       "url": "http://127.0.0.1:4345/admin",
       "title": "Ledger CMS — Dashboard",
       "horizontalOverflow": true,
-      "overflowingElements": [
-        "h2",
-        "p",
-        "h2",
-        "p",
-        "h2",
-        "p",
-        "th",
-        "th",
-        "th",
-        "th"
-      ],
+      "overflowingElements": ["h2", "p", "h2", "p", "h2", "p", "th", "th", "th", "th"],
       "cls": 0,
       "lcpMs": 0,
       "smallTapTargets": [
@@ -132,18 +121,7 @@
       "url": "http://127.0.0.1:4345/admin",
       "title": "Ledger CMS — Dashboard",
       "horizontalOverflow": true,
-      "overflowingElements": [
-        "h2",
-        "p",
-        "h2",
-        "p",
-        "h2",
-        "p",
-        "th",
-        "th",
-        "th",
-        "th"
-      ],
+      "overflowingElements": ["h2", "p", "h2", "p", "h2", "p", "th", "th", "th", "th"],
       "cls": 0,
       "lcpMs": 0,
       "smallTapTargets": [
@@ -564,7 +542,7 @@
       "detail": [
         "http://127.0.0.1:4345/admin LCP ms: 605 / limit 2500 — ok",
         "http://127.0.0.1:4345/admin CLS: 0 / limit 0.1 — ok",
-        "http://127.0.0.1:4345/admin TBT ms: 417 / limit 200 — EXCEEDED",
+        "http://127.0.0.1:4345/admin TBT ms: 385 / limit 200 — EXCEEDED",
         "http://127.0.0.1:4345/admin totalBytes: 3979 / limit 500000 — ok"
       ]
     }
@@ -574,97 +552,73 @@
       "axis": "hierarchy",
       "score": 3,
       "basis": "critic-validated",
-      "evidence": [
-        "evals/baselines/admin/evidence/desktop-light.png"
-      ]
+      "evidence": ["evals/baselines/admin/evidence/desktop-light.png"]
     },
     {
       "axis": "composition",
       "score": 3,
       "basis": "critic-validated",
-      "evidence": [
-        "evals/baselines/admin/evidence/desktop-light.png"
-      ]
+      "evidence": ["evals/baselines/admin/evidence/desktop-light.png"]
     },
     {
       "axis": "typography",
       "score": 2,
       "basis": "critic-validated",
-      "evidence": [
-        "evals/baselines/admin/evidence/desktop-light.png"
-      ]
+      "evidence": ["evals/baselines/admin/evidence/desktop-light.png"]
     },
     {
       "axis": "color-surface",
       "score": 2,
       "basis": "critic-validated",
-      "evidence": [
-        "evals/baselines/admin/evidence/desktop-light.png"
-      ]
+      "evidence": ["evals/baselines/admin/evidence/desktop-light.png"]
     },
     {
       "axis": "spacing-rhythm",
       "score": 3,
       "basis": "critic-validated",
-      "evidence": [
-        "evals/baselines/admin/evidence/desktop-light.png"
-      ]
+      "evidence": ["evals/baselines/admin/evidence/desktop-light.png"]
     },
     {
       "axis": "motion-interaction",
       "score": 2,
       "basis": "critic-validated",
-      "evidence": [
-        "evals/baselines/admin/evidence/desktop-light.png"
-      ]
+      "evidence": ["evals/baselines/admin/evidence/desktop-light.png"]
     },
     {
       "axis": "content-copy",
       "score": 3,
       "basis": "critic-validated",
-      "evidence": [
-        "evals/baselines/admin/evidence/desktop-light.png"
-      ]
+      "evidence": ["evals/baselines/admin/evidence/desktop-light.png"]
     },
     {
       "axis": "accessibility",
       "score": 1,
       "basis": "measured",
-      "evidence": [
-        "evals/baselines/admin/evidence/axe-0.json"
-      ]
+      "evidence": ["evals/baselines/admin/evidence/axe-0.json"]
     },
     {
       "axis": "responsive-edge",
       "score": 1,
       "basis": "measured",
-      "evidence": [
-        "evals/baselines/admin/evidence/capture.json"
-      ]
+      "evidence": ["evals/baselines/admin/evidence/capture.json"]
     },
     {
       "axis": "consistency-system",
       "score": 2,
       "basis": "critic-validated",
-      "evidence": [
-        "evals/baselines/admin/evidence/desktop-light.png"
-      ]
+      "evidence": ["evals/baselines/admin/evidence/desktop-light.png"]
     },
     {
       "axis": "distinctiveness-pov",
       "score": 2,
       "basis": "judged",
-      "evidence": [
-        "evals/baselines/admin/page.html"
-      ]
+      "evidence": ["evals/baselines/admin/page.html"]
     },
     {
       "axis": "performance",
       "score": 3,
       "basis": "measured",
-      "evidence": [
-        "evals/baselines/admin/evidence/budget-table.json"
-      ]
+      "evidence": ["evals/baselines/admin/evidence/budget-table.json"]
     }
   ],
   "notes": [

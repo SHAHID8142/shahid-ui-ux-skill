@@ -39,9 +39,7 @@
       "url": "http://127.0.0.1:4345/portfolio",
       "title": "Studio Fixture — Portfolio",
       "horizontalOverflow": true,
-      "overflowingElements": [
-        "code"
-      ],
+      "overflowingElements": ["code"],
       "cls": 0,
       "lcpMs": 0,
       "smallTapTargets": [
@@ -66,11 +64,7 @@
           "height": 19
         }
       ],
-      "landmarks": [
-        "nav",
-        "main",
-        "section#work"
-      ],
+      "landmarks": ["nav", "main", "section#work"],
       "headings": [
         {
           "level": 1,
@@ -106,9 +100,7 @@
       "url": "http://127.0.0.1:4345/portfolio",
       "title": "Studio Fixture — Portfolio",
       "horizontalOverflow": true,
-      "overflowingElements": [
-        "code"
-      ],
+      "overflowingElements": ["code"],
       "cls": 0,
       "lcpMs": 0,
       "smallTapTargets": [
@@ -133,11 +125,7 @@
           "height": 19
         }
       ],
-      "landmarks": [
-        "nav",
-        "main",
-        "section#work"
-      ],
+      "landmarks": ["nav", "main", "section#work"],
       "headings": [
         {
           "level": 1,
@@ -198,11 +186,7 @@
           "height": 19
         }
       ],
-      "landmarks": [
-        "nav",
-        "main",
-        "section#work"
-      ],
+      "landmarks": ["nav", "main", "section#work"],
       "headings": [
         {
           "level": 1,
@@ -263,11 +247,7 @@
           "height": 19
         }
       ],
-      "landmarks": [
-        "nav",
-        "main",
-        "section#work"
-      ],
+      "landmarks": ["nav", "main", "section#work"],
       "headings": [
         {
           "level": 1,
@@ -328,11 +308,7 @@
           "height": 19
         }
       ],
-      "landmarks": [
-        "nav",
-        "main",
-        "section#work"
-      ],
+      "landmarks": ["nav", "main", "section#work"],
       "headings": [
         {
           "level": 1,
@@ -393,11 +369,7 @@
           "height": 19
         }
       ],
-      "landmarks": [
-        "nav",
-        "main",
-        "section#work"
-      ],
+      "landmarks": ["nav", "main", "section#work"],
       "headings": [
         {
           "level": 1,
@@ -434,17 +406,15 @@
     {
       "gate": "G4",
       "status": "pass",
-      "detail": [
-        "zero serious/critical axe violations across recorded scans"
-      ]
+      "detail": ["zero serious/critical axe violations across recorded scans"]
     },
     {
       "gate": "G5",
       "status": "fail",
       "detail": [
-        "http://127.0.0.1:4345/portfolio LCP ms: 602 / limit 2500 — ok",
+        "http://127.0.0.1:4345/portfolio LCP ms: 603 / limit 2500 — ok",
         "http://127.0.0.1:4345/portfolio CLS: 0 / limit 0.1 — ok",
-        "http://127.0.0.1:4345/portfolio TBT ms: 424 / limit 200 — EXCEEDED",
+        "http://127.0.0.1:4345/portfolio TBT ms: 466 / limit 200 — EXCEEDED",
         "http://127.0.0.1:4345/portfolio totalBytes: 3607 / limit 500000 — ok"
       ]
     }
@@ -454,97 +424,73 @@
       "axis": "hierarchy",
       "score": 3,
       "basis": "critic-validated",
-      "evidence": [
-        "evals/baselines/portfolio/evidence/desktop-light.png"
-      ]
+      "evidence": ["evals/baselines/portfolio/evidence/desktop-light.png"]
     },
     {
       "axis": "composition",
       "score": 3,
       "basis": "critic-validated",
-      "evidence": [
-        "evals/baselines/portfolio/evidence/desktop-light.png"
-      ]
+      "evidence": ["evals/baselines/portfolio/evidence/desktop-light.png"]
     },
     {
       "axis": "typography",
       "score": 2,
       "basis": "critic-validated",
-      "evidence": [
-        "evals/baselines/portfolio/evidence/desktop-light.png"
-      ]
+      "evidence": ["evals/baselines/portfolio/evidence/desktop-light.png"]
     },
     {
       "axis": "color-surface",
       "score": 2,
       "basis": "critic-validated",
-      "evidence": [
-        "evals/baselines/portfolio/evidence/desktop-light.png"
-      ]
+      "evidence": ["evals/baselines/portfolio/evidence/desktop-light.png"]
     },
     {
       "axis": "spacing-rhythm",
       "score": 3,
       "basis": "critic-validated",
-      "evidence": [
-        "evals/baselines/portfolio/evidence/desktop-light.png"
-      ]
+      "evidence": ["evals/baselines/portfolio/evidence/desktop-light.png"]
     },
     {
       "axis": "motion-interaction",
       "score": 2,
       "basis": "critic-validated",
-      "evidence": [
-        "evals/baselines/portfolio/evidence/desktop-light.png"
-      ]
+      "evidence": ["evals/baselines/portfolio/evidence/desktop-light.png"]
     },
     {
       "axis": "content-copy",
       "score": 3,
       "basis": "critic-validated",
-      "evidence": [
-        "evals/baselines/portfolio/evidence/desktop-light.png"
-      ]
+      "evidence": ["evals/baselines/portfolio/evidence/desktop-light.png"]
     },
     {
       "axis": "accessibility",
       "score": 4,
       "basis": "measured",
-      "evidence": [
-        "evals/baselines/portfolio/evidence/axe-0.json"
-      ]
+      "evidence": ["evals/baselines/portfolio/evidence/axe-0.json"]
     },
     {
       "axis": "responsive-edge",
       "score": 1,
       "basis": "measured",
-      "evidence": [
-        "evals/baselines/portfolio/evidence/capture.json"
-      ]
+      "evidence": ["evals/baselines/portfolio/evidence/capture.json"]
     },
     {
       "axis": "consistency-system",
       "score": 2,
       "basis": "critic-validated",
-      "evidence": [
-        "evals/baselines/portfolio/evidence/desktop-light.png"
-      ]
+      "evidence": ["evals/baselines/portfolio/evidence/desktop-light.png"]
     },
     {
       "axis": "distinctiveness-pov",
       "score": 2,
       "basis": "judged",
-      "evidence": [
-        "evals/baselines/portfolio/page.html"
-      ]
+      "evidence": ["evals/baselines/portfolio/page.html"]
     },
     {
       "axis": "performance",
       "score": 3,
       "basis": "measured",
-      "evidence": [
-        "evals/baselines/portfolio/evidence/budget-table.json"
-      ]
+      "evidence": ["evals/baselines/portfolio/evidence/budget-table.json"]
     }
   ],
   "notes": [

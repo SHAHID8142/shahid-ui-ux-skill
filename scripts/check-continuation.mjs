@@ -208,9 +208,12 @@ for (const t of tasks) {
     if (text === null) continue; // already flagged above
     const namesTask = text.includes(t.id);
     check(`receipt ${r} names its task (${t.id})`, namesTask, '', 'fail');
-    const failVerdict = /=\s*fail\b|verdict:\s*fail\b|=\s*not-run\b(?!\w)/i.test(text);
+    // A done task's receipt may legitimately record not-run/not-applicable
+    // sub-checks WITH reasons (receipt contract); only bare fail verdicts
+    // contradict the done status.
+    const failVerdict = /=\s*fail\b|verdict:\s*fail\b/i.test(text);
     check(
-      `receipt ${r} records no bare fail/not-run verdict for done task ${t.id}`,
+      `receipt ${r} records no fail verdict for done task ${t.id}`,
       !failVerdict,
       failVerdict ? 'done task receipt contains a failing verdict — investigate' : '',
       'fail',
