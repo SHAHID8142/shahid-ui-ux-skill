@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { AxeBuilder } from '@axe-core/playwright';
-import { chromium, type Browser, type Page } from 'playwright';
+import { type Browser, type Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { CdpOverlay, type AttachResult } from '../src/cdp.js';
 
@@ -53,11 +53,8 @@ beforeAll(async () => {
   browser = launched.browser;
   page = launched.page;
   attachResult = launched.result;
-  // keep a handle alive for the tests: re-attach through a module-level instance
-  attachHandle = overlay;
 }, 120000);
 
-let attachHandle: CdpOverlay;
 
 afterAll(async () => {
   await browser?.close();
