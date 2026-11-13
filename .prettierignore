@@ -1,0 +1,12 @@
+# Canonical records, continuity files and all markdown are authored, not auto-formatted
+pnpm-lock.yaml
+TASKS.json
+*.md
+.sus-dev/
+docs/
+archive/
+reviews/
+fixtures/marketing/.next/
+**/dist/
+**/next-env.d.ts
+**/tsconfig.tsbuildinfo

@@ -43,11 +43,19 @@ export default function MarketingPage() {
     <main id="main">
       <header id="navbar" className="section navbar" aria-label="Site navigation">
         <nav>
-          <a href="#hero" className="wordmark">Nimbus Desk</a>
+          <a href="#hero" className="wordmark">
+            Nimbus Desk
+          </a>
           <ul>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#social-proof">Stories</a></li>
-            <li><a href="#cta">Get started</a></li>
+            <li>
+              <a href="#features">Features</a>
+            </li>
+            <li>
+              <a href="#social-proof">Stories</a>
+            </li>
+            <li>
+              <a href="#cta">Get started</a>
+            </li>
           </ul>
         </nav>
       </header>
@@ -55,10 +63,12 @@ export default function MarketingPage() {
       <section id="hero" className="section hero" aria-labelledby="hero-title">
         <h1 id="hero-title">Plan the week once, then let the plan work</h1>
         <p className="lede">
-          Nimbus Desk is a hypothetical planning tool used as a test fixture.
-          Its copy is synthetic: nothing here describes a real product or claims.
+          Nimbus Desk is a hypothetical planning tool used as a test fixture. Its copy is synthetic:
+          nothing here describes a real product or claims.
         </p>
-        <a href="#cta" className="button primary">See the checklist</a>
+        <a href="#cta" className="button primary">
+          See the checklist
+        </a>
       </section>
 
       <section id="features" className="section features" aria-labelledby="features-title">
@@ -73,7 +83,11 @@ export default function MarketingPage() {
         </ul>
       </section>
 
-      <section id="social-proof" className="section social-proof" aria-labelledby="social-proof-title">
+      <section
+        id="social-proof"
+        className="section social-proof"
+        aria-labelledby="social-proof-title"
+      >
         <h2 id="social-proof-title">Notes from the fixture dataset</h2>
         <figure className="quote" id="quote-one">
           <blockquote>{quotes[0]?.text}</blockquote>
@@ -88,13 +102,15 @@ export default function MarketingPage() {
       <section id="cta" className="section cta" aria-labelledby="cta-title">
         <h2 id="cta-title">Try the demo checklist</h2>
         <p>This fixture intentionally ships no signup flow. The button is a demo control.</p>
-        <button type="button" className="button secondary">Open demo</button>
+        <button type="button" className="button secondary">
+          Open demo
+        </button>
       </section>
 
       <footer id="footer" className="section footer">
         <p>
-          Fixture content for SUS evaluation. Synthetic copy, no real persons,
-          no tracking scripts, no external requests.
+          Fixture content for SUS evaluation. Synthetic copy, no real persons, no tracking scripts,
+          no external requests.
         </p>
       </footer>
     </main>

@@ -238,9 +238,18 @@
       ],
       "risk": "over-strict lint slows iteration",
       "rollback": "rule tiers: error/warn/advisory",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D28/D29 build authorization (self-verified per protocol)",
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0103.md",
+        "eslint.config.mjs",
+        "stylelint.config.mjs",
+        ".github/workflows/ci.yml",
+        ".prettierrc.json"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0103.md"
     },
     {
       "id": "T0104",

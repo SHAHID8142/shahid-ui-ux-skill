@@ -53,3 +53,12 @@
   next build 0; next start curl 200 (9930B, 6/6 landmarks, 0 external URLs); next dev
   curl 200. Two build/test failures found+fixed en route (JSX automatic runtime;
   default-404 prerender). Receipt: .sus-dev/VERIFICATION/T0102.md. Next: T0103 lint/CI.
+
+- 2026-11-13T23:35:00+06:00 | ZCode (GLM) | T0103 | Flat ESLint (ts-eslint rec + prettier
+  + node globals), custom sus/no-raw-style-values G1-precursor rule (hex ban in
+  packages/*/src), stylelint 18 + config-standard 41, prettier (markdown excluded by
+  policy), CI workflow (node 22/24 matrix, check->lint->format->typecheck->test).
+  Checks: lint 0 (negative hex fixture -> exit 1, restored); stylelint 0 (12 auto-fixed);
+  format:check 0; typecheck 0; test 4/4; workflow YAML parsed. Remote CI run not-run
+  (triggers on push). Dead code in checker removed. Receipt: .sus-dev/VERIFICATION/T0103.md.
+  Next: T0104 schema versioning + contract-test strategy (Zod, ADR-005).

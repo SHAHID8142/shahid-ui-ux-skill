@@ -1,0 +1,35 @@
+name: CI
+
+# Build-phase verification pipeline (protocol §0.5): automated checks on dev
+# branches. main is never built here; final private push is T1006.
+"on":
+  push:
+    branches-ignore: [main]
+  pull_request:
+
+jobs:
+  verify:
+    name: verify (node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['22', '24'] # ADR-006: maintenance LTS + active LTS
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4 # reads packageManager from package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Continuation checker
+        run: pnpm check
+      - name: Lint
+        run: pnpm lint
+      - name: Format check
+        run: pnpm format:check
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Tests
+        run: pnpm test

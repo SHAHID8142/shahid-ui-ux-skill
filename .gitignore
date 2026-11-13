@@ -33,3 +33,6 @@ playwright-report/
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# TypeScript incremental build info (regenerated)
+*.tsbuildinfo

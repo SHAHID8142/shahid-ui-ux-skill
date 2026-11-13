@@ -2,7 +2,7 @@
    later SUS tasks (tokens G1/G12, scanner corpus) modify and measure this. */
 :root {
   --fg: #1a1d21;
-  --bg: #ffffff;
+  --bg: #fff;
   --muted: #5c6470;
   --accent: #2743c7;
   --surface: #f4f6fa;
@@ -10,42 +10,131 @@
   --space-group: 1.5rem;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
   color: var(--fg);
   background: var(--bg);
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
   line-height: 1.6;
 }
 
-.section { padding: var(--space-group); max-width: 60rem; margin-inline: auto; }
+.section {
+  padding: var(--space-group);
+  max-width: 60rem;
+  margin-inline: auto;
+}
 
-.navbar nav { display: flex; justify-content: space-between; align-items: center; }
-.navbar ul { display: flex; gap: 1rem; list-style: none; margin: 0; padding: 0; }
-.wordmark { font-weight: 700; text-decoration: none; color: var(--fg); }
+.navbar nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-.hero { padding-block: 4rem; }
-.hero h1 { font-size: 2.25rem; line-height: 1.15; margin: 0 0 1rem; }
-.lede { color: var(--muted); max-width: 44ch; }
+.navbar ul {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.wordmark {
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--fg);
+}
+
+.hero {
+  padding-block: 4rem;
+}
+
+.hero h1 {
+  font-size: 2.25rem;
+  line-height: 1.15;
+  margin: 0 0 1rem;
+}
+
+.lede {
+  color: var(--muted);
+  max-width: 44ch;
+}
 
 .button {
-  display: inline-block; padding: 0.6rem 1.1rem; border-radius: var(--radius);
-  border: 1px solid transparent; cursor: pointer; font: inherit;
+  display: inline-block;
+  padding: 0.6rem 1.1rem;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  font: inherit;
 }
-.button.primary { background: var(--accent); color: #fff; }
-.button.secondary { background: var(--surface); color: var(--fg); border-color: #d5d9e2; }
 
-.features ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
-.feature-card { background: var(--surface); border-radius: var(--radius); padding: 1rem; }
-.feature-card h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
+.button.primary {
+  background: var(--accent);
+  color: #fff;
+}
 
-.social-proof .quote { margin: 1rem 0; border-left: 3px solid var(--accent); padding-left: 1rem; }
-.social-proof blockquote { margin: 0 0 0.4rem; }
-.social-proof figcaption { color: var(--muted); font-size: 0.9rem; }
+.button.secondary {
+  background: var(--surface);
+  color: var(--fg);
+  border-color: #d5d9e2;
+}
 
-.cta { background: var(--surface); border-radius: var(--radius); margin-block: 2rem; padding: 2rem; }
-.cta h2 { margin-top: 0; }
+.features ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
 
-.footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid #e3e6ec; }
+.feature-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.feature-card h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.05rem;
+}
+
+.social-proof .quote {
+  margin: 1rem 0;
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+}
+
+.social-proof blockquote {
+  margin: 0 0 0.4rem;
+}
+
+.social-proof figcaption {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.cta {
+  background: var(--surface);
+  border-radius: var(--radius);
+  margin-block: 2rem;
+  padding: 2rem;
+}
+
+.cta h2 {
+  margin-top: 0;
+}
+
+.footer {
+  color: var(--muted);
+  font-size: 0.9rem;
+  border-top: 1px solid #e3e6ec;
+}

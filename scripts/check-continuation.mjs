@@ -16,28 +16,34 @@
  */
 
 import { execFileSync } from 'node:child_process';
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const ROOT = process.cwd();
 const results = [];
-let sawFailure = false; // hard inconsistencies -> exit 1
-let sawRecovery = false; // dirty/divergence -> exit 2
 
 function sh(cmd, args) {
   try {
-    return execFileSync(cmd, args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
-  } catch (err) {
+    return execFileSync(cmd, args, {
+      cwd: ROOT,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    }).trim();
+  } catch {
     return null;
   }
 }
 
 function check(name, ok, detail, severity) {
   // severity: 'fail' = inconsistency (exit 1), 'recover' = needs review (exit 2),
-  // 'info' = informational only.
-  if (severity === 'fail' && !ok) sawFailure = true;
-  if (severity === 'recover' && !ok) sawRecovery = true;
-  const mark = ok ? 'PASS' : severity === 'info' ? 'INFO' : severity === 'recover' ? 'REVIEW' : 'FAIL';
+  // 'info' = informational only. The verdict is computed from results at the end.
+  const mark = ok
+    ? 'PASS'
+    : severity === 'info'
+      ? 'INFO'
+      : severity === 'recover'
+        ? 'REVIEW'
+        : 'FAIL';
   results.push({ mark, name, detail: ok ? (detail ?? '') : (detail ?? 'condition not met') });
 }
 
@@ -84,9 +90,12 @@ if (tasksDoc && Array.isArray(tasksDoc.tasks)) {
   tasks = tasksDoc.tasks;
   check('TASKS.json parses; tasks is an array', true, `${tasks.length} tasks`, 'fail');
   const meta = tasksDoc.meta ?? {};
-  check('TASKS.json meta has canonical fields',
+  check(
+    'TASKS.json meta has canonical fields',
     Boolean(meta.product && meta.version && meta.build_gate && meta.protocol),
-    `version=${meta.version ?? 'missing'}`, 'fail');
+    `version=${meta.version ?? 'missing'}`,
+    'fail',
+  );
 } else {
   check('TASKS.json parses; tasks is an array', false, 'missing or malformed', 'fail');
 }
@@ -94,7 +103,18 @@ if (tasksDoc && Array.isArray(tasksDoc.tasks)) {
 // ---------- 3. task records: fields, unique IDs, status vocabulary ----------
 const ID_RE = /^T\d{3,4}[a-z]{0,2}$/;
 const STATUSES = new Set(['pending', 'review', 'done', 'blocked']);
-const REQUIRED_FIELDS = ['m', 'title', 'obj', 'deps', 'files', 'acc', 'tests', 'risk', 'rollback', 'status'];
+const REQUIRED_FIELDS = [
+  'm',
+  'title',
+  'obj',
+  'deps',
+  'files',
+  'acc',
+  'tests',
+  'risk',
+  'rollback',
+  'status',
+];
 const ids = new Set();
 if (tasks.length > 0) {
   for (const t of tasks) {
@@ -136,15 +156,22 @@ if (tasks.length > 0) {
       if (!ids.has(d)) dangling.push(`${t.id} -> ${d}`);
     }
   }
-  check('no dangling dependencies', dangling.length === 0,
-    dangling.length === 0 ? '' : `dangling: ${dangling.join(', ')}`, 'fail');
+  check(
+    'no dangling dependencies',
+    dangling.length === 0,
+    dangling.length === 0 ? '' : `dangling: ${dangling.join(', ')}`,
+    'fail',
+  );
 
   // acyclicity via Kahn's algorithm
   const indeg = new Map(tasks.map((t) => [t.id, 0]));
   const adj = new Map(tasks.map((t) => [t.id, []]));
   for (const t of tasks) {
     for (const d of t.deps ?? []) {
-      if (adj.has(d)) { adj.get(d).push(t.id); indeg.set(t.id, indeg.get(t.id) + 1); }
+      if (adj.has(d)) {
+        adj.get(d).push(t.id);
+        indeg.set(t.id, indeg.get(t.id) + 1);
+      }
     }
   }
   let queue = [...indeg.entries()].filter(([, n]) => n === 0).map(([id]) => id);
@@ -157,8 +184,12 @@ if (tasks.length > 0) {
       if (indeg.get(next) === 0) queue.push(next);
     }
   }
-  check('dependency graph acyclic', visited === tasks.length,
-    visited === tasks.length ? '' : `${tasks.length - visited} tasks in a cycle`, 'fail');
+  check(
+    'dependency graph acyclic',
+    visited === tasks.length,
+    visited === tasks.length ? '' : `${tasks.length - visited} tasks in a cycle`,
+    'fail',
+  );
 }
 
 // ---------- 5. done tasks have existing, consistent evidence ----------
@@ -178,9 +209,18 @@ for (const t of tasks) {
     const namesTask = text.includes(t.id);
     check(`receipt ${r} names its task (${t.id})`, namesTask, '', 'fail');
     const failVerdict = /=\s*fail\b|verdict:\s*fail\b|=\s*not-run\b(?!\w)/i.test(text);
-    check(`receipt ${r} records no bare fail/not-run verdict for done task ${t.id}`,
-      !failVerdict, failVerdict ? 'done task receipt contains a failing verdict — investigate' : '', 'fail');
-    check(`receipt ${r} records a pass verdict for done task ${t.id}`, /pass/i.test(text), '', 'fail');
+    check(
+      `receipt ${r} records no bare fail/not-run verdict for done task ${t.id}`,
+      !failVerdict,
+      failVerdict ? 'done task receipt contains a failing verdict — investigate' : '',
+      'fail',
+    );
+    check(
+      `receipt ${r} records a pass verdict for done task ${t.id}`,
+      /pass/i.test(text),
+      '',
+      'fail',
+    );
   }
 }
 
@@ -190,18 +230,29 @@ if (er) {
   const perm = er.build_permission === true;
   const decisions = readText('docs/OWNER_DECISIONS_LOG.md') ?? '';
   const aperioRecorded = /APERIO/.test(decisions) && /BUILD_PERMISSION = true/.test(decisions);
-  check('EFFECTIVE_REQUIREMENTS.build_permission matches recorded APERIO decision',
+  check(
+    'EFFECTIVE_REQUIREMENTS.build_permission matches recorded APERIO decision',
     perm === aperioRecorded,
-    perm === aperioRecorded ? '' : 'manifest and decisions log disagree about the build gate', 'fail');
+    perm === aperioRecorded ? '' : 'manifest and decisions log disagree about the build gate',
+    'fail',
+  );
   const meta = tasksDoc?.meta ?? {};
   const gateAgrees = perm
     ? /received/i.test(String(meta.build_gate ?? ''))
     : !/received/i.test(String(meta.build_gate ?? ''));
-  check('TASKS.json meta.build_gate agrees with build_permission', gateAgrees,
-    gateAgreeDetail(perm, meta.build_gate), 'fail');
+  check(
+    'TASKS.json meta.build_gate agrees with build_permission',
+    gateAgrees,
+    gateAgreeDetail(perm, meta.build_gate),
+    'fail',
+  );
   const adopted = (er.proposals ?? []).every((p) => /adopted/i.test(String(p.status)));
-  check('ADR proposals carry recorded adoption (D29)', adopted,
-    adopted ? '' : 'a proposal lacks an adopted status', 'fail');
+  check(
+    'ADR proposals carry recorded adoption (D29)',
+    adopted,
+    adopted ? '' : 'a proposal lacks an adopted status',
+    'fail',
+  );
 }
 function gateAgreeDetail(perm, gate) {
   return `build_permission=${perm}, meta.build_gate="${gate}"`;
@@ -214,17 +265,30 @@ if (gitOk) {
   const dirty = sh('git', ['status', '--porcelain=v1']) ?? '';
   const branch = sh('git', ['rev-parse', '--abbrev-ref', 'HEAD']);
   const conflicts = sh('git', ['diff', '--check']);
-  check('working tree clean', dirty === '',
-    dirty === '' ? '' : `${dirty.split('\n').filter(Boolean).length} changed path(s) — resume needs task-recovery review`,
-    'recover');
-  check('no conflict markers staged/unstaged', conflicts === null || conflicts === '',
-    conflicts ?? '', 'fail');
+  check(
+    'working tree clean',
+    dirty === '',
+    dirty === ''
+      ? ''
+      : `${dirty.split('\n').filter(Boolean).length} changed path(s) — resume needs task-recovery review`,
+    'recover',
+  );
+  check(
+    'no conflict markers staged/unstaged',
+    conflicts === null || conflicts === '',
+    conflicts ?? '',
+    'fail',
+  );
 
   const state = readText('.sus-dev/STATE.md') ?? '';
   const mBranch = state.match(/^Branch:\s*([^\s,.;]+)/m);
   if (mBranch) {
-    check('STATE.md branch matches actual branch', mBranch[1] === branch,
-      mBranch[1] === branch ? '' : `STATE says "${mBranch[1]}", actual "${branch}"`, 'info');
+    check(
+      'STATE.md branch matches actual branch',
+      mBranch[1] === branch,
+      mBranch[1] === branch ? '' : `STATE says "${mBranch[1]}", actual "${branch}"`,
+      'info',
+    );
   } else {
     check('STATE.md records a branch', false, 'no "Branch:" line found', 'fail');
   }
@@ -232,31 +296,65 @@ if (gitOk) {
   // unpushed commits: normal during build (D26/D30) — informational, not a failure
   const upstream = sh('git', ['rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{u}']);
   if (upstream) {
-    const ahead = Number.parseInt(sh('git', ['rev-list', '--count', `${upstream}..HEAD`]) ?? '0', 10);
-    check('unpushed commits reported for checkpoint policy', true,
-      ahead > 0 ? `${ahead} local commit(s) ahead of ${upstream} — push checkpoint per D30` : 'in sync', 'info');
+    const ahead = Number.parseInt(
+      sh('git', ['rev-list', '--count', `${upstream}..HEAD`]) ?? '0',
+      10,
+    );
+    check(
+      'unpushed commits reported for checkpoint policy',
+      true,
+      ahead > 0
+        ? `${ahead} local commit(s) ahead of ${upstream} — push checkpoint per D30`
+        : 'in sync',
+      'info',
+    );
   } else {
-    check('branch has an upstream', true, `branch "${branch}" has no upstream — push -u per D30 if needed`, 'info');
+    check(
+      'branch has an upstream',
+      true,
+      `branch "${branch}" has no upstream — push -u per D30 if needed`,
+      'info',
+    );
   }
 
   // other worktrees: historical review worktrees are expected; dirty ones need review
   const wt = (sh('git', ['worktree', 'list', '--porcelain']) ?? '').split('\n').filter(Boolean);
-  check('git worktrees listed', true,
-    `${wt.filter((l) => l.startsWith('worktree ')).length} worktree(s) — historical review worktrees are expected`, 'info');
+  check(
+    'git worktrees listed',
+    true,
+    `${wt.filter((l) => l.startsWith('worktree ')).length} worktree(s) — historical review worktrees are expected`,
+    'info',
+  );
 }
 
 // ---------- 8. tooling ----------
-check('node present', typeof process.versions.node === 'string', `node ${process.versions.node}`, 'info');
+check(
+  'node present',
+  typeof process.versions.node === 'string',
+  `node ${process.versions.node}`,
+  'info',
+);
 const pnpm = sh('pnpm', ['--version']);
-check('pnpm present (workspace tasks)', pnpm !== null, pnpm ? `pnpm ${pnpm}` : 'pnpm not found — workspace tasks will fail', 'info');
+check(
+  'pnpm present (workspace tasks)',
+  pnpm !== null,
+  pnpm ? `pnpm ${pnpm}` : 'pnpm not found — workspace tasks will fail',
+  'info',
+);
 
 // ---------- 9. stale lease ----------
 for (const t of tasks) {
   if (t.lease) {
     const state = readText('.sus-dev/STATE.md') ?? '';
     const session = String(t.lease.session ?? '');
-    check(`lease on ${t.id} is recorded in STATE.md`, state.includes(session),
-      state.includes(session) ? '' : `lease session "${session}" not found in STATE.md — stale lease, investigate before takeover`, 'fail');
+    check(
+      `lease on ${t.id} is recorded in STATE.md`,
+      state.includes(session),
+      state.includes(session)
+        ? ''
+        : `lease session "${session}" not found in STATE.md — stale lease, investigate before takeover`,
+      'fail',
+    );
   }
 }
 
@@ -272,12 +370,18 @@ console.log('='.repeat(60));
 const fails = results.filter((r) => r.mark === 'FAIL').length;
 const reviews = results.filter((r) => r.mark === 'REVIEW').length;
 if (fails > 0) {
-  console.log(`VERDICT: CANNOT RESUME SAFELY — ${fails} inconsistency(ies). Fix recorded state or recover the affected task(s) per protocol §1.3. Do not blindly continue.`);
+  console.log(
+    `VERDICT: CANNOT RESUME SAFELY — ${fails} inconsistency(ies). Fix recorded state or recover the affected task(s) per protocol §1.3. Do not blindly continue.`,
+  );
   process.exit(1);
 }
 if (reviews > 0) {
-  console.log(`VERDICT: RESUME REQUIRES TASK-RECOVERY REVIEW — working tree is not clean. Compare tracked changes with the recorded task intention; complete or revert only those changes.`);
+  console.log(
+    `VERDICT: RESUME REQUIRES TASK-RECOVERY REVIEW — working tree is not clean. Compare tracked changes with the recorded task intention; complete or revert only those changes.`,
+  );
   process.exit(2);
 }
-console.log('VERDICT: SAFE TO CONTINUE — read AGENTS.md, then STATE.md for the next eligible task.');
+console.log(
+  'VERDICT: SAFE TO CONTINUE — read AGENTS.md, then STATE.md for the next eligible task.',
+);
 process.exit(0);
