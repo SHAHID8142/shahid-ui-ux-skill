@@ -13,14 +13,14 @@
       "url": "http://127.0.0.1:4345/marketing",
       "lcpMs": 602,
       "cls": 0,
-      "totalBlockingMs": 0,
+      "totalBlockingMs": 6,
       "totalByteWeight": 2604
     }
   ],
   "detail": [
     "http://127.0.0.1:4345/marketing LCP ms: 602 / limit 2500 — ok",
     "http://127.0.0.1:4345/marketing CLS: 0 / limit 0.1 — ok",
-    "http://127.0.0.1:4345/marketing TBT ms: 0 / limit 200 — ok",
+    "http://127.0.0.1:4345/marketing TBT ms: 6 / limit 200 — ok",
     "http://127.0.0.1:4345/marketing totalBytes: 2604 / limit 500000 — ok"
   ]
 }

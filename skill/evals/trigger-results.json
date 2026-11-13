@@ -1,0 +1,10 @@
+{
+  "method": "deterministic proxy over description terms (live host-triggering evals: M9)",
+  "shouldTrigger": 4,
+  "triggered": 4,
+  "falsePositives": 0,
+  "falseNegatives": 0,
+  "precision": 1,
+  "recall": 1,
+  "recordedAt": "2026-11-14"
+}

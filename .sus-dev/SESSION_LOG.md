@@ -176,3 +176,9 @@
   not-built status, per-load budget w/ refusal semantics) + precedence resolver
   (auto-injected fixed layer, surfaced conflicts). 11/11 tests. Receipt:
   VERIFICATION/T0203.md. Next: T0204 CLI fallback.
+
+- 2026-11-14T03:20:00+06:00 | ZCode (GLM) | T0204+T0205 | sus CLI (route/load/
+  precedence/capabilities) with honest degradation matrix; triggering proxy evals
+  recorded (precision 1.0 / recall 1.0, live host evals deferred to M9 explicitly).
+  18/18 adapters tests; workspace suites green. M2 COMPLETE (T0201-T0205).
+  Receipts: VERIFICATION/T0204.md, T0205.md. Next: M3 research/anti-slop.

@@ -657,9 +657,16 @@
       ],
       "risk": "CLI/skill drift",
       "rollback": "shared contract tests",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0204.md",
+        "packages/adapters/src/cli.ts",
+        "packages/adapters/tests/cli.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0204.md"
     },
     {
       "id": "T0205",
@@ -680,9 +687,16 @@
       ],
       "risk": "description churn",
       "rollback": "description changes require eval rerun",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0205.md",
+        "packages/adapters/tests/triggering.test.ts",
+        "skill/evals/trigger-results.json"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0205.md"
     },
     {
       "id": "T0301",
