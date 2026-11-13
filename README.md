@@ -3,6 +3,12 @@
 Planning workspace for **SUS**: an agent-agnostic design-intelligence skill + mandatory
 **Live Studio** for building high-quality web UI one approved section at a time.
 
+**Scope (owner decision D14):** web UI/UX — marketing sites, e-commerce, CRM/dashboards,
+CMS admin panels, portfolios. No native mobile at v1.
+**Epistemic contract (D15–D17):** no templates; the agent must argue non-best-practice requests
+with evidence and stay a learner, not a believer in its training data.
+**Build gate (D19):** planning only until the owner sends `APERIO`.
+
 **Current state:** specification only. No code has been written yet.
 Milestone M0 (discovery + architecture decisions) is not started.
 
@@ -13,6 +19,11 @@ SUS/
 ├── README.md                          # this index
 ├── docs/
 │   ├── SUS_MASTER_PRD_v1.0.md         # requirements of record (read first)
+│   ├── PRD_AMENDMENTS_v1.1.md         # proposed: scope, epistemic contract, gates, rubric, studio spec
+│   ├── RESEARCH_AND_EXPERTISE_MODEL.md# research: how expert designers work → mechanisms
+│   ├── PRD_GAP_ANALYSIS.md            # cross-check findings F1–F20 + open questions
+│   ├── TOOLING_CANDIDATES.md          # open-source tool candidates + licences
+│   ├── OWNER_DECISIONS_LOG.md         # every owner instruction, decisions D01–D22, build gate
 │   ├── AGENT_START_PROMPT.md          # paste into a coding agent to start
 │   ├── ROADMAP_AND_TASK_PROTOCOL.md   # milestones, micro-task record, review gates
 │   ├── AUDIT_AND_OPEN_DECISIONS.md    # audit findings + deliberately open decisions
