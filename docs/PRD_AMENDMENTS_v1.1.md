@@ -204,6 +204,12 @@ command and the four-value verdict rule (`pass` / `fail` / `not-run` / `not-appl
 live in `docs/GATE_REGISTRY.md`: a gate without an owning task and a negative fixture is not a gate,
 it is a wish, and `not-run` may never be reported as `pass`.
 
+**Applicability (DA-22).** A gate applies only where the project actually has the thing it guards:
+G1 applies when the project has (or adopts) a token system; G3's numeric-claim rule applies to
+product-facing copy, not to test data; the both-themes requirement in A1/A7 does not apply to a
+deliberately single-theme product. Every `not-applicable` verdict carries a one-line recorded reason
+and is reviewed at acceptance — never inferred silently from an empty result.
+
 | ID | Gate | Mechanism | Blocks |
 |---|---|---|---|
 | G1 | Token-only styling | lint: no raw hex/rgb/px in component scope when a token exists; exceptions need `DECISIONS.md` ref | commit |
@@ -246,12 +252,14 @@ Tiers: **deterministic** gates CI. **hybrid** scores deterministically where pos
 validated by a critic. **judged** never gates CI — it informs the acceptance conversation, exactly
 as published practice recommends.
 
-Bands: 50–60 reference-grade · 42–49 strong, minor clean-up · 33–41 acceptable with named gaps ·
-<33 rework required. Bands are a **review aid, not a certified professional grade**: each axis gets
-its own context-aware anchors (not one generic scale); measured checks cover only part of what an
-axis name implies; and the composite can never compensate for a failed blocking gate or an
-accessibility violation. The judged axis (Distinctiveness) is excluded from any blocking decision —
-the owner judges craft with the evidence in front of them.
+Bands for the **11-axis acceptance composite (max 55)**: 46–55 reference-grade · 39–45 strong, minor
+clean-up · 30–38 acceptable with named gaps · <30 rework required. (The 12-axis composite, max 60,
+is reported for continuity and is never used for acceptance — otherwise the judged axis would
+silently gate decisions it is explicitly excluded from.) Bands are a **review aid, not a certified
+professional grade**: each axis gets its own context-aware anchors (not one generic scale); measured
+checks cover only part of what an axis name implies; and the composite can never compensate for a
+failed blocking gate or an accessibility violation. The judged axis (Distinctiveness) is excluded
+from any blocking decision — the owner judges craft with the evidence in front of them.
 
 **Anti-inflation:** quarterly calibration against human ratings; a judged axis is trusted only
 while agreement stays ≥80% within ±1 point. Below that, anchors are rewritten before the axis is
@@ -267,9 +275,14 @@ used in acceptance again. Scores and rationales are stored so drift is visible o
    smallest change that would resolve it. P0/P1 findings cannot be self-dismissed.
 4. Author resolves each finding: fix, or documented rebuttal with evidence. Rebuttals go to
    `DECISIONS.md`.
-5. Acceptance requires zero open P0, all P1 resolved or rebutted, and rubric ≥ band threshold.
+5. Acceptance uses the **measured composite** — the 11 deterministic + hybrid axes (max 55);
+   `rubric ≥ band threshold` always means that composite. The judged axis (Distinctiveness) is
+   reported beside it and **never enters the acceptance arithmetic** (DA-15/review H5).
 6. Where a host has no subagents, the critic runs as a separate session; if neither is possible,
    the record states `independent review: not-run` and the section cannot be marked GA-acceptable.
+   This is the **single** fallback policy: no other document may offer a weaker one, and deterministic
+   gates may at most grant provisional internal acceptance while any GA/AA claim stays blocked
+   (DA-42).
 
 ## Part 5 — Direction Engine spec
 
@@ -454,10 +467,20 @@ per Part 10) are separate decisions. Implementation does not start until both ar
 
 ## Part 13 — Deep-audit reconciliation (2026-11-13)
 
-The independent deep audit (`DEEP_AUDIT_2026-11-13.md`, 48 findings) was cross-checked finding by
-finding. All mechanically verifiable claims were reproduced and confirmed, including one false
-"ALL CHECKS PASSED" claim in the earlier evidence log (T1001's unresolved dependency had been
-silently skipped by the checker). Resolution status:
+The independent deep audit (`DEEP_AUDIT_2026-11-13.md`, 48 findings) was cross-checked and every
+mechanically verifiable claim was reproduced, including one false "ALL CHECKS PASSED" claim in the
+earlier evidence log (T1001's unresolved dependency had been silently skipped by the checker).
+
+**Correction (2026-11-13, second pass).** The first version of this section claimed "cross-checked
+finding by finding" and "rejected or narrowed: none outright". An external review of that claim was
+correct: **11 findings still had no recorded disposition** (F05, F08, F09, F10, F13, F14, F22, F34,
+F35, F42, F43 — six of them High). That was an unverified claim in a document whose whole purpose is
+honesty about evidence, so it is corrected here rather than quietly amended. All 48 are now
+dispositioned below. Finding namespaces are prefixed from now on: **DA-** = deep audit
+(`DEEP_AUDIT_2026-11-13.md`), **GA-** = gap analysis (`PRD_GAP_ANALYSIS.md`, F1–F20), so the two
+F-numberings can no longer be confused (review C-9).
+
+Resolution status:
 
 - **Accepted and applied in this revision:** F01 partial (approval statuses), F02 (protocol
   separation recorded in §18 map + A11 below), F03 (playbook = questions/mechanisms/tradeoffs,
@@ -475,14 +498,42 @@ silently skipped by the checker). Resolution status:
 - **Accepted as proposals, requiring owner approval:** the reasoning-and-learning workflow
   (audit §10), behavioral acceptance scenarios (audit §11), and the Live Studio launch contract
   (audit §9) — incorporated as the reference behaviour for T0158/T0506/T0709 respectively.
-- **Rejected or narrowed:** none outright. Two findings were narrowed: F41's document-inventory
-  counts differed from a recount (immaterial counting-method difference), and F38's "spike before
-  T0400" is encoded as parallel-discovery + completion barrier (T0701 requires T0700) rather than
-  serialising knowledge work behind the spike, which the amendments explicitly permit.
+- **Dispositioned in the second pass (previously missing):** F05 → foundation module for heuristics /
+  usability / onboarding / navigation / IA is now owned by **T0402b** with a user-flow validation
+  deliverable. F08 → T0301 must map each claim to a quoted supporting passage with primary/secondary
+  distinction and no unsourced competitor counts. F09 → T0301 gains a research plan contract
+  (questions, budget, stop rule, revisit trigger). F10 → T0310 (trend review loop). F13 → T0807
+  accessibility suite. F14 → T0158 behavioral eval suite. F22 → gate applicability rules added to Part
+  2 and `GATE_REGISTRY.md` (`not-applicable` needs a recorded reason). F34 → T0704: every drawing
+  operation needs a non-drawing equivalent; geometry stored as semantic intent. F35 → T0502 requires a
+  cross-store two-phase transaction with crash recovery, plus lease fencing in T0504. F42 → one review
+  fallback policy (provisional internal acceptance only; GA/AA claims blocked). F43 → T1002 requires
+  held-out sets and a sampling/power rationale, with risk R15 tracking overfit.
+- **Rejected or narrowed:** none rejected. Four narrowed: DA-41's inventory counts differed from a
+  recount (counting method), DA-38's "spike before T0400" became parallel discovery plus completion
+  barrier (T0701 requires T0700) because the amendments explicitly let the spike re-scope rather than
+  block knowledge work, DA-39's missing-playbook finding was resolved by adding tasks rather than by
+  trimming the promised launch set, and review claim H6 was accepted in substance while the intended
+  reach (all non-M10 tasks in the regression ancestry) is stricter than "every task".
 - **Not verifiable by this agent:** D23's exact wording as spoken by the owner (relayed through
   the auditing agent); owner confirmation requested.
 
-### A11. Two protocols, one product (F02)
+### A12. Scope-cut order (error-budget policy, review MISS-3)
+
+When time or effort pressure forces a cut, the order is fixed and the cut is recorded in
+`DECISIONS.md`: (1) reduce playbook/knowledge **breadth** (fewer components, honestly listed as
+"no playbook"); (2) reduce Studio **polish** (fewer conveniences, same guarantees); (3) reduce
+benchmark **scope** (fewer briefs, claims withdrawn accordingly). Never cut: a blocking gate, the
+accessibility floor, the no-templates rule, the approval workflow, or the honesty requirements.
+Silent scope cuts are treated as defects, not pragmatism.
+
+### A13. Host list of record (review C-3)
+
+The supported-host list in `COVERAGE_MATRIX.md` §4 supersedes the PRD §12 host enumeration.
+"Auto Pilot" remains an *unresolved product* in the PRD and is **not** a supported host at v1;
+no adapter task targets it until the owner names the product.
+
+### A11. Two protocols, one product (DA-02)
 
 SUS-development protocol (PRD §18, task protocol, release gates) and consuming-project design
 protocol (PRD §7 workflow, section gates) are separately named. A consumer session never inherits

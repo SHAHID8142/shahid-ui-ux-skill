@@ -52,7 +52,7 @@ owner sends `APERIO`. Planning documents, research and questions continue until 
 ## Documents created so far (planning artefacts only)
 
 **Root state files:** `README.md` (index) · `ROADMAP.md` (milestone status) · `TASKS.json`
-(73-task WBS, validated) · `HANDOFF.md` (resume file) · `DECISIONS.md` · `RISKS.md` ·
+(WBS; task count is authoritative in TASKS.json) · `HANDOFF.md` (resume file) · `DECISIONS.md` · `RISKS.md` ·
 `TEST_EVIDENCE.md`
 
 **docs/:** `SUS_MASTER_PRD_v1.0.md` (original baseline, unchanged) · `PRD_AMENDMENTS_v1.1.md` ·

@@ -6,7 +6,7 @@
 COMPLETED: T0001–T0003 (workspace audit, gap analysis F1–F20, risk register + coverage matrix);
            planning docs: research model, amendments v1.1 (A1–A10, gates G1–G12, rubric,
            epistemic contract E1–E9, studio spec), ADR drafts 001–006, tooling candidates,
-           full WBS (TASKS.json, 87 tasks, validated), ROADMAP/DECISIONS/RISKS/TEST_EVIDENCE.
+           full WBS (TASKS.json, 88 tasks, validated), ROADMAP/DECISIONS/RISKS/TEST_EVIDENCE.
            GitHub: SHAHID8142/shahid-ui-ux-skill (private), prior planning work committed+pushed.
            Deep audit: docs/DEEP_AUDIT_2026-11-13.md (48 findings, current primary sources,
            owner clarification D23; full scope + mandatory browser Live Studio retained).
@@ -44,10 +44,10 @@ HOW TO RESUME: read README.md → docs/SUS_MASTER_PRD_v1.0.md → docs/PRD_AMEND
 
 ## Deep-audit handoff
 
-The audit inspected all 18 pre-existing Markdown files, all 87 task records, Git state and the
+The audit inspected all 18 pre-existing Markdown files, all 88 task records, Git state and the
 five archived originals. The archive matches. The audit found T1001 depending on the
 unresolved string `M3–M9 tasks` plus several unmapped milestone barriers and launch deliverables;
-all were fixed in the reconciliation pass (TASKS.json now 84 tasks, strict-validated). See the
+all were fixed in the reconciliation pass (TASKS.json now 88 tasks, strict-validated). See the
 report for evidence and proposed research, learning, approval, Studio,
 accessibility and evaluation corrections. No SUS code or executable artifact was created.
 The audit report and its documentation updates are local working-tree changes at handoff.

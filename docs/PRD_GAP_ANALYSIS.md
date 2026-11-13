@@ -89,3 +89,18 @@ fixture corpus = 4 apps (one per surface mode), playbook build order, and the cr
 - Motion as mandatory, with reduced-motion alternatives and interruption tests.
 - Fail-closed Studio mapping, localhost trust boundary, no arbitrary command execution.
 - Refusal to promise bug-free/original/ranked outcomes.
+
+## Namespace legend and review-driven open questions (2026-11-13)
+
+**Finding namespaces:** `GA-nn` = findings in this document (F1–F20). `DA-nn` = findings in
+`DEEP_AUDIT_2026-11-13.md` (F01–F48). Task acceptance criteria now use these prefixes, so a bare
+`F13` can no longer mean two different things.
+
+Open questions raised by independent reviews and still owned by the owner:
+
+| # | Question | Why it matters | Current default |
+|---|---|---|---|
+| Q10 | What effort/calendar envelope is realistic (single person part-time, full-time, or team)? | 88 micro-tasks with ~13 milestones imply months; no estimate exists anywhere (review MISS-1/MISS-2) | no calendar promise; one task at a time, commit after each |
+| Q11 | Is any telemetry/monitoring of the shipped skill acceptable, and under what privacy rules? | the shipped product currently has no observability plan (review MISS-4) | no telemetry at v1; local evidence bundles only |
+| Q12 | Who signs off a scope cut when pressure hits, and is the A12 cut order acceptable? | prevents silent scope reduction (review MISS-3) | A12 order, cuts recorded in `DECISIONS.md` |
+| Q13 | Should Studio support static-HTML projects at GA (benchmark target does)? | changes the Studio target surface and the competitive claim (review C-4/H11) | CSS-only write path, `experimental`, documented degradation |

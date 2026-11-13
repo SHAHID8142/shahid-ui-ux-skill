@@ -23,7 +23,7 @@ are pending; no product implementation or scope reduction was authorized by the 
 SUS/
 ├── README.md                          # this index
 ├── ROADMAP.md                         # living milestone status (points at TASKS.json)
-├── TASKS.json                         # full WBS: 87 tasks, validated IDs + deps
+├── TASKS.json                         # full WBS: 88 tasks, validated IDs + deps
 ├── HANDOFF.md                         # fresh-context resume file (protocol §D)
 ├── DECISIONS.md                       # append-only decision record
 ├── RISKS.md                           # risk register R1–R18

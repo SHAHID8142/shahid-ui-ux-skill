@@ -102,7 +102,18 @@ text treated as data (prompt-injection quarantine); append-only audit log; no ou
 **Consequences.** Framework-agnostic by construction (D18); no fork of user builds; instrumentation
 is opt-in. Cost: CDP session management, reconnect logic, and honest `experimental` labels for
 non-spike stacks. Rejected option 1 alone (fragile, framework-coupled), option 2 (TLS/CSP pain),
-option 3 (store review, install friction, weaker source access).
+option 3 (store review, install friction, weaker source access) — a distribution trade-off, not a
+capability claim: a browser extension can draw on a page as well as CDP can, it simply cannot be
+shipped through this project's install story or reach the same source information (review M18).
+
+**Fallback ladder if the spike fails (review ARCH-3).** Studio stays mandatory (D23); what changes
+is the write path, in this order, each still offering draw → intent → diff → approve → apply → undo:
+(1) CDP attach with a framework plugin that stamps source ids; (2) framework-specific plugin only
+(Vite/Next/Astro loaders) with the bundled-browser overlay; (3) CSS-only write path where component
+source cannot be resolved — the overlay edits design tokens and styles, and every component change
+becomes an explicit, approved instruction instead of a silent source rewrite, labelled
+`experimental`. Only if all three fail does the owner get a re-scope decision, recorded in
+`DECISIONS.md`.
 
 **Reversal trigger.** CDP overlay proves unable to reach ≥90% mapping confidence on either spike
 stack (A2b go/no-go), or a host makes CDP attach impossible.
@@ -166,8 +177,10 @@ binaries; contributors should face one language.
 
 **Options.** TypeScript everywhere · TypeScript + Rust core (detector) · Go.
 
-**Decision (proposed).** **TypeScript (Node ≥ 22 LTS — the active LTS line at adoption; Node 20
-reached end-of-life in April 2026), strict mode, ESM**, everywhere including
+**Decision (proposed).** **TypeScript on the Node line that is still supported: minimum Node 22
+(maintenance LTS, supported into 2027) and the current Active LTS at adoption time (Node 24 as of
+this writing) as the default pin** — Node 20 reached end-of-life in April 2026, so it is not a floor.
+Strict mode, ESM, everywhere including
 the detector. Rationale: one toolchain, npx-friendly, DOM/CSS scanning performance in Node is
 sufficient for per-section scans; Rust would add a build/publish matrix (per-platform binaries)
 that contradicts zero-install at v1.

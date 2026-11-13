@@ -27,11 +27,21 @@ never reported as `pass`.
 
 ## Non-waivable vs waivable
 
-- **Non-waivable:** G1, G2, G3, G11, and the violation classes inside G4/G7/G8/G9 that map to
-  WCAG 2.2 A/AA success criteria in scope.
+- **Blocking by default, waivable only by signed exception:** G1, G2, G3, G11, and the violation
+  classes inside G4/G7/G8/G9 that map to WCAG 2.2 A/AA criteria in scope. This is the owner's
+  bargaining path (D16): the agent must state the criterion, offer the closest compliant
+  alternative, and if the owner still insists, the exception is signed in `DECISIONS.md` with an
+  expiry, disclosed in the evidence bundle, and the verdict becomes `non-conformant-accepted`.
+  That verdict blocks any "AA compliant" or GA claim. A gate is never simply switched off or
+  silently skipped — this replaces the earlier wording that made these gates "non-waivable" and
+  contradicted amendments Part 1 item 3 (review H4 / C-1).
 - **Waivable with a recorded, expiring exception:** G5 budgets (temporary overage with owner
   sign-off and expiry), G6 (documented, equivalent alternative), G12 (planned migration window).
-- **Never waivable:** a `not-run` verdict recorded as `pass`.
+- **Never waivable:** a `not-run` verdict recorded as `pass`, and an exception that has no expiry,
+  no recorded criterion, or no entry in the evidence bundle.
+
+Applicability follows amendments Part 2: `not-applicable` requires a one-line reason and is
+reviewed at acceptance.
 
 ## Adding a gate
 

@@ -144,3 +144,40 @@ ranges, gate ownership, coverage promises) + content reading. No implementation 
 | Count consistency README/ROADMAP/HANDOFF | 87 / 87 / 87 |
 
 Still no SUS implementation exists and no build approval was inferred.
+
+## Independent-review reconciliation pass (2026-11-13, assistant)
+
+Two independent reviews of commit `cda9d9d` arrived in `reviews/independent/`
+(antigravity-opus, opencode-m3.1-flash). Their blocking claims were verified against the files
+before any fix. Note: the opencode review file was still untracked at the time of the previous
+commit; it is committed now with provenance intact.
+
+### Verified review claims and fixes
+| Review claim | Verdict | Fix |
+|---|---|---|
+| H1/C-9+4.3: Part 13 claimed "cross-checked finding by finding / none outright" while 11 DA findings had no disposition | **Confirmed** (F05, F08, F09, F10, F13, F14, F22, F34, F35, F42, F43) | Part 13 corrected with explicit dispositions for all 48; overclaim acknowledged in place |
+| H2: PRD §6 foundation module (heuristics/usability/onboarding/navigation/IA) unowned | **Confirmed** (0 keyword hits in WBS) | new task T0402b with user-flow validation deliverable |
+| H4/C-1: registry "non-waivable" contradicted amendments' signed-exception path | **Confirmed** | registry rewritten: blocking by default, waivable only via signed expiring exception → `non-conformant-accepted`, blocks AA/GA claims |
+| H5/C-2: judged axis "never blocks" vs acceptance band including it; composite math | **Confirmed** (12×5=60 vs implied 55) | acceptance uses 11-axis composite (max 55); bands restated; 12-axis composite reported only |
+| H6: T1001 reached only 63/87 tasks | **Confirmed** | T1001 deps = all non-M10 tasks (reaches 83/88); T1005 reaches 87/88 |
+| H9/C-5: "Node 22 = active LTS at adoption" wrong as of 2026-11 | **Confirmed** (Node 24 is active LTS; 22 in maintenance to 2027) | ADR-006 reworded: min 22, pin active LTS (24) |
+| C-9/M1: F-ID namespace collision (GA F1–F20 vs DA F01–F48) | **Confirmed** | task refs rewritten to `DA-nn`; legend added to gap analysis |
+| C-10/M3: gates G9/G11/G12 absent from task records | **Confirmed** | gate-ownership lines added to owning tasks (T0401, T0152b, T0406, T0603, T0807, T0154, T0305, T0402) |
+| C-7/M5: T0159 `files` contradicted ADR-001 layout | **Confirmed** | changed to `skill/scripts/` |
+| C-8/M2: stale task counts in live docs | **Confirmed** | counts now 88 consistently; OWNER log points at TASKS.json as authority |
+| C-3/M11: "Auto Pilot" still listed as PRD host | **Confirmed** | A13: coverage-matrix host list supersedes; Auto Pilot not a v1 host |
+| C-11/M18: extension rejection rationale conflated capability with distribution | **Confirmed** | ADR-003 rationale clarified |
+| ARCH-3: Studio no-go fallback underspecified | **Confirmed** | ADR-003 fallback ladder added (Studio stays mandatory per D23) |
+| MISS-1..4: no effort estimate, no value-delivery phasing, no error budget, no observability plan | **Confirmed as gaps** | A12 scope-cut order added; Q10–Q13 recorded as owner questions; no telemetry at v1 |
+| C-4/H11: static-HTML Studio ❌ vs benchmark target | **Accepted with reason** | Q13 records it as an owner decision; matrix already documents the degradation honestly |
+
+### Post-fix validation
+| Check | Result |
+|---|---|
+| JSON parse / task count | OK, **88 tasks** |
+| Unresolved refs / cycles / backward deps (strict) | 0 / 0 / 0 |
+| T1001 ancestry | 83/88 non-M10 tasks |
+| T1005 ancestry | 87/88 |
+| Gate registry ↔ TASKS.json owner consistency | PASS (12/12) |
+
+Still no SUS implementation exists and no build approval was inferred.

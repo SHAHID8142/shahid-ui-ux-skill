@@ -44,7 +44,7 @@
         "docs/PRD_GAP_ANALYSIS.md"
       ],
       "acc": [
-        "findings F1–F20 with severity",
+        "findings F1–DA-20 with severity",
         "conflicts named, not silently resolved"
       ],
       "tests": [
@@ -229,7 +229,7 @@
       "acc": [
         "versioned schema with migration fixture passes",
         "JSON Schema export committed",
-        "compact task schema validated: aliases, permitted statuses, evidence refs, completion rules (F40)"
+        "compact task schema validated: aliases, permitted statuses, evidence refs, completion rules (DA-40)"
       ],
       "tests": [
         "vitest contract tests",
@@ -300,7 +300,8 @@
       ],
       "acc": [
         "axe JSON archived",
-        "budget table rendered in evidence"
+        "budget table rendered in evidence",
+        "gate ownership: emits the verdict for G4, G5 (see docs/GATE_REGISTRY.md)"
       ],
       "tests": [
         "inject known violation into fixture; gate fails"
@@ -349,7 +350,8 @@
         "packages/eval-core/"
       ],
       "acc": [
-        "bundle without shots/metrics/gates rejected"
+        "bundle without shots/metrics/gates rejected",
+        "gate ownership: emits the verdict for G11 (see docs/GATE_REGISTRY.md)"
       ],
       "tests": [
         "valid + invalid fixtures"
@@ -387,7 +389,7 @@
       "id": "T0156",
       "m": "M1.5",
       "title": "Token/cost budget measurement",
-      "obj": "Measure tokens per section task; set budget target (F17)",
+      "obj": "Measure tokens per section task; set budget target (DA-17)",
       "deps": [
         "T0153"
       ],
@@ -536,7 +538,9 @@
         "skill/references/"
       ],
       "acc": [
-        "no fabricated citation passes validation"
+        "no fabricated citation passes validation",
+        "research plan contract: questions, budget, stop rule, revisit trigger (DA-09)",
+        "claim→source map with quoted supporting passage, primary/secondary distinction, conflict-of-interest note; no unsourced specific counts (DA-08)"
       ],
       "tests": [
         "provenance fixtures"
@@ -626,7 +630,8 @@
       ],
       "acc": [
         "precision/recall published per rule",
-        "advisory vs blocking decided by numbers"
+        "advisory vs blocking decided by numbers",
+        "gate ownership: emits the verdict for G10 (see docs/GATE_REGISTRY.md)"
       ],
       "tests": [
         "corpus runner in CI"
@@ -672,7 +677,8 @@
         "packages/tokens/"
       ],
       "acc": [
-        "DTCG validation + semantic layer + exports regenerate"
+        "DTCG validation + semantic layer + exports regenerate",
+        "gate ownership: emits the verdict for G1, G12 (see docs/GATE_REGISTRY.md)"
       ],
       "tests": [
         "token fixtures; export snapshot"
@@ -694,7 +700,8 @@
         "skill/references/"
       ],
       "acc": [
-        "blur-test + CPL checks machine-runnable"
+        "blur-test + CPL checks machine-runnable",
+        "gate ownership: emits the verdict for G9 (see docs/GATE_REGISTRY.md)"
       ],
       "tests": [
         "foundation fixtures"
@@ -730,7 +737,7 @@
       "id": "T0404",
       "m": "M4",
       "title": "Playbook schema + authoring standard",
-      "obj": "12-part playbook structure + knowledge-lint (F16)",
+      "obj": "12-part playbook structure + knowledge-lint (DA-16)",
       "deps": [
         "T0203"
       ],
@@ -789,7 +796,8 @@
       "acc": [
         "G3 placeholder check wired",
         "claims register schema",
-        "domain behavior contracts: commerce truthfulness/recoverable payment states/duplicate-submit protection; admin roles/bulk-action clarity/auditability; non-waivable constraints listed separately from owner taste (F47)"
+        "domain behavior contracts: commerce truthfulness/recoverable payment states/duplicate-submit protection; admin roles/bulk-action clarity/auditability; non-waivable constraints listed separately from owner taste (DA-47)",
+        "gate ownership: emits the verdict for G3, G9 (see docs/GATE_REGISTRY.md)"
       ],
       "tests": [
         "copy fixtures"
@@ -893,7 +901,7 @@
       "id": "T0502",
       "m": "M5",
       "title": "Section state machine + section locks (5A)",
-      "obj": "planned→…→accepted states; lease file prevents concurrent section edits (F12)",
+      "obj": "planned→…→accepted states; lease file prevents concurrent section edits (DA-12)",
       "deps": [
         "T0501"
       ],
@@ -903,7 +911,8 @@
       ],
       "acc": [
         "illegal transitions rejected",
-        "lock expiry handled"
+        "lock expiry handled",
+        "cross-store transaction across markdown state, machine schemas, tokens, evidence and source writes: two-phase commit + crash-recovery test (DA-35)"
       ],
       "tests": [
         "state-machine property tests"
@@ -949,7 +958,7 @@
       "acc": [
         "exception without expiry rejected",
         "history preserved on conflict",
-        "lease generation/fencing: expired worker cannot apply after re-acquire (F35)"
+        "lease generation/fencing: expired worker cannot apply after re-acquire (DA-35)"
       ],
       "tests": [
         "journal append/atomic-rename tests (F19)"
@@ -973,8 +982,8 @@
         "packages/eval-core/"
       ],
       "acc": [
-        "violation attempt fails CI with clear message (F18 UX)",
-        "shared-dependency impact recorded; material change to shared code reopens affected acceptances (F25)"
+        "violation attempt fails CI with clear message (DA-18 UX)",
+        "shared-dependency impact recorded; material change to shared code reopens affected acceptances (DA-25)"
       ],
       "tests": [
         "negative test: out-of-order edit attempt"
@@ -997,7 +1006,7 @@
       ],
       "acc": [
         "matrix result per section in evidence bundle",
-        "locale set prioritized per brief: shaping/fallback fonts, segmentation, input methods, currency/date/numerals, translated errors — not a universal locale claim (F46)"
+        "locale set prioritized per brief: shaping/fallback fonts, segmentation, input methods, currency/date/numerals, translated errors — not a universal locale claim (DA-46)"
       ],
       "tests": [
         "fixture with deliberate edge cases"
@@ -1091,7 +1100,8 @@
       ],
       "acc": [
         "no flash-as-only-feedback violations",
-        "state converges after interruption"
+        "state converges after interruption",
+        "gate ownership: emits the verdict for G6 (see docs/GATE_REGISTRY.md)"
       ],
       "tests": [
         "Playwright interaction specs"
@@ -1115,7 +1125,7 @@
       ],
       "acc": [
         "≥90% single-node mapping at confidence ≥0.8 on ≥1 stack, else re-scope",
-        "write-path probed per source language (.tsx/.astro/.css/content): selection → edit-owner resolution → preview → apply → cleanup → undo, incl. repeated instances + shared components (F29)"
+        "write-path probed per source language (.tsx/.astro/.css/content): selection → edit-owner resolution → preview → apply → cleanup → undo, incl. repeated instances + shared components (DA-29)"
       ],
       "tests": [
         "spike report with numbers, committed"
@@ -1205,7 +1215,8 @@
         "packages/studio-web/"
       ],
       "acc": [
-        "schema validates; malformed/out-of-bounds rejected; undo safe"
+        "schema validates; malformed/out-of-bounds rejected; undo safe",
+        "every drawing operation has a non-drawing equivalent (typed instruction / keyboard path); geometry stored as semantic intent, never as raw pixels only (DA-34)"
       ],
       "tests": [
         "serialization round-trip tests"
@@ -1322,7 +1333,7 @@
         "packages/eval-core/"
       ],
       "acc": [
-        "failing gate yields concise explanation + affected operation + safe recovery + retry, with redacted diagnostics; outcomes 'preview failed'/'apply failed'/'verification failed'/'rollback blocked'/'accepted' are distinct; auto-revert only when the transaction is intact (F36)"
+        "failing gate yields concise explanation + affected operation + safe recovery + retry, with redacted diagnostics; outcomes 'preview failed'/'apply failed'/'verification failed'/'rollback blocked'/'accepted' are distinct; auto-revert only when the transaction is intact (DA-36)"
       ],
       "tests": [
         "inject failing change; assert revert + message"
@@ -1435,7 +1446,7 @@
       ],
       "acc": [
         "kill -9 mid-session → recovery without data loss",
-        "multi-file apply is one transaction with durable recovery manifest; atomic rename alone is insufficient (F35)"
+        "multi-file apply is one transaction with durable recovery manifest; atomic rename alone is insufficient (DA-35)"
       ],
       "tests": [
         "crash-injection tests"
@@ -1458,7 +1469,7 @@
         "packages/studio-bridge/"
       ],
       "acc": [
-        "threat-model doc + passing suite; no critical open; indirect injection via drawings, OCR, screenshots, recalled lessons rejected at the action boundary — untrusted content never authorizes writes/commands/network (F31)"
+        "threat-model doc + passing suite; no critical open; indirect injection via drawings, OCR, screenshots, recalled lessons rejected at the action boundary — untrusted content never authorizes writes/commands/network (DA-31)"
       ],
       "tests": [
         "dedicated security CI job"
@@ -1480,7 +1491,8 @@
         "packages/studio-web/"
       ],
       "acc": [
-        "overlay passes axe; full keyboard path documented"
+        "overlay passes axe; full keyboard path documented",
+        "gate ownership: emits the verdict for G7, G8 (see docs/GATE_REGISTRY.md)"
       ],
       "tests": [
         "axe + manual keyboard protocol"
@@ -1539,7 +1551,7 @@
       "id": "T0903",
       "m": "M9",
       "title": "Codex / Claude Code / Cursor adapters",
-      "obj": "Only with verified identities + test environments (F11: no unverified rows)",
+      "obj": "Only with verified identities + test environments (DA-11: no unverified rows)",
       "deps": [
         "T0902"
       ],
@@ -1570,7 +1582,7 @@
       ],
       "acc": [
         "uninstall restores prior state; doctor reports drift",
-        "installed dir name + generated host entries tested: long paths, update, uninstall preserves user files (F45)"
+        "installed dir name + generated host entries tested: long paths, update, uninstall preserves user files (DA-45)"
       ],
       "tests": [
         "installer E2E on clean dirs"
@@ -1609,30 +1621,97 @@
       "title": "Cross-module regression suite",
       "obj": "All gates G1–G12 + skill evals + studio E2E in one pipeline",
       "deps": [
+        "T0001",
+        "T0002",
+        "T0003",
+        "T0004",
+        "T0005",
+        "T0101",
+        "T0102",
+        "T0103",
+        "T0104",
+        "T0151",
+        "T0152",
+        "T0152b",
+        "T0153",
+        "T0154",
+        "T0155",
+        "T0156",
+        "T0201",
+        "T0202",
+        "T0203",
+        "T0204",
+        "T0205",
+        "T0301",
+        "T0302",
+        "T0303",
+        "T0304",
         "T0305",
-        "T0310",
+        "T0400",
+        "T0401",
+        "T0402",
+        "T0403",
+        "T0404",
+        "T0405",
+        "T0406",
+        "T0407",
+        "T0408",
         "T0409",
-        "T0405b",
-        "T0405c",
+        "T0501",
+        "T0502",
+        "T0503",
+        "T0504",
         "T0505",
-        "T0506",
-        "T0508",
         "T0551",
+        "T0600",
+        "T0601",
+        "T0602",
         "T0603",
+        "T0700",
+        "T0701",
+        "T0702",
+        "T0703",
+        "T0704",
+        "T0705",
+        "T0706",
+        "T0707",
         "T0708",
         "T0790",
+        "T0801",
+        "T0802",
+        "T0803",
+        "T0804",
+        "T0805",
         "T0806",
         "T0807",
-        "T0810",
+        "T0901",
+        "T0902",
+        "T0903",
         "T0904",
-        "T0905"
+        "T0905",
+        "T0102b",
+        "T0158",
+        "T0310",
+        "T0405b",
+        "T0405c",
+        "T0506",
+        "T0508",
+        "T0709",
+        "T0809",
+        "T0810",
+        "T0906",
+        "T0159",
+        "T0811",
+        "T0812",
+        "T0402b"
       ],
       "files": [
         "evals/",
         ".github/"
       ],
       "acc": [
-        "single command runs everything; <10 min CI"
+        "single command runs everything; <10 min CI",
+        "reachability check: every non-M10 task must be in the ancestry (audit H6)"
       ],
       "tests": [
         "full run recorded"
@@ -1655,7 +1734,9 @@
         "evals/benchmarks/"
       ],
       "acc": [
-        "raw data released; no claim without this"
+        "raw data released; no claim without this",
+        "held-out briefs never inspected during tuning; sampling/power rationale recorded (DA-43)",
+        "separation of dev fixtures, calibration cases and held-out evaluation sets"
       ],
       "tests": [
         "benchmark artifacts committed"
@@ -1672,17 +1753,19 @@
       "obj": "Fresh-context review of shipped code + dependency licence audit",
       "deps": [
         "T0806",
-        "T0904"
+        "T0904",
+        "T1001"
       ],
       "files": [],
       "acc": [
-        "findings triaged; criticals zero"
+        "findings triaged; criticals zero",
+        "single review-fallback policy; no document may offer a weaker fallback (DA-42)"
       ],
       "tests": [
         "review report"
       ],
       "risk": "no independent reviewer available",
-      "rollback": "disclose limitation; deterministic gates stand",
+      "rollback": "deterministic gates may grant provisional acceptance; a GA claim is blocked and recorded as `independent review: not-run` (DA-42)",
       "status": "pending",
       "approval": "pending"
     },
@@ -1692,7 +1775,8 @@
       "title": "Docs, examples, installer guide, changelog",
       "obj": "Honest docs from coverage matrix + support matrix; no unverified claims",
       "deps": [
-        "T0905"
+        "T0905",
+        "T1001"
       ],
       "files": [
         "docs/",
@@ -1700,7 +1784,7 @@
       ],
       "acc": [
         "limitation statements shipped verbatim from coverage matrix",
-        "maintenance owner + review calendar + supported-upgrade period + security reporting defined (F48)"
+        "maintenance owner + review calendar + supported-upgrade period + security reporting defined (DA-48)"
       ],
       "tests": [
         "docs lint: claim-checker"
@@ -1737,7 +1821,7 @@
       "id": "T0102b",
       "m": "M1",
       "title": "Fixture apps B/C/D (e-commerce, dashboard/CMS-admin, portfolio)",
-      "obj": "Complete the 4-surface corpus with licensing + ground-truth notes (F40)",
+      "obj": "Complete the 4-surface corpus with licensing + ground-truth notes (DA-40)",
       "deps": [
         "T0102"
       ],
@@ -1760,7 +1844,7 @@
       "id": "T0158",
       "m": "M1.5",
       "title": "Behavioral/reasoning eval suite",
-      "obj": "Test decisions, not artifacts: reframing, source relevance, contradiction handling, principled trend rejection, dissent, uncertainty, transfer (F14)",
+      "obj": "Test decisions, not artifacts: reframing, source relevance, contradiction handling, principled trend rejection, dissent, uncertainty, transfer (DA-14)",
       "deps": [
         "T0153"
       ],
@@ -1782,7 +1866,7 @@
       "id": "T0310",
       "m": "M3",
       "title": "Trend/research review loop",
-      "obj": "Versioned on-demand refresh: candidate → evaluated → adopted/rejected/watch/superseded; no background scheduler claim (F10)",
+      "obj": "Versioned on-demand refresh: candidate → evaluated → adopted/rejected/watch/superseded; no background scheduler claim (DA-10)",
       "deps": [
         "T0301"
       ],
@@ -1805,7 +1889,7 @@
       "id": "T0405b",
       "m": "M4",
       "title": "Launch playbooks batch 2: hero, card, pricing, footer, empty/loading/error",
-      "obj": "Close the gap between the promised 15-playbook launch set and tasked playbooks (F39)",
+      "obj": "Close the gap between the promised 15-playbook launch set and tasked playbooks (DA-39)",
       "deps": [
         "T0405"
       ],
@@ -1827,7 +1911,7 @@
       "id": "T0405c",
       "m": "M4",
       "title": "Launch playbooks batch 3: product grid, PDP, cart summary, checkout steps, modal, toast",
-      "obj": "Commerce + overlay launch playbooks (F39)",
+      "obj": "Commerce + overlay launch playbooks (DA-39)",
       "deps": [
         "T0405"
       ],
@@ -1849,7 +1933,7 @@
       "id": "T0506",
       "m": "M5",
       "title": "Prediction + lesson lifecycle",
-      "obj": "Event ≠ explanation: candidate → tested locally → reviewed → promoted with scope → challenged/retired; cross-project sharing only via explicit sanitized publication boundary (F11/F12)",
+      "obj": "Event ≠ explanation: candidate → tested locally → reviewed → promoted with scope → challenged/retired; cross-project sharing only via explicit sanitized publication boundary (DA-11/DA-12)",
       "deps": [
         "T0504"
       ],
@@ -1873,7 +1957,7 @@
       "id": "T0508",
       "m": "M5",
       "title": "Approval receipts (version-bound)",
-      "obj": "Approval bound to project+section+proposal version+source hashes+permitted operation+expiry/revocation; forged/replayed/stale approvals rejected (F24)",
+      "obj": "Approval bound to project+section+proposal version+source hashes+permitted operation+expiry/revocation; forged/replayed/stale approvals rejected (DA-24)",
       "deps": [
         "T0503"
       ],
@@ -1897,7 +1981,7 @@
       "id": "T0709",
       "m": "M7",
       "title": "Session/event/request lifecycle contract",
-      "obj": "IDs, acks, queued/running/proposed/cancelled/failed/completed, idempotent apply, stale-result rejection, heartbeat, backpressure, reconnect replay (F26)",
+      "obj": "IDs, acks, queued/running/proposed/cancelled/failed/completed, idempotent apply, stale-result rejection, heartbeat, backpressure, reconnect replay (DA-26)",
       "deps": [
         "T0702"
       ],
@@ -1921,7 +2005,7 @@
       "id": "T0809",
       "m": "M8",
       "title": "Second-wave playbooks A: search/filters, settings, dashboard widgets",
-      "obj": "Coverage-matrix second wave, Operate focus (F39)",
+      "obj": "Coverage-matrix second wave, Operate focus (DA-39)",
       "deps": [
         "T0407"
       ],
@@ -1943,7 +2027,7 @@
       "id": "T0810",
       "m": "M8",
       "title": "Second-wave playbooks B: onboarding, article layout, gallery/case study",
-      "obj": "Coverage-matrix second wave, Read/Experience focus (F39)",
+      "obj": "Coverage-matrix second wave, Read/Experience focus (DA-39)",
       "deps": [
         "T0405b"
       ],
@@ -1965,7 +2049,7 @@
       "id": "T0906",
       "m": "M9",
       "title": "Reference implementations: 3 dogfood sites built with SUS",
-      "obj": "A10 track owner: marketing + commerce + dashboard sites built under SUS rules, evidence published (F39/F43)",
+      "obj": "A10 track owner: marketing + commerce + dashboard sites built under SUS rules, evidence published (DA-39/DA-43)",
       "deps": [
         "T0505",
         "T0708"
@@ -1995,7 +2079,7 @@
         "T0154"
       ],
       "files": [
-        "scripts/",
+        "skill/scripts/",
         "docs/GATE_REGISTRY.md"
       ],
       "acc": [
@@ -2053,6 +2137,31 @@
       ],
       "risk": "complex state matrices",
       "rollback": "per-playbook acceptance",
+      "status": "pending",
+      "approval": "pending"
+    },
+    {
+      "id": "T0402b",
+      "m": "M4",
+      "title": "Foundations: heuristics, usability, onboarding, navigation + IA",
+      "obj": "PRD §6 names UX heuristics, usability, onboarding, navigation and information architecture as a foundation module; no task owned it (locate: DA-05, review H2). Includes user-flow research + validation deliverable so an attractive section is judged as part of a usable flow.",
+      "deps": [
+        "T0403"
+      ],
+      "files": [
+        "skill/foundations/"
+      ],
+      "acc": [
+        "flow map per surface mode (entry → task → success)",
+        "heuristic evaluation checklist applied to each accepted section",
+        "navigation/IA decisions recorded with rationale",
+        "validation method named (unmoderated test, click-through, or explicit not-run)"
+      ],
+      "tests": [
+        "foundation lint + fixture walkthrough"
+      ],
+      "risk": "breadth over depth",
+      "rollback": "foundation files versioned",
       "status": "pending",
       "approval": "pending"
     }
