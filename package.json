@@ -9,9 +9,11 @@
   },
   "scripts": {
     "typecheck": "pnpm -r exec tsc --noEmit",
-    "check": "node scripts/check-continuation.mjs"
+    "check": "node scripts/check-continuation.mjs",
+    "test": "vitest run"
   },
   "devDependencies": {
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.0"
   }
 }

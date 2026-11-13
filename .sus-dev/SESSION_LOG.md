@@ -44,3 +44,12 @@
   E3 experiment description) tripped the checker's own false-pass detector on a done task.
   Reworded to "failing verdict markers"; checker green. Dogfooding note: the detector
   works, receipts must be written in verdict-safe language.
+
+- 2026-11-13T23:05:00+06:00 | ZCode (GLM) | T0102 | Wired vitest 3.2.7 workspace runner
+  (root test script; projects = packages/* + fixtures/*; esbuild approved via allowBuilds
+  in pnpm-workspace.yaml). Fixture A: fixtures/marketing — Next 15.5.29 App Router,
+  React 19.3.1, six landmark sections, explicit not-found page, original synthetic copy,
+  no external assets. Checks: pnpm install 0; pnpm test 0 (4/4); pnpm typecheck 0;
+  next build 0; next start curl 200 (9930B, 6/6 landmarks, 0 external URLs); next dev
+  curl 200. Two build/test failures found+fixed en route (JSX automatic runtime;
+  default-404 prerender). Receipt: .sus-dev/VERIFICATION/T0102.md. Next: T0103 lint/CI.

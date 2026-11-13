@@ -205,9 +205,17 @@
       ],
       "risk": "fixture maintenance burden",
       "rollback": "fixtures isolated per directory",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D28/D29 build authorization (self-verified per protocol)",
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0102.md",
+        "fixtures/marketing/",
+        "vitest.config.mts",
+        "packages/eval-core/tests/smoke.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0102.md"
     },
     {
       "id": "T0103",
