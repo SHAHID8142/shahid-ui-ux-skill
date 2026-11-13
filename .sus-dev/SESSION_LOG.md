@@ -171,3 +171,8 @@
 - 2026-11-14T03:00:00+06:00 | ZCode (GLM) | T0202 | sus.intent v1 + heuristic router
   (explicit module sets, honest fallback, schema-validated). 7/7 router tests.
   Receipt: VERIFICATION/T0202.md. Next: T0203 JIT loader + precedence.
+
+- 2026-11-14T03:10:00+06:00 | ZCode (GLM) | T0203 | JIT loader (registry w/ honest
+  not-built status, per-load budget w/ refusal semantics) + precedence resolver
+  (auto-injected fixed layer, surfaced conflicts). 11/11 tests. Receipt:
+  VERIFICATION/T0203.md. Next: T0204 CLI fallback.
