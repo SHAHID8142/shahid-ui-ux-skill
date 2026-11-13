@@ -129,14 +129,23 @@ const results = [
 ];
 
 const THRESHOLD = 0.9;
-console.log(JSON.stringify({ threshold: THRESHOLD, results }, null, 2));
 const errors = results.filter((r) => r.error);
 if (errors.length > 0) {
   console.error('spike blocked:', errors.map((e) => e.error).join('; '));
   process.exit(3);
 }
 const go = results.every((r) => r.uniqueRate >= THRESHOLD);
+// single clean JSON document (evidence file consumers parse the whole stdout)
 console.log(
-  `VERDICT: ${go ? 'GO' : 'NO-GO'} (unique-owner ${results.map((r) => `${r.name}=${(r.uniqueRate * 100).toFixed(0)}%`).join(', ')})`,
+  JSON.stringify(
+    {
+      threshold: THRESHOLD,
+      results,
+      verdict: go ? 'GO' : 'NO-GO',
+      verdictLine: `VERDICT: ${go ? 'GO' : 'NO-GO'} (unique-owner ${results.map((r) => `${r.name}=${(r.uniqueRate * 100).toFixed(0)}%`).join(', ')})`,
+    },
+    null,
+    2,
+  ),
 );
 process.exit(go ? 0 : 2);

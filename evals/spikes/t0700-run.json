@@ -21,6 +21,7 @@
       "uniqueRate": 0.3953488372093023,
       "ambiguousSample": []
     }
-  ]
+  ],
+  "verdict": "NO-GO",
+  "verdictLine": "VERDICT: NO-GO (unique-owner fixtureA:next-marketing=65%, fixtureB:astro-commerce=40%)"
 }
-VERDICT: NO-GO (unique-owner fixtureA:next-marketing=65%, fixtureB:astro-commerce=40%)
