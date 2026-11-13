@@ -169,9 +169,17 @@
       ],
       "risk": "layout churn later",
       "rollback": "git revert; layout is cheap pre-code",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D28/D29 build authorization (self-verified per protocol; no per-micro-task approvals)",
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0101.md",
+        "CONTRIBUTING.md",
+        "package.json",
+        "pnpm-workspace.yaml"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0101.md"
     },
     {
       "id": "T0102",

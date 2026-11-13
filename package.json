@@ -1,0 +1,16 @@
+{
+  "name": "sus",
+  "version": "0.0.0",
+  "private": true,
+  "description": "SUS — Shahid UI UX Skill monorepo (ADR-001 layout). Private; not published.",
+  "packageManager": "pnpm@11.22.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "typecheck": "pnpm -r exec tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}

@@ -22,3 +22,12 @@
   STATE.md updated. Build gate closed; private dev-branch checkpoint pushes permitted (D30).
   Validation: EFFECTIVE_REQUIREMENTS.json parses; TASKS.json diff minimal (8 insert/8 delete).
   Commit: same commit as this entry. Next: T0101 repository skeleton.
+
+- 2026-11-13T23:25:00+06:00 | ZCode (GLM) | T0101 | Created ADR-001 skeleton: root
+  package.json (private, engines >=22, pnpm@11.22.0), pnpm-workspace.yaml,
+  tsconfig.base.json (strict/NodeNext), 7 packages @sus/{schemas,scanners,tokens,
+  studio-bridge,studio-web,adapters,eval-core} with stubs, skill/fixtures/evals
+  READMEs, CONTRIBUTING.md boundary doc. Checks: pnpm install exit 0 (8 projects);
+  pnpm -r exec tsc --noEmit exit 0; negative type fixture caught (exit 1, TS2322)
+  then restored; 7/7 packages private. Receipt: .sus-dev/VERIFICATION/T0101.md.
+  Commit: same commit as receipt. Next: T0010 executable continuation checker.

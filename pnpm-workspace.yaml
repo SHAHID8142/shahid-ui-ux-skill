@@ -1,0 +1,5 @@
+# ADR-001: pnpm workspaces. Fixtures are workspace members (dep management) but
+# never published; they are self-contained test targets (T0102/T0102b).
+packages:
+  - packages/*
+  - fixtures/*
