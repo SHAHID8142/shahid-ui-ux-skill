@@ -1,13 +1,14 @@
 # ROADMAP — SUS (living file)
 
 **Authoritative task list:** `TASKS.json` (counts and statuses computed from TASKS.json; current receipt in .sus-dev/VERIFICATION/).
-**Requirements:** `docs/SUS_MASTER_PRD_v1.0.md` + `docs/PRD_AMENDMENTS_v1.1.md` (proposed).
-**Build gate:** planning only until owner sends `APERIO` (see `docs/OWNER_DECISIONS_LOG.md`).
+**Requirements:** `docs/SUS_MASTER_PRD_v1.0.md` + effective manifest
+`docs/EFFECTIVE_REQUIREMENTS.json` (ADR-001/002/004/005/006 adopted; ADR-003 as amended).
+**Build gate:** closed — APERIO recorded as OWNER_DECISIONS_LOG.md D28 (2026-11-13).
 
 | Milestone | Scope | Tasks | Status |
 |---|---|---|---|
-| M0 | Discovery, gap analysis, ADRs, WBS | T0001–T0005 | **done/review** — awaiting owner approval |
-| M1 | Repo skeleton, test runner, CI, schema versioning | T0101–T0104, T0102b | pending |
+| M0 | Discovery, gap analysis, ADRs, WBS | T0001–T0005, T0006, T0007 | **done** — D29 approval recorded |
+| M1 | Repo skeleton, test runner, CI, schema versioning | T0101–T0104, T0102b, T0010 | pending — T0101 next |
 | M1.5 | **Evaluation Spine** (rubric, harness, baselines, calibration, gate registry) | T0151–T0159, T0158 | pending |
 | M2 | Portable skill core (SKILL.md, router, JIT loader, CLI) | T0201–T0205 | pending |
 | M3 | Research honesty + anti-slop (evidence, taxonomy, scanner, corpus, trend loop) | T0301–T0305, T0310 | pending |
@@ -20,7 +21,7 @@
 | M9 | Adapters + installer + support matrix + dogfood sites | T0901–T0906 | pending |
 | M10 | Regression, benchmark, independent review, docs, release | T1001–T1005 | pending |
 
-## Proposed first implementation batch (blocked on recorded authorization and effective architecture)
+## Active first implementation batch (unlocked by D28/D29)
 
 `T0101 → T0102 → T0103 → T0104 → T0151` (repo skeleton, fixture A, CI, schemas, rubric CLI)
 

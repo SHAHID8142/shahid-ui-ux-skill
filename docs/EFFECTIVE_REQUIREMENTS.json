@@ -1,8 +1,8 @@
 {
-  "version": 1,
-  "updated": "2026-11-13T22:12:16.174483+06:00",
-  "build_permission": false,
-  "authorization_receipt": null,
+  "version": 2,
+  "updated": "2026-11-13T23:05:00+06:00",
+  "build_permission": true,
+  "authorization_receipt": "OWNER_DECISIONS_LOG.md D28-D31 (same commit as this file's update; discoverable with git log -1 --format=%H -- docs/OWNER_DECISIONS_LOG.md)",
   "build_complete_pushed": false,
   "authority": [
     "current explicit owner instruction",
@@ -58,15 +58,15 @@
       "id": "ER-SYNC",
       "status": "fixed",
       "owner": "project owner",
-      "source": "D26",
-      "statement": "Local commits; no checkpoint push"
+      "source": "D26 superseded by D30 (owner APERIO message 2026-11-13)",
+      "statement": "Local atomic commits always; private dev-branch checkpoint pushes permitted for recovery/agent transfer; never public, never main, never unfinished merges"
     },
     {
       "id": "ER-BUILD",
       "status": "fixed",
       "owner": "project owner",
-      "source": "D11,D19,D27",
-      "statement": "Explicit APERIO required; implementation currently prohibited"
+      "source": "D11,D19,D27,D28",
+      "statement": "APERIO received 2026-11-13 (recorded D28): implementation authorized; no further authorization requests for eligible micro-tasks"
     },
     {
       "id": "ER-SECURITY",
@@ -86,34 +86,40 @@
   "proposals": [
     {
       "id": "ADR-001",
-      "status": "proposed",
-      "approval_receipt": null
+      "status": "adopted",
+      "approval_receipt": "OWNER_DECISIONS_LOG.md D29 (same commit as this file's update)"
     },
     {
       "id": "ADR-002",
-      "status": "proposed",
-      "approval_receipt": null
+      "status": "adopted",
+      "approval_receipt": "OWNER_DECISIONS_LOG.md D29 (same commit as this file's update)"
     },
     {
       "id": "ADR-003",
-      "status": "proposed",
-      "approval_receipt": null
+      "status": "adopted-as-amended",
+      "approval_receipt": "OWNER_DECISIONS_LOG.md D29 (same commit as this file's update); amended form: dual-stack experimental ladder + fallback ladder + conservative privacy policy, per OWNER_REVIEW_PACKET.md"
     },
     {
       "id": "ADR-004",
-      "status": "proposed",
-      "approval_receipt": null
+      "status": "adopted",
+      "approval_receipt": "OWNER_DECISIONS_LOG.md D29 (same commit as this file's update)"
     },
     {
       "id": "ADR-005",
-      "status": "proposed",
-      "approval_receipt": null
+      "status": "adopted",
+      "approval_receipt": "OWNER_DECISIONS_LOG.md D29 (same commit as this file's update)"
     },
     {
       "id": "ADR-006",
-      "status": "proposed",
-      "approval_receipt": null
+      "status": "adopted",
+      "approval_receipt": "OWNER_DECISIONS_LOG.md D29 (same commit as this file's update); verify supported Node runtime at adoption (T0101) before pinning"
     }
+  ],
+  "irreversible_externals_open": [
+    "licence and distribution channel (D06/B003)",
+    "publication/GA decision",
+    "paid services",
+    "real customer data"
   ],
   "supersessions": [
     {
@@ -121,6 +127,12 @@
       "supersedes": [
         "PRD \u00a718 interim independent reviews",
         "D10 pending reviewer recruitment"
+      ]
+    },
+    {
+      "source": "D30 (owner APERIO message 2026-11-13)",
+      "supersedes": [
+        "D26 no-push rule; private dev-branch checkpoint pushes now permitted"
       ]
     },
     {

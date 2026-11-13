@@ -1,20 +1,26 @@
 # Development state
 
-Updated: 2026-11-13T22:18:48.872406+06:00 (Asia/Dhaka). Host: Codex; model identity not independently queried.
-Branch: chore/continuation-reconciliation. Last confirmed checkpoint: aebf5ff
-(bootstrap); this reconciliation receipt belongs to its containing commit.
-Original main: 6ea7fb708f54e630e74e858eaa8aa2c469f04c33, remote verified this session.
-Stage: planning only; BUILD_PERMISSION=false; BUILD_COMPLETE_PUSHED=false.
-Canonical statuses: TASKS.json. T0006 done; T0007 review for owner decisions;
-T0004/T0005 also review. No active lease. Concurrency 1.
-Next eligible action: resolve B001/B002 using docs/OWNER_REVIEW_PACKET.md. No
-executable task is eligible. Do not create another independent pre-build review.
-After explicit authorization and architecture resolution, record once and start T0101.
-Blockers: .sus-dev/BLOCKERS.md. Publication B003 is a separate later gate.
-Active files: none after checkpoint. No product artifacts created.
-Latest checks: .sus-dev/VERIFICATION/T0007.md; DAG/semantic negative checks pass;
-product/security/E2E/a11y tests not-run. Resume-checker experiments not-run.
-Environment: macOS/zsh; Python/Git/gh available; no product tooling installation.
-Other historical review worktrees left untouched. No remote pushes this session.
-Next exact command: `git status --porcelain=v1`, then read owner decisions and task state.
-For actual receipt SHA: `git log -1 --format=%H -- .sus-dev/VERIFICATION/T0007.md`.
+Updated: 2026-11-13T23:10:00+06:00 (Asia/Dhaka). Host: ZCode; model: GLM (account:zai-start-plan/GLM-5.3-Flash).
+Branch: chore/continuation-reconciliation. Original main: 6ea7fb708f54e630e74e858eaa8aa2c469f04c33.
+Stage: BUILD in progress. BUILD_PERMISSION=true (APERIO recorded as D28, this commit).
+BUILD_COMPLETE_PUSHED=false. Architecture: ADR-001/002/004/005/006 adopted, ADR-003 as
+amended (D29). Checkpoint pushes to private dev branches permitted (D30).
+
+Canonical statuses: TASKS.json. Done: T0001-T0007 (M0 complete). No active lease.
+Concurrency 1.
+
+Current task: T0101 repository skeleton + contribution boundaries (M1).
+Next exact steps: verify Node/pnpm, create pnpm-workspace.yaml + packages/{schemas,
+scanners,tokens,studio-bridge,studio-web,adapters,eval-core} + skill/ + fixtures/ +
+evals/ + CONTRIBUTING.md, then `pnpm install` and `pnpm -r exec tsc --noEmit`, save
+.sus-dev/VERIFICATION/T0101.md, update TASKS.json/SESSION_LOG/STATE, one atomic commit,
+then `git push origin chore/continuation-reconciliation` (private dev branch, D30).
+Next task after T0101: T0010 executable continuation checker (builder resume
+experiments), then T0102 fixture app A.
+
+Blockers: none open except standing B003 (licence/publication, later phase) and B004
+(irreversible externals during build). Active files: none after checkpoint.
+
+Latest checks: none yet for product tasks (T0101 first executable task). Environment:
+macOS/zsh; Node v26.10.0, npm 11.19.1, pnpm 11.22.0 available; Git, gh, python3
+available. For actual receipt SHA of this stage: `git log -1 --format=%H -- AGENTS.md`.

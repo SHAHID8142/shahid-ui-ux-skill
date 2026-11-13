@@ -13,3 +13,12 @@
   and 26 missing-producer negative cases passed. No product tests run. Receipt:
   .sus-dev/VERIFICATION/T0007.md; commit is containing commit. T0007 remains review,
   pending B001/B002; next action is owner authorization/architecture resolution.
+
+- 2026-11-13T23:10:00+06:00 | ZCode (GLM) | AUTH | APERIO received and recorded once as
+  OWNER_DECISIONS_LOG.md D28-D31. T0004/T0005/T0007 -> done in TASKS.json (planning-v1.3);
+  ADR-001/002/004/005/006 adopted as proposed, ADR-003 as amended (D29) via
+  EFFECTIVE_REQUIREMENTS.json v2. B001/B002 closed; B003/B004 standing. AGENTS.md,
+  HANDOFF.md, ROADMAP.md, OWNER_REVIEW_PACKET.md, ADR_DRAFTS.md approval block, BLOCKERS.md,
+  STATE.md updated. Build gate closed; private dev-branch checkpoint pushes permitted (D30).
+  Validation: EFFECTIVE_REQUIREMENTS.json parses; TASKS.json diff minimal (8 insert/8 delete).
+  Commit: same commit as this entry. Next: T0101 repository skeleton.

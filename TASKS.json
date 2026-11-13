@@ -1,10 +1,10 @@
 {
   "meta": {
     "product": "SUS — Shahid UI UX Skill",
-    "version": "planning-v1.2",
+    "version": "planning-v1.3",
     "updated": "2026-11-13",
     "protocol": "docs/AGENT_CONTINUE_PROTOCOL.md; docs/TASK_RECORD_CONTRACT.md",
-    "build_gate": "APERIO not yet received — all implementation tasks remain pending",
+    "build_gate": "APERIO received 2026-11-13 (D28): build authorized; statuses below are canonical",
     "concurrency": 1,
     "note": "statuses reflect planning progress only; no product code exists"
   },
@@ -109,8 +109,8 @@
       ],
       "risk": "ADR-003 (CDP bridge) unproven until T0700 spike",
       "rollback": "ADRs revisable before build",
-      "status": "review",
-      "approval": "pending",
+      "status": "done",
+      "approval": "OWNER_DECISIONS_LOG.md D28-D29 (same commit as TASKS.json update)",
       "evidence": [
         "ADR_DRAFTS.md"
       ],
@@ -139,8 +139,8 @@
       ],
       "risk": "over-planning; tasks must be revised against reality in M1",
       "rollback": "TASKS.json is versioned; revisions logged",
-      "status": "review",
-      "approval": "pending",
+      "status": "done",
+      "approval": "OWNER_DECISIONS_LOG.md D28-D29 (same commit as TASKS.json update)",
       "evidence": [
         "TASKS.json"
       ],
@@ -2378,8 +2378,8 @@
       ],
       "risk": "False continuity or unsafe resumption",
       "rollback": "Revert only this task’s known changes; preserve unrelated work",
-      "status": "review",
-      "approval": "D24 planning authorization",
+      "status": "done",
+      "approval": "D24 planning authorization + B001/B002 closure (D28/D29, same commit as TASKS.json update)",
       "phase": "planning",
       "owner": null,
       "lease": null,

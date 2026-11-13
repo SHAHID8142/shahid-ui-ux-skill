@@ -3,17 +3,22 @@
 Read AGENTS.md → docs/AGENT_CONTINUE_PROTOCOL.md → .sus-dev/STATE.md → TASKS.json →
 docs/OWNER_DECISIONS_LOG.md → docs/EFFECTIVE_REQUIREMENTS.json, then inspect Git.
 
-Planning only. No APERIO receipt, product implementation or product test success.
+**Build phase.** APERIO was received and recorded once (OWNER_DECISIONS_LOG.md D28,
+2026-11-13); do not re-request authorization. Architecture baseline: ADR-001/002/004/
+005/006 adopted as proposed, ADR-003 as amended (D29). Private dev-branch checkpoint
+pushes are permitted (D30); never public, never unfinished merges into `main`.
+
 Task status is exclusively TASKS.json; do not infer completion from older reports.
-Latest checkpoint and exact next command are in .sus-dev/STATE.md.
-
-Work locally on chore/continuation-reconciliation. No checkpoint pushes and no new
-independent reviewers. The seven historical reports are preserved with hashes in
-REVIEW_SOURCES.json. Full Studio remains mandatory. Proposed ADRs remain proposals.
+Latest checkpoint, current task and exact next command are in .sus-dev/STATE.md.
 Unpushed commits are recoverable only in this workspace or a full transfer including
-.git; opening a different machine cannot fetch these checkpoints from GitHub.
+.git; a different machine cannot fetch dev-branch checkpoints unless they were pushed.
 
-On authorization, record it once, honor effective architecture decisions, implement
-one eligible micro-task, run checks, save evidence and a local atomic commit, repeat.
-Only after full verified build: private push, verify remote SHA, then stop for audit.
-Public release requires separate owner approval.
+Implement one eligible micro-task at a time: real tests, verified acceptance criteria,
+evidence receipt + TASKS.json update + STATE/SESSION_LOG update in one atomic local
+commit, then private dev-branch checkpoint push. Keep automated regression, security
+and a11y checks; no new independent audit rounds until BUILD_COMPLETE_PUSHED.
+Full Studio, Motion Intelligence and all mandatory scope stay non-optional (D24/D29).
+Stop only for genuine blockers, irreversible externals (licence B003, publication,
+paid services) or unavailable resources; record them in .sus-dev/BLOCKERS.md.
+After complete verified build: private push, verify remote SHA, then stop for the
+separately commissioned audit (T1003/T1005 are later owner actions).

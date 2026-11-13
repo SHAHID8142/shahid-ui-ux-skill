@@ -1,7 +1,10 @@
 > 2026-11-13 reconciliation: see REVIEW_RECONCILIATION.md and STUDIO_SAFETY_CONTRACT.md.
-> Historical confidence cutoffs, real-source preview wording and automatic scope cuts below
-> are superseded by D24 scope/security requirements and the recorded planning corrections.
-> All six ADR implementation choices remain proposed; no architecture approval inferred.
+> 2026-11-13 APERIO authorization: ADR-001/002/004/005/006 **adopted as proposed** and
+> ADR-003 **adopted as amended** (experimental ladder + fallback ladder + conservative
+> privacy policy) by OWNER_DECISIONS_LOG.md D29 — the reversible implementation
+> baseline. Reversal triggers below stay live; reopening an ADR follows its trigger,
+> and irreversible external matters (licence, publication, paid services) were not
+> decided here. Historical wording superseded by D24/D29 as noted per section.
 
 # SUS — Architecture Decision Records (Drafts for approval)
 
@@ -204,4 +207,13 @@ new ADR.
 
 | ADR | Decision owner | Status |
 |---|---|---|
-| 001–006 | SHAHID (owner) | proposed — approve, amend, or reject each individually |
+| 001 | SHAHID (owner) | **adopted as proposed** — D29, 2026-11-13 |
+| 002 | SHAHID (owner) | **adopted as proposed** — D29, 2026-11-13 |
+| 003 | SHAHID (owner) | **adopted as amended** (experimental ladder, fallback ladder, conservative privacy policy) — D29, 2026-11-13 |
+| 004 | SHAHID (owner) | **adopted as proposed** — D29, 2026-11-13 |
+| 005 | SHAHID (owner) | **adopted as proposed** — D29, 2026-11-13 |
+| 006 | SHAHID (owner) | **adopted as proposed** — D29, 2026-11-13; Node pin verified at T0101 |
+
+Receipt: `docs/EFFECTIVE_REQUIREMENTS.json` proposals[] + `docs/OWNER_DECISIONS_LOG.md`
+D29 (same commit as this file's update). Each ADR's reversal trigger remains an active
+engineering check during the build; reopening one follows its own trigger.

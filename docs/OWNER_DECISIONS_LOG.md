@@ -33,15 +33,16 @@ Newest entries appended at the bottom. **Nothing here is implemented** unless ma
 | D22 | "HAL" was a typo; it appears in **no** original document | closed | removed from open questions |
 | D23 | Deeply audit and refine the existing full project; **do not reduce anything**. Keep the master skill and mandatory Live Studio: draw/select/write instructions directly over the consuming project's running browser page, connected to its agent. Check Impeccable's Live command/workflow as a reference. Improve the agent's research, judgment and continued learning within this full scope. | clarified by owner during deep audit, 2026-11-13 | `DEEP_AUDIT_2026-11-13.md`; reconciled in amendments Part 13 — **owner to confirm wording** |
 
-## Build gate
+## Build gate (closed — see D28 below)
 
 ```
-BUILD_PERMISSION = false
-UNLOCK_KEYWORD  = "APERIO"   # means: start building. Does not load the Aperio Next workflow.
+BUILD_PERMISSION = true        # APERIO received 2026-11-13; recorded once as D28/D29.
+UNLOCK_KEYWORD  = "APERIO"     # means: start building. Does not load the Aperio Next workflow.
 ```
 
-Nothing in `packages/`, `skills/`, `adapters/` or any executable artifact is created until the
-owner sends `APERIO`. Planning documents, research and questions continue until then.
+Implementation tasks in TASKS.json are executable subject to their dependencies.
+Product artifacts are created from T0101 onward with per-task verification, evidence
+receipts and atomic local commits (D26), plus private dev-branch checkpoint pushes (D30).
 
 ## Open ambiguities to clarify (not assumptions)
 
@@ -81,3 +82,34 @@ instructed “read it and act on it” in Codex. Full text: AGENT_CONTINUE_PROTO
 
 D24 also confirms mandatory full Studio scope; D23 wording confirmation is no longer
 needed for that scope. It does not approve ADR-003's particular implementation.
+
+## 2026-11-13 — APERIO authorization and build start (D28–D31)
+
+Source: owner message beginning "APERIO / I authorize the actual implementation of
+Shahid UI UX Skill (SUS)", received 2026-11-13 in ZCode on branch
+chore/continuation-reconciliation at a4533a8. This is the recorded one-time unlock;
+future sessions must reuse this record, not re-request authorization.
+
+- D28 | **APERIO received: build gate closed.** `BUILD_PERMISSION = true` from this
+  commit forward. Actual implementation of the full mandatory scope is authorized per
+  docs/AGENT_CONTINUE_PROTOCOL.md. Do not restart planning or repeat completed audits.
+- D29 | **T0004/T0005 approved: architecture baseline adopted.** ADR-001/002/004/005/006
+  are adopted as proposed; ADR-003 is adopted as amended (dual-stack experimental
+  ladder with fallback implementation ladder, conservative privacy policy, no
+  consumer-source writes before safety prerequisites) — the exact scope the owner
+  review packet proposed. Evidence-supported, reversible recommendations (each ADR
+  carries a reversal trigger) form the implementation baseline. **Irreversible external
+  matters are not decided by this:** licence/distribution (D06/B003), paid services,
+  publication/GA, and real customer data remain separate owner decisions.
+- D30 | **Private dev-branch checkpoint pushes permitted.** Supersedes D26's strict
+  no-push rule per the authority order (latest explicit owner instruction wins). Safe
+  private development-branch checkpoints may be pushed for recovery and agent transfer.
+  Never publish, never merge unfinished work into `main`, never change repository
+  visibility without separate authorization. The final private push of the complete
+  build remains the T1006 boundary.
+- D31 | **Continuation and stop conditions confirmed.** The repository's durable state
+  (AGENTS.md → protocol → STATE → TASKS.json → decisions) is the only resumption
+  interface; a future agent receiving only `continue` must recover and proceed without
+  another master prompt. Work stops only for genuine blockers, irreversible decisions
+  requiring authorization, or unavailable resources — and finally at the
+  BUILD_COMPLETE_PUSHED audit boundary before the separately commissioned audit.

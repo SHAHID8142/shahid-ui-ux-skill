@@ -1,5 +1,11 @@
 # Concrete pre-build decision packet
 
+**RESOLVED 2026-11-13 (D28/D29):** the owner sent APERIO and authorized adopting the
+evidence-supported, reversible recommendations in this packet. ADR-001/002/004/005/006
+adopted as proposed; ADR-003 adopted as amended with the conservative privacy policy.
+Irreversible externals (licence B003, publication, paid services, real data) remain
+separate owner decisions. See OWNER_DECISIONS_LOG.md D28–D31.
+
 Planning corrections and historical reports are available in REVIEW_RECONCILIATION.md.
 No software is built. This packet does not authorize implementation by itself.
 
