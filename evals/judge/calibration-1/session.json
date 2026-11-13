@@ -1,0 +1,30 @@
+{
+  "id": "5c9967c3-036a-41a5-b12a-cb27d1e1bcb4",
+  "createdAt": "2026-11-13T19:28:57.850Z",
+  "mapping": {
+    "A": "baseline:marketing",
+    "B": "baseline:commerce",
+    "C": "baseline:admin",
+    "D": "baseline:portfolio"
+  },
+  "order": [
+    "C",
+    "D",
+    "A",
+    "B"
+  ],
+  "axes": [
+    "hierarchy",
+    "composition",
+    "typography",
+    "color-surface",
+    "spacing-rhythm",
+    "motion-interaction",
+    "content-copy",
+    "accessibility",
+    "responsive-edge",
+    "consistency-system",
+    "distinctiveness-pov",
+    "performance"
+  ]
+}

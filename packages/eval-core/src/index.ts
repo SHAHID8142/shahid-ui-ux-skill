@@ -12,3 +12,13 @@ export {
   type CaptureCombo,
 } from './harness/capture.js';
 export { evaluateG11, type GateResult } from '@sus/schemas';
+export {
+  createJudgeSession,
+  recordPass,
+  computeAgreement,
+  type JudgeSession,
+  type JudgeSubmission,
+  type JudgePass,
+  type AgreementReport,
+  type AxisAgreement,
+} from './judge.js';

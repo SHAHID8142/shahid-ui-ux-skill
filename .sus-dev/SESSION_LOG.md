@@ -140,3 +140,10 @@
   (serious color-contrast x2, TBT exceed) — honest unassisted defects. Metrics schema
   extended with title (harness parity). Workspace 61/61. Receipt: VERIFICATION/T0153.md.
   Next: T0155 blind judge protocol + calibration.
+
+- 2026-11-14T02:00:00+06:00 | ZCode (GLM) | T0155 | Blind judge protocol + machinery
+  (anonymized sessions, validated passes, per-axis agreement vs 0.8/1.0 targets,
+  below-target flagging) + calibration run 1 over 4 baselines: exact-match 1.00,
+  0 below-target, limitations disclosed (single judge, author-judge, no vision;
+  inter-rater NOT-RUN). 4 judge tests; workspace 65/65. Receipt: VERIFICATION/T0155.md.
+  Next: T0156 token/cost budgets.

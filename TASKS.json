@@ -474,9 +474,17 @@
       ],
       "risk": "no human raters available → owner rates",
       "rollback": "judged tier stays advisory",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0155.md",
+        "evals/judge/PROTOCOL.md",
+        "evals/judge/calibration-1/",
+        "packages/eval-core/src/judge.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0155.md"
     },
     {
       "id": "T0156",

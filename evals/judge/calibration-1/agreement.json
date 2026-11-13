@@ -1,0 +1,99 @@
+{
+  "session": "5c9967c3-036a-41a5-b12a-cb27d1e1bcb4",
+  "pairsCompared": 1,
+  "targetExact": 0.8,
+  "targetMeanAbsDiff": 1,
+  "axes": [
+    {
+      "axis": "hierarchy",
+      "exactMatchRate": 1,
+      "meanAbsDiff": 0,
+      "belowTarget": false
+    },
+    {
+      "axis": "composition",
+      "exactMatchRate": 1,
+      "meanAbsDiff": 0,
+      "belowTarget": false
+    },
+    {
+      "axis": "typography",
+      "exactMatchRate": 1,
+      "meanAbsDiff": 0,
+      "belowTarget": false
+    },
+    {
+      "axis": "color-surface",
+      "exactMatchRate": 1,
+      "meanAbsDiff": 0,
+      "belowTarget": false
+    },
+    {
+      "axis": "spacing-rhythm",
+      "exactMatchRate": 1,
+      "meanAbsDiff": 0,
+      "belowTarget": false
+    },
+    {
+      "axis": "motion-interaction",
+      "exactMatchRate": 1,
+      "meanAbsDiff": 0,
+      "belowTarget": false
+    },
+    {
+      "axis": "content-copy",
+      "exactMatchRate": 1,
+      "meanAbsDiff": 0,
+      "belowTarget": false
+    },
+    {
+      "axis": "accessibility",
+      "exactMatchRate": 1,
+      "meanAbsDiff": 0,
+      "belowTarget": false
+    },
+    {
+      "axis": "responsive-edge",
+      "exactMatchRate": 1,
+      "meanAbsDiff": 0,
+      "belowTarget": false
+    },
+    {
+      "axis": "consistency-system",
+      "exactMatchRate": 1,
+      "meanAbsDiff": 0,
+      "belowTarget": false
+    },
+    {
+      "axis": "distinctiveness-pov",
+      "exactMatchRate": 1,
+      "meanAbsDiff": 0,
+      "belowTarget": false
+    },
+    {
+      "axis": "performance",
+      "exactMatchRate": 1,
+      "meanAbsDiff": 0,
+      "belowTarget": false
+    }
+  ],
+  "belowTargetAxes": [],
+  "method": "consecutive-pass per-axis comparison (exact-match rate + mean abs diff); intra-judge self-consistency when one judgeId",
+  "limitations": [
+    "single judge (intra-judge self-consistency, NOT inter-rater reliability)",
+    "author-judge: builder wrote the baselines; blindness is procedural (aliases + shuffled order), not cognitive",
+    "no visual inspection: judgments from HTML structure + measured metrics only",
+    "inter-rater calibration with a second independent judge: NOT-RUN (next calibration step)"
+  ],
+  "mappingRevealed": {
+    "A": "baseline:marketing",
+    "B": "baseline:commerce",
+    "C": "baseline:admin",
+    "D": "baseline:portfolio"
+  },
+  "aggregate": {
+    "meanExactMatchRate": 1.0,
+    "belowTargetAxes": [],
+    "verdict": "pass (self-consistency ceiling; inter-rater calibration still NOT-RUN)"
+  }
+}
