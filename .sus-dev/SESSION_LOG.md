@@ -120,3 +120,10 @@
   D32. Dogfooded immediately: issue #8 (CI verification, fail-open G4/G5) triaged ->
   T0103b added to TASKS.json (planning-v1.4). Finding accepted: evaluateG4([])/G5([])
   returning pass is a real fail-open defect; fail-closed fix queued first in T0103b.
+
+- 2026-11-14T01:00:00+06:00 | ZCode (GLM) | T0103b | Issue #8 resolved: fail-closed
+  G4/G5 (empty scans/budgets, null/NaN metrics) + negatives; runLighthouse emits null
+  for missing metrics + retry(max3); build-first typecheck (unbuilt dist/ was the
+  CI typecheck root cause); stylelint + chromium + fixture builds added to CI.
+  10 CI runs enumerated w/ root causes. Fresh CI 43489224416 GREEN on exact HEAD
+  e5ce983f, Node 22+24, 52/52 tests each (log-verified). Receipt: CI_ACTIONS_PRIVATE.md.

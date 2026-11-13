@@ -2577,14 +2577,22 @@
       ],
       "risk": "runner/plan constraints may block full verification",
       "rollback": "workflow + gate changes are additive; revert only this task's changes",
-      "status": "pending",
+      "status": "done",
       "approval": "owner issue #8 via D32 open-issue gate",
       "phase": "build",
-      "owner": null,
+      "owner": "zcode-glm-2026-11-13",
       "lease": null,
-      "evidence": [],
+      "evidence": [
+        ".sus-dev/VERIFICATION/CI_ACTIONS_PRIVATE.md",
+        ".github/workflows/ci.yml",
+        "packages/eval-core/src/harness/a11y-budgets.ts",
+        "packages/eval-core/tests/a11y-budgets.test.ts"
+      ],
       "children": [],
-      "results": []
+      "results": [
+        "CI run 43489224416 green on exact HEAD e5ce983f, Node 22+24, 52/52 tests per node (log-verified)"
+      ],
+      "commit": "e5ce983f37203b046a406e869fa1af718bd76d08"
     }
   ]
 }
