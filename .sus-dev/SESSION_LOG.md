@@ -100,3 +100,10 @@
   themes + capture CLI command. 5 harness tests pass live against served fixture A
   (matrix complete, no overflow, CLS<0.1, landmarks recorded); workspace 33/33.
   Receipt: VERIFICATION/T0152.md. Next: T0152b axe/Lighthouse.
+
+- 2026-11-14T00:20:00+06:00 | ZCode (GLM) | T0152b | G4/G5 gate evaluators + axe scan
+  runner + Lighthouse runner (chrome-launcher + Chrome-for-Testing fresh profile;
+  Chrome 136+ debug-port constraint handled per ADR-003). 8/8 tests incl. end-to-end
+  negatives: nameless button -> axe catches -> G4 fail; budget exceed -> G5 EXCEEDED.
+  Real fixture A: G4 pass, Lighthouse LCP 772ms/CLS 0/TBT 35ms/110KB -> G5 pass.
+  LCP-zero flake policy documented. Receipt: VERIFICATION/T0152b.md. Next: T0102b fixtures B/C/D.
