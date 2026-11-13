@@ -11,3 +11,4 @@ export {
   type CaptureResult,
   type CaptureCombo,
 } from './harness/capture.js';
+export { evaluateG11, type GateResult } from '@sus/schemas';

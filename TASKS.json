@@ -435,9 +435,16 @@
       ],
       "risk": "bundle bloat",
       "rollback": "retention policy in schema",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0154.md",
+        "packages/schemas/src/evidence-bundle.ts",
+        "packages/eval-core/tests/evidence-bundle.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0154.md"
     },
     {
       "id": "T0155",

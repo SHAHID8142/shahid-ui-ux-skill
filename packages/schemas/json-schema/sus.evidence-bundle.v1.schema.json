@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "subject": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provenance": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generatedAt": {
+      "type": "string",
+      "minLength": 4
+    },
+    "shots": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "viewport": {
+            "type": "string",
+            "enum": [
+              "mobile",
+              "tablet",
+              "desktop"
+            ]
+          },
+          "theme": {
+            "type": "string",
+            "enum": [
+              "light",
+              "dark"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "viewport",
+          "theme",
+          "path"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "metrics": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "minLength": 1
+          },
+          "horizontalOverflow": {
+            "type": "boolean"
+          },
+          "overflowingElements": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cls": {
+            "type": "number"
+          },
+          "lcpMs": {
+            "type": "number",
+            "minimum": 0
+          },
+          "smallTapTargets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "selector": {
+                  "type": "string"
+                },
+                "width": {
+                  "type": "number"
+                },
+                "height": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "selector",
+                "width",
+                "height"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "landmarks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "headings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "level": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "text": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "level",
+                "text"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "url",
+          "horizontalOverflow",
+          "overflowingElements",
+          "cls",
+          "lcpMs",
+          "smallTapTargets",
+          "landmarks",
+          "headings"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "gates": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "gate": {
+            "type": "string",
+            "enum": [
+              "G4",
+              "G5",
+              "G11"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail"
+            ]
+          },
+          "detail": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "gate",
+          "status",
+          "detail"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "rubricScores": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "axis": {
+            "type": "string",
+            "minLength": 1
+          },
+          "score": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "basis": {
+            "type": "string",
+            "enum": [
+              "measured",
+              "critic-validated",
+              "judged"
+            ]
+          },
+          "evidence": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "axis",
+          "score",
+          "basis",
+          "evidence"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "subject",
+    "provenance",
+    "generatedAt",
+    "shots",
+    "metrics",
+    "gates"
+  ],
+  "additionalProperties": false,
+  "$id": "sus.evidence-bundle",
+  "x-sus-version": 1
+}

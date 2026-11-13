@@ -127,3 +127,9 @@
   CI typecheck root cause); stylelint + chromium + fixture builds added to CI.
   10 CI runs enumerated w/ root causes. Fresh CI 43489224416 GREEN on exact HEAD
   e5ce983f, Node 22+24, 52/52 tests each (log-verified). Receipt: CI_ACTIONS_PRIVATE.md.
+
+- 2026-11-14T01:10:00+06:00 | ZCode (GLM) | T0154 | Evidence bundle schema v1 (completeness
+  in-schema: >=1 shot, >=1 metrics, >=1 gates) + sus-eval evidence CLI + G11 fail-closed
+  evaluator + registry extension (rubric-score + evidence-bundle JSON Schema committed,
+  sync-checked). 5/5 new tests; workspace 57/57. Receipt: VERIFICATION/T0154.md.
+  Next: T0153 no-skill baselines on 4 fixtures.

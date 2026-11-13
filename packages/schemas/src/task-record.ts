@@ -111,3 +111,6 @@ export { TaskRecordV1 as TaskRecordCurrent, SusTaskRecordV1 as SusTaskRecordCurr
 
 /** Schema registry used by the JSON-Schema export + sync check. */
 export const SUS_SCHEMA_REGISTRY = [SusTaskRecordV1, SusTaskRecordV2] as const;
+
+// Additional registries live next to their schemas and are merged by the
+// exporter (see index.ts SUS_SCHEMA_REGISTRY_ALL).

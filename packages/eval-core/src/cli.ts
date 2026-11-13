@@ -76,4 +76,32 @@ if (command === 'capture') {
   process.exit(0);
 }
 
-fail(`unknown command "${String(command)}" — usage: sus-eval score|capture`);
+if (command === 'evidence') {
+  const { values } = parseArgs({
+    args: args.slice(1),
+    options: { in: { type: 'string' }, out: { type: 'string' } },
+  });
+  if (!values.in) fail('evidence requires --in <bundle.json>');
+  let raw: unknown;
+  try {
+    raw = JSON.parse(readFileSync(values.in, 'utf8'));
+  } catch (e) {
+    fail(`cannot read ${values.in}: ${e instanceof Error ? e.message : e}`);
+  }
+  const { EvidenceBundle, evaluateG11 } = await import('@sus/schemas');
+  const parsed = EvidenceBundle.safeParse(raw);
+  if (!parsed.success) {
+    fail(parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; '));
+  }
+  const g11 = evaluateG11(parsed.data);
+  const json = JSON.stringify({ bundle: values.in, g11 }, null, 2);
+  if (values.out) {
+    writeFileSync(values.out, `${json}\n`);
+    console.log(`wrote ${values.out}`);
+  } else {
+    console.log(json);
+  }
+  process.exit(0);
+}
+
+fail(`unknown command "${String(command)}" — usage: sus-eval score|capture|evidence`);

@@ -33,3 +33,26 @@ export {
   type RubricScoreData,
   type ScoringVerdictData,
 } from './rubric.js';
+export {
+  CaptureShot,
+  EvidenceBundle,
+  GateResultData,
+  PageMetricsData,
+  SusEvidenceBundle,
+  ThemeName,
+  ViewportName,
+  evaluateG11,
+  type EvidenceBundleData,
+  type GateResult,
+} from './evidence-bundle.js';
+import { SusRubricScore } from './rubric.js';
+import { SusEvidenceBundle } from './evidence-bundle.js';
+import { SusTaskRecordV1, SusTaskRecordV2 } from './task-record.js';
+
+/** All versioned SUS schemas; the JSON-Schema exporter consumes this. */
+export const SUS_SCHEMA_REGISTRY_ALL = [
+  SusTaskRecordV1,
+  SusTaskRecordV2,
+  SusRubricScore,
+  SusEvidenceBundle,
+] as const;
