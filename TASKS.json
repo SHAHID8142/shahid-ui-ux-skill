@@ -594,9 +594,17 @@
       ],
       "risk": "intent overlap (unslop vs audit)",
       "rollback": "router table is data, editable",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0202.md",
+        "packages/schemas/src/intent.ts",
+        "packages/adapters/src/router.ts",
+        "packages/adapters/tests/router.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0202.md"
     },
     {
       "id": "T0203",

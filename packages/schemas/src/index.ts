@@ -56,3 +56,4 @@ export const SUS_SCHEMA_REGISTRY_ALL = [
   SusRubricScore,
   SusEvidenceBundle,
 ] as const;
+export { ACTIONS, MODULES, SURFACES, Intent, SusIntent, type IntentData } from './intent.js';

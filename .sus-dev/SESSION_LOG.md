@@ -167,3 +167,7 @@
   precedence + surfaces references (honest status), evals.json seed, validator
   wired into pnpm check (frontmatter/budgets/evals/G3 + 4 negative fixtures, 5/5).
   Workspace 76/76. Receipt: VERIFICATION/T0201.md. Next: T0202 intent schema + router.
+
+- 2026-11-14T03:00:00+06:00 | ZCode (GLM) | T0202 | sus.intent v1 + heuristic router
+  (explicit module sets, honest fallback, schema-validated). 7/7 router tests.
+  Receipt: VERIFICATION/T0202.md. Next: T0203 JIT loader + precedence.
