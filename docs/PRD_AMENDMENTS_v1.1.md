@@ -49,16 +49,20 @@ Allowed: rules, constraints, evidence, checklists, taxonomies, exemplars **cited
 reason** — never as assets to reuse. Every produced artifact must be traceable to the project brief
 plus cited reasoning. If the agent cannot trace a decision, it has to say so.
 
-### E2. Four kinds of claim (and only four)
+### E2. Seven kinds of claim (and only seven)
 
 | Kind | Example | Weight |
 |---|---|---|
-| **Standard** | WCAG 2.2 1.4.3 contrast, ARIA APG combobox keys | normative, cited |
-| **Observed** | "tap targets measure 18×18 px in this build" | strongest; measured here, reproducible |
+| **Normative standard** | WCAG 2.2 SC 1.4.3 contrast | binding; WCAG and ARIA are normative — the ARIA APG is *informative* guidance |
+| **External empirical** | a published study's finding | evidence with method, sample, scope — never universal by itself |
+| **Expert guidance** | APG patterns, NN/g articles | informative; cite and apply with judgement |
+| **Observed** | "tap targets measure 18×18 px in this build" | strongest for *this* project; reproducible; does not generalise by itself |
 | **Prior** | "side-tab cards usually read as decoration" | hypothesis, labelled, confidence capped |
+| **Inference** | "therefore this layout will confuse users" | must name its premises; falsifiable |
 | **Preference** | "I want it darker" | legitimate, never presented as evidence |
 
-A finding that cannot name its kind is rejected. "Looks better" alone is not a claim.
+A finding that cannot name its kind is rejected. "Looks better" alone is not a claim. Source
+authority and applicability to this project are recorded separately.
 
 ### E3. Challenge protocol (argue and bargain)
 
@@ -105,6 +109,14 @@ Every section states ≥1 falsifiable prediction before implementation ("headlin
 checked and recorded. A failed prediction becomes a project lesson in `.sus/LESSONS.md` and, after
 review, a candidate rule in the knowledge base with its evidence.
 
+Lesson lifecycle (governed): **candidate → tested locally → reviewed for reuse → promoted with
+explicit scope → challenged / superseded / retired**. An event is recorded separately from its
+explanation (observation, context, confidence, competing explanations, outcome). One project's
+result never becomes a universal rule automatically; counterexamples narrow or retire promoted
+rules with history intact. Lessons stay project-local by default; cross-project sharing happens
+only through an explicit, sanitised publication boundary (no customer data, credentials,
+screenshots or confidential strategy) with recorded consent and retention.
+
 ### E9. Calibration is a product metric
 
 Track prediction hit-rate and rubric-vs-human agreement. A system that cannot measure its own
@@ -120,7 +132,7 @@ Deliverables: `evals/` runner; rubric schema + scoring CLI; screenshot harness (
 2 themes); axe-core + Lighthouse budgets; evidence store; fixture corpus v1 (**4 apps**, one per
 surface mode: marketing (Persuade), e-commerce (Persuade+Operate), CRM/CMS-admin dashboard
 (Operate), portfolio (Experience/Read)); blind A/B judge protocol; no-skill baseline record.
-Exit evidence: baseline scores for unassisted agent on all 3 fixtures, reproducible by command.
+Exit evidence: baseline scores for unassisted agent on all 4 fixtures, reproducible by command.
 
 ### A2. New milestone **M4.0 — Direction Reasoning** (first task of M4)
 Rationale: the largest cause of AI-typical output is an uncommitted aesthetic — but presets would
@@ -232,7 +244,11 @@ validated by a critic. **judged** never gates CI — it informs the acceptance c
 as published practice recommends.
 
 Bands: 50–60 reference-grade · 42–49 strong, minor clean-up · 33–41 acceptable with named gaps ·
-<33 rework required.
+<33 rework required. Bands are a **review aid, not a certified professional grade**: each axis gets
+its own context-aware anchors (not one generic scale); measured checks cover only part of what an
+axis name implies; and the composite can never compensate for a failed blocking gate or an
+accessibility violation. The judged axis (Distinctiveness) is excluded from any blocking decision —
+the owner judges craft with the evidence in front of them.
 
 **Anti-inflation:** quarterly calibration against human ratings; a judged axis is trusted only
 while agreement stays ≥80% within ±1 point. Below that, anchors are rewritten before the axis is
@@ -270,10 +286,12 @@ anti_references: [what this must not look like, and why]
 evidence: [{url, retrieved, classification}]
 ```
 
-**Uniqueness check** (advisory in M4, blocking at M5): distance from the banned-defaults list, and
-from the project's own previous sections/pages. Measured on: typeface class, palette hue/temperature,
-corner-radius policy, shadow policy, dominant layout motif, imagery presence. Repetition above
-threshold requires a recorded justification.
+**Uniqueness check** (advisory at all times): distance from the banned-defaults list, and from the
+project's own previous sections/pages, measured on typeface class, palette hue/temperature,
+corner-radius policy, shadow policy, dominant layout motif, imagery presence. High frequency is a
+**prompt to investigate, never a defect by itself**: preserving an established design system, a
+familiar checkout pattern, or an explicitly requested style is a valid, recordable decision. Only
+objective gates (G1–G12) block.
 
 ## Part 6 — Evidence bundle (acceptance artifact)
 
@@ -398,5 +416,45 @@ T0155 calibration.
 
 ---
 
-**Approval:** architecture approval (A1–A10) and implementation-batch approval (first 8 tasks) are
-separate decisions. Implementation does not start until both are recorded here.
+**Approval:** architecture approval (A1–A10) and implementation-batch approval (first five tasks,
+per Part 10) are separate decisions. Implementation does not start until both are recorded here.
+
+---
+
+## Part 13 — Deep-audit reconciliation (2026-11-13)
+
+The independent deep audit (`DEEP_AUDIT_2026-11-13.md`, 48 findings) was cross-checked finding by
+finding. All mechanically verifiable claims were reproduced and confirmed, including one false
+"ALL CHECKS PASSED" claim in the earlier evidence log (T1001's unresolved dependency had been
+silently skipped by the checker). Resolution status:
+
+- **Accepted and applied in this revision:** F01 partial (approval statuses), F02 (protocol
+  separation recorded in §18 map + A11 below), F03 (playbook = questions/mechanisms/tradeoffs,
+  not recipes), F04 (uniqueness now advisory-only), F06 (motion decision may be "none, with
+  reason"), F07 (seven claim kinds; APG informative), F11/F12 (lesson lifecycle + sharing
+  boundary), F15 (bands are review aids; judged axis never blocks), F16–F20 (gates restated per
+  actual WCAG criteria and exceptions), F21 (lab vs field separated), F23 (visual proposal
+  required), F24 (approval receipts), F25 (shared-impact reopening), F26–F33 (Studio event
+  contract, preview authorization, evidence tiers, per-language write path, transaction manifest,
+  action-boundary security, concrete auth, data-flow map), F36 (failure UX), F37–F40 (task graph
+  fixed: T1001 enumerated, barriers encoded as dependencies, missing playbooks/fixtures/learning
+  tasks added), F41 (stale counts fixed), F44 (Node 20 EOL → Node 22 LTS floor), F45 (description
+  limit corrected to spec's 1,024), F46–F48 (i18n depth, domain/ethical checks, maintenance
+  ownership — added to task acceptance criteria).
+- **Accepted as proposals, requiring owner approval:** the reasoning-and-learning workflow
+  (audit §10), behavioral acceptance scenarios (audit §11), and the Live Studio launch contract
+  (audit §9) — incorporated as the reference behaviour for T0158/T0506/T0709 respectively.
+- **Rejected or narrowed:** none outright. Two findings were narrowed: F41's document-inventory
+  counts differed from a recount (immaterial counting-method difference), and F38's "spike before
+  T0400" is encoded as parallel-discovery + completion barrier (T0701 requires T0700) rather than
+  serialising knowledge work behind the spike, which the amendments explicitly permit.
+- **Not verifiable by this agent:** D23's exact wording as spoken by the owner (relayed through
+  the auditing agent); owner confirmation requested.
+
+### A11. Two protocols, one product (F02)
+
+SUS-development protocol (PRD §18, task protocol, release gates) and consuming-project design
+protocol (PRD §7 workflow, section gates) are separately named. A consumer session never inherits
+SUS's own monorepo, release rubric or benchmark requirements; a SUS builder never treats a website
+section acceptance as a product release approval. Shared artifacts (`.sus/`) carry a `protocol`
+field naming which regime a record belongs to.

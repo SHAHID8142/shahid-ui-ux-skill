@@ -132,4 +132,5 @@ Expert practice and craft
 - https://www.w3.org/TR/WCAG22/ · https://www.w3.org/WAI/ARIA/apg/ · https://www.designtokens.org/tr/2025.10/
 
 **Licensing note:** no text, rule names, or assets from the above are copied. All heuristics are
-restated independently and attributed; standards (WCAG, ARIA APG, DTCG) are cited as normative.
+restated independently and attributed; WCAG and ARIA are cited as normative, the ARIA APG as
+informative guidance, and DTCG 2025.10 as a community design-token report.

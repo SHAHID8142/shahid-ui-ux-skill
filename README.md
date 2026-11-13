@@ -10,7 +10,12 @@ with evidence and stay a learner, not a believer in its training data.
 **Build gate (D19):** planning only until the owner sends `APERIO`.
 
 **Current state:** specification only. No code has been written yet.
-Milestone M0 (discovery + architecture decisions) is not started.
+Milestone M0 (discovery + architecture decisions) has three tasks done and two in review.
+
+**Latest review:** [Deep audit — 2026-11-13](docs/DEEP_AUDIT_2026-11-13.md) records 48 findings,
+standards checks, research/learning refinements and full Live Studio contracts. The owner confirmed
+that the full scope and mandatory browser drawing/writing Studio remain required. Recommendations
+are pending; no product implementation or scope reduction was authorized by the audit.
 
 ## Layout
 
@@ -18,7 +23,7 @@ Milestone M0 (discovery + architecture decisions) is not started.
 SUS/
 ├── README.md                          # this index
 ├── ROADMAP.md                         # living milestone status (points at TASKS.json)
-├── TASKS.json                         # full WBS: 73 tasks, validated IDs + deps
+├── TASKS.json                         # full WBS: 84 tasks, validated IDs + deps
 ├── HANDOFF.md                         # fresh-context resume file (protocol §D)
 ├── DECISIONS.md                       # append-only decision record
 ├── RISKS.md                           # risk register R1–R14
@@ -35,6 +40,7 @@ SUS/
 │   ├── AGENT_START_PROMPT.md          # paste into a coding agent to start
 │   ├── ROADMAP_AND_TASK_PROTOCOL.md   # milestones, micro-task record, review gates
 │   ├── AUDIT_AND_OPEN_DECISIONS.md    # audit findings + deliberately open decisions
+│   ├── DEEP_AUDIT_2026-11-13.md      # current deep audit; proposed refinements, full scope retained
 │   └── README_START_HERE.md           # original handoff bundle readme
 └── archive/
     └── SUS_Final_PRD_Handoff_v1.0.zip # original bundle (byte-identical to docs/*.md)

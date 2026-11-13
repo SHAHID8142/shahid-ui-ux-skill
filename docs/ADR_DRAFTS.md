@@ -57,7 +57,8 @@ with one canonical source of truth and honest per-host support.
 
 **Decision (proposed).** Option 1 canonical; host-specific entry files are **generated artifacts**
 from templates (slash-command manifests, plugin wrappers). `sus doctor` validates frontmatter,
-name/dir match, description length, and token budget. Triggering lives entirely in the ≤1024-char
+name/dir match, description length (spec limit 1,024 chars; kept concise as a maintainability
+practice, not a format law), and token budget. Triggering lives entirely in the ≤1024-char
 description; evals test triggering (should/should-not sets) in CI.
 
 Constraints carried from amendments: SKILL.md ≤ 5k tokens, knowledge files ≤ 2k tokens, precedence
@@ -85,7 +86,8 @@ apply/rollback — without modifying user sites uninvited, and with a localhost 
 
 **Decision (proposed).** Option 4. The bridge is a localhost server; it attaches to a browser via
 the Chrome DevTools Protocol (bundled Playwright chromium by default; attach to the user's own
-Chrome via `--remote-debugging-port` as opt-in). The overlay is injected through CDP, so no app code
+Chrome via `--remote-debugging-port` as opt-in, which since Chrome 136 requires a dedicated
+non-default user profile). The overlay is injected through CDP, so no app code
 changes and no CSP fight at runtime. Source mapping comes from an **optional** dev-server plugin
 (Next/Vite/Astro) that stamps `data-sus-id`; without it, mapping degrades to source-map + DOM-path
 heuristics with lower confidence and more user confirmation.
@@ -164,7 +166,8 @@ binaries; contributors should face one language.
 
 **Options.** TypeScript everywhere · TypeScript + Rust core (detector) · Go.
 
-**Decision (proposed).** **TypeScript (Node ≥ 20.19 LTS), strict mode, ESM**, everywhere including
+**Decision (proposed).** **TypeScript (Node ≥ 22 LTS — the active LTS line at adoption; Node 20
+reached end-of-life in April 2026), strict mode, ESM**, everywhere including
 the detector. Rationale: one toolchain, npx-friendly, DOM/CSS scanning performance in Node is
 sufficient for per-section scans; Rust would add a build/publish matrix (per-platform binaries)
 that contradicts zero-install at v1.

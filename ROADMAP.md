@@ -1,6 +1,6 @@
 # ROADMAP — SUS (living file)
 
-**Authoritative task list:** `TASKS.json` (73 tasks, machine-checked: unique IDs, acyclic deps).
+**Authoritative task list:** `TASKS.json` (84 tasks, machine-checked: unique IDs, acyclic deps, no unresolved references).
 **Requirements:** `docs/SUS_MASTER_PRD_v1.0.md` + `docs/PRD_AMENDMENTS_v1.1.md` (proposed).
 **Build gate:** planning only until owner sends `APERIO` (see `docs/OWNER_DECISIONS_LOG.md`).
 

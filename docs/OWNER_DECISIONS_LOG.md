@@ -31,6 +31,7 @@ Newest entries appended at the bottom. **Nothing here is implemented** unless ma
 | D20 | **CMS = the site's admin/control panel** (Operate mode), not content-driven public pages | clarified | amendments Part 0 |
 | D21 | Fixtures may use copies of owner's real projects | allowed | amendments A1 |
 | D22 | "HAL" was a typo; it appears in **no** original document | closed | removed from open questions |
+| D23 | Deeply audit and refine the existing full project; **do not reduce anything**. Keep the master skill and mandatory Live Studio: draw/select/write instructions directly over the consuming project's running browser page, connected to its agent. Check Impeccable's Live command/workflow as a reference. Improve the agent's research, judgment and continued learning within this full scope. | clarified by owner during deep audit, 2026-11-13 | `DEEP_AUDIT_2026-11-13.md`; proposed refinements pending reconciliation |
 
 ## Build gate
 

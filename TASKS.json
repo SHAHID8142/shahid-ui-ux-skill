@@ -92,7 +92,7 @@
       "id": "T0104", "m": "M1", "title": "Schema versioning + contract-test strategy",
       "obj": "Decide $id/version/migration pattern (implements ADR-005)",
       "deps": ["T0101"], "files": ["packages/schemas/"],
-      "acc": ["versioned schema with migration fixture passes", "JSON Schema export committed"],
+      "acc": ["versioned schema with migration fixture passes", "JSON Schema export committed", "compact task schema validated: aliases, permitted statuses, evidence refs, completion rules (F40)"],
       "tests": ["vitest contract tests", "schema export sync check"],
       "risk": "migration complexity creep", "rollback": "migrations are additive-only v1",
       "status": "pending", "approval": "pending"
@@ -129,7 +129,7 @@
     {
       "id": "T0153", "m": "M1.5", "title": "No-skill baseline scores on 4 fixtures",
       "obj": "Measure unassisted agent output as comparison floor",
-      "deps": ["T0151", "T0152", "T0152b"], "files": ["evals/baselines/"],
+      "deps": ["T0151", "T0152", "T0152b", "T0154"], "files": ["evals/baselines/"],
       "acc": ["baseline evidence bundles committed for 4 surfaces"],
       "tests": ["rerun once for stability; delta < threshold"],
       "risk": "baseline drifts with model updates", "rollback": "baselines dated + re-runnable",
@@ -166,7 +166,7 @@
     {
       "id": "T0201", "m": "M2", "title": "Minimal SKILL.md + frontmatter validator",
       "obj": "Spec-compliant entry skill; sus doctor validates",
-      "deps": ["T0104"], "files": ["skill/SKILL.md", "packages/adapters/"],
+      "deps": ["T0104", "T0155"], "files": ["skill/SKILL.md", "packages/adapters/"],
       "acc": ["name/dir match", "description ≤1024 chars", "≤5k tokens"],
       "tests": ["validator CLI on valid+invalid fixtures"],
       "risk": "host quirks", "rollback": "generated host entries isolated",
@@ -313,14 +313,14 @@
       "id": "T0406", "m": "M4", "title": "Content/UX copy + SEO module",
       "obj": "Message ladder, claims register, search intent; no invented metrics",
       "deps": ["T0301"], "files": ["skill/references/"],
-      "acc": ["G3 placeholder check wired", "claims register schema"],
+      "acc": ["G3 placeholder check wired", "claims register schema", "domain behavior contracts: commerce truthfulness/recoverable payment states/duplicate-submit protection; admin roles/bulk-action clarity/auditability; non-waivable constraints listed separately from owner taste (F47)"],
       "tests": ["copy fixtures"],
       "risk": "SEO overclaim", "rollback": "cite Google guidance only",
       "status": "pending", "approval": "pending"
     },
     {
-      "id": "T0407", "m": "M4", "title": "Operate-mode playbooks (CMS admin/CRM)",
-      "obj": "Data table, filters, bulk actions, settings, record forms (D20)",
+      "id": "T0407", "m": "M4", "title": "Operate-mode launch playbooks (CMS admin/CRM)",
+      "obj": "Data table + record forms only (launch set per coverage matrix; filters/bulk/settings are T0809) (D20)",
       "deps": ["T0405"], "files": ["skill/playbooks/"],
       "acc": ["table states: sort/filter/empty/loading/error/pagination"],
       "tests": ["fixture dashboard render + axe"],
@@ -377,7 +377,7 @@
       "id": "T0504", "m": "M5", "title": "Decision persistence + exception policy",
       "obj": "DECISIONS.md append-only; dissent ledger (E4); exception expiry",
       "deps": ["T0501"], "files": ["packages/eval-core/"],
-      "acc": ["exception without expiry rejected", "history preserved on conflict"],
+      "acc": ["exception without expiry rejected", "history preserved on conflict", "lease generation/fencing: expired worker cannot apply after re-acquire (F35)"],
       "tests": ["journal append/atomic-rename tests (F19)"],
       "risk": "journal growth", "rollback": "compaction with hash chain",
       "status": "pending", "approval": "pending"
@@ -386,7 +386,7 @@
       "id": "T0505", "m": "M5", "title": "Four-section fixture enforcement test (5B)",
       "obj": "Prove: no section N+1 implementation before N accepted (gate G2)",
       "deps": ["T0502", "T0503"], "files": ["fixtures/", "packages/eval-core/"],
-      "acc": ["violation attempt fails CI with clear message (F18 UX)"],
+      "acc": ["violation attempt fails CI with clear message (F18 UX)", "shared-dependency impact recorded; material change to shared code reopens affected acceptances (F25)"],
       "tests": ["negative test: out-of-order edit attempt"],
       "risk": "gate blocks legitimate fixes", "rollback": "fix-tier fast path",
       "status": "pending", "approval": "pending"
@@ -395,7 +395,7 @@
       "id": "T0551", "m": "M5.5", "title": "Hardening matrix runner",
       "obj": "0/1/many items, long strings, RTL, i18n +40%, zoom 200%, dark/light, reduced motion, offline, error injection",
       "deps": ["T0152"], "files": ["packages/eval-core/"],
-      "acc": ["matrix result per section in evidence bundle"],
+      "acc": ["matrix result per section in evidence bundle", "locale set prioritized per brief: shaping/fallback fonts, segmentation, input methods, currency/date/numerals, translated errors — not a universal locale claim (F46)"],
       "tests": ["fixture with deliberate edge cases"],
       "risk": "runtime cost", "rollback": "advisory until M8, blocking at GA",
       "status": "pending", "approval": "pending"
@@ -442,7 +442,7 @@
       "id": "T0700", "m": "M7", "title": "Dual-stack mapping spike — GO/NO-GO",
       "obj": "DOM→source mapping on Next.js AND Astro (A2b); confidence distribution recorded",
       "deps": ["T0102"], "files": ["fixtures/", "packages/adapters/"],
-      "acc": ["≥90% single-node mapping at confidence ≥0.8 on ≥1 stack, else re-scope"],
+      "acc": ["≥90% single-node mapping at confidence ≥0.8 on ≥1 stack, else re-scope", "write-path probed per source language (.tsx/.astro/.css/content): selection → edit-owner resolution → preview → apply → cleanup → undo, incl. repeated instances + shared components (F29)"],
       "tests": ["spike report with numbers, committed"],
       "risk": "this is the highest-risk technical bet in SUS",
       "rollback": "no-go → Studio re-scoped to variant-preview-only, knowledge product continues",
@@ -505,7 +505,7 @@
     {
       "id": "T0707", "m": "M7", "title": "Approval-gated apply + rollback (AST writes)",
       "obj": "ts-morph/recast edits; git snapshot; typecheck+build verify; auto-revert on failure (§7.2)",
-      "deps": ["T0706"], "files": ["packages/studio-bridge/"],
+      "deps": ["T0706", "T0503"], "files": ["packages/studio-bridge/"],
       "acc": ["uncommitted user edits never overwritten; conflict detected"],
       "tests": ["apply/revert/conflict E2E"],
       "risk": "AST rewrite breaks unusual syntax", "rollback": "refuse + report on unknown syntax",
@@ -514,7 +514,7 @@
     {
       "id": "T0708", "m": "M7", "title": "Studio E2E demo: desktop/mobile + reconnect",
       "obj": "Full loop on fixture: annotate→intent→diff→approve→apply→verify→undo",
-      "deps": ["T0707"], "files": ["evals/"],
+      "deps": ["T0707", "T0790"], "files": ["evals/"],
       "acc": ["demo reproducible by command; video + evidence bundle"],
       "tests": ["E2E suite"],
       "risk": "demo-only polish", "rollback": "demo is the acceptance test, not marketing",
@@ -524,7 +524,7 @@
       "id": "T0790", "m": "M7", "title": "Verification loop (M7.9)",
       "obj": "apply→build→axe→shots→motion→gate summary; hard-gate failure = auto-revert (§7.4)",
       "deps": ["T0707", "T0152b", "T0603"], "files": ["packages/studio-bridge/", "packages/eval-core/"],
-      "acc": ["failing gate shows raw error + auto-revert, never 'completed'"],
+      "acc": ["failing gate yields concise explanation + affected operation + safe recovery + retry, with redacted diagnostics; outcomes 'preview failed'/'apply failed'/'verification failed'/'rollback blocked'/'accepted' are distinct; auto-revert only when the transaction is intact (F36)"],
       "tests": ["inject failing change; assert revert + message"],
       "risk": "loop latency", "rollback": "async verification with status surface",
       "status": "pending", "approval": "pending"
@@ -569,7 +569,7 @@
       "id": "T0805", "m": "M8", "title": "Session persistence + crash/restart recovery",
       "obj": "Annotations + intent + session survive restart; stale state detected",
       "deps": ["T0704", "T0504"], "files": ["packages/studio-bridge/"],
-      "acc": ["kill -9 mid-session → recovery without data loss"],
+      "acc": ["kill -9 mid-session → recovery without data loss", "multi-file apply is one transaction with durable recovery manifest; atomic rename alone is insufficient (F35)"],
       "tests": ["crash-injection tests"],
       "risk": "corrupt journal", "rollback": "append-only + hash chain",
       "status": "pending", "approval": "pending"
@@ -578,7 +578,7 @@
       "id": "T0806", "m": "M8", "title": "Security test suite (§7.5)",
       "obj": "CSP/origin/auth/prompt-injection/retention/redaction/audit-log coverage",
       "deps": ["T0701", "T0805"], "files": ["packages/studio-bridge/"],
-      "acc": ["threat-model doc + passing suite; no critical open"],
+      "acc": ["threat-model doc + passing suite; no critical open; indirect injection via drawings, OCR, screenshots, recalled lessons rejected at the action boundary — untrusted content never authorizes writes/commands/network (F31)"],
       "tests": ["dedicated security CI job"],
       "risk": "unknown unknowns", "rollback": "external review at T1003",
       "status": "pending", "approval": "pending"
@@ -624,7 +624,7 @@
       "id": "T0904", "m": "M9", "title": "Installer: install/update/uninstall/status/doctor",
       "obj": "Global + project scope; checksums; no silent installs",
       "deps": ["T0901"], "files": ["packages/adapters/"],
-      "acc": ["uninstall restores prior state; doctor reports drift"],
+      "acc": ["uninstall restores prior state; doctor reports drift", "installed dir name + generated host entries tested: long paths, update, uninstall preserves user files (F45)"],
       "tests": ["installer E2E on clean dirs"],
       "risk": "partial installs", "rollback": "transactional install with manifest",
       "status": "pending", "approval": "pending"
@@ -642,7 +642,7 @@
     {
       "id": "T1001", "m": "M10", "title": "Cross-module regression suite",
       "obj": "All gates G1–G12 + skill evals + studio E2E in one pipeline",
-      "deps": ["M3–M9 tasks"], "files": ["evals/", ".github/"],
+      "deps": ["T0305", "T0310", "T0409", "T0405b", "T0405c", "T0505", "T0506", "T0508", "T0551", "T0603", "T0708", "T0790", "T0806", "T0807", "T0810", "T0904", "T0905"], "files": ["evals/", ".github/"],
       "acc": ["single command runs everything; <10 min CI"],
       "tests": ["full run recorded"],
       "risk": "suite fragility", "rollback": "tiered: blocking vs nightly",
@@ -660,7 +660,7 @@
     {
       "id": "T1003", "m": "M10", "title": "Independent security/a11y/licence review",
       "obj": "Fresh-context review of shipped code + dependency licence audit",
-      "deps": ["T0806"], "files": [],
+      "deps": ["T0806", "T0904"], "files": [],
       "acc": ["findings triaged; criticals zero"],
       "tests": ["review report"],
       "risk": "no independent reviewer available", "rollback": "disclose limitation; deterministic gates stand",
@@ -670,7 +670,7 @@
       "id": "T1004", "m": "M10", "title": "Docs, examples, installer guide, changelog",
       "obj": "Honest docs from coverage matrix + support matrix; no unverified claims",
       "deps": ["T0905"], "files": ["docs/", "README.md"],
-      "acc": ["limitation statements shipped verbatim from coverage matrix"],
+      "acc": ["limitation statements shipped verbatim from coverage matrix", "maintenance owner + review calendar + supported-upgrade period + security reporting defined (F48)"],
       "tests": ["docs lint: claim-checker"],
       "risk": "marketing creep", "rollback": "claim-checker in CI",
       "status": "pending", "approval": "pending"
@@ -682,6 +682,106 @@
       "acc": ["§22 Definition of Done met; human approval recorded"],
       "tests": ["release checklist"],
       "risk": "premature announcement", "rollback": "publish is the last action, always",
+      "status": "pending", "approval": "pending"
+    },
+
+    {
+      "id": "T0102b", "m": "M1", "title": "Fixture apps B/C/D (e-commerce, dashboard/CMS-admin, portfolio)",
+      "obj": "Complete the 4-surface corpus with licensing + ground-truth notes (F40)",
+      "deps": ["T0102"], "files": ["fixtures/"],
+      "acc": ["all four fixtures build + serve", "provenance/licensing recorded"],
+      "tests": ["build + smoke per fixture"],
+      "risk": "maintenance burden", "rollback": "fixtures isolated per directory",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0158", "m": "M1.5", "title": "Behavioral/reasoning eval suite",
+      "obj": "Test decisions, not artifacts: reframing, source relevance, contradiction handling, principled trend rejection, dissent, uncertainty, transfer (F14)",
+      "deps": ["T0153"], "files": ["evals/"],
+      "acc": ["held-out briefs + repeated runs; no-skill vs skill comparison under matched conditions"],
+      "tests": ["eval runner + scored report"],
+      "risk": "subjective scoring drift", "rollback": "rubric anchors calibrated per T0155",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0310", "m": "M3", "title": "Trend/research review loop",
+      "obj": "Versioned on-demand refresh: candidate → evaluated → adopted/rejected/watch/superseded; no background scheduler claim (F10)",
+      "deps": ["T0301"], "files": ["knowledge/", "packages/schemas/"],
+      "acc": ["entries carry first/last observation, maturity, costs, rejection reasons; volatile vs durable review cadence"],
+      "tests": ["lifecycle fixtures"],
+      "risk": "trend churn", "rollback": "adopted trends pinned until reviewed change approved",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0405b", "m": "M4", "title": "Launch playbooks batch 2: hero, card, pricing, footer, empty/loading/error",
+      "obj": "Close the gap between the promised 15-playbook launch set and tasked playbooks (F39)",
+      "deps": ["T0405"], "files": ["skill/playbooks/"],
+      "acc": ["same 12-part standard + state matrices as batch 1"],
+      "tests": ["playbook lint + fixture render"],
+      "risk": "breadth over depth", "rollback": "coverage matrix governs scope",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0405c", "m": "M4", "title": "Launch playbooks batch 3: product grid, PDP, cart summary, checkout steps, modal, toast",
+      "obj": "Commerce + overlay launch playbooks (F39)",
+      "deps": ["T0405"], "files": ["skill/playbooks/"],
+      "acc": ["checkout includes payment-state + duplicate-submit checklist"],
+      "tests": ["playbook lint + fixture render"],
+      "risk": "commerce complexity", "rollback": "per-playbook acceptance",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0506", "m": "M5", "title": "Prediction + lesson lifecycle",
+      "obj": "Event ≠ explanation: candidate → tested locally → reviewed → promoted with scope → challenged/retired; cross-project sharing only via explicit sanitized publication boundary (F11/F12)",
+      "deps": ["T0504"], "files": ["packages/eval-core/", "packages/schemas/"],
+      "acc": ["counterexample narrows/retires a rule with history intact", "customer data/credentials never leave project without consent flow"],
+      "tests": ["lifecycle + sanitization fixtures"],
+      "risk": "accidental rule promotion", "rollback": "promotion requires reviewed scope + expiry",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0508", "m": "M5", "title": "Approval receipts (version-bound)",
+      "obj": "Approval bound to project+section+proposal version+source hashes+permitted operation+expiry/revocation; forged/replayed/stale approvals rejected (F24)",
+      "deps": ["T0503"], "files": ["packages/schemas/", "packages/eval-core/"],
+      "acc": ["changed content invalidates approval", "duplicate click applies at most once"],
+      "tests": ["forgery/replay/stale fixtures"],
+      "risk": "UX friction", "rollback": "one-click confirm with visible scope",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0709", "m": "M7", "title": "Session/event/request lifecycle contract",
+      "obj": "IDs, acks, queued/running/proposed/cancelled/failed/completed, idempotent apply, stale-result rejection, heartbeat, backpressure, reconnect replay (F26)",
+      "deps": ["T0702"], "files": ["packages/studio-bridge/", "packages/studio-web/"],
+      "acc": ["duplicate delivery applies at most once", "browser UI shows real agent state"],
+      "tests": ["event-ordering + reconnect + duplicate-delivery tests"],
+      "risk": "state machine complexity", "rollback": "fail-closed on unknown state",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0809", "m": "M8", "title": "Second-wave playbooks A: search/filters, settings, dashboard widgets",
+      "obj": "Coverage-matrix second wave, Operate focus (F39)",
+      "deps": ["T0407"], "files": ["skill/playbooks/"],
+      "acc": ["same standard as launch set"],
+      "tests": ["playbook lint"],
+      "risk": "scope creep", "rollback": "matrix governs",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0810", "m": "M8", "title": "Second-wave playbooks B: onboarding, article layout, gallery/case study",
+      "obj": "Coverage-matrix second wave, Read/Experience focus (F39)",
+      "deps": ["T0405b"], "files": ["skill/playbooks/"],
+      "acc": ["same standard as launch set"],
+      "tests": ["playbook lint"],
+      "risk": "scope creep", "rollback": "matrix governs",
+      "status": "pending", "approval": "pending"
+    },
+    {
+      "id": "T0906", "m": "M9", "title": "Reference implementations: 3 dogfood sites built with SUS",
+      "obj": "A10 track owner: marketing + commerce + dashboard sites built under SUS rules, evidence published (F39/F43)",
+      "deps": ["T0505", "T0708"], "files": ["fixtures/", "evals/"],
+      "acc": ["evidence bundles public; failures documented like user-reported issues"],
+      "tests": ["full gate suite per site"],
+      "risk": "dogfood time cost", "rollback": "sites are fixtures, not marketing",
       "status": "pending", "approval": "pending"
     }
   ]
