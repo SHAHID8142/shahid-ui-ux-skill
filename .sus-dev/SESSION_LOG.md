@@ -78,3 +78,7 @@
   check on the two generated json-schema files; excluded **/json-schema/** from
   prettier (generated-artifact policy, like dist/); sync remains enforced by
   test:sync. format:check 0, test:sync 0 locally. Receipt updated.
+
+- 2026-11-13T23:30:00+06:00 | ZCode (GLM) | CI | Remote CI verified green (run
+  43468234662, Node 22+24, all steps pass). T0103 acceptance closed. Two prior runs
+  caught real format issues — pipeline functioning as designed.
