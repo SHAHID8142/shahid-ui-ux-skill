@@ -9,7 +9,7 @@
   },
   "scripts": {
     "typecheck": "pnpm run --silent build && pnpm -r --if-present run typecheck",
-    "check": "node scripts/check-continuation.mjs && node scripts/check-gates.mjs && node scripts/validate-skill.mjs && node scripts/validate-playbooks.mjs || test $? -eq 3",
+    "check": "node scripts/check-continuation.mjs && node scripts/check-gates.mjs && node scripts/validate-skill.mjs && node scripts/validate-knowledge.mjs && node scripts/validate-playbooks.mjs || test $? -eq 3",
     "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -19,7 +19,8 @@
     "build": "pnpm -r --if-present run build",
     "gates": "node scripts/check-gates.mjs",
     "skill": "node scripts/validate-skill.mjs",
-    "playbooks": "node scripts/validate-playbooks.mjs"
+    "playbooks": "node scripts/validate-playbooks.mjs",
+    "knowledge": "node scripts/validate-knowledge.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

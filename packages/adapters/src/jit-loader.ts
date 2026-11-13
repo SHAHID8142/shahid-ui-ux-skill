@@ -44,7 +44,16 @@ export function moduleRegistry(): ModuleDescriptor[] {
   return [
     { id: 'direction-reasoning', path: null, status: 'not-built' },
     { id: 'tokens', path: null, status: 'not-built' },
-    { id: 'foundations', path: null, status: 'not-built' },
+    {
+      id: 'foundations',
+      path: 'skill/references/foundations-layout-responsive.md',
+      status: 'built',
+    },
+    {
+      id: 'foundations-color-typography',
+      path: 'skill/references/foundations-color-typography.md',
+      status: 'built',
+    },
     { id: 'playbook:marketing', path: null, status: 'not-built' },
     { id: 'playbook:commerce', path: null, status: 'not-built' },
     { id: 'playbook:operate', path: null, status: 'not-built' },

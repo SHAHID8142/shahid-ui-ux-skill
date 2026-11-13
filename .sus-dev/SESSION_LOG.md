@@ -242,3 +242,10 @@
   payload cap, append-only audit, injection quarantine, structurally read-only
   surface. 10/10 security tests. Receipt: VERIFICATION/T0701.md. Next: T0702 CDP
   attach + T0402/T0403/T0409/T0601 while sub-agent T0904 completes.
+
+- 2026-11-14T05:30:00+06:00 | ZCode (GLM) | T0402+T0403+T0409 | Foundations knowledge
+  modules (colour/typography + layout/responsive/a11y with issue-#10 content-adaptive
+  transformation as first-class rule, admin baseline named as the preserved negative)
+  + knowledge lint wired into pnpm check (3/3 negatives). 166/166 tests.
+  Receipts: T0402.md, T0403.md, T0409.md. Next: T0601 motion tokens; sub-agent T0904
+  integration pending.

@@ -951,9 +951,15 @@
       ],
       "risk": "prose bloat",
       "rollback": "≤2k tokens per file enforced",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0402.md",
+        "skill/references/foundations-color-typography.md"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0402.md"
     },
     {
       "id": "T0403",
@@ -975,12 +981,18 @@
       ],
       "risk": "over-prescriptive rules",
       "rollback": "rules cite standards, advisory unless gate",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
       "gates": [
         "G9"
-      ]
+      ],
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0403.md",
+        "skill/references/foundations-layout-responsive.md"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0403.md"
     },
     {
       "id": "T0404",
@@ -1143,9 +1155,16 @@
       ],
       "risk": "lint maintenance",
       "rollback": "warnings first month",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0409.md",
+        "scripts/validate-knowledge.mjs",
+        "packages/adapters/tests/knowledge-lint.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0409.md"
     },
     {
       "id": "T0501",

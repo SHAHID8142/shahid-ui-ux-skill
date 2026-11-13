@@ -9,12 +9,11 @@ amended (D29). Checkpoint pushes to private dev branches permitted (D30).
 Canonical statuses: TASKS.json. Done: T0001-T0007 (M0 complete). No active lease.
 Concurrency 1.
 
-Current task: T0701 (bridge server, main agent) with T0904 leased to subagent-t0904 (isolated scripts/install/ scope; integration owner: main agent).
+Current task: T0402+T0403 foundations (main agent, in progress). Lease: zcode-subagent-t0904 owns T0904 installer (isolated scripts/install/; main agent integrates).
 Next exact steps: `pnpm check` (exit 0 verified). Then ready set: T0402
 (color/typography foundations), T0403 (layout/responsive/a11y foundations),
 T0409 (knowledge lint in CI — validates skill refs + playbooks + provenance
-catalog), T0601 (motion tokens), T0701 (bridge server: auth, allowlist,
-session state — NO consumer-source writes; ladder step 1 per the mapping-spike verdict),
+catalog), T0601 (motion tokens), T0702 (CDP attach + overlay injection — bridge server done),
 T0904 (installer/doctor). Then T0402b fixtures-deep + T0702-T0709 chain ->
 T0700w -> T0400/T0405 playbooks -> M8/M9/M10.
 
