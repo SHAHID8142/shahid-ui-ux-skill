@@ -10,13 +10,11 @@ Canonical statuses: TASKS.json. Done: T0001-T0007 (M0 complete). No active lease
 Concurrency 1.
 
 Current task: T0601 (motion tokens — next, pending) while subagent-t0904 (lease zcode-subagent-t0904) completes T0904; main agent integrates.
-Next exact steps: `pnpm check` (exit 0 verified). Then ready set: T0402
-(color/typography foundations), T0403 (layout/responsive/a11y foundations),
-T0409 (knowledge lint in CI — validates skill refs + playbooks + provenance
-catalog), T0601 (motion tokens), T0702 (CDP attach + overlay injection — bridge server done),
-T0904 (installer/doctor). Then T0402b fixtures-deep + T0702-T0709 chain ->
-T0700w -> T0400/T0405 playbooks -> M8/M9/M10.
-
+Next exact steps: `pnpm check` (exit 0 verified). Then ready set: T0601
+(motion tokens + reduced-motion semantics), T0702 (CDP attach + overlay
+injection — bridge server done), T0904 integration (sub-agent, in flight).
+Then T0402b fixtures-deep + T0703-T0709 chain -> T0700w -> T0400/T0405
+playbooks -> M8/M9/M10.
 Blockers: none open except standing B003 (licence/publication, later phase) and B004
 (irreversible externals during build). Active files: none after checkpoint.
 
