@@ -227,3 +227,12 @@
   recorded in STATE.md. Lesson recorded: two pushes went out with red typecheck/
   format before the combined-check discipline was complete — receipts and fixes
   landed immediately after; discipline now: typecheck+lint+format+tests BEFORE push.
+
+- 2026-11-14T05:00:00+06:00 | ZCode (GLM) | T0010b | Issue #9 handoff fix + checker
+  hardening: STATE current-task/next-steps stale-reference detection (4/4 end-to-end
+  negatives incl. the T0154 class), --root override, STATE format discipline.
+  Continuous-execution + parallelism rules persisted in AGENTS.md + protocol per
+  issue #9; issue #10 requirements wired into T0403/T0407/T0809/T0551 acc.
+  Receipt: VERIFICATION/T0010b.md. Issues #9/#10 remain OPEN (workflow directives,
+  resolved on completion of their wired tasks; #9's continuous execution is now
+  the operative loop).

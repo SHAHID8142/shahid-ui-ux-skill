@@ -155,3 +155,21 @@ At the first invocation, report briefly: verified repo/branch/HEAD, confirmed pr
 At subsequent invocations of **`continue`**, give a concise resumption receipt: last verified commit/task, next eligible task, checks to run and any actual blocker, then carry out the next safe task. Persistent project files—not the host's private conversation history—are the operational memory.
 
 **Core policy:** One-time instruction, durable repository context, micro-tasks, automatic verification, local checkpoints, uninterrupted build where safe, final private push, **only then** an independent multi-agent audit. Preserve the full mandatory SUS scope and the owner's control over irreversible decisions.
+
+## Continuous execution + bounded parallelism (owner issue #9, 2026-11-14)
+
+The main agent NEVER stops after an ordinary successful task to ask for
+`continue`: it loops — inspect state (incl. open GitHub issues, D32) → select
+the next dependency-unlocked bounded task → implement → verify (tests +
+negatives + affected checks; CI green for the pushed SHA) → record evidence +
+atomic checkpoint → private dev-branch push → continue immediately. Halting is
+required ONLY for genuine blockers (unsafe edit, critical failure needing
+resolution, irreversible owner decision, missing external permission,
+exhausted quota/context/runtime, or full completion).
+
+Parallelism: main agent + at most TWO sub-agents (max 3 workers). Only with
+isolated, dependency-ready tasks and explicit file ownership; sub-agents never
+edit TASKS.json/STATE/decisions/protocol records and never push shared
+branches — the main agent integrates one verified change at a time. Shared
+files (lockfile, CI, canonical records, cross-cutting contracts) are
+main-agent-exclusive. If isolation cannot be guaranteed: fewer workers.

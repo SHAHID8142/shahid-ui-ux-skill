@@ -19,7 +19,9 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-const ROOT = process.cwd();
+const ROOT = process.argv.includes('--root')
+  ? process.argv[process.argv.indexOf('--root') + 1]
+  : process.cwd();
 const results = [];
 
 function sh(cmd, args) {
@@ -284,6 +286,38 @@ if (gitOk) {
   );
 
   const state = readText('.sus-dev/STATE.md') ?? '';
+  // stale-reference detection (owner issue #9): a STATE that names done or
+  // nonexistent tasks as "current task" misdirects a fresh agent — fail it.
+  const idPattern = /\bT\d{3,4}[a-z]{0,2}\b/g;
+  const currentLine = /Current task:[^\n]*/.exec(state)?.[0] ?? '';
+  const currentIds = [...currentLine.matchAll(idPattern)].map((m) => m[0]);
+  {
+    const statusOf = new Map(tasks.map((t) => [t.id, t.status]));
+    const staleCurrent = currentIds.filter((id) => {
+      const st = statusOf.get(id);
+      return st === undefined || st === 'done';
+    });
+    check(
+      'STATE.md current-task references are live (issue #9)',
+      staleCurrent.length === 0 || currentIds.length === 0,
+      staleCurrent.length === 0
+        ? ''
+        : `stale current-task reference(s): ${staleCurrent.join(', ')} — reconcile STATE with TASKS.json`,
+      'fail',
+    );
+    const nextSection = /Next exact steps:[\s\S]*?(?=\n\n|$)/.exec(state)?.[0] ?? '';
+    const nextIds = [...new Set([...nextSection.matchAll(idPattern)].map((m) => m[0]))];
+    const statusOfAll = new Map(tasks.map((t) => [t.id, t.status]));
+    const staleNext = nextIds.filter((id) => statusOfAll.get(id) === 'done');
+    check(
+      'STATE.md next-step task IDs are not already done (issue #9)',
+      staleNext.length === 0,
+      staleNext.length === 0
+        ? ''
+        : `next steps reference done task(s): ${staleNext.join(', ')} — stale handoff`,
+      'fail',
+    );
+  }
   const mBranch = state.match(/^Branch:\s*([^\s,.;]+)/m);
   if (mBranch) {
     check(

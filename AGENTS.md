@@ -17,4 +17,7 @@ implementation is authorized; do not re-request it. Architecture baseline: ADR-0
 private dev-branch checkpoint pushes are permitted (D30) — never public, never
 unfinished merges into `main`. Complete the build and verify the final private push
 (T1006) before stopping for a separately commissioned audit.
-The canonical protocol supersedes older per-task review/push instructions.
+Continuous execution: never stop after an ordinary task to ask for `continue` —
+chain the next dependency-unlocked task (issue #9); max 2 isolated sub-agents,
+main agent integrates. The canonical protocol supersedes older per-task
+review/push instructions.

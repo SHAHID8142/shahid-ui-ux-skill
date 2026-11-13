@@ -967,7 +967,8 @@
         "skill/references/"
       ],
       "acc": [
-        "reflow contract schema validates"
+        "reflow contract schema validates",
+        "issue #10: content-adaptive responsive transformation (table->stacked records on mobile) with negative fixtures; 320/390/768/1440 viewport tests; no overflow-x:hidden concealment"
       ],
       "tests": [
         "fixtures at 5 viewports"
@@ -1088,7 +1089,8 @@
         "skill/playbooks/"
       ],
       "acc": [
-        "table states: sort/filter/empty/loading/error/pagination"
+        "table states: sort/filter/empty/loading/error/pagination",
+        "issue #10: SUS-guided admin reference implementation (table->card demo on same records) SEPARATE from the labeled no-skill baseline"
       ],
       "tests": [
         "fixture dashboard render + axe"
@@ -1326,7 +1328,8 @@
       ],
       "acc": [
         "matrix result per section in evidence bundle",
-        "locale set prioritized per brief: shaping/fallback fonts, segmentation, input methods, currency/date/numerals, translated errors — not a universal locale claim (DA-46)"
+        "locale set prioritized per brief: shaping/fallback fonts, segmentation, input methods, currency/date/numerals, translated errors — not a universal locale claim (DA-46)",
+        "issue #10: hardening matrix extended to the admin fixture at 320/390/768/1440 with negative overflow fixture"
       ],
       "tests": [
         "fixture with deliberate edge cases"
@@ -2500,7 +2503,8 @@
         "skill/playbooks/"
       ],
       "acc": [
-        "same standard as launch set"
+        "same standard as launch set",
+        "issue #10: filter/sort/search continuity across layout changes; long-ID/translated-label/empty-error-loading states covered"
       ],
       "tests": [
         "playbook lint"
@@ -2872,6 +2876,45 @@
         "CI run 43489224416 green on exact HEAD e5ce983f, Node 22+24, 52/52 tests per node (log-verified)"
       ],
       "commit": "e5ce983f37203b046a406e869fa1af718bd76d08"
+    },
+    {
+      "id": "T0010b",
+      "m": "M1",
+      "title": "Checker stale-reference hardening (owner issue #9)",
+      "obj": "Continuation checker detects stale current-task/next-step references in STATE.md vs TASKS.json; handoff discrepancy fix",
+      "deps": [
+        "T0010"
+      ],
+      "files": [
+        "scripts/check-continuation.mjs",
+        ".sus-dev/STATE.md"
+      ],
+      "acc": [
+        "checker flags STATE current-task references to tasks not pending/in-progress",
+        "stale next-step task IDs flagged",
+        "T0154 discrepancy class cannot recur silently"
+      ],
+      "tests": [
+        "positive: fresh state passes",
+        "negative: fabricated stale state fails"
+      ],
+      "risk": "false positives on legit states",
+      "rollback": "revert checker change only",
+      "status": "done",
+      "approval": "owner issue #9 via D32 gate",
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "lease": null,
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0010b.md",
+        "scripts/check-continuation.mjs",
+        "packages/eval-core/tests/checker-hardening.test.ts"
+      ],
+      "children": [],
+      "results": [
+        "issue #9 handoff discrepancy fixed + checker hardened with 4 end-to-end negatives"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0010b.md"
     }
   ]
 }
