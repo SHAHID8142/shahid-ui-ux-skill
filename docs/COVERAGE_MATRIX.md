@@ -60,7 +60,7 @@ only"** rather than improvised expertise. Silence is not allowed.
 
 | Host | Status at v1 |
 |---|---|
-| FreePi CLI | supported (primary dev host) |
+| FreePi CLI | development host — formal install/load/invoke smoke test still required before any "supported" label (T0902) |
 | One additional host verified by smoke test | supported |
 | Codex, Claude Code, Cursor, Copilot, Gemini CLI, others | experimental until each passes install + invocation + skill-loading smoke test |
 | Any host without skill-file loading | unsupported — CLI fallback documented |

@@ -303,8 +303,8 @@
     {
       "id": "T0405", "m": "M4", "title": "Launch playbooks: button/CTA, navbar, form/input",
       "obj": "Full state matrices + motion + a11y + responsive per coverage matrix",
-      "deps": ["T0402", "T0403", "T0404", "T0600"], "files": ["skill/playbooks/"],
-      "acc": ["variant-vs-state matrix complete", "every state has motion + reduced-motion"],
+      "deps": ["T0402", "T0403", "T0404"], "files": ["skill/playbooks/"],
+      "acc": ["variant-vs-state matrix complete", "every state has motion + reduced-motion", "state matrices forward-compatible with T0600 state-machine schema"],
       "tests": ["playbook lint + fixture render"],
       "risk": "playbook drift from code", "rollback": "fixtures bind playbooks to reality",
       "status": "pending", "approval": "pending"

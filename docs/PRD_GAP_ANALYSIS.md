@@ -63,14 +63,14 @@ Owner asked for the PRD to be cross-checked by multiple agents before building.
 
 | ID | Question | Suggested default if you don't answer |
 |---|---|---|
-| Q1 | *(explained in chat)* Which web stack must the Studio work on first? | Next.js (App Router) + React + Tailwind, because it is the most common agent-generated stack and the mapping spike is cheapest there |
-| Q2 | Does `APERIO` mean "start building" **or** "activate the Aperio Next workflow"? | "start building" only; Aperio stays untouched unless asked |
-| Q3 | What is "HAL"? A codename for the multi-agent cross-check, or a real tool? | treat as codename for the cross-check step |
-| Q4 | Studio scope at v1: local dev only, or also staging URLs with a token? | local dev only at v1; staging behind explicit opt-in (M8) |
+| Q1 | Which web stack must the Studio work on first? | **resolved by D18:** framework-agnostic; mapping spike on Next.js AND Astro (A2b); winner decided by measured confidence-per-effort, not popularity |
+| Q2 | Does `APERIO` mean "start building" **or** "activate the Aperio Next workflow"? | **resolved by D19:** start building only |
+| Q3 | What is "HAL"? A codename for the multi-agent cross-check, or a real tool? | **resolved by D22:** owner typo; verified absent from all original documents |
+| Q4 | Studio scope at v1: local dev only, or also staging URLs with a token? | open — local-dev-only proposed; staging opt-in deferred to M8; confirm at ADR-003 approval |
 | Q5 | Should SUS include *native mobile* (iOS/Android) guidance at launch? | **resolved by D14:** web only. Native is explicitly out of scope and documented as such |
 | Q6 | Language priority for the knowledge library | English content, internationalisation-ready structure (logical CSS, no hardcoded strings in examples) |
-| Q7 | Is "heavy" allowed to mean a Rust/Node CLI dependency for the detector, or must it be zero-install JS? | zero-install JS/Node first (npx), native binary only if measured need |
-| Q8 | Who is the first real user/test subject for M1.5 fixtures — your own projects? | use 3 real projects of yours as fixture apps (read-only clones), because they expose real-world CSS |
+| Q7 | Is "heavy" allowed to mean a Rust/Node CLI dependency for the detector, or must it be zero-install JS? | **proposed as ADR-006:** zero-install TS/Node at v1; native module only behind a measured trigger |
+| Q8 | Who is the first real user/test subject for M1.5 fixtures — your own projects? | **resolved by D21:** owner's real projects allowed as read-only fixture sources; 4 apps, one per surface mode |
 | Q9 | Do you want a public "SUS vs Impeccable" comparison page at any point? | only after the benchmark protocol runs; until then no comparative marketing |
 
 ### Resolved scope note (D14)

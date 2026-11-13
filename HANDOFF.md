@@ -30,4 +30,6 @@ HOW TO RESUME: read README.md → docs/SUS_MASTER_PRD_v1.0.md → docs/PRD_AMEND
 7. Licence + channel before any publication; repo stays private until approved.
 8. `APERIO` = start building (not the Aperio Next workflow).
 9. Use third-party tools/skills/MCP where they help; no proprietary copying.
+10. Independent cross-check of the plan before build — separate fresh session with a
+    hostile-reviewer brief; findings reconciled here before `APERIO`.
 10. Independent cross-check of the plan before build (no subagent here → separate session).

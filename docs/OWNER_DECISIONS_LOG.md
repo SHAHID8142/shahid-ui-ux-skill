@@ -50,12 +50,14 @@ owner sends `APERIO`. Planning documents, research and questions continue until 
 
 ## Documents created so far (planning artefacts only)
 
-| File | Purpose |
-|---|---|
-| `README.md` | workspace index + condensed spec |
-| `docs/SUS_MASTER_PRD_v1.0.md` | original requirements baseline (unchanged) |
-| `docs/RESEARCH_AND_EXPERTISE_MODEL.md` | research: how expert designers work → mechanisms |
-| `docs/PRD_AMENDMENTS_v1.1.md` | proposed amendments A1–A10, gates G1–G12, rubric, Studio spec |
-| `docs/PRD_GAP_ANALYSIS.md` | cross-check findings F1–F20 + open questions Q1–Q9 |
-| `docs/TOOLING_CANDIDATES.md` | open-source tool candidates with licences and roles |
-| `docs/AGENT_START_PROMPT.md` · `ROADMAP_AND_TASK_PROTOCOL.md` · `AUDIT_AND_OPEN_DECISIONS.md` · `README_START_HERE.md` | original handoff bundle (unchanged) |
+**Root state files:** `README.md` (index) · `ROADMAP.md` (milestone status) · `TASKS.json`
+(73-task WBS, validated) · `HANDOFF.md` (resume file) · `DECISIONS.md` · `RISKS.md` ·
+`TEST_EVIDENCE.md`
+
+**docs/:** `SUS_MASTER_PRD_v1.0.md` (original baseline, unchanged) · `PRD_AMENDMENTS_v1.1.md` ·
+`RESEARCH_AND_EXPERTISE_MODEL.md` · `PRD_GAP_ANALYSIS.md` · `COVERAGE_MATRIX.md` ·
+`ADR_DRAFTS.md` · `TOOLING_CANDIDATES.md` · `OWNER_DECISIONS_LOG.md` (this file) ·
+original handoff bundle: `AGENT_START_PROMPT.md`, `ROADMAP_AND_TASK_PROTOCOL.md`,
+`AUDIT_AND_OPEN_DECISIONS.md`, `README_START_HERE.md`
+
+**archive/:** `SUS_Final_PRD_Handoff_v1.0.zip` (byte-identical to the original five)

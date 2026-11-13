@@ -27,9 +27,10 @@ Consequences, recorded as requirements:
 - Four surface modes (Persuade / Operate / Read / Experience) drive the critique vocabulary and
   playbook selection; **brand surfaces must not be judged by product-UI conventions, and vice versa**.
 - Fixture corpus (A1) becomes **four apps, one per mode** — not three.
-- Playbook build order: navbar → hero → CTA/button → form/input → cards → pricing → product grid/PDP
-  → cart/checkout → data table → dashboard widget → settings → search/filter → footer →
-  empty/loading/error → modal → onboarding → article layout → gallery/case study.
+- Playbook build order follows `COVERAGE_MATRIX.md` §2 exactly — launch set: navbar → hero →
+  CTA/button → form/input → cards → pricing → product grid/PDP → cart/checkout → data table →
+  footer → empty/loading/error → modal → toast; second wave (search/filters, settings, dashboard
+  widgets, onboarding, article, gallery) starts M8. No playbook may jump the queue.
 - CMS means the **admin/control panel** for a site (Operate), not content-driven public pages. Public
   content pages are covered under marketing/Read as a secondary surface.
 - WCAG 2.2 AA applies to every surface; e-commerce checkout additionally gets an error-recovery and
@@ -117,8 +118,8 @@ the knowledge library, so every later module is graded, not asserted.
 
 Deliverables: `evals/` runner; rubric schema + scoring CLI; screenshot harness (3 viewports ×
 2 themes); axe-core + Lighthouse budgets; evidence store; fixture corpus v1 (**4 apps**, one per
-surface mode: marketing, e-commerce, CRM/dashboard, CMS/portfolio); blind A/B judge protocol;
-no-skill baseline record.
+surface mode: marketing (Persuade), e-commerce (Persuade+Operate), CRM/CMS-admin dashboard
+(Operate), portfolio (Experience/Read)); blind A/B judge protocol; no-skill baseline record.
 Exit evidence: baseline scores for unassisted agent on all 3 fixtures, reproducible by command.
 
 ### A2. New milestone **M4.0 — Direction Reasoning** (first task of M4)
@@ -282,7 +283,7 @@ threshold requires a recorded justification.
   "commit": "<sha>",
   "direction": "dir-<slug>",
   "rubric": {"hierarchy": 4, "…": "…", "composite": 47},
-  "shots": ["1440-light.png", "1440-dark.png", "768-light.png", "390-light.png"],
+  "shots": ["1440-light.png", "1440-dark.png", "768-light.png", "768-dark.png", "390-light.png", "390-dark.png"],
   "metrics": {"overflow_320": 0, "cls": 0.01, "lcp_ms": 1800, "targets_under_24": 0},
   "a11y": {"axe_serious": 0, "keyboard_walk": "pass", "focus_order": "recorded"},
   "motion": {"transitions": 6, "reduced_parity": true, "interrupted_ok": true},
@@ -361,10 +362,11 @@ M9   Adapters (+ M9.5 generated support matrix)
 M10  Benchmark, security/a11y review, docs, license, release
 ```
 
-**First eight unlocked micro-tasks (proposed):**
+**First batch of five unlocked micro-tasks (proposed, per protocol §18 “first 3–5”):**
 T0101 repo skeleton · T0102 test runner + fixture app A · T0103 lint/typecheck/CI ·
-T0151 rubric schema + scoring CLI · T0152 screenshot/metric harness · T0152b axe + budgets ·
-T0153 baseline no-skill scores · T0154 evidence bundle schema + validator.
+T0104 schema versioning + contract-test strategy · T0151 rubric schema + scoring CLI.
+Next five: T0152 harness · T0152b axe + budgets · T0153 baselines · T0154 evidence schema ·
+T0155 calibration.
 
 ## Part 11 — PRD section map
 
