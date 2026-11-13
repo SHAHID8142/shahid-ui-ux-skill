@@ -9,7 +9,7 @@ amended (D29). Checkpoint pushes to private dev branches permitted (D30).
 Canonical statuses: TASKS.json. Done: T0001-T0007 (M0 complete). No active lease.
 Concurrency 1.
 
-Current task: none (between tasks). No active leases. Last: T0702 done.
+Current task: none (between tasks). No active leases. Recent completion: the CDP overlay slice.
 Next exact steps: `pnpm check` (exit 0 verified). Then ready set: T0602/T0603 (motion playbooks + interruption suite —
 tokens done), T0703 (element selection + stable anchors), then T0402b
 fixtures-deep + T0704-T0709 chain ->
