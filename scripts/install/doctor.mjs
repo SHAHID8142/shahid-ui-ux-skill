@@ -72,7 +72,11 @@ if (fmMatch) {
     if (kv) fm[kv[1].toLowerCase()] = kv[2].trim();
   }
 }
-report(NAME_PATTERN.test(fm.name ?? ''), 'name matches Agent Skills pattern', fm.name ?? '(missing)');
+report(
+  NAME_PATTERN.test(fm.name ?? ''),
+  'name matches Agent Skills pattern',
+  fm.name ?? '(missing)',
+);
 report(
   typeof fm.name === 'string' && basename(dir) === fm.name,
   'directory name matches frontmatter name (Agent Skills spec)',

@@ -178,11 +178,11 @@ function cmdInstall(dest, force) {
     }
     const manifestPath = join(target, MANIFEST_NAME);
     if (existsSync(manifestPath)) {
-      let oldManifest = null;
+      let oldManifest;
       try {
         oldManifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
       } catch {
-        oldManifest = null; // unreadable record → treat as wholesale replace below
+        oldManifest = undefined; // unreadable record → treat as wholesale replace below
       }
       if (oldManifest) {
         const recorded = new Set([...safeManifestFiles(oldManifest), MANIFEST_NAME]);
