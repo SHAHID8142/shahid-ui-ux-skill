@@ -360,6 +360,140 @@ export function markRead(root, { agent, ids }) {
   return merged.length;
 }
 
+
+// ----------------------------------------------------------------- findings
+
+/**
+ * A structured peer-review finding: what is wrong, how to fix it, and the
+ * evidence. Findings are messages (so the other agent is notified) plus a
+ * tracked record in <bus>/findings so they cannot be lost in a scrolling inbox.
+ */
+export function fileFinding(root, f) {
+  const msg = sendMessage(root, {
+    from: f.from,
+    to: f.to,
+    type: 'finding',
+    body: f.body,
+    task: f.task ?? null,
+    paths: f.paths ?? [],
+  });
+  const record = {
+    ...msg,
+    severity: f.severity ?? 'medium',
+    fix: f.fix ?? '',
+    evidence: f.evidence ?? '',
+    status: 'open',
+    resolution: null,
+    resolvedAt: null,
+  };
+  writeJson(join(paths(root).findings, `${msg.id}.json`), record);
+  log(root, { ev: 'finding', id: msg.id, from: f.from, to: f.to, severity: record.severity });
+  return record;
+}
+
+export function listFindings(root, { status = 'open', to = null, from = null } = {}) {
+  return listJson(paths(root).findings)
+    .filter((f) => (status === 'all' || f.status === status) && (!to || f.to === to) && (!from || f.from === from))
+    .sort((a, b) => String(a.at).localeCompare(String(b.at)));
+}
+
+export function resolveFinding(root, { agent, id, resolution }) {
+  const file = join(paths(root).findings, `${id}.json`);
+  const rec = readJson(file, null);
+  if (!rec) return { ok: false, reason: 'not-found' };
+  const updated = {
+    ...rec,
+    status: 'resolved',
+    resolution,
+    resolvedBy: agent,
+    resolvedAt: nowIso(),
+  };
+  writeJson(file, updated);
+  sendMessage(root, {
+    from: agent,
+    to: rec.from,
+    type: 'answer',
+    task: rec.task,
+    replyTo: rec.id,
+    body: `Finding ${rec.id} resolved: ${resolution}`,
+  });
+  log(root, { ev: 'resolve', id, agent });
+  return { ok: true, finding: updated };
+}
+
+// ------------------------------------------------------------------- digest
+
+function commitsSince(baseSha, limit = 5) {
+  const out = baseSha ? git(['log', '--oneline', `${baseSha}..HEAD`]) : git(['log', '--oneline', `-${limit}`]);
+  return (out ?? '').split('\n').filter(Boolean).slice(0, limit);
+}
+
+function dirtyUnder(snap, claimPaths) {
+  if (!claimPaths || claimPaths.length === 0) return [];
+  return snap.dirty.filter((line) => claimPaths.some((p) => line.includes(p)));
+}
+
+/**
+ * The per-task gate: who else is working, on what, what changed in their scope
+ * since they claimed it, what they asked me, and which findings are open for me.
+ */
+export function digest(root, { agent }) {
+  const snap = gitSnapshot();
+  const lines = [];
+  lines.push(`COORDINATION DIGEST for ${agent} — ${snap.branch} @ ${snap.head}, dirty ${snap.dirty.length}`);
+  lines.push('');
+
+  const agents = listAgents(root);
+  lines.push('AGENTS');
+  if (agents.length === 0) lines.push('  (none registered)');
+  for (const a of agents) {
+    const age = Math.round(ageSeconds(a.heartbeatAt ?? a.registeredAt));
+    const self = a.id === agent ? ' <- you' : '';
+    lines.push(
+      `  ${String(a.id).padEnd(12)} ${(a.live ? 'LIVE' : 'stale').padEnd(5)} hb ${String(age).padStart(5)}s  br:${a.branch ?? '?'}${self}${a.note ? `  — ${a.note}` : ''}`,
+    );
+  }
+
+  lines.push('');
+  lines.push('PEER REVIEW TARGETS (their claims; read-only — never edit their files)');
+  const others = listClaims(root).filter((c) => c.live && c.agent !== agent);
+  if (others.length === 0) lines.push('  (no other live claims right now)');
+  for (const c of others) {
+    lines.push(`  ${c.task} by ${c.agent}  (hb ${Math.round(ageSeconds(c.heartbeatAt))}s, base ${String(c.baseSha ?? '?').slice(0, 7)})`);
+    if (c.note) lines.push(`    intent: ${c.note}`);
+    lines.push(`    scope : ${c.paths?.length ? c.paths.join(', ') : '(no paths claimed — ask them)'}`);
+    for (const line of commitsSince(c.baseSha)) lines.push(`    commit since claim: ${line}`);
+    const dirty = dirtyUnder(snap, c.paths);
+    for (const d of dirty.slice(0, 12)) lines.push(`    uncommitted: ${d}`);
+    if (dirty.length === 0) lines.push('    uncommitted: none in claimed scope');
+    lines.push('    review: correctness? tests? evidence receipt? canonical state untouched?');
+  }
+
+  const mine = listClaims(root).filter((c) => c.live && c.agent === agent);
+  lines.push('');
+  lines.push('MY CLAIMS');
+  if (mine.length === 0) lines.push('  (none — claim before editing)');
+  for (const c of mine) lines.push(`  ${c.task}  ${c.paths?.length ? c.paths.join(', ') : '(no paths)'}`);
+
+  const unread = listInbox(root, { agent });
+  const openToMe = listFindings(root, { to: agent });
+  const mineOpen = listFindings(root, { from: agent });
+  lines.push('');
+  lines.push('ACTION REQUIRED');
+  lines.push(`  unread messages ${unread.length} | findings for you ${openToMe.length} | your open findings ${mineOpen.length}`);
+  for (const m of unread.slice(-5)) {
+    lines.push(`  [${m.type}] ${m.from}: ${oneLine(m.body, 140)}  (id ${m.id})`);
+  }
+  for (const f of openToMe) {
+    lines.push(`  [${f.severity}] ${f.id} ${f.task ?? '-'} ${oneLine(f.body, 140)}`);
+    if (f.fix) lines.push(`      fix: ${oneLine(f.fix, 140)}`);
+  }
+  lines.push('');
+  lines.push('GATE: file findings on their scope (`finding`), resolve theirs (`resolve`),');
+  lines.push('      then claim your own task+paths. Continue only when this block is clean.');
+  return { text: lines.join('\n'), unread, openToMe, others };
+}
+
 // -------------------------------------------------------------------- board
 
 function gitSnapshot(cwd = process.cwd()) {

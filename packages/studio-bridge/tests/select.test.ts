@@ -21,9 +21,9 @@ beforeAll(async () => {
     res.writeHead(200, { 'content-type': 'text/html' }).end(html);
   });
   await new Promise<void>((resolve, reject) => {
-      server!.once('error', reject);
-      server!.listen(PORT, '127.0.0.1', resolve);
-    });
+    server!.once('error', reject);
+    server!.listen(PORT, '127.0.0.1', resolve);
+  });
 }, 120000);
 
 afterAll(() => {
