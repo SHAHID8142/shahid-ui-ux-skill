@@ -13,8 +13,7 @@ evidence — CI on free standard runners).
 Canonical task statuses: TASKS.json (61 of 96 done). No active lease.
 Concurrency: 2 workers (D33) — claim via lease before editing.
 
-Current task: none (between tasks). Pi previously held T0704 (lease TTL
-expired, no re-claim visible — confirm on the bus before taking it).
+Current task: none (between tasks). Last: T0704 annotations done (pi's expired claim released — noted in TASKS.json).
 
 Next exact steps: `pnpm verify` (exit 0) before every push. Ready set:
 T0704 annotations, T0804 scanner overlay, T0709 lifecycle contract, then

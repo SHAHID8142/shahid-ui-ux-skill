@@ -1643,12 +1643,19 @@
       ],
       "risk": "coordinate spaces across zoom/scroll",
       "rollback": "store in viewport space + transforms",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "owner": null,
+      "owner": "zcode-glm",
       "lease": null,
-      "note": "pi bus claim TTL-expired 2026-11-14; re-claim via coordination.mjs before working"
+      "note": "pi bus claim TTL-expired and released; zcode implemented per lane split",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0704.md",
+        "packages/schemas/src/annotations.ts",
+        "packages/studio-bridge/src/annotations.ts",
+        "packages/studio-bridge/tests/annotations.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0704.md"
     },
     {
       "id": "T0705",

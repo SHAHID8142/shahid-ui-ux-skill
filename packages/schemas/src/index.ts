@@ -149,3 +149,13 @@ export {
   type MotionTokensData,
   type TransitionSpecData,
 } from './motion.js';
+export {
+  Annotation,
+  AnnotationKind,
+  AnnotationSession,
+  SusAnnotation,
+  SusAnnotationSession,
+  undoLast,
+  type AnnotationData,
+  type AnnotationSessionData,
+} from './annotations.js';

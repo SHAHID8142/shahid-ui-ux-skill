@@ -301,3 +301,9 @@
   identical smoke PASS 7/7 peer-verified; task closed with both receipts. Repo
   now PUBLIC (T0011 done, issue #11 closed). Next ready: T0704 (released by pi?),
   T0804, T0709.
+
+- 2026-11-14T09:15:00+06:00 | ZCode (GLM) | T0704 | Annotation contract + bridge
+  serialization: normalized semantic geometry (DA-34), typed+keyboard equivalents
+  required, per-kind point rules, clamped capture, undo pure op. 7/7 tests;
+  pnpm verify full green. Receipt: VERIFICATION/T0704.md. Next: T0705 intent
+  compiler; T0602/T0603 when playbooks unlock.
