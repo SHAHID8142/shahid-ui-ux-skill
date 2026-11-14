@@ -6,27 +6,15 @@
 export const SUS_STUDIO_WEB_PACKAGE = '0.0.0' as const;
 
 export {
-  ANNOTATION_FORMAT,
-  ANNOTATION_VERSION,
-  MAX_ANNOTATIONS_PER_DOC,
+  MAX_ANNOTATIONS_PER_SESSION,
   MAX_HISTORY_DEPTH,
-  MAX_NOTE_CHARS,
-  MAX_PEN_POINTS,
-  AnnotationStore,
-  validateAnnotationDocument,
+  AnnotationSessionStore,
+  undoLastAnnotation,
 } from './annotations.js';
 export type {
-  Annotation,
-  AnnotationAnchor,
-  AnnotationDocument,
-  AnnotationGeometry,
   AnnotationKind,
-  ApplyResult,
-  ArrowGeometry,
   InstructionSource,
+  AddInstruction,
   MutationInstruction,
-  PenGeometry,
-  Point,
-  RectangleGeometry,
-  ViewportMetadata,
+  StoreResult,
 } from './annotations.js';

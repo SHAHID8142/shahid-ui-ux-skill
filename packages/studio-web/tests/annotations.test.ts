@@ -1,419 +1,432 @@
 /**
- * T0704 tests — annotations: rectangle/pen/arrow + serialization.
+ * T0704b tests — studio-web annotation session store over the LANDED
+ * substrate contract (@sus/schemas SusAnnotation v1 + @sus/studio-bridge).
  *
  * Acceptance under test:
- *  - schema validates: envelope contract, strict field checks
- *  - malformed/out-of-bounds rejected: every negative below names its reason
- *  - undo safe: empty-history no-ops, redo-branch truncation, id continuity,
- *    bounded history
- *  - non-drawing equivalent: pointer, keyboard and instruction paths are the
- *    SAME mutation entrypoint and produce byte-identical documents (DA-34)
- *  - serialization round trip: serialize -> parse -> serialize is byte-stable;
- *  - semantic geometry: documents carry viewport metadata + anchors, never
- *    raw pixels only (DA-34).
+ *  - schema validates: session serialization round-trips through the
+ *    substrate's schema-validated serializer/parser
+ *  - malformed/out-of-bounds rejected: wrong point counts per kind, missing
+ *    typed equivalents, out-of-range normalized coords, duplicate ids
+ *  - undo safe: empty-history no-ops, redo-branch truncation, bounded history,
+ *    remove+undo restore
+ *  - non-drawing equivalence (DA-34): pointer/keyboard/instruction paths share
+ *    ONE entrypoint and must carry typedEquivalent + keyboardPath — enforced
+ *    by the schema itself, proven identical-output here
+ *  - semantic geometry: viewport pixels normalize to 0..1, never raw pixels
+ *    only (DA-34), clamped at capture, hard-rejected at the session boundary
  */
 import { describe, expect, it } from 'vitest';
 import {
-  ANNOTATION_FORMAT,
-  ANNOTATION_VERSION,
-  MAX_ANNOTATIONS_PER_DOC,
-  AnnotationStore,
-  type AnnotationDocument,
+  AnnotationSessionStore,
+  MAX_ANNOTATIONS_PER_SESSION,
+  MAX_HISTORY_DEPTH,
   type MutationInstruction,
-  type ViewportMetadata,
 } from '../src/annotations.js';
 
-const VIEWPORT: ViewportMetadata = {
-  width: 1280,
-  height: 800,
-  dpr: 2,
-  scrollX: 0,
-  scrollY: 120,
-  capturedAt: '2026-11-14T06:30:00.000Z',
-};
+const PAGE_URL = 'https://example.com/product';
+const VIEWPORT = { width: 1280, height: 800 };
 
-function rectDoc(): AnnotationDocument {
-  const store = new AnnotationStore(VIEWPORT);
-  const r = store.apply({
-    op: 'add-rectangle',
-    provenance: 'pointer',
-    geometry: { kind: 'rectangle', x: 10, y: 20, width: 300, height: 140 },
-    anchor: { kind: 'id', value: 'hero', confidence: 1 },
-    note: 'hero region',
-  });
-  if (!r.ok) throw new Error(`fixture broken: ${r.reasons.join('; ')}`);
-  return r.document;
+function store(): AnnotationSessionStore {
+  return new AnnotationSessionStore({ pageUrl: PAGE_URL, viewport: VIEWPORT });
 }
 
-describe('T0704 annotations — schema validates', () => {
-  it('valid document passes validation and carries viewport + anchor metadata', () => {
-    const doc = rectDoc();
-    expect(doc.viewport).toEqual(VIEWPORT);
-    expect(doc.annotations).toHaveLength(1);
-    const ann = doc.annotations[0]!;
-    expect(ann.id).toBe('a-1');
-    expect(ann.geometry).toEqual({ kind: 'rectangle', x: 10, y: 20, width: 300, height: 140 });
-    expect(ann.anchor).toEqual({ kind: 'id', value: 'hero', confidence: 1 });
+function addRect(s: AnnotationSessionStore, label = 'hero region'): MutationInstruction {
+  return {
+    op: 'add',
+    kind: 'rectangle',
+    pixels: [
+      { x: 10, y: 20 },
+      { x: 310, y: 160 },
+    ],
+    label,
+    typedEquivalent: `annotate rect "${label}"`,
+    keyboardPath: 'Ctrl+Shift+R then drag-arrows',
+    at: '2026-11-14T06:30:00.000Z',
+    source: 'pointer',
+  };
+}
+
+describe('T0704b — schema validates (via landed contract)', () => {
+  it('stores viewport pixels as NORMALIZED semantic geometry', () => {
+    const s = store();
+    const r = s.apply(addRect(s));
+    expect(r.ok).toBe(true);
+    const a = s.document().annotations[0]!;
+    // 10/1280 -> 0.0078, 20/800 -> 0.025 (4-dp normalization in substrate)
+    expect(a.points[0]).toEqual({ x: 0.0078, y: 0.025 });
+    expect(a.points[1]).toEqual({ x: 0.2422, y: 0.2 });
+    expect(a.kind).toBe('rectangle');
+    expect(a.pageUrl).toBe(PAGE_URL);
+    expect(a.createdAt).toBe('2026-11-14T06:30:00.000Z');
+    expect(a.author).toBe('studio-web');
   });
 
-  it('serialization envelope carries format OUTSIDE the strict record body', () => {
-    const store = new AnnotationStore(VIEWPORT);
-    store.apply({
-      op: 'add-rectangle',
-      provenance: 'instruction',
-      geometry: { kind: 'rectangle', x: 0, y: 0, width: 5, height: 5 },
+  it('every stored annotation carries required non-drawing equivalents', () => {
+    const s = store();
+    s.apply(addRect(s));
+    const a = s.document().annotations[0]!;
+    expect(a.typedEquivalent.length).toBeGreaterThan(0);
+    expect(a.keyboardPath.length).toBeGreaterThan(0);
+  });
+
+  it('serialize -> parse -> serialize is byte-identical (substrate serializer)', () => {
+    const s = store();
+    s.apply(addRect(s));
+    s.apply({
+      op: 'add',
+      kind: 'arrow',
+      pixels: [
+        { x: 100, y: 100 },
+        { x: 320, y: 240 },
+      ],
+      label: 'points at CTA',
+      typedEquivalent: 'annotate arrow "points at CTA"',
+      keyboardPath: 'Ctrl+Shift+A then arrows',
     });
-    const envelope = JSON.parse(store.serialize()) as Record<string, unknown>;
-    expect(envelope['format']).toBe(ANNOTATION_FORMAT);
-    expect(envelope['version']).toBe(ANNOTATION_VERSION);
-    expect(Object.keys(envelope['doc'] as object)).toEqual(['viewport', 'annotations']);
+    s.apply({
+      op: 'add',
+      kind: 'pen',
+      pixels: [
+        { x: 0, y: 0 },
+        { x: 640, y: 400 },
+        { x: 1279, y: 799 },
+      ],
+      label: 'underline nav',
+      typedEquivalent: 'annotate pen "underline nav"',
+      keyboardPath: 'Ctrl+Shift+P then arrows',
+    });
+    const first = s.serialize();
+    const parsed = AnnotationSessionStore.parse(first);
+    expect(parsed.ok).toBe(true);
+    if (!parsed.ok) throw new Error(parsed.reasons.join('; '));
+    expect(JSON.stringify(parsed.session, null, 2)).toBe(first);
   });
 });
 
-describe('T0704 annotations — malformed/out-of-bounds rejected (fail closed)', () => {
+describe('T0704b — malformed/out-of-bounds rejected (fail closed)', () => {
   const bad: Array<[string, MutationInstruction, string]> = [
     [
-      'rectangle exceeds right edge',
+      'rectangle with 3 corners',
       {
-        op: 'add-rectangle',
-        provenance: 'pointer',
-        geometry: { kind: 'rectangle', x: 1200, y: 0, width: 200, height: 50 },
+        op: 'add',
+        kind: 'rectangle',
+        pixels: [
+          { x: 1, y: 1 },
+          { x: 2, y: 2 },
+          { x: 3, y: 3 },
+        ],
+        label: 'x',
+        typedEquivalent: 't',
+        keyboardPath: 'k',
       },
-      'x+width',
+      'exactly 2 corner points',
     ],
     [
-      'rectangle below viewport top after scroll offset base 0',
+      'arrow with 1 point',
       {
-        op: 'add-rectangle',
-        provenance: 'pointer',
-        geometry: { kind: 'rectangle', x: 0, y: -5, width: 50, height: 50 },
+        op: 'add',
+        kind: 'arrow',
+        pixels: [{ x: 1, y: 1 }],
+        label: 'x',
+        typedEquivalent: 't',
+        keyboardPath: 'k',
       },
-      'out of bounds',
+      'exactly 2 points',
     ],
     [
-      'zero-area rectangle',
+      'pen with 2 points (needs >= 3)',
       {
-        op: 'add-rectangle',
-        provenance: 'keyboard',
-        geometry: { kind: 'rectangle', x: 5, y: 5, width: 0, height: 50 },
+        op: 'add',
+        kind: 'pen',
+        pixels: [
+          { x: 1, y: 1 },
+          { x: 2, y: 2 },
+        ],
+        label: 'x',
+        typedEquivalent: 't',
+        keyboardPath: 'k',
       },
-      'must be > 0',
+      'pen stroke needs >= 3 points',
     ],
     [
-      'pen with a single point',
-      { op: 'add-pen', provenance: 'pointer', geometry: { kind: 'pen', points: [{ x: 1, y: 1 }] } },
-      '>= 2 points',
+      'missing typedEquivalent (DA-34)',
+      {
+        op: 'add',
+        kind: 'rectangle',
+        pixels: [
+          { x: 1, y: 1 },
+          { x: 2, y: 2 },
+        ],
+        label: 'x',
+        typedEquivalent: '',
+        keyboardPath: 'k',
+      },
+      'invalid annotation',
     ],
     [
-      'pen point outside viewport',
+      'empty label',
       {
-        op: 'add-pen',
-        provenance: 'pointer',
-        geometry: { kind: 'pen', points: [{ x: 1, y: 1 }, { x: 5000, y: 1 }] },
+        op: 'add',
+        kind: 'rectangle',
+        pixels: [
+          { x: 1, y: 1 },
+          { x: 2, y: 2 },
+        ],
+        label: '',
+        typedEquivalent: 't',
+        keyboardPath: 'k',
       },
-      'points[1].x',
-    ],
-    [
-      'arrow head and tail coincide',
-      {
-        op: 'add-arrow',
-        provenance: 'pointer',
-        geometry: { kind: 'arrow', from: { x: 10, y: 10 }, to: { x: 10, y: 10 } },
-      },
-      'coincide',
-    ],
-    [
-      'NaN coordinate',
-      {
-        op: 'add-arrow',
-        provenance: 'pointer',
-        geometry: { kind: 'arrow', from: { x: Number.NaN, y: 10 }, to: { x: 20, y: 10 } },
-      },
-      'not a finite number',
+      'invalid annotation',
     ],
   ];
   for (const [name, instruction, reasonPart] of bad) {
     it(`rejects: ${name}`, () => {
-      const store = new AnnotationStore(VIEWPORT);
-      const result = store.apply(instruction);
-      expect(result.ok).toBe(false);
-      if (!result.ok) {
-        expect(result.reasons.join(' | ')).toContain(reasonPart);
-      }
-      expect(store.document().annotations).toHaveLength(0); // rejected = no state change
+      const s = store();
+      const r = s.apply(instruction);
+      expect(r.ok).toBe(false);
+      if (!r.ok) expect(r.reasons.join(' | ')).toContain(reasonPart);
+      expect(s.document().annotations).toHaveLength(0); // rejected = no state change
     });
   }
 
-  it('rejects oversized pen strokes beyond the point cap', () => {
-    const store = new AnnotationStore(VIEWPORT);
-    const points = Array.from({ length: 2001 }, (_, i) => ({ x: i % 1279, y: i % 799 }));
-    const result = store.apply({ op: 'add-pen', provenance: 'pointer', geometry: { kind: 'pen', points } });
-    expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.reasons.join()).toContain('2000 point cap');
-  });
-
   it('rejects removing an unknown id', () => {
-    const store = new AnnotationStore(VIEWPORT);
-    const result = store.apply({ op: 'remove', provenance: 'keyboard', id: 'a-99' });
-    expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.reasons.join()).toContain('no annotation with id a-99');
+    const s = store();
+    const r = s.apply({ op: 'remove', id: 'a-99' });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.reasons.join()).toContain('no annotation with id a-99');
+  });
+
+  it('clamps out-of-viewport pixels at capture (documented normalization), but the session boundary hard-rejects out-of-range normalized coords', () => {
+    const s = store();
+    const r = s.apply({
+      op: 'add',
+      kind: 'rectangle',
+      pixels: [
+        { x: -50, y: -50 },
+        { x: 5000, y: 9999 },
+      ],
+      label: 'clamped rect',
+      typedEquivalent: 't',
+      keyboardPath: 'k',
+    });
+    expect(r.ok).toBe(true);
+    const a = s.document().annotations[0]!;
+    expect(a.points[0]).toEqual({ x: 0, y: 0 }); // clamped into 0..1
+    expect(a.points[1]).toEqual({ x: 1, y: 1 });
+
+    // At the DATA boundary nothing clamps: a session with 1.5 coords is invalid.
+    const forged = JSON.parse(s.serialize()) as {
+      annotations: Array<{ points: Array<{ x: number }> }>;
+    };
+    forged.annotations[0]!.points[0]!.x = 1.5;
+    const parsed = AnnotationSessionStore.parse(JSON.stringify(forged));
+    expect(parsed.ok).toBe(false);
+    if (!parsed.ok) expect(parsed.reasons.join()).toContain('invalid session JSON');
+  });
+
+  it('rejects duplicate ids at the session boundary', () => {
+    const s = store();
+    s.apply(addRect(s));
+    const forged = JSON.parse(s.serialize()) as { annotations: Array<object> };
+    forged.annotations.push({ ...forged.annotations[0]! });
+    const parsed = AnnotationSessionStore.parse(JSON.stringify(forged));
+    // Fails closed regardless of how the substrate flattens its zod issues
+    // (issue-detail loss is filed as a substrate finding, not a store defect).
+    expect(parsed.ok).toBe(false);
+  });
+
+  it('rejects invalid JSON and unknown record shapes', () => {
+    const badJson = AnnotationSessionStore.parse('{not json');
+    expect(badJson.ok).toBe(false);
+    if (!badJson.ok) expect(badJson.reasons.join()).toContain('JSON');
+
+    const unknown = AnnotationSessionStore.parse(
+      JSON.stringify({ pageUrl: PAGE_URL, viewport: VIEWPORT, annotations: [], extra: 1 }),
+    );
+    expect(unknown.ok).toBe(false);
+    if (!unknown.ok) expect(unknown.reasons.join()).toContain('invalid session JSON');
   });
 });
 
-describe('T0704 annotations — serialization round trip', () => {
-  it('serialize -> parse -> serialize is byte-identical', () => {
-    const store = new AnnotationStore(VIEWPORT);
-    store.apply({
-      op: 'add-rectangle',
-      provenance: 'pointer',
-      geometry: { kind: 'rectangle', x: 10, y: 20, width: 300, height: 140 },
-      anchor: { kind: 'id', value: 'hero', confidence: 1 },
-    });
-    store.apply({
-      op: 'add-pen',
-      provenance: 'keyboard',
-      geometry: { kind: 'pen', points: [{ x: 1.5, y: 2.5 }, { x: 3.5, y: 4.5 }, { x: 6.25, y: 8.125 }] },
-      note: 'circle this',
-    });
-    store.apply({
-      op: 'add-arrow',
-      provenance: 'instruction',
-      geometry: { kind: 'arrow', from: { x: 100, y: 100 }, to: { x: 200, y: 150 } },
-    });
-    const first = store.serialize();
-    const parsed = AnnotationStore.parse(first);
-    expect(parsed.ok).toBe(true);
-    if (!parsed.ok) throw new Error(parsed.reasons.join('; '));
-    const second = JSON.stringify({ format: ANNOTATION_FORMAT, version: ANNOTATION_VERSION, doc: parsed.document });
-    expect(second).toBe(first);
-    expect(JSON.stringify(parsed.document)).toBe(JSON.stringify(store.document()));
-  });
-
-  it('rejects invalid JSON, wrong format and wrong version with explicit reasons', () => {
-    const noJson = AnnotationStore.parse('{not json');
-    expect(noJson.ok).toBe(false);
-    if (!noJson.ok) expect(noJson.reasons[0]).toContain('invalid JSON');
-
-    const wrongFormat = AnnotationStore.parse(
-      JSON.stringify({ format: 'sus.other', version: 1, doc: { viewport: VIEWPORT, annotations: [] } }),
-    );
-    expect(wrongFormat.ok).toBe(false);
-    if (!wrongFormat.ok) expect(wrongFormat.reasons.join()).toContain('expected "sus.studio-annotation"');
-
-    const wrongVersion = AnnotationStore.parse(
-      JSON.stringify({ format: ANNOTATION_FORMAT, version: 2, doc: { viewport: VIEWPORT, annotations: [] } }),
-    );
-    expect(wrongVersion.ok).toBe(false);
-    if (!wrongVersion.ok) expect(wrongVersion.reasons.join()).toContain('no migration chain exists');
-  });
-
-  it('rejects parsed annotations with malformed ids/provenance and bad geometry', () => {
-    const cases: Array<[string, object, string]> = [
-      [
-        'bad id',
-        { id: 'nope', kind: 'pen', geometry: { kind: 'pen', points: [{ x: 1, y: 1 }, { x: 2, y: 2 }] }, provenance: 'pointer' },
-        "expected monotonic id",
-      ],
-      [
-        'bad provenance',
-        { id: 'a-1', kind: 'pen', geometry: { kind: 'pen', points: [{ x: 1, y: 1 }, { x: 2, y: 2 }] }, provenance: 'voice' },
-        'provenance',
-      ],
-      [
-        'unknown geometry kind',
-        { id: 'a-1', kind: 'blob', geometry: { kind: 'blob' }, provenance: 'pointer' },
-        "expected 'rectangle' | 'pen' | 'arrow'",
-      ],
-      [
-        'anchor confidence out of range',
-        {
-          id: 'a-1',
-          kind: 'rectangle',
-          geometry: { kind: 'rectangle', x: 1, y: 1, width: 5, height: 5 },
-          anchor: { kind: 'id', value: 'x', confidence: 1.5 },
-          provenance: 'pointer',
-        },
-        'confidence',
-      ],
-    ];
-    for (const [name, annotation, reasonPart] of cases) {
-      const doc = { viewport: VIEWPORT, annotations: [annotation] };
-      const result = AnnotationStore.parse(
-        JSON.stringify({ format: ANNOTATION_FORMAT, version: ANNOTATION_VERSION, doc }),
-      );
-      expect(result.ok, name).toBe(false);
-      if (!result.ok) expect(result.reasons.join(' | '), name).toContain(reasonPart);
-    }
-  });
-
-  it('rejects a parsed document whose viewport is missing or invalid', () => {
-    const noViewport = AnnotationStore.parse(
-      JSON.stringify({ format: ANNOTATION_FORMAT, version: 1, doc: { annotations: [] } }),
-    );
-    expect(noViewport.ok).toBe(false);
-    if (!noViewport.ok) expect(noViewport.reasons.join()).toContain('viewport');
-
-    const badViewport = AnnotationStore.parse(
-      JSON.stringify({
-        format: ANNOTATION_FORMAT,
-        version: 1,
-        doc: { viewport: { ...VIEWPORT, dpr: 99 }, annotations: [] },
-      }),
-    );
-    expect(badViewport.ok).toBe(false);
-    if (!badViewport.ok) expect(badViewport.reasons.join()).toContain('dpr');
-  });
-});
-
-describe('T0704 annotations — undo/redo safety', () => {
+describe('T0704b — undo/redo safety', () => {
   it('undo on empty history is a no-op failure; redo without undo likewise', () => {
-    const store = new AnnotationStore(VIEWPORT);
-    const u = store.apply({ op: 'undo', provenance: 'keyboard' });
-    const r = store.apply({ op: 'redo', provenance: 'keyboard' });
+    const s = store();
+    const u = s.apply({ op: 'undo' });
+    const r = s.apply({ op: 'redo' });
     expect(u.ok).toBe(false);
     expect(r.ok).toBe(false);
     if (!u.ok) expect(u.reasons.join()).toContain('nothing to undo');
     if (!r.ok) expect(r.reasons.join()).toContain('nothing to redo');
+    expect(s.canUndo()).toBe(false);
   });
 
-  it('undo removes the annotation, redo restores it exactly', () => {
-    const store = new AnnotationStore(VIEWPORT);
-    store.apply({
-      op: 'add-rectangle',
-      provenance: 'pointer',
-      geometry: { kind: 'rectangle', x: 1, y: 2, width: 3, height: 4 },
-    });
-    const before = store.document();
-    const undone = store.apply({ op: 'undo', provenance: 'keyboard' });
-    expect(undone.ok).toBe(true);
-    expect(store.document().annotations).toHaveLength(0);
-    const redone = store.apply({ op: 'redo', provenance: 'keyboard' });
-    expect(redone.ok).toBe(true);
-    expect(JSON.stringify(store.document())).toBe(JSON.stringify(before));
-    expect(store.canUndo()).toBe(true);
-    expect(store.canRedo()).toBe(false);
+  it('undo removes the last annotation; redo restores it exactly', () => {
+    const s = store();
+    s.apply(addRect(s));
+    const before = s.document();
+    expect(s.apply({ op: 'undo' }).ok).toBe(true);
+    expect(s.document().annotations).toHaveLength(0);
+    expect(s.apply({ op: 'redo' }).ok).toBe(true);
+    expect(JSON.stringify(s.document())).toBe(JSON.stringify(before));
+    expect(s.canUndo()).toBe(true);
+    expect(s.canRedo()).toBe(false);
   });
 
-  it('a new mutation truncates the redo branch (standard editor semantics)', () => {
-    const store = new AnnotationStore(VIEWPORT);
-    const add = (y: number) =>
-      store.apply({
-        op: 'add-rectangle',
-        provenance: 'pointer',
-        geometry: { kind: 'rectangle', x: 0, y, width: 10, height: 10 },
-      });
-    add(1);
-    store.apply({ op: 'undo', provenance: 'keyboard' });
-    expect(store.canRedo()).toBe(true);
-    add(2); // new mutation — redo branch must die
-    expect(store.canRedo()).toBe(false);
-    expect(store.document().annotations.map((a) => a.id)).toEqual(['a-2']); // id monotonicity preserved
+  it('a new mutation truncates the redo branch; ids are never re-allocated', () => {
+    const s = store();
+    s.apply(addRect(s)); // a-1
+    s.apply({ op: 'undo' });
+    expect(s.canRedo()).toBe(true);
+    s.apply({
+      op: 'add',
+      kind: 'pen',
+      pixels: [
+        { x: 1, y: 1 },
+        { x: 2, y: 2 },
+        { x: 3, y: 3 },
+      ],
+      label: 'new stroke',
+      typedEquivalent: 't',
+      keyboardPath: 'k',
+    }); // new mutation — redo branch dies
+    expect(s.canRedo()).toBe(false);
+    // Content rewound but the id counter NEVER rewinds: this is a-2, not a-1.
+    expect(s.document().annotations.map((a) => a.id)).toEqual(['a-2']);
   });
 
   it('undo after remove restores the removed annotation in place', () => {
-    const store = new AnnotationStore(VIEWPORT);
-    store.apply({
-      op: 'add-rectangle',
-      provenance: 'instruction',
-      geometry: { kind: 'rectangle', x: 1, y: 1, width: 2, height: 2 },
-    });
-    store.apply({ op: 'remove', provenance: 'keyboard', id: 'a-1' });
-    expect(store.document().annotations).toHaveLength(0);
-    const undone = store.apply({ op: 'undo', provenance: 'pointer' });
-    expect(undone.ok).toBe(true);
-    expect(store.document().annotations[0]!.id).toBe('a-1');
+    const s = store();
+    s.apply(addRect(s));
+    s.apply({ op: 'remove', id: 'a-1' });
+    expect(s.document().annotations).toHaveLength(0);
+    expect(s.apply({ op: 'undo' }).ok).toBe(true);
+    expect(s.document().annotations[0]!.id).toBe('a-1');
   });
 
   it('history is bounded at 100 snapshots', () => {
-    const store = new AnnotationStore(VIEWPORT);
-    for (let i = 0; i < 105; i += 1) {
-      const y = (i % 79) + 1;
-      store.apply({
-        op: 'add-rectangle',
-        provenance: 'instruction',
-        geometry: { kind: 'rectangle', x: 0, y, width: 10, height: 10 },
+    const s = store();
+    for (let i = 0; i < MAX_HISTORY_DEPTH + 5; i += 1) {
+      s.apply({
+        op: 'add',
+        kind: 'pen',
+        pixels: [
+          { x: i, y: i },
+          { x: i + 10, y: i + 10 },
+          { x: i + 20, y: i + 20 },
+        ],
+        label: `stroke ${i}`,
+        typedEquivalent: `t${i}`,
+        keyboardPath: 'k',
       });
     }
     let undos = 0;
-    while (store.canUndo() && undos <= 101) {
-      store.apply({ op: 'undo', provenance: 'keyboard' });
+    while (s.canUndo() && undos <= MAX_HISTORY_DEPTH + 1) {
+      s.apply({ op: 'undo' });
       undos += 1;
     }
-    expect(undos).toBe(100);
-    // oldest snapshot was evicted: exactly the last 100 adds are undoable
-    expect(store.document().annotations).toHaveLength(5);
+    expect(undos).toBe(MAX_HISTORY_DEPTH);
+    // oldest snapshot was evicted: exactly the last 100 adds remain undoable
+    expect(s.document().annotations).toHaveLength(5);
   });
 });
 
-describe('T0704 annotations — non-drawing equivalence (DA-34)', () => {
-  it('pointer, keyboard and instruction paths have identical EFFECTS', () => {
-    const geometry = { kind: 'arrow', from: { x: 10, y: 10 }, to: { x: 60, y: 40 } } as const;
-    const anchor = { kind: 'text', value: 'add to cart', confidence: 0.7 } as const;
-    const pointer = new AnnotationStore(VIEWPORT);
-    const keyboard = new AnnotationStore(VIEWPORT);
-    const automation = new AnnotationStore(VIEWPORT);
-    pointer.apply({ op: 'add-arrow', provenance: 'pointer', geometry: { ...geometry }, anchor: { ...anchor } });
-    keyboard.apply({ op: 'add-arrow', provenance: 'keyboard', geometry: { ...geometry }, anchor: { ...anchor } });
-    automation.apply({ op: 'add-arrow', provenance: 'instruction', geometry: { ...geometry }, anchor: { ...anchor } });
-    // The EFFECT (geometry + anchor + id) is identical across all three paths;
-    // only `provenance` faithfully records who performed it.
-    const effects = [pointer, keyboard, automation].map((s) =>
-      JSON.stringify({ ...s.document(), annotations: s.document().annotations.map(({ provenance: _p, ...rest }) => rest) }),
-    );
-    expect(effects[0]).toBe(effects[1]);
-    expect(effects[1]).toBe(effects[2]);
-    const provenances = [pointer, keyboard, automation].map(
-      (s) => s.document().annotations[0]!.provenance,
-    );
-    expect(provenances).toEqual(['pointer', 'keyboard', 'instruction']);
+describe('T0704b — non-drawing equivalence (DA-34)', () => {
+  it('pointer, keyboard and instruction paths share one entrypoint with identical effects', () => {
+    const effect = (s: AnnotationSessionStore) =>
+      s.document().annotations.map((a) => ({
+        id: a.id,
+        kind: a.kind,
+        points: a.points,
+        label: a.label,
+        typedEquivalent: a.typedEquivalent,
+        keyboardPath: a.keyboardPath,
+      }));
+    const pointer = store();
+    const keyboard = store();
+    const automation = store();
+    const instr: MutationInstruction = {
+      op: 'add',
+      kind: 'arrow',
+      pixels: [
+        { x: 10, y: 10 },
+        { x: 60, y: 40 },
+      ],
+      label: 'add to cart',
+      typedEquivalent: 'annotate arrow "add to cart"',
+      keyboardPath: 'Ctrl+Shift+A then arrows',
+      at: '2026-11-14T06:40:00.000Z',
+    };
+    // same instruction type through the single apply() entrypoint; only the
+    // `source` tag differs (capture telemetry, never persisted to behavior)
+    pointer.apply({ ...instr, source: 'pointer' });
+    keyboard.apply({ ...instr, source: 'keyboard' });
+    automation.apply({ ...instr, source: 'instruction' });
+    expect(JSON.stringify(effect(pointer))).toBe(JSON.stringify(effect(keyboard)));
+    expect(JSON.stringify(effect(keyboard))).toBe(JSON.stringify(effect(automation)));
+    // the equivalence is DATA: without typed equivalents the record is invalid
+    const s = store();
+    const r = s.apply({ ...instr, typedEquivalent: '', keyboardPath: '' });
+    expect(r.ok).toBe(false);
   });
 
-  it('document-level automation via serialize/parse matches live-store documents', () => {
-    const live = new AnnotationStore(VIEWPORT);
-    live.apply({
-      op: 'add-pen',
-      provenance: 'pointer',
-      geometry: { kind: 'pen', points: [{ x: 5, y: 5 }, { x: 15, y: 25 }] },
-    });
-    const parsed = AnnotationStore.parse(live.serialize());
-    expect(parsed.ok).toBe(true);
-    if (!parsed.ok) throw new Error(parsed.reasons.join('; '));
-    expect(JSON.stringify(parsed.document)).toBe(JSON.stringify(live.document()));
+  it('substrate pure-list undo is safe on an empty session', async () => {
+    const { undoLastAnnotation } = await import('@sus/studio-bridge');
+    const empty = { pageUrl: PAGE_URL, viewport: VIEWPORT, annotations: [] };
+    expect(undoLastAnnotation(empty)).toEqual(empty);
   });
 });
 
-describe('T0704 annotations — caps + immutability', () => {
-  it('annotation count per document is capped', () => {
-    const store = new AnnotationStore(VIEWPORT);
-    for (let i = 0; i < MAX_ANNOTATIONS_PER_DOC; i += 1) {
-      const y = (i % 79) + 1;
-      const r = store.apply({
-        op: 'add-rectangle',
-        provenance: 'instruction',
-        geometry: { kind: 'rectangle', x: 0, y, width: 10, height: 10 },
+describe('T0704b — caps + immutability', () => {
+  it('annotation count per session is capped', () => {
+    const s = store();
+    for (let i = 0; i < MAX_ANNOTATIONS_PER_SESSION; i += 1) {
+      const r = s.apply({
+        op: 'add',
+        kind: 'pen',
+        pixels: [
+          { x: i % 100, y: i % 90 },
+          { x: (i % 100) + 5, y: (i % 90) + 5 },
+          { x: (i % 100) + 9, y: (i % 90) + 9 },
+        ],
+        label: `s${i}`,
+        typedEquivalent: `t${i}`,
+        keyboardPath: 'k',
       });
       expect(r.ok).toBe(true);
     }
-    const overflow = store.apply({
-      op: 'add-rectangle',
-      provenance: 'instruction',
-      geometry: { kind: 'rectangle', x: 0, y: 1, width: 10, height: 10 },
+    const overflow = s.apply({
+      op: 'add',
+      kind: 'pen',
+      pixels: [
+        { x: 1, y: 1 },
+        { x: 2, y: 2 },
+        { x: 3, y: 3 },
+      ],
+      label: 'overflow',
+      typedEquivalent: 't',
+      keyboardPath: 'k',
     });
     expect(overflow.ok).toBe(false);
     if (!overflow.ok) expect(overflow.reasons.join()).toContain('cap reached');
   });
 
   it('document() returns an immutable view — external mutation cannot corrupt the store', () => {
-    const store = new AnnotationStore(VIEWPORT);
-    store.apply({
-      op: 'add-rectangle',
-      provenance: 'pointer',
-      geometry: { kind: 'rectangle', x: 1, y: 1, width: 2, height: 2 },
-    });
-    const doc = store.document();
+    const s = store();
+    s.apply(addRect(s));
+    const doc = s.document();
     expect(Object.isFrozen(doc)).toBe(true);
     expect(Object.isFrozen(doc.annotations)).toBe(true);
-    const second = store.document();
-    expect(JSON.stringify(second)).toBe(JSON.stringify(doc));
+    expect(Object.isFrozen(doc.annotations[0])).toBe(true);
+    expect(JSON.stringify(s.document())).toBe(JSON.stringify(doc));
+  });
+
+  it('constructor rejects non-positive or non-integer viewports (fail closed)', () => {
+    expect(
+      () => new AnnotationSessionStore({ pageUrl: PAGE_URL, viewport: { width: 0, height: 100 } }),
+    ).toThrow(/viewport\.width/);
+    expect(
+      () =>
+        new AnnotationSessionStore({ pageUrl: PAGE_URL, viewport: { width: 1.5, height: 100 } }),
+    ).toThrow(/viewport\.width/);
   });
 });

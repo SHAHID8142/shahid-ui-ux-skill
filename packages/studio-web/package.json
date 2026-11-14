@@ -16,6 +16,10 @@
     "build": "tsc",
     "test": "vitest run"
   },
+  "dependencies": {
+    "@sus/schemas": "workspace:*",
+    "@sus/studio-bridge": "workspace:*"
+  },
   "devDependencies": {
     "typescript": "^5.9.2",
     "vitest": "^3.2.7"
