@@ -90,12 +90,11 @@ describe('selection anchors + confidence gate (T0703)', () => {
         document.body.appendChild(p);
       }
     });
-    const result = await resolveSelection(page, 'amb-a');
-    // both carry unique ids here, so id-anchor resolves — force ambiguity via text
-    const textAmb = await page.evaluate(() => {
+    // both carry unique ids here, so id-anchor resolves — strip ids to force
+    // the structural/text ambiguity path
+    await page.evaluate(() => {
       for (const el of document.querySelectorAll('#amb-a, #amb-b')) el.removeAttribute('id');
     });
-    expect(textAmb).toBeUndefined();
     const refused: SelectionResult = await resolveSelection(page, 'amb-a');
     // no id now: structural paths differ (nth-of-type) → structural may still be unique.
     // The refusal contract is exercised directly below with a synthetic ambiguous inventory.
