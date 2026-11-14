@@ -226,30 +226,30 @@ export class FindingsOverlayStore {
   }
 
   /**
-   * Markdown table for DECISIONS.md. The overlay does NOT write that file —
-   * exporting text and applying it is a separate, approval-gated write
-   * (T0706/T0707). Deterministic ordering by key.
+   * Rows in DECISIONS.md's own append-only format:
+   * `date | decision | rationale | alternatives | approval | scope`
+   * (see the DECISIONS.md header). Deterministic ordering by key.
+   *
+   * The overlay NEVER writes DECISIONS.md — emitting the rows is the store's
+   * job; applying them to the file is an approval-gated write (T0706/T0707),
+   * exactly like any other mutation.
    */
-  dismissalLogMarkdown(): string {
-    const log = this.dismissalsList();
-    if (log.length === 0) return '';
-    const rows = log.map(
-      (d) =>
-        `| ${escapeCell(d.category)} | ${escapeCell(`${d.file}:${d.line}`)} | ${escapeCell(d.severity)} | ${escapeCell(d.reason)} | ${escapeCell(d.author)} | ${escapeCell(d.at)} |`,
-    );
+  dismissalLogLines(): string[] {
     const stale = new Set(this.staleDismissals().map((d) => d.key));
-    const annotated = rows.map((row, i) => {
-      const d = log[i];
-      return d && stale.has(d.key) ? row.replace(/ \|$/, ' ⚠ stale |') : row;
+    return this.dismissalsList().map((d) => {
+      const decision = `Dismiss scanner finding ${d.category} at ${d.file}:${d.line}`;
+      const rationale = stale.has(d.key)
+        ? `${escapeLine(d.reason)} (stale: finding no longer reported)`
+        : escapeLine(d.reason);
+      return [
+        `- ${d.at.slice(0, 10)}`,
+        decision,
+        rationale,
+        '—',
+        `operator ${escapeLine(d.author)}`,
+        escapeLine(d.category),
+      ].join(' | ');
     });
-    return [
-      '### Dismissed scanner findings',
-      '',
-      '| Category | Source | Severity | Reason | Author | Recorded |',
-      '| --- | --- | --- | --- | --- | --- |',
-      ...annotated,
-      '',
-    ].join('\n');
   }
 
   private matchesFilter(severity: Severity): boolean {
@@ -271,7 +271,7 @@ function fingerprint(finding: Finding, file: string): string {
   return [finding.category, file, foldText(finding.snippet), foldText(finding.matched)].join('|');
 }
 
-/** Escapes a markdown table cell (pipes + newlines would break the table). */
-function escapeCell(s: string): string {
+/** Escapes a DECISIONS.md field: no pipes (breaks the column format), no newlines. */
+function escapeLine(s: string): string {
   return s.replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
 }

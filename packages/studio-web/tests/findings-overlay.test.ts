@@ -262,44 +262,55 @@ describe('T0804 — dismissal log for DECISIONS.md', () => {
   it('is empty when nothing was dismissed', () => {
     const store = overlay();
     store.ingest([scan('a.tsx', [{ line: 1, snippet: 'text-center' }])]);
-    expect(store.dismissalLogMarkdown()).toBe('');
+    expect(store.dismissalLogLines()).toEqual([]);
   });
 
-  it('renders a deterministic markdown table ordered by key, with reasons', () => {
+  it('emits DECISIONS.md rows in the house append-only format', () => {
     const store = overlay();
     store.ingest([
       scan('b.tsx', [{ line: 9, snippet: 'gradient-hero', severity: 'blocking' }]),
       scan('a.tsx', [{ line: 3, snippet: 'text-center' }]),
     ]);
     for (const f of store.all()) store.dismiss(f.key, `reason for ${f.file} recorded`, AT);
-    const md = store.dismissalLogMarkdown();
-    expect(md).toContain('| Category | Source | Severity | Reason | Author | Recorded |');
-    expect(md).toContain('reason for a.tsx recorded');
-    expect(md).toContain('reason for b.tsx recorded');
-    // deterministic: same store state renders identically twice
-    expect(store.dismissalLogMarkdown()).toBe(md);
-    // ordered by key (a.tsx before b.tsx)
-    expect(md.indexOf('a.tsx:3')).toBeLessThan(md.indexOf('b.tsx:9'));
+    const lines = store.dismissalLogLines();
+    expect(lines).toHaveLength(2);
+
+    // date | decision | rationale | alternatives | approval | scope
+    const first = lines[0]!;
+    const fields = first.replace(/^- /, '').split(' | ');
+    expect(fields).toHaveLength(6);
+    expect(fields[0]).toBe('2026-11-14');
+    expect(fields[1]).toBe('Dismiss scanner finding hero-centered at a.tsx:3');
+    expect(fields[2]).toBe('reason for a.tsx recorded');
+    expect(fields[3]).toBe('—');
+    expect(fields[4]).toBe('operator pi');
+    expect(fields[5]).toBe('hero-centered');
+
+    // deterministic + ordered by key (a.tsx before b.tsx)
+    expect(store.dismissalLogLines()).toEqual(lines);
+    expect(lines[0]).toContain('a.tsx:3');
+    expect(lines[1]).toContain('b.tsx:9');
   });
 
-  it('escapes pipes and newlines so the table cannot be broken by content', () => {
+  it('keeps one row per decision even when content contains pipes or newlines', () => {
     const store = overlay();
     store.ingest([scan('a.tsx', [{ line: 1, snippet: 'text-center' }])]);
     store.dismiss(store.all()[0]!.key, 'reason with | pipe and\nnewline inside', AT);
-    const md = store.dismissalLogMarkdown();
-    expect(md).toContain('\\|');
-    // the row containing the reason stays on ONE line (newline folded to space)
-    const reasonRow = md.split('\n').find((l) => l.includes('pipe and'));
-    expect(reasonRow).toBeDefined();
-    expect(reasonRow).toContain('newline inside');
+    const lines = store.dismissalLogLines();
+    expect(lines).toHaveLength(1);
+    const line = lines[0]!;
+    // still exactly six fields once escaped pipes are honoured
+    expect(line.split(/(?<!\\)\|/)).toHaveLength(6);
+    expect(line).toContain('newline inside'); // newline folded to a space
   });
 
-  it('marks stale dismissals in the log', () => {
+  it('flags a stale dismissal in its rationale', () => {
     const store = overlay();
     store.ingest([scan('a.tsx', [{ line: 1, snippet: 'text-center' }])]);
     store.dismiss(store.all()[0]!.key, 'decision that later became obsolete', AT);
     store.ingest([scan('a.tsx', [])]);
-    expect(store.dismissalLogMarkdown()).toContain('stale');
+    const lines = store.dismissalLogLines();
+    expect(lines[0]).toContain('stale: finding no longer reported');
   });
 });
 
