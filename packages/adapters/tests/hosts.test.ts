@@ -4,7 +4,7 @@
  * above 'unverified' via generateHostEntry.
  */
 import { describe, expect, it } from 'vitest';
-import { HOST_ADAPTERS, generateHostEntry, supportTier } from '../src/index.js';
+import { HOST_ADAPTERS, generateHostEntry } from '../src/index.js';
 
 describe('host adapters (T0903)', () => {
   it('defines codex/claude-code/cursor with expected-only capabilities', () => {
