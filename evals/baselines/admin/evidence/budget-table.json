@@ -11,16 +11,16 @@
   "runs": [
     {
       "url": "http://127.0.0.1:4345/admin",
-      "lcpMs": 612,
+      "lcpMs": 610,
       "cls": 0,
-      "totalBlockingMs": 686,
+      "totalBlockingMs": 426,
       "totalByteWeight": 3979
     }
   ],
   "detail": [
-    "http://127.0.0.1:4345/admin LCP ms: 612 / limit 2500 — ok",
+    "http://127.0.0.1:4345/admin LCP ms: 610 / limit 2500 — ok",
     "http://127.0.0.1:4345/admin CLS: 0 / limit 0.1 — ok",
-    "http://127.0.0.1:4345/admin TBT ms: 686 / limit 200 — EXCEEDED",
+    "http://127.0.0.1:4345/admin TBT ms: 426 / limit 200 — EXCEEDED",
     "http://127.0.0.1:4345/admin totalBytes: 3979 / limit 500000 — ok"
   ]
 }

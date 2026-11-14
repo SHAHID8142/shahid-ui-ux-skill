@@ -296,3 +296,8 @@
   deps standard, workflow least-privilege added). Anonymous read verified. CI green
   on public standard runners (after the gate checker's ancestry catch on T0011 —
   by design). Receipt: VERIFICATION/T0011.md. Issue #11 closed with evidence.
+
+- 2026-11-14T08:05:00+06:00 | ZCode (GLM) | T0902-done | FreePi arm landed (pi):
+  identical smoke PASS 7/7 peer-verified; task closed with both receipts. Repo
+  now PUBLIC (T0011 done, issue #11 closed). Next ready: T0704 (released by pi?),
+  T0804, T0709.

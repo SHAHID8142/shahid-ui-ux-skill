@@ -2024,7 +2024,7 @@
       ],
       "risk": "host API changes",
       "rollback": "version-pinned verification",
-      "status": "review",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
       "owner": "zcode-glm (freepi arm: pi)",
@@ -2044,7 +2044,7 @@
       ],
       "commit": "same commit as .sus-dev/VERIFICATION/T0902.md",
       "results": [
-        "zcode arm PASS 7/7; freepi arm awaits pi run (bus message left) — acc closes when both receipts exist"
+        "BOTH HOSTS PASS identical smoke 7/7: zcode (evals/host-smoke/zcode-b061cc4.json) + freepi (evals/host-smoke/freepi-fe06295.json, peer-verified by zcode)"
       ]
     },
     {
