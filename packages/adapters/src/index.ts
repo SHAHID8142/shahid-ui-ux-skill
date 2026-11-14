@@ -27,3 +27,4 @@ export {
   supportTier,
   generateSupportMatrix,
 } from './adapter-interface.js';
+export { HOST_ADAPTERS, generateHostEntry } from './hosts.js';

@@ -2087,9 +2087,19 @@
       ],
       "risk": "maintaining many hosts",
       "rollback": "tier system caps promises",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0903.md",
+        "packages/adapters/src/hosts.ts",
+        "packages/adapters/tests/hosts.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0903.md",
+      "results": [
+        "no guessed host claims: codex/claude-code/cursor stay unverified pending real-host smoke; freepi/zcode verified with receipts"
+      ]
     },
     {
       "id": "T0904",

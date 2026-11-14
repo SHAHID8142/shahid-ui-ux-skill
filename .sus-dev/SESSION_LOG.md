@@ -339,3 +339,9 @@
   conflict-stop), untracked bytes preserved, REAL SIGKILL mid-flight test
   recovering exactly from disk. 7/7 tests; pnpm verify green. T0707 consumes
   this (still approval-gated). Receipt: VERIFICATION/T0805.md.
+
+- 2026-11-14T11:50:00+06:00 | ZCode (GLM) | T0903 | Host adapters: codex/claude-code/
+  cursor declared with expected-only capabilities + 'none yet' evidence; freepi/zcode
+  verified with T0902 receipts; generateHostEntry structural smoke-before-label rule
+  (no smoke → never above 'unverified'). 4/4 tests; verify green. T0706 held by pi.
+  Receipt: VERIFICATION/T0903.md.

@@ -15,10 +15,10 @@ Concurrency: 2 workers (D33) — claim via lease before editing.
 
 Current task: none (between tasks). Annotation split delivery COMPLETE and integrated. Pi peer-reviewed the substrate: PASS + 3 LOW findings → routed to the lifecycle-contract task.
 
-Next exact steps: `pnpm verify` (exit 0) before every push. Ready set:
-T0706 dry-run preview + isolated preview transaction, then T0707 apply gates
-(the lifecycle contract owns the 3 routed LOW findings — done) → T0700w →
-T0400/T0405 playbooks → T0602/T0603 motion →
+Next exact steps: `pnpm verify` (exit 0) before every push. Pi holds T0706
+(dry-run preview, live bus claim). Ready for zcode: T0804 scanner overlay,
+T0806/T0807 as they unlock, then T0707 apply gates → T0700w → T0400/T0405
+playbooks → T0602/T0603 motion →
 M8/M9/M10 → T1006 final verified private push.
 
 Blockers: standing B003 (licence/publication, later phase) and B004
