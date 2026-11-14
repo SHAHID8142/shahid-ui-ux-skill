@@ -27,6 +27,8 @@ filesystem protocol, not a socket or a daemon:
 C="node scripts/coord/coordination.mjs"
 
 $C register --as pi --host pi --model "<model>" --note "what I am doing"
+$C step --as pi                # MANDATORY before every task: peer state + review + gate
+$C digest --as pi              # same information without the exit-code gate
 $C board                       # agents, live claims, unread inbox, branch + dirty count
 $C negotiate --as pi --to zcode --offer "T0704 annotations"
 $C inbox --as pi               # reads and marks read
@@ -35,6 +37,12 @@ $C claim --as pi --task T0704 --path packages/studio-bridge/src --note "annotati
 $C check-paths --as pi --path packages/studio-bridge/src
 $C heartbeat --as pi           # refresh presence + all my claims (cheap; do it each step)
 $C release --as pi --task T0704
+
+$C finding --as pi --to zcode --severity high --task T0704 \
+   --body "what is wrong" --fix "smallest correct fix" --evidence "cmd/exit/file:line"
+$C findings --status open      # tracked review items (not lost in a scrolling inbox)
+$C resolve --as pi --id <findingId> --resolution "what was done"   # notifies reporter
+$C watch --as pi --interval 5 --iterations 12
 ```
 
 `claim` **refuses** (exit 1) when another live agent holds the task or an overlapping
@@ -44,14 +52,55 @@ to edit — the unclaimed edits of an in-flight checkpoint are exactly the dange
 
 ## Standard loop for each agent (add one line to the task loop)
 
-1. `board` — see who is live and what is claimed.
+1. `step` — see who is live, what they claim, what changed in their scope since they
+   claimed it, what they asked you, and which findings are open for you. It exits 1
+   while anything is addressed to you, so "always check the other agent" is a gate
+   you cannot forget rather than a good intention.
 2. `claim` the task **and its paths** before the first edit. If refused, take another
    task; do not "just edit quickly".
 3. `inbox` / `wait` after any question, before starting a slice you were not sure about.
-4. `heartbeat` after each verified step; `release` when the checkpoint is committed.
-5. Only the main agent edits `TASKS.json`, `.sus-dev/STATE.md`, `AGENTS.md`, the
+4. Review their work as you go, and file `finding` records instead of silently fixing
+   their files: correctness, tests, evidence receipt, canonical state untouched.
+5. `heartbeat` after each verified step; `release` when the checkpoint is committed.
+6. Only the main agent edits `TASKS.json`, `.sus-dev/STATE.md`, `AGENTS.md`, the
    protocol, `package.json`, and shared contracts. Sub-agents/workmates own their task
    files + their own receipt, and hand the receipt to the main agent.
+
+## Peer review — how "always check each other" is enforced
+
+Each completed task of the other agent is reviewed by reading their diff and
+**re-running their recorded tests**, then filing `finding` records with severity,
+the smallest correct fix, and evidence. A finding is a message plus a tracked record,
+and `resolve` closes it and notifies the reporter, so nothing depends on memory or on
+a scrolling markdown file.
+
+Rules that keep review honest (learned the hard way in this repo):
+
+- **Verify before filing.** A dirty worktree is usually a run in progress: the
+  portfolio `budget-table.json` looked deleted for ~6 minutes purely because the eval
+  harness was mid-regeneration. Check the current state, re-read the file, or run the
+  test before claiming a defect.
+- **Check the authority, not just the prose.** Claimed rubric tags and cited claim ids
+  were validated against `packages/schemas/src/rubric.ts` and
+  `evals/research/provenance-catalog.json` — both were correct, so no finding was
+  filed. Cheap to check, expensive to get wrong.
+- **Review is bounded** to the claimed scope of that task; it is not a licence to
+expand into an audit of the whole product.
+
+## Channel precedence (single arbitration rule)
+
+A prose inbox cannot refuse a claim, so it cannot arbitrate. When both exist:
+
+1. **Machine bus (`scripts/coord`)** — authoritative for task/path claims and for
+   review findings, because `claim` refuses overlaps mechanically.
+2. **`.sus-dev/INBOX.md`** — prose handoffs, lane agreements and review narrative
+   that a human reads.
+3. **`TASKS.json owner` + `lease`** — still the canonical, protocol-required record;
+   write it before starting so the continuation checker can see the claim.
+
+If the three disagree, treat that as a finding about the process, not a detail to
+ignore — this repository hit exactly that case (`T0704` claimed in prose while
+`TASKS.json` had `owner=None, lease=None`).
 
 ## Negotiation message (what "who does what" looks like)
 
@@ -63,8 +112,9 @@ plain `say --type answer`. Both messages are stored under `<bus>/inbox/<agent>/`
 ## Self-verification
 
 ```bash
-$C selftest    # 16 cases: exclusive claim, path overlap, stale takeover, atomicity
-               # under 6 concurrent processes, reply threading, read cursor, release
+$C selftest    # 21 cases: exclusive claim, path overlap, stale takeover, atomicity
+               # under 6 concurrent processes, repeated --path, finding lifecycle,
+               # digest/gate composition, reply threading, read cursor, release
 ```
 
 CI (`pnpm verify`) does not run this yet — wiring it into `package.json` is a shared-file
