@@ -32,3 +32,36 @@ export type {
   SeverityFilter,
   SourceFinding,
 } from './findings-overlay.js';
+
+export { KeyboardDrawingController, typedEquivalent } from './keyboard-drawing.js';
+export type {
+  DrawingState,
+  KeyboardDrawingKey,
+  KeyboardDrawingOptions,
+  KeyboardDrawingResult,
+  KeyboardDrawingSnapshot,
+  Viewport,
+} from './keyboard-drawing.js';
+
+export {
+  AnnotationListModel,
+  MIN_TARGET_CSS_PX,
+  OverlayFocusManager,
+  PROJECT_TARGET_CSS_PX,
+  emitG7Reflow,
+  emitG8TargetSize,
+  emitG9Semantics,
+} from './a11y.js';
+export type {
+  AnnotationListItem,
+  AnnotationListSource,
+  FocusKeyResult,
+  FocusTarget,
+  GateStatus,
+  ReflowException,
+  ReflowMeasurement,
+  SemanticsCheck,
+  StudioGateVerdict,
+  TargetMeasurement,
+  TargetSizeException,
+} from './a11y.js';
