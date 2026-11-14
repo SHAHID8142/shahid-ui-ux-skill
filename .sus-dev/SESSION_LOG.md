@@ -413,3 +413,19 @@
   first push attempt because the continuation checker was stale, which is exactly
   what it is for. 24 new tests mutation-checked; full `pnpm verify` exit 0 (49 files
   / 450 tests). Receipt: VERIFICATION/T0700wa.md. Next: T0700wb end-to-end proof.
+
+- 2026-11-14T20:10:00+06:00 | Pi (FreePi) | T0700wb | Dual-stack end-to-end
+  safe-write proof. Built `tests/feasibility.test.ts`: for each stack it stamps a
+  disposable copy, really builds it (`next build` prerenders HTML, `astro build`),
+  serves that HTML, selects the anchor with a real browser (`resolveSelection`,
+  confidence 1.0), resolves the owner, then preview → approval → apply → build
+  verification → exact undo, plus the denial cases. **Result: Next.js GO for the
+  whole chain with zero harmful wrong-owner writes. Astro is BLOCKED at the editor**
+  — `src/editor.ts` parses TSX only, so `.astro` is refused as `unparseable-source`
+  with the file byte-identical (correct fail-closed, but no Astro edit path exists).
+  Created T0700wc (Astro source editing) and marked T0700wb blocked rather than done;
+  verdict in evals/t0700w-VERDICT.md. Harness bugs found and fixed: VerificationResult
+  is {status:'pass'|'fail'} not {ok} (every successful apply was silently reverting!),
+  and the approval is checked before the capability, so a retry after a write dies as
+  stale-approval — the test now asserts the guarantee, not the ordering. Package
+  189/189. Next: T0700wc.

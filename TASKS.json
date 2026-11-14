@@ -2334,7 +2334,8 @@
         "T0010b",
         "T0011",
         "T0704b",
-        "T0700wb"
+        "T0700wb",
+        "T0700wc"
       ],
       "files": [
         "evals/",
@@ -3087,12 +3088,55 @@
       ],
       "risk": "False GO verdict from a harness that skips a gate",
       "rollback": "Block on failure; fixtures are copies",
+      "status": "blocked",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "lease": null,
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0700wb.md",
+        "evals/t0700w-VERDICT.md",
+        "packages/studio-bridge/tests/feasibility.test.ts"
+      ],
+      "blocker": "Astro source editing does not exist: packages/studio-bridge/src/editor.ts is JSX-only and refuses .astro as unparseable-source (fail-closed, file untouched). Next.js stack passes the full chain; Astro passes stamping/build/selection/owner. T0700wc implements the Astro editor, after which this task re-runs and closes the parent.",
+      "results": [
+        "Next stack: stamp -> next build (real prerendered HTML) -> Playwright selection at confidence 1.0 -> owner resolution -> isolated preview -> approval -> apply -> next build verification -> undo restoring exact bytes; denials for page-derived provenance and retry after consumption, tree unchanged each time",
+        "Astro stack: stamp -> astro build -> selection at confidence 1.0 -> owner resolution proven; apply is BLOCKED because the editor refuses .astro (fail-closed, verified byte-identical)",
+        "zero harmful wrong-owner writes observed on either stack; unknown ownership refuses by reason and the file is never touched"
+      ]
+    },
+    {
+      "id": "T0700wc",
+      "m": "M7",
+      "title": "Astro source editing in the safe-write editor",
+      "obj": "Extend the byte-minimal editor to .astro sources so the approval-gated apply chain can write markup between frontmatter and script boundaries, with the same refusal model (anchor preserved, parse/build verified, never reformat)",
+      "deps": [
+        "T0700wb"
+      ],
+      "files": [
+        "packages/studio-bridge/src/editor.ts",
+        "packages/studio-bridge/tests/editor.test.ts",
+        "packages/studio-bridge/tests/feasibility.test.ts"
+      ],
+      "acc": [
+        "insert-child/before/after, replace-node and delete-node work on .astro templates by anchor with everything outside the target byte-identical",
+        "An edit that drops the anchor, crosses the frontmatter or leaves the template unbalanced is refused",
+        "The Astro feasibility chain (apply -> astro build verification -> undo) passes and T0700wb closes"
+      ],
+      "tests": [
+        "Editor suite extension plus the Astro half of the feasibility suite"
+      ],
+      "risk": "Corrupting a component by editing across template boundaries",
+      "rollback": "Refuse rather than write; disposable copies in tests",
       "status": "pending",
       "approval": "pending",
       "phase": "build",
       "owner": null,
       "lease": null,
-      "evidence": []
+      "evidence": [],
+      "results": [
+        "created by T0700wb: the feasibility experiment found the editor is JSX-only, which blocks the Astro apply leg"
+      ]
     },
     {
       "id": "T1006",

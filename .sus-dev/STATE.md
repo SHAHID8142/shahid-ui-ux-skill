@@ -10,27 +10,30 @@ BUILD_COMPLETE_PUSHED=false. Architecture: ADR-001/002/004/005/006 adopted,
 ADR-003 as amended (D29). Repository is PUBLIC (D34, issue #11 closed with
 evidence — CI on free standard runners).
 
-Canonical task statuses: TASKS.json (73 of 99 done — T0706 preview, T0806 security/G13,
-T0707 approval-gated apply + rollback, T0700wa anchor stamping + owner resolution).
-Lease held by pi on T0700wb (dual-stack end-to-end safe-write proof); zcode stale.
+Canonical task statuses: TASKS.json (73 of 100 done; T0700wb BLOCKED with a named
+blocker, T0700wc created). T0706 preview, T0806 security/G13, T0707 approval-gated
+apply + rollback, T0700wa anchor stamping + owner resolution are done. zcode stale.
 Concurrency: 2 workers (D33) — claim via lease before editing.
 
-Current task: T0700wb — dual-stack end-to-end safe-write proof (selection → owner →
-isolated preview → approval → apply → verification → undo on disposable copies of
-both fixtures, zero harmful wrong-owner writes). It is the gate before expensive
-production knowledge; T0803 and T0905 are also READY.
+Current task: T0700wc — Astro source editing. T0700wb proved the Next.js chain
+end-to-end (stamp → next build → live selection 1.0 → owner → preview → approval →
+apply → next build verify → exact undo; denials refuse) and found the real blocker:
+src/editor.ts is JSX-only and refuses .astro fail-closed, so the Astro stack cannot
+be written at all. Verdict: evals/t0700w-VERDICT.md (Next GO, Astro blocked at the
+editor). T0803 and T0905 are also READY.
 
-Next exact steps: finish T0700wb on both stacks and record the GO/NO-GO verdict in
-evals/ -> T0803 variants -> T0400/T0405/T0405b/T0405c/T0407/T0602/T0603
-knowledge+playbooks -> T0802/T0708/T0790/T0905 -> T0906/T1001/T1002/T1004 -> T1006
-final verified private push.
+Next exact steps: implement .astro editing in src/editor.ts (all five operations,
+anchor preserved, frontmatter/script boundaries untouched, refusals rather than
+writes) -> re-run the Astro half of tests/feasibility.test.ts, close T0700wb and
+T0700w -> T0803 variants -> T0400/T0405 knowledge+playbooks -> T0802/T0708/T0790/
+T0905 -> T0906/T1001/T1002/T1004 -> T1006 final verified private push.
 
 Blockers: standing B003 (licence/publication, later phase) and B004
 (irreversible externals during build). Active files: none after checkpoint.
 
-Latest checks: 2026-11-14T19:45 +06:00 — full `pnpm verify` exit 0 (49 files / 450
-tests) on the T0700wa tree; push gate installed (`.githooks/pre-push` ->
-scripts/gate-push.mjs) and proven to block a push when the continuation checker fails;
-studio-bridge 182/182 (24 new, mutation-checked). Repository PUBLIC: CI runs free on standard runners.
+Latest checks: 2026-11-14T20:10 +06:00 — studio-bridge 189/189 including the 7-case
+dual-stack feasibility suite (real `next build`/`astro build`, real browser selection);
+push gate proven to block a stale push; T0700wb verdict recorded (Next GO, Astro
+blocked on the JSX-only editor -> T0700wc). Repository PUBLIC: CI runs free on standard runners.
 Format for this file: the Current-task line names ONLY live tasks; done-task
 ids live in TASKS.json and SESSION_LOG, never here.
