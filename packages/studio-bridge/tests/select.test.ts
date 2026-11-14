@@ -6,6 +6,7 @@ import { createServer, type Server } from 'node:http';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { commerceFixtureHtml } from './support/fixture-html.js';
 import { resolveSelection, type SelectionResult } from '../src/select.js';
 
 const PORT = 4351;
@@ -16,7 +17,7 @@ let server: Server | undefined;
 beforeAll(async () => {
   // static serving of the BUILT fixture: deterministic, no astro-preview
   // port races across concurrent suites (the built HTML is fully static)
-  const html = readFileSync(join(FIXTURE, 'dist', 'index.html'), 'utf8');
+  const html = commerceFixtureHtml();
   server = createServer((_req, res) => {
     res.writeHead(200, { 'content-type': 'text/html' }).end(html);
   });

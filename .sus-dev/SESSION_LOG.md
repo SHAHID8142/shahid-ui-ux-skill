@@ -396,3 +396,20 @@
   tests (158 in package), mutation-checked (one guard initially survived and its
   missing test was added). Full `pnpm verify` exit 0 — 48 files / 426 tests.
   Receipt: VERIFICATION/T0707.md. Next: T0700w dual-stack feasibility.
+
+- 2026-11-14T19:45:00+06:00 | Pi (FreePi) | T0700wa | Render-time anchor stamping +
+  owner resolution, first half of T0700w (split into T0700wa/T0700wb because
+  canonical ids allow two lowercase letters). `src/owner-index.ts`: `data-sus-id`
+  stamped from the TypeScript AST for Next/TSX and from a frontmatter-aware template
+  scanner for Astro, covering literal ids AND map instances, braces preserved,
+  id-less files byte-identical, re-stamping a no-op; owner index resolves
+  literal/map-instance/scoped-`<style>`/stylesheet anchors and refuses
+  unknown/ambiguous/computed ownership; shared `tests/support/fixture-html.ts`
+  removed a build-order race in the select+cdp suites (astro build clears dist while
+  writing). Two real bugs the tests caught: expression stamps lost braces, Astro map
+  params were unbound to their array. Also added the push gate
+  (`scripts/gate-push.mjs` + `.githooks/pre-push`, `pnpm hooks:install`) which runs
+  the full release suite and restores Lighthouse-churned baselines — it blocked the
+  first push attempt because the continuation checker was stale, which is exactly
+  what it is for. 24 new tests mutation-checked; full `pnpm verify` exit 0 (49 files
+  / 450 tests). Receipt: VERIFICATION/T0700wa.md. Next: T0700wb end-to-end proof.

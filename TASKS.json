@@ -2333,7 +2333,8 @@
         "T0103b",
         "T0010b",
         "T0011",
-        "T0704b"
+        "T0704b",
+        "T0700wb"
       ],
       "files": [
         "evals/",
@@ -3009,6 +3010,83 @@
       ],
       "risk": "Unsupported completion or unsafe mutation",
       "rollback": "Preserve original sources; block on failure",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "owner": null,
+      "lease": null,
+      "evidence": [],
+      "children": [
+        "T0700wa",
+        "T0700wb"
+      ],
+      "results": [
+        "split into T0700w-a (anchor stamping + owner resolution, done) and T0700w-b (end-to-end safe-write proof on both stacks, pending) — the parent closes only when both children close"
+      ]
+    },
+    {
+      "id": "T0700wa",
+      "m": "M7",
+      "title": "Render-time anchor stamping + source owner resolution",
+      "obj": "Stamp data-sus-id at render time on both stacks and resolve a stamped anchor to exactly one source owner, refusing ambiguity and computed data",
+      "deps": [
+        "T0707"
+      ],
+      "files": [
+        "packages/studio-bridge/src/owner-index.ts",
+        "packages/studio-bridge/tests/owner-index.test.ts",
+        "fixtures/"
+      ],
+      "acc": [
+        "Both stacks stamp id-bearing elements (literal ids and map instances) without changing anything else",
+        "A stamped anchor resolves to one owner file; unknown, ambiguous and computed ownership refuse",
+        "Runs against the real fixtures, not invented strings"
+      ],
+      "tests": [
+        "owner-index suite 24 tests, mutation-checked"
+      ],
+      "risk": "Wrong-owner writes from a guessed mapping",
+      "rollback": "Refuse rather than guess; sources untouched (stamping is a copy-on-write step)",
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "lease": null,
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0700wa.md",
+        "packages/studio-bridge/src/owner-index.ts",
+        "packages/studio-bridge/tests/owner-index.test.ts"
+      ],
+      "results": [
+        "stamping handles literal ids and map-instance ids on Next/TSX (TypeScript AST) and Astro (template scanner that skips frontmatter and respects quotes/{} nesting); id-less files stay byte-identical; re-stamping is a no-op",
+        "owner index resolves literal anchors, map instances through same-file array literals, scoped <style> classes and stylesheet classes; unknown / ambiguous / computed ownership refuse with reasons",
+        "two real bugs found by the tests and fixed: expression stamps lost their braces (data-sus-id=f.id broke JSX parsing) and Astro map params were not bound to their source array",
+        "24 tests green, mutation-checked (ambiguity guard and expression-brace guard each break exactly the intended tests)"
+      ]
+    },
+    {
+      "id": "T0700wb",
+      "m": "M7",
+      "title": "Dual-stack end-to-end safe-write proof",
+      "obj": "Prove selection → correct owner → isolated preview → authentic approval → apply → verification → undo on disposable copies of the Next.js and Astro fixtures, with zero harmful wrong-owner writes",
+      "deps": [
+        "T0700wa"
+      ],
+      "files": [
+        "packages/studio-bridge/tests/",
+        "scripts/",
+        "evals/"
+      ],
+      "acc": [
+        "Both stacks prove the full chain on disposable fixtures",
+        "Zero harmful wrong-owner writes; unknown ownership refuses",
+        "Security and recovery negatives pass before promotion; verdict recorded in evals/"
+      ],
+      "tests": [
+        "End-to-end chain per stack plus denial and recovery cases"
+      ],
+      "risk": "False GO verdict from a harness that skips a gate",
+      "rollback": "Block on failure; fixtures are copies",
       "status": "pending",
       "approval": "pending",
       "phase": "build",

@@ -10,6 +10,7 @@ import { AxeBuilder } from '@axe-core/playwright';
 import { type Browser, type Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { CdpOverlay, type AttachResult } from '../src/cdp.js';
+import { commerceFixtureHtml } from './support/fixture-html.js';
 
 const PORT = 4352; // dedicated: no collision with eval-core suites
 const URL = `http://127.0.0.1:${PORT}/`;
@@ -22,7 +23,7 @@ let attachResult: AttachResult;
 
 beforeAll(async () => {
   // static serving of the BUILT fixture — no astro-preview port races
-  const html = readFileSync(join(FIXTURE, 'dist', 'index.html'), 'utf8');
+  const html = commerceFixtureHtml();
   server = createServer((_req, res) => {
     res.writeHead(200, { 'content-type': 'text/html' }).end(html);
   });
