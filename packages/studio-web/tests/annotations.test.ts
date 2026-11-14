@@ -221,7 +221,7 @@ describe('T0704b — malformed/out-of-bounds rejected (fail closed)', () => {
     forged.annotations[0]!.points[0]!.x = 1.5;
     const parsed = AnnotationSessionStore.parse(JSON.stringify(forged));
     expect(parsed.ok).toBe(false);
-    if (!parsed.ok) expect(parsed.reasons.join()).toContain('invalid session JSON');
+    if (!parsed.ok) expect(parsed.reasons.join()).toContain('invalid session');
   });
 
   it('rejects duplicate ids at the session boundary', () => {

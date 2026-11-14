@@ -336,9 +336,9 @@
       "gate": "G5",
       "status": "fail",
       "detail": [
-        "http://127.0.0.1:4345/marketing LCP ms: 602 / limit 2500 — ok",
+        "http://127.0.0.1:4345/marketing LCP ms: 601 / limit 2500 — ok",
         "http://127.0.0.1:4345/marketing CLS: 0 / limit 0.1 — ok",
-        "http://127.0.0.1:4345/marketing TBT ms: 307 / limit 200 — EXCEEDED",
+        "http://127.0.0.1:4345/marketing TBT ms: 218 / limit 200 — EXCEEDED",
         "http://127.0.0.1:4345/marketing totalBytes: 2604 / limit 500000 — ok"
       ]
     }
