@@ -4,16 +4,15 @@
  * (finding 2); session file envelope (finding 3).
  */
 import { describe, expect, it } from 'vitest';
-import {
-  IsoTimestamp,
-  LifecycleEnvelope,
-  type LifecycleEnvelopeData,
-} from '@sus/schemas';
+import { IsoTimestamp, LifecycleEnvelope, type LifecycleEnvelopeData } from '@sus/schemas';
 import { deserializeSession } from '../src/annotations.js';
 
 const OPEN = '2026-11-14T09:00:00Z';
 
-function envelope(events: Array<{ seq: number; at: string; kind: string; detail: string }>, state = 'open'): LifecycleEnvelopeData {
+function envelope(
+  events: Array<{ seq: number; at: string; kind: string; detail: string }>,
+  state = 'open',
+): LifecycleEnvelopeData {
   return {
     envelopeVersion: 1,
     schema: 'sus.session-lifecycle',
@@ -57,9 +56,15 @@ describe('lifecycle envelope (T0709)', () => {
   });
 
   it('closed state requires a close event last', () => {
-    const closed = envelope([openEvt, { seq: 1, at: '2026-11-14T09:05:00Z', kind: 'close', detail: 'bye' }], 'closed');
+    const closed = envelope(
+      [openEvt, { seq: 1, at: '2026-11-14T09:05:00Z', kind: 'close', detail: 'bye' }],
+      'closed',
+    );
     expect(LifecycleEnvelope.safeParse(closed).success).toBe(true);
-    const notClosed = envelope([openEvt, { seq: 1, at: '2026-11-14T09:05:00Z', kind: 'attach', detail: 'x' }], 'closed');
+    const notClosed = envelope(
+      [openEvt, { seq: 1, at: '2026-11-14T09:05:00Z', kind: 'attach', detail: 'x' }],
+      'closed',
+    );
     expect(LifecycleEnvelope.safeParse(notClosed).success).toBe(false);
   });
 
