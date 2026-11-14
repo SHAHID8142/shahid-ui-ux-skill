@@ -368,3 +368,16 @@
   mutation check proved the two load-bearing tests bite. Full `pnpm verify`
   exit 0 — 45 files / 349 tests. Receipt: VERIFICATION/T0706.md. Next: T0806
   (last T0707 prerequisite).
+
+- 2026-11-14T18:05:00+06:00 | Pi (FreePi) | T0806 | Security suite + G13.
+  `docs/THREAT_MODEL.md` (T1–T11 threat→control→test, 4 stated limitations),
+  `packages/studio-bridge/src/security.ts` (ActionBoundary refusing untrusted
+  provenance BEFORE capability check per DA-31, single-use capability bound to
+  session/frame/kind/proposal-hash/fence/TTL with replay+expiry denial, capture
+  minimisation redacting unmarked CRM records/names/emails/phones/cards/secrets,
+  CaptureStore accepting only RedactedResult with purge/delete/revoke, evaluateG13
+  refusing not-applicable), 32 new tests (113 in package), G13 wired into
+  GATE_REGISTRY + check-gates (6 in-process negatives) + a dedicated CI security
+  job. Also fixed BridgeServer.start() to resolve the actual ephemeral port
+  (removes the fixed-port collision class the peer hit). Full `pnpm verify`
+  exit 0 — 46 files / 381 tests. Receipt: VERIFICATION/T0806.md. Next: T0707.

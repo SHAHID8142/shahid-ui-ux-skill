@@ -1993,11 +1993,27 @@
       ],
       "risk": "unknown unknowns",
       "rollback": "external review at T1003",
-      "status": "pending",
-      "approval": "pending",
+      "status": "done",
+      "approval": "D33 live bus claim (pi); owner-authorized lane choice A",
       "phase": "build",
       "gates": [
         "G13"
+      ],
+      "owner": "pi",
+      "lease": null,
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0806.md",
+        "docs/THREAT_MODEL.md",
+        "packages/studio-bridge/src/security.ts",
+        "packages/studio-bridge/tests/security.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0806.md",
+      "results": [
+        "T1-T11 threat model with threat->control->test rows; hostile-page denial suite (token reads, synthetic approval, UI replacement, cross-frame, reconnect/replay, direct commands, DNS rebinding, path escape)",
+        "DA-31 action boundary refuses untrusted provenance before the capability is examined; single-use capability bound to session/frame/kind/proposal hash/fence/TTL with replay+expiry denial",
+        "capture minimisation redacts unmarked CRM records/names/emails/phones/cards/secrets (counts only, consent required); store accepts only RedactedResult; purge/delete/revoke consent tested; audit log residue-free",
+        "G13 wired: registry implemented + badFixture, six in-process fail-closed negatives in check-gates, dedicated CI security job; not-applicable refused, waivable false",
+        "server.start() now resolves the actual ephemeral port (fixes the fixed-port collision class); full pnpm verify exit 0 — 46 files / 381 tests"
       ]
     },
     {

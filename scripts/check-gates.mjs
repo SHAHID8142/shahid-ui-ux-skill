@@ -117,6 +117,46 @@ for (const gate of registry.gates) {
     evaluateG11({ shots: [], metrics: [], gates: [] }).status === 'fail',
     'G11: empty bundle fails closed',
   );
+
+  // G13 is the non-waivable critical security/privacy gate (T0806). Its
+  // negatives are proven in-process so a registry edit alone can never make it
+  // pass: no evidence is not-run, one undefended attempt fails, and a
+  // not-applicable claim is refused outright.
+  const { evaluateG13 } = await import(join(ROOT, 'packages', 'studio-bridge', 'dist', 'index.js'));
+  const defended = {
+    attempts: [{ name: 'synthetic-approval', denied: true }],
+    redaction: [{ name: 'crm', residueFree: true, consentShown: true }],
+    retention: [{ name: 'purge', purgedOrDeleted: true }],
+  };
+  report(
+    evaluateG13({ attempts: [], redaction: [], retention: [] }).status === 'not-run',
+    'G13: no evidence is not-run, never pass',
+  );
+  report(
+    evaluateG13({ ...defended, attempts: [{ name: 'ui-replacement', denied: false }] }).status ===
+      'fail',
+    'G13: an undefended hostile attempt fails the gate',
+  );
+  report(
+    evaluateG13({
+      ...defended,
+      redaction: [{ name: 'crm', residueFree: false, consentShown: true }],
+    }).status === 'fail',
+    'G13: redaction residue fails the gate',
+  );
+  report(
+    evaluateG13({ ...defended, retention: [{ name: 'purge', purgedOrDeleted: false }] }).status ===
+      'fail',
+    'G13: retained material fails the gate',
+  );
+  report(
+    evaluateG13({ ...defended, claimedNotApplicable: 'no user data' }).status === 'fail',
+    'G13: a not-applicable claim is refused (never waivable)',
+  );
+  report(
+    evaluateG13(defended).status === 'pass' && evaluateG13(defended).waivable === false,
+    'G13: fully defended evidence passes and the verdict stays non-waivable',
+  );
 }
 
 // ---------- 3. release ancestry assertions (reconciliation review H4/M2) ----------

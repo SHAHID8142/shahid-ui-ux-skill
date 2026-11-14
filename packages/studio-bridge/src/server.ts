@@ -215,10 +215,14 @@ export class BridgeServer {
         res.end(JSON.stringify(result.body));
       });
     });
-    // ADR-003 binding posture: loopback only, never 0.0.0.0
+    // ADR-003 binding posture: loopback only, never 0.0.0.0.
+    // Resolves the ACTUAL bound port (port 0 → ephemeral), so a test or a
+    // second bridge can never collide on a fixed port or silently report a
+    // port nothing is listening on.
     return new Promise((resolve) => {
       this.server!.listen(this.options.port, '127.0.0.1', () => {
-        resolve(this.options.port);
+        const address = this.server!.address();
+        resolve(typeof address === 'object' && address ? address.port : this.options.port);
       });
     });
   }

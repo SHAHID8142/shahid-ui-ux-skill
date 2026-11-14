@@ -20,7 +20,7 @@ reconciliation requirement that the critical security gate is non-waivable
 | G10 | Detector quality | release | T0305 | not-run |
 | G11 | Evidence completeness | acceptance | T0154 | implemented (fail-closed evaluator + CLI) |
 | G12 | Contract drift | weekly+release | T0401 | implemented (fail-closed drift gate + negatives) |
-| G13 | Critical security/privacy | release | T0806 | not-run — **never waivable** |
+| G13 | Critical security/privacy | release | T0806 | implemented (threat model + hostile-agent suite + fail-closed negatives; `not-applicable` refused) — **never waivable** |
 
 Rules (ER-SECURITY + amendments): unimplemented checks report **not-run**,
 never pass; each landed gate ships a bad fixture proving failure;

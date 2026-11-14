@@ -48,3 +48,26 @@ jobs:
           pnpm --filter @sus/fixture-admin build
           pnpm --filter @sus/fixture-portfolio build
           pnpm --filter @sus/fixture-marketing build
+
+  # G13 is the non-waivable critical security/privacy gate (T0806). It runs as
+  # its own job so a failure cannot be read as "one red step among many": a
+  # hostile-page denial or a privacy leak fails the build on its own.
+  security:
+    name: security suite (G13 — never waivable)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build (dist for the gate checks)
+        run: pnpm build
+      - name: Hostile-page denial + privacy suite (docs/THREAT_MODEL.md)
+        run: pnpm --filter @sus/studio-bridge exec vitest run tests/security.test.ts
+      - name: G13 fail-closed negatives
+        run: node scripts/check-gates.mjs
+      - name: Threat model is present
+        run: test -s docs/THREAT_MODEL.md

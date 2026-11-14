@@ -31,6 +31,31 @@ export {
 } from './annotations.js';
 export { compileIntent, deriveRelationship, type CompileInput } from './intent-compiler.js';
 export {
+  ActionBoundary,
+  CapabilityAuthority,
+  CaptureStore,
+  ACTION_KINDS,
+  PROVENANCES,
+  evaluateG13,
+  findResidues,
+  minimizeCapture,
+  type ActionKind,
+  type ActionRequest,
+  type BoundaryDecision,
+  type CapabilityBinding,
+  type CapabilityCheck,
+  type CaptureInput,
+  type CaptureRecord,
+  type DenyReason,
+  type G13Evidence,
+  type G13Verdict,
+  type OperationCapability,
+  type Provenance,
+  type Redaction,
+  type RedactionKind,
+  type RedactionResult,
+} from './security.js';
+export {
   PreviewSession,
   responsiveAlternativeFor,
   PREVIEW_CONTEXT_LINES,

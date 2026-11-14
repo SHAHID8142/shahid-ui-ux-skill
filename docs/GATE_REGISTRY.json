@@ -154,9 +154,11 @@
       "ownerTasks": [
         "T0806"
       ],
-      "check": null,
-      "checkStatus": "not-run",
-      "waivable": false
+      "check": "packages/studio-bridge evaluateG13 (fail-closed; not-applicable refused) + tests",
+      "checkStatus": "implemented",
+      "waivable": false,
+      "badFixture": "packages/studio-bridge/tests/security.test.ts (undefended attempt / redaction residue / consent-skip / retention-of-material / claimed-not-applicable negatives)",
+      "threatModel": "docs/THREAT_MODEL.md"
     }
   ],
   "semanticPrerequisites": [
