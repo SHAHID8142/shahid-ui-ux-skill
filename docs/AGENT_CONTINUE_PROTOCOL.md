@@ -173,3 +173,21 @@ edit TASKS.json/STATE/decisions/protocol records and never push shared
 branches — the main agent integrates one verified change at a time. Shared
 files (lockfile, CI, canonical records, cross-cutting contracts) are
 main-agent-exclusive. If isolation cannot be guaranteed: fewer workers.
+
+## Paired-agent cooperation + inbox (owner issue/Dir. 2026-11-14, D33)
+
+A second agent/host works the same repository. Rules:
+1. **Claim before work**: TASKS.json `owner` + `lease` (session id, expiry,
+   fencing generation) BEFORE editing; both agents' leases live in STATE.md.
+2. **Inbox**: read `.sus-dev/INBOX.md` on every `continue`; leave messages for
+   the peer there (findings, handoffs, warnings). GitHub issues remain the
+   owner-facing channel.
+3. **Mutual task checking (mandatory)**: for each peer-completed task, run a
+   bounded peer review — re-run its recorded tests, read its diff, record
+   findings (problems / fixes / improvements) under "Peer review" in the task
+   receipt. Fix small problems directly (noting them); flag bigger ones in
+   the inbox. This is owner-ordered worker cooperation (D33), not an audit
+   round (D25 unaffected for external parties).
+4. **Split by lane**: knowledge/evaluation vs bridge/studio vs installer/adapters
+   — claim across lanes, never the same files. Shared canonical records: edit
+   only your own task's rows; reconcile on conflict preserving both entries.

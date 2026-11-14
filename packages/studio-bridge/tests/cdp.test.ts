@@ -3,51 +3,33 @@
  * isolated-world state invisible to the hostile page, reconnect after
  * restart, keyboard-navigable + axe-clean overlay (kilo H3: a11y not deferred).
  */
-import { execSync, spawn, type ChildProcess } from 'node:child_process';
+import { createServer, type Server } from 'node:http';
 import { readFileSync } from 'node:fs';
-import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { AxeBuilder } from '@axe-core/playwright';
 import { type Browser, type Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { CdpOverlay, type AttachResult } from '../src/cdp.js';
 
-const PORT = 4341; // dedicated: no collision with eval-core suites
+const PORT = 4352; // dedicated: no collision with eval-core suites
 const URL = `http://127.0.0.1:${PORT}/`;
 const FIXTURE = join(__dirname, '..', '..', '..', 'fixtures', 'commerce'); // Astro stack per T0700 ladder
 
-let server: ChildProcess | undefined;
+let server: Server | undefined;
 let browser: Browser;
 let page: Page;
 let attachResult: AttachResult;
 
-async function waitForReady(url: string, timeoutMs = 30000): Promise<void> {
-  const start = Date.now();
-  while (Date.now() - start < timeoutMs) {
-    try {
-      if ((await fetch(url)).ok) return;
-    } catch {
-      /* retry */
-    }
-    await new Promise((r) => setTimeout(r, 300));
-  }
-  throw new Error(`preview server not ready at ${url}`);
-}
-
 beforeAll(async () => {
-  if (!existsSync(join(FIXTURE, 'dist', 'index.html'))) {
-    execSync('pnpm exec astro build', { cwd: FIXTURE, stdio: 'ignore' });
-  }
-  server = spawn(
-    'pnpm',
-    ['exec', 'astro', 'preview', '--port', String(PORT), '--host', '127.0.0.1'],
-    {
-      cwd: FIXTURE,
-      stdio: 'ignore',
-      detached: true,
-    },
-  );
-  await waitForReady(URL);
+  // static serving of the BUILT fixture — no astro-preview port races
+  const html = readFileSync(join(FIXTURE, 'dist', 'index.html'), 'utf8');
+  server = createServer((_req, res) => {
+    res.writeHead(200, { 'content-type': 'text/html' }).end(html);
+  });
+  await new Promise<void>((resolve, reject) => {
+      server!.once('error', reject);
+      server!.listen(PORT, '127.0.0.1', resolve);
+    });
   const overlay = new CdpOverlay();
   const launched = await overlay.launchAndAttach(URL);
   browser = launched.browser;
@@ -57,13 +39,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await browser?.close();
-  if (server?.pid) {
-    try {
-      process.kill(-server.pid);
-    } catch {
-      /* gone */
-    }
-  }
+  server?.close();
 });
 
 describe('CDP overlay injection (T0702)', () => {

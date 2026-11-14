@@ -2,54 +2,32 @@
  * T0703: element selection + stable anchors — confidence gate: below 0.6
  * never edits; asks the user from ranked candidates.
  */
-import { execSync, spawn, type ChildProcess } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
+import { createServer, type Server } from 'node:http';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { resolveSelection, type SelectionResult } from '../src/select.js';
 
-const PORT = 4341;
+const PORT = 4351;
 const URL = `http://127.0.0.1:${PORT}/`;
 const FIXTURE = join(__dirname, '..', '..', '..', 'fixtures', 'commerce');
-let server: ChildProcess | undefined;
-
-async function waitForReady(url: string, timeoutMs = 30000): Promise<void> {
-  const start = Date.now();
-  while (Date.now() - start < timeoutMs) {
-    try {
-      if ((await fetch(url)).ok) return;
-    } catch {
-      /* retry */
-    }
-    await new Promise((r) => setTimeout(r, 300));
-  }
-  throw new Error(`preview not ready at ${url}`);
-}
+let server: Server | undefined;
 
 beforeAll(async () => {
-  if (!existsSync(join(FIXTURE, 'dist', 'index.html'))) {
-    execSync('pnpm exec astro build', { cwd: FIXTURE, stdio: 'ignore' });
-  }
-  server = spawn(
-    'pnpm',
-    ['exec', 'astro', 'preview', '--port', String(PORT), '--host', '127.0.0.1'],
-    {
-      cwd: FIXTURE,
-      stdio: 'ignore',
-      detached: true,
-    },
-  );
-  await waitForReady(URL);
+  // static serving of the BUILT fixture: deterministic, no astro-preview
+  // port races across concurrent suites (the built HTML is fully static)
+  const html = readFileSync(join(FIXTURE, 'dist', 'index.html'), 'utf8');
+  server = createServer((_req, res) => {
+    res.writeHead(200, { 'content-type': 'text/html' }).end(html);
+  });
+  await new Promise<void>((resolve, reject) => {
+      server!.once('error', reject);
+      server!.listen(PORT, '127.0.0.1', resolve);
+    });
 }, 120000);
 
 afterAll(() => {
-  if (server?.pid) {
-    try {
-      process.kill(-server.pid);
-    } catch {
-      /* gone */
-    }
-  }
+  server?.close();
 });
 
 describe('selection anchors + confidence gate (T0703)', () => {

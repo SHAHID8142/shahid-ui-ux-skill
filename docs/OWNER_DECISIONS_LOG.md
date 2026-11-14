@@ -129,3 +129,28 @@ and continues safely on `continue`.
   docs/AGENT_CONTINUE_PROTOCOL.md (Open-issue monitoring gate). Applied
   immediately: issue #8 (CI verification + fail-open G4/G5 gates) triaged and
   mapped to T0103b.
+
+## 2026-11-14 — two-agent cooperation (D33)
+
+Source: owner instruction — one more agent/host joins the project; the two
+agents must cooperate, communicate, split tasks between them, ALWAYS check
+each other's tasks (reporting problems found, fixes, and improvements), and
+maintain an inbox.
+
+- D33 | **Paired-agent cooperation contract.** (a) Tasks are claimed via the
+  TASKS.json lease protocol (owner + lease fields); both agents' leases are
+  recorded in the shared STATE.md. (b) The durable repository state is the
+  inter-agent communication channel: TASKS.json (claims), .sus-dev/STATE.md
+  (who is working on what), .sus-dev/SESSION_LOG.md (handoffs), and
+  .sus-dev/INBOX.md (async messages — every agent reads it on `continue`).
+  (c) **Mutual task checking is mandatory and owner-ordered**: for each
+  completed task, the OTHER agent runs a bounded peer-review pass — re-run the
+  recorded tests, read the diff, and record findings (problems found, fixes
+  applied, improvement suggestions) in the task receipt under "Peer review"
+  and/or the inbox. This owner-ordered mutual check operates BETWEEN the two
+  commissioned workers; it does not reinstate the independent-auditor rounds
+  banned by D25 (external audit remains a post-build owner action).
+  (d) Shared records (TASKS.json, STATE, decisions, protocol) are edited by
+  the owning agent; conflicts resolve by rebase-and-reconcile with both
+  agents' entries preserved. (e) Work splits avoid file collisions; the
+  continuation checker's lease detection arbitrates.

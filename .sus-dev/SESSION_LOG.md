@@ -272,3 +272,9 @@
   ladder (id 1.0 / structural 0.8 / text 0.7 / ambiguous 0.5+refusal+ranked),
   unknown-target honesty, isolated-world posture. 6/6 tests; pnpm verify 0.
   Receipt: VERIFICATION/T0703.md. T0402b sub-agent still running.
+
+- 2026-11-14T06:45:00+06:00 | ZCode (GLM) | D33+T0402b | Two-agent cooperation
+  protocol persisted (AGENTS/protocol/decisions D33 + .sus-dev/INBOX.md created with
+  lane-split proposal + gotchas). T0402b sub-agent work verified + integrated
+  (peer-check request left in inbox). Studio-bridge tests de-raced (inline static
+  servers) + listen-error hardening; cdp/select 11/11. Receipt: T0402b.md.

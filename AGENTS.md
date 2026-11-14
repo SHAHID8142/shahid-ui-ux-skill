@@ -19,5 +19,7 @@ unfinished merges into `main`. Complete the build and verify the final private p
 (T1006) before stopping for a separately commissioned audit.
 Continuous execution: never stop after an ordinary task to ask for `continue` —
 chain the next dependency-unlocked task (issue #9); max 2 isolated sub-agents,
-main agent integrates. The canonical protocol supersedes older per-task
-review/push instructions.
+main agent integrates. Two-agent cooperation (D33): claim tasks via leases,
+read `.sus-dev/INBOX.md` on every continue, ALWAYS peer-check the other
+agent's completed tasks (record problems/fixes/improvements in the receipt).
+The canonical protocol supersedes older per-task review/push instructions.
