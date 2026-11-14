@@ -2024,10 +2024,10 @@
       ],
       "risk": "host API changes",
       "rollback": "version-pinned verification",
-      "status": "pending",
+      "status": "review",
       "approval": "pending",
       "phase": "build",
-      "owner": "zcode-glm",
+      "owner": "zcode-glm (freepi arm: pi)",
       "lease": {
         "session": "zcode-glm",
         "task": "T0902",
@@ -2036,7 +2036,16 @@
         "acquired": "2026-11-14T05:12:00Z",
         "expires": "2026-11-14T08:12:00Z",
         "fencingGeneration": 1
-      }
+      },
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0902.md",
+        "scripts/coord/smoke-host.mjs",
+        "evals/host-smoke/"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0902.md",
+      "results": [
+        "zcode arm PASS 7/7; freepi arm awaits pi run (bus message left) — acc closes when both receipts exist"
+      ]
     },
     {
       "id": "T0903",

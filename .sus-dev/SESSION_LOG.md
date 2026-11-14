@@ -278,3 +278,15 @@
   lane-split proposal + gotchas). T0402b sub-agent work verified + integrated
   (peer-check request left in inbox). Studio-bridge tests de-raced (inline static
   servers) + listen-error hardening; cdp/select 11/11. Receipt: T0402b.md.
+
+- 2026-11-14T07:30:00+06:00 | ZCode (GLM) | T0902 | Host smoke script delivered
+  (7 checks, spawnSync w/ error surfacing, args-default lesson recorded). zcode
+  arm PASS 7/7 deterministic; freepi arm with pi (bus + INBOX requests left).
+  Status: review (honest — acc needs both hosts). Receipt: VERIFICATION/T0902.md.
+  All 5 pi findings resolved on the bus; D33a precedence adopted.
+
+- 2026-11-14T08:00:00+06:00 | ZCode (GLM) | T0902-wrapped | Host smoke PASS 7/7
+  (zcode receipt committed); freepi arm with pi. Root cause of the masked-failure
+  chase: run() lacked args default — spread threw, catch masked as exit-1-empty.
+  Stale broken receipt removed, clean PASS receipt committed. verify exit 0.
+  Owner restart pending — checkpoint complete.

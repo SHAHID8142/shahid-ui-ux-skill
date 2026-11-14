@@ -122,7 +122,8 @@ for (const l of lines) console.log(l);
 console.log('='.repeat(60));
 if (errors.length > 0) {
   console.log(`VERDICT: skill bundle INVALID — ${errors.length} error(s)`);
-  process.exit(1);
+  process.exitCode = 1; // natural exit: pipe output flushes before the code applies
+} else {
+  if (warns.length > 0) for (const w of warns) console.log('WARN:', w);
+  console.log('VERDICT: skill bundle valid.');
 }
-if (warns.length > 0) for (const w of warns) console.log('WARN:', w);
-console.log('VERDICT: skill bundle valid.');
