@@ -171,3 +171,12 @@ export {
   type TargetData,
   type VisualIntentData,
 } from './visual-intent.js';
+export {
+  IsoTimestamp,
+  LifecycleEnvelope,
+  LifecycleState,
+  SessionEvent,
+  SusLifecycleEnvelope,
+  type LifecycleEnvelopeData,
+  type SessionEventData,
+} from './lifecycle.js';

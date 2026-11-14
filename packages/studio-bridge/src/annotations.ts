@@ -72,9 +72,20 @@ export function serializeSession(session: AnnotationSessionData): string {
 }
 
 export function deserializeSession(json: string): AnnotationSessionData {
-  const parsed = AnnotationSession.safeParse(JSON.parse(json));
-  if (!parsed.success)
-    throw new Error(`invalid session JSON: ${parsed.error.issues.map(String).join('; ')}`);
+  let raw: unknown;
+  try {
+    raw = JSON.parse(json);
+  } catch (e) {
+    throw new Error(`invalid session JSON: ${String(e)}`);
+  }
+  const parsed = AnnotationSession.safeParse(raw);
+  if (!parsed.success) {
+    // finding 2 (T0704b peer review): surface the real per-field messages,
+    // never [object Object]
+    throw new Error(
+      `invalid session: ${parsed.error.issues.map((i) => `${i.path.join('.') || '(root)'}: ${i.message}`).join('; ')}`,
+    );
+  }
   return parsed.data;
 }
 

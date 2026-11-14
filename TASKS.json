@@ -1818,9 +1818,19 @@
       ],
       "risk": "ordering ambiguity",
       "rollback": "explicit index confirmation",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "pi (peer-checked by zcode-glm)",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0801.md",
+        "packages/studio-web/src/selection.ts",
+        "packages/studio-web/tests/selection.test.ts"
+      ],
+      "commit": "4929ac9",
+      "results": [
+        "peer-check: 23/23 tests re-run PASS by zcode; ordered selection model + insertion constraint sets verified"
+      ]
     },
     {
       "id": "T0802",
@@ -2577,9 +2587,20 @@
       ],
       "risk": "state machine complexity",
       "rollback": "fail-closed on unknown state",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm",
+      "lease": null,
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0709.md",
+        "packages/schemas/src/lifecycle.ts",
+        "packages/studio-bridge/tests/lifecycle.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0709.md",
+      "results": [
+        "owns the 3 routed T0704b findings: all implemented (strict timestamps, error mapping, version envelope)"
+      ]
     },
     {
       "id": "T0809",

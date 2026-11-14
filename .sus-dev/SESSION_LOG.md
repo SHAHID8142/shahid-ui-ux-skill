@@ -320,3 +320,8 @@
   findings routed to T0709 by agreement on the bus). Flaky-first-test timeout raised
   (30s). Split delivery T0704+T0704b COMPLETE: full verify 226/226. TASKS.json closed
   canonically. Next: T0709 lifecycle contract (owns routed findings), T0706.
+
+- 2026-11-14T10:10:00+06:00 | ZCode (GLM) | T0709 | Lifecycle contract: strict
+  timestamps, legal-transition envelope, version envelope; deserializeSession
+  real-message fix. Owns the 3 routed findings — all implemented. 13/13 tests;
+  pnpm verify green. Receipt: VERIFICATION/T0709.md. Next: T0706 dry-run preview.
