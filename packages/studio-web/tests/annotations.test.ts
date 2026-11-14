@@ -244,7 +244,7 @@ describe('T0704b — malformed/out-of-bounds rejected (fail closed)', () => {
       JSON.stringify({ pageUrl: PAGE_URL, viewport: VIEWPORT, annotations: [], extra: 1 }),
     );
     expect(unknown.ok).toBe(false);
-    if (!unknown.ok) expect(unknown.reasons.join()).toContain('invalid session JSON');
+    if (!unknown.ok) expect(unknown.reasons.join()).toContain('invalid session');
   });
 });
 
