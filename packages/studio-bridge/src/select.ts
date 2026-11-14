@@ -55,7 +55,9 @@ async function inventory(page: Page): Promise<DomNode[]> {
         let nth = 1;
         if (parent) {
           const current: Element = cur;
-          const same: Element[] = Array.from(parent.children).filter((c: Element) => c.tagName === current.tagName);
+          const same: Element[] = Array.from(parent.children).filter(
+            (c: Element) => c.tagName === current.tagName,
+          );
           if (same.length > 1) nth = same.indexOf(current) + 1;
         }
         parts.unshift(`${cur.tagName.toLowerCase()}${nth > 1 ? `:nth-of-type(${nth})` : ''}`);
@@ -74,9 +76,19 @@ async function inventory(page: Page): Promise<DomNode[]> {
         .trim();
       const isLeaf = el.children.length === 0;
       if (isLeaf && ownText.length >= 4) {
-        nodes.push({ tag: el.tagName.toLowerCase(), id: el.id || null, text: ownText.slice(0, 120), path: pathOf(el) });
+        nodes.push({
+          tag: el.tagName.toLowerCase(),
+          id: el.id || null,
+          text: ownText.slice(0, 120),
+          path: pathOf(el),
+        });
       } else if (el.id) {
-        nodes.push({ tag: el.tagName.toLowerCase(), id: el.id, text: ownText.slice(0, 120), path: pathOf(el) });
+        nodes.push({
+          tag: el.tagName.toLowerCase(),
+          id: el.id,
+          text: ownText.slice(0, 120),
+          path: pathOf(el),
+        });
       }
     }
     return nodes;
@@ -126,7 +138,9 @@ export async function resolveSelection(page: Page, targetId: string): Promise<Se
     };
   }
   // ambiguous — never edit; rank candidates for the user
-  const candidates = (pathMatches.length ? pathMatches : textMatches.length ? textMatches : idMatches).map((n) => ({
+  const candidates = (
+    pathMatches.length ? pathMatches : textMatches.length ? textMatches : idMatches
+  ).map((n) => ({
     anchor: n.id
       ? ({ kind: 'id', value: n.id } as Anchor)
       : ({ kind: 'structural', value: n.path } as Anchor),

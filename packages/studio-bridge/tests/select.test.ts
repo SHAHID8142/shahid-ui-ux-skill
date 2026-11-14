@@ -30,11 +30,15 @@ beforeAll(async () => {
   if (!existsSync(join(FIXTURE, 'dist', 'index.html'))) {
     execSync('pnpm exec astro build', { cwd: FIXTURE, stdio: 'ignore' });
   }
-  server = spawn('pnpm', ['exec', 'astro', 'preview', '--port', String(PORT), '--host', '127.0.0.1'], {
-    cwd: FIXTURE,
-    stdio: 'ignore',
-    detached: true,
-  });
+  server = spawn(
+    'pnpm',
+    ['exec', 'astro', 'preview', '--port', String(PORT), '--host', '127.0.0.1'],
+    {
+      cwd: FIXTURE,
+      stdio: 'ignore',
+      detached: true,
+    },
+  );
   await waitForReady(URL);
 }, 120000);
 
@@ -108,8 +112,16 @@ describe('selection anchors + confidence gate (T0703)', () => {
       confidence: 0.5,
       editRefused: true,
       rankedCandidates: [
-        { anchor: { kind: 'structural', value: 'main > p:nth-of-type(1)' }, tag: 'p', preview: 'first' },
-        { anchor: { kind: 'structural', value: 'main > p:nth-of-type(2)' }, tag: 'p', preview: 'second' },
+        {
+          anchor: { kind: 'structural', value: 'main > p:nth-of-type(1)' },
+          tag: 'p',
+          preview: 'first',
+        },
+        {
+          anchor: { kind: 'structural', value: 'main > p:nth-of-type(2)' },
+          tag: 'p',
+          preview: 'second',
+        },
       ],
     };
     expect(refused.editRefused && refused.confidence < 0.6).toBe(true);
