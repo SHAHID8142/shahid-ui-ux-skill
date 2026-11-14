@@ -16,9 +16,9 @@ Concurrency: 2 workers (D33) — claim via lease before editing.
 Current task: none (between tasks). Annotation split delivery COMPLETE and integrated. Pi peer-reviewed the substrate: PASS + 3 LOW findings → routed to the lifecycle-contract task.
 
 Next exact steps: `pnpm verify` (exit 0) before every push. Ready set:
-T0709 lifecycle contract (owns the 3 routed LOW findings: createdAt format,
-deserialize error mapping, session version envelope), T0706 dry-run preview,
-then T0707 apply gates → T0700w → T0400/T0405 playbooks → T0602/T0603 motion →
+T0706 dry-run preview + isolated preview transaction, then T0707 apply gates
+(the lifecycle contract owns the 3 routed LOW findings — done) → T0700w →
+T0400/T0405 playbooks → T0602/T0603 motion →
 M8/M9/M10 → T1006 final verified private push.
 
 Blockers: standing B003 (licence/publication, later phase) and B004

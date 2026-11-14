@@ -70,7 +70,7 @@ describe('lifecycle envelope (T0709)', () => {
 
   it('deserializeSession surfaces REAL zod messages (finding 2 fixed)', () => {
     const bad = JSON.stringify({ pageUrl: 'not-a-url', viewport: {}, annotations: [] });
-    expect(() => deserializeSession(bad)).toThrow(/pageUrl/);
+    expect(() => deserializeSession(bad)).toThrow(/pageUrl: Invalid input|pageUrl.*url/);
   });
 
   it('session file envelope: persisted annotation sessions wrap in a versioned envelope (finding 3)', () => {

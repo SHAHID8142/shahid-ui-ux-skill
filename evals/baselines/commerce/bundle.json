@@ -588,9 +588,9 @@
       "gate": "G5",
       "status": "fail",
       "detail": [
-        "http://127.0.0.1:4345/commerce LCP ms: 602 / limit 2500 — ok",
+        "http://127.0.0.1:4345/commerce LCP ms: 601 / limit 2500 — ok",
         "http://127.0.0.1:4345/commerce CLS: 0 / limit 0.1 — ok",
-        "http://127.0.0.1:4345/commerce TBT ms: 387 / limit 200 — EXCEEDED",
+        "http://127.0.0.1:4345/commerce TBT ms: 495 / limit 200 — EXCEEDED",
         "http://127.0.0.1:4345/commerce totalBytes: 3740 / limit 500000 — ok"
       ]
     }
