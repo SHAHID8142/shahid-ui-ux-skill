@@ -469,3 +469,17 @@
   plus every conflict). 13 failure-injection tests over real temp trees, mutation-checked
   (hash check -> 3 failures, owner-changed -> 1). bridge 218/218. Receipt:
   VERIFICATION/T0802.md. Next: T0790.
+
+- 2026-11-14T22:10:00+06:00 | Pi (FreePi) | Issue #12 | Handoff consistency now fails the build.
+  Verified the issue against HEAD instead of trusting it: counts had already converged
+  (79/100) but `meta.note` still said "no product code exists", active guidance still said
+  "never public" in a public repo (D34), and nothing enforced any of it. Added
+  `scripts/lib/handoff.mjs` + `scripts/check-handoff.mjs` (codes: state-count-missing/drift,
+  meta-claims-no-code, meta-planning-only, stale-visibility, invalid-lease,
+  lease-on-done-task), wired FIRST in `pnpm verify`. History is exempt by design: a line
+  recording a supersession passes, a live claim fails, so the append-only decision log is
+  never rewritten to make a checker green. Reconciled AGENTS/HANDOFF/protocol/
+  EFFECTIVE_REQUIREMENTS (superseded_clause keeps the original wording)/package.json/ci.yml
+  and restructured `meta.concurrency` to separate host workers (2) from the owner's
+  sub-agent ceiling (2). 10 fixtures in packages/schemas (5 negative from the real drifts),
+  mutation-checked. Receipt: VERIFICATION/ISSUE-12.md. Next: T0400.

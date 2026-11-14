@@ -1,7 +1,8 @@
 name: CI
 
 # Build-phase verification pipeline (protocol §0.5): automated checks on dev
-# branches. main is never built here; final private push is T1006.
+# branches. main is never built here; the final verified checkpoint push is T1006
+# (public repository per D34; the product itself is not published).
 'on':
   push:
     branches-ignore: [main]

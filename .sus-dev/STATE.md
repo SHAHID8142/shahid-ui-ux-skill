@@ -17,18 +17,18 @@ Concurrency: 2 workers (D33) — claim via lease before editing.
 
 Current task: none. Dual-stack feasibility GO on both stacks; A/B/C variants done;
 stale-mapping/conflict detection done; verification loop done (five distinct outcomes,
-DA-36 revert-only-when-intact, redacted diagnostics). Next: Issue #12 (P1 handoff
-consistency) then knowledge work.
+DA-36 revert-only-when-intact, redacted diagnostics). Next: T0400
+knowledge work (Issue #12 closed).
 
-Next exact steps: Issue #12 — reconcile STATE/TASKS/meta/visibility claims and make a
-checker fail CI on handoff drift with negative fixtures -> T0400/T0405 knowledge +
+Next exact steps: T0400/T0405 knowledge +
 T0405b/c playbooks -> T0407/T0602/T0603 -> T0708/T0905/T0906 -> T1001/T1002/T1004 ->
 T1006 final verified checkpoint.
 
 Blockers: standing B003 (licence/publication, later phase) and B004
 (irreversible externals during build). Active files: none after checkpoint.
 
-Latest checks: 2026-11-14T21:25 +06:00 — studio-bridge 218/218 (13 new failure-injection
-conflict tests), studio-web 117/117; push gate blocks any unverified push. Repository PUBLIC: CI runs free on standard runners.
+Latest checks: 2026-11-14T22:10 +06:00 — Issue #12 closed: `pnpm handoff` fails the release
+suite on count/meta/visibility/lease drift (10 fixtures, mutation-checked); push gate
+blocks any unverified push. Repository PUBLIC: CI runs free on standard runners.
 Format for this file: the Current-task line names ONLY live tasks; done-task
 ids live in TASKS.json and SESSION_LOG, never here.

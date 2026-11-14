@@ -27,7 +27,7 @@ is reloaded on future sessions. No host support smoke test has yet run.
 
 **One-time master instruction for ZCode, FreePi/Pi, Codex, and any capable coding agent**
 **Project:** Shahid UI UX Skill (SUS)
-**Repository:** `https://github.com/SHAHID8142/shahid-ui-ux-skill` (private)
+**Repository:** `https://github.com/SHAHID8142/shahid-ui-ux-skill` (public repository, D34; product unpublished)
 **Scope:** Reconcile existing planning evidence, build the complete intended product incrementally, keep durable cross-agent context, verify each small change automatically, complete and privately push the build, and **only then** open a separate independent audit phase.
 
 You are the implementation lead and continuity steward. This instruction must be converted into **repository-resident operating instructions**, so future agents can resume by opening the same project and saying **`continue`**. Your success is not a long chat response; it is a reproducible, functioning project with truthful status, durable records, safe Git history, and working verification.
@@ -136,15 +136,19 @@ After authorization and effective-contract reconciliation, maintain the full dep
 
 **Quality and release:** measurable Gate G1–G12 plus critical-security/privacy gate, labelled outcomes and exceptions, usable keyboard and assistive-tech flows, source provenance, privacy-safe fixtures and reference sites, benchmarks with no-skill baseline and uncertainty, packaging/install/uninstall/update, licence decision before any publication. Record what was not tested.
 
-## 5. Local completion, final private push, **then** independent audit
+## 5. Local completion, final verified checkpoint push, **then** independent audit
+
+> Wording note (D34, 2026-11-14): this section originally read "final private push".
+> The repository is public and the product is not published; the push below is a
+> verified checkpoint on an authorized dev branch, never a release.
 
 Treat development completion as an evidence-backed milestone, not a percentage: all mandatory deliverables exist; task dependencies fulfilled; no unresolved P0/P1 release blockers; planned tests have run with outcomes tied to final SHA; known limitations disclosed; source mapping and safe-write round trips proven on supported Next.js and Astro fixtures; Studio works end-to-end; relevant host adapters pass smoke tests; safe rollback, section ownership, privacy and motion parity covered; full build/docs/install flow reproducible. If any criterion fails, continue repair tasks: do **not** create an auditor round to compensate.
 
-Before the final private push:
+Before the final checkpoint push:
 
 1. Run the full deterministic release suite and review results **locally as the builder**. Record commands, exit codes, failures, flaky reruns and environmental limitations. Do not represent tests not run as passed.
 2. Verify clean local Git status and clear task/evidence/handoff records, preserve author work, check exact target remote/branch, and ensure secret scanning plus legal/licence checks. A 'push' is not a public release or permission to change repository visibility.
-3. If final private push requires authentication/permission, use ordinary host authorization. Never invent credentials or quietly escalate permissions. Commit final product code/docs/evidence atomically and push to the authorized private branch.
+3. If the final checkpoint push requires authentication/permission, use ordinary host authorization. Never invent credentials or quietly escalate permissions. Commit final product code/docs/evidence atomically and push to the authorized dev branch.
 4. Confirm the **actual remote commit SHA** and the full suite's relation to the pushed revision. Write `docs/BUILD_COMPLETION_HANDOFF.md` with scope matrix, module status, reproducible commands, supported-host proof, known limitations and audit input instructions. If an additional handoff commit is needed, push it and record the new actual SHA.
 5. **STOP at the post-build audit boundary**: `BUILD_COMPLETE_PUSHED = true` only when verified. **Do not self-author an 'independent audit'** or claim externally certified readiness. Inform the owner that the independent audit can now be commissioned on that exact SHA. Publication/GA decisions remain separate owner actions.
 

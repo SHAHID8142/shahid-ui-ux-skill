@@ -2,14 +2,14 @@
   "name": "sus",
   "version": "0.0.0",
   "private": true,
-  "description": "SUS — Shahid UI UX Skill monorepo (ADR-001 layout). Private; not published.",
+  "description": "SUS \u2014 Shahid UI UX Skill monorepo (ADR-001 layout). Public repository (D34); the product is not published.",
   "packageManager": "pnpm@11.22.0",
   "engines": {
     "node": ">=22"
   },
   "scripts": {
     "typecheck": "pnpm run --silent build && pnpm -r --if-present run typecheck",
-    "check": "node scripts/check-continuation.mjs && node scripts/check-gates.mjs && node scripts/validate-skill.mjs && node scripts/validate-knowledge.mjs && node scripts/validate-playbooks.mjs || test $? -eq 3",
+    "check": "node scripts/check-continuation.mjs && node scripts/check-handoff.mjs && node scripts/check-gates.mjs && node scripts/validate-skill.mjs && node scripts/validate-knowledge.mjs && node scripts/validate-playbooks.mjs || test $? -eq 3",
     "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -21,10 +21,11 @@
     "skill": "node scripts/validate-skill.mjs",
     "playbooks": "node scripts/validate-playbooks.mjs",
     "knowledge": "node scripts/validate-knowledge.mjs",
-    "verify": "pnpm gates:full && pnpm lint && pnpm format:check && pnpm stylelint && pnpm typecheck && pnpm build && pnpm test",
+    "verify": "pnpm handoff && pnpm gates:full && pnpm lint && pnpm format:check && pnpm stylelint && pnpm typecheck && pnpm build && pnpm test",
     "gates:full": "node scripts/check-gates.mjs && node scripts/validate-skill.mjs && node scripts/validate-knowledge.mjs && node scripts/validate-playbooks.mjs || test $? -eq 3",
     "hooks:install": "git config core.hooksPath .githooks && echo \"push gate installed (.githooks/pre-push)\"",
-    "gate:push": "node scripts/gate-push.mjs"
+    "gate:push": "node scripts/gate-push.mjs",
+    "handoff": "node scripts/check-handoff.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

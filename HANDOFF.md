@@ -5,8 +5,9 @@ docs/OWNER_DECISIONS_LOG.md → docs/EFFECTIVE_REQUIREMENTS.json, then inspect G
 
 **Build phase.** APERIO was received and recorded once (OWNER_DECISIONS_LOG.md D28,
 2026-11-13); do not re-request authorization. Architecture baseline: ADR-001/002/004/
-005/006 adopted as proposed, ADR-003 as amended (D29). Private dev-branch checkpoint
-pushes are permitted (D30); never public, never unfinished merges into `main`.
+005/006 adopted as proposed, ADR-003 as amended (D29). Dev-branch checkpoint pushes
+are permitted (D30); the repository is PUBLIC (D34, supersedes D30's visibility
+clause) but the product is NOT published and no `main` merge happens unfinished.
 
 Task status is exclusively TASKS.json; do not infer completion from older reports.
 Latest checkpoint, current task and exact next command are in .sus-dev/STATE.md.

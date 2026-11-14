@@ -59,7 +59,8 @@
       "status": "fixed",
       "owner": "project owner",
       "source": "D26 superseded by D30 (owner APERIO message 2026-11-13)",
-      "statement": "Local atomic commits always; private dev-branch checkpoint pushes permitted for recovery/agent transfer; never public, never main, never unfinished merges"
+      "statement": "Local atomic commits always; dev-branch checkpoint pushes permitted for recovery/agent transfer; never unfinished merges into main",
+      "superseded_clause": "the original D30 wording \"never public\" is superseded by D34 (2026-11-14): the repository is public; the product remains unpublished until an owner decision"
     },
     {
       "id": "ER-BUILD",

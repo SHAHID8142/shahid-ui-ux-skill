@@ -14,9 +14,11 @@ Preserve unrelated edits and live leases. TASKS.json alone owns task status.
 The owner's APERIO authorization is recorded (OWNER_DECISIONS_LOG.md D28, 2026-11-13):
 implementation is authorized; do not re-request it. Architecture baseline: ADR-001/
 002/004/005/006 adopted, ADR-003 as amended (D29). No intermediate independent audits;
-private dev-branch checkpoint pushes are permitted (D30) — never public, never
-unfinished merges into `main`. Complete the build and verify the final private push
-(T1006) before stopping for a separately commissioned audit.
+dev-branch checkpoint pushes are permitted (D30); the repository itself is PUBLIC
+(D34, 2026-11-14 — supersedes D30's "never public"), while the *product* remains
+unpublished until the owner decides. Never push unfinished merges into `main`.
+Complete the build and verify the final checkpoint push (T1006) before stopping for
+a separately commissioned audit.
 Continuous execution: never stop after an ordinary task to ask for `continue` —
 chain the next dependency-unlocked task (issue #9); max 2 isolated sub-agents,
 main agent integrates. Two-agent cooperation (D33): claim tasks via leases,
