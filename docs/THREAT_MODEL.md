@@ -51,12 +51,16 @@ name in the last column); the gate verdict is produced by running that suite.
 
 ## Recorded limitations (not hidden)
 
-1. **No preview/apply HTTP endpoint exists yet.** The bridge server is a
-   read-only session surface by design; threats T1–T8 are proven at the
-   boundary layer that T0707 will call, not over a network route that does not
-   exist. When the apply route lands (T0707), the same `ActionBoundary` +
-   `CapabilityAuthority` checks must run **before** the first mutation and the
-   suite must cover the route itself.
+1. **No apply HTTP endpoint exists yet.** The apply path itself now exists
+   (`packages/studio-bridge/src/apply.ts`, T0707) and consumes
+   `ActionBoundary` + `CapabilityAuthority` **before the first mutation**, in
+   this order: receipt replay → approval grant → action boundary → section-owner
+   resolution → preimage recheck → durable transaction → verification. What does
+   not exist is a network route that reaches it; the bridge server stays a
+   read-only session surface. When that route lands, it must call this engine
+   unchanged and the suite must additionally cover the route (auth, framing,
+   rate, and body handling) rather than assuming the engine's guarantees
+   survive transport.
 2. **Cross-origin isolation mechanics** (which surface owns approval, extension
    vs separate trusted window) remain an implementation choice for T0707/T0700w
    under ADR-003; this threat model constrains the outcome ("page cannot mint
@@ -69,6 +73,26 @@ name in the last column); the gate verdict is produced by running that suite.
    retention of screenshot binaries are **not** implemented — there is no
    screenshot capture path yet, and this model forbids adding one before the
    redaction path covers images.
+
+## Apply-path ordering (T0707)
+
+`ApplyEngine.apply()` refuses in this order, so a refusal never leaves a byte
+written and an approval never silently widens:
+
+1. **receipt replay** — same operation id returns the stored receipt (no second write);
+2. **unfinished transaction** — a prepared-but-unapplied manifest blocks new work until recovery;
+3. **approval grant** — content-bound hash, expiry and proposal id (`stale-base`, `expired` → refused);
+4. **plan coverage** — every planned file approved, every approved file covered, no delete carrying edits;
+5. **action boundary** — trusted provenance + single-use capability for this session/frame/proposal/fence;
+6. **preimage recheck** — current bytes must still equal the approved preimage (a race is a conflict, not a merge);
+7. **section owner** — AST resolution; ambiguous or missing anchor refuses;
+8. **durable transaction** — manifest + preimages before the first write (DA-35);
+9. **verification** — the project's own typecheck/build; failure reverts exactly;
+10. **receipt** — durable `.sus/ops/<id>.json`.
+
+Undo is transaction-specific: it restores that transaction's preimages and
+refuses (`undo-conflict`) if the file changed after apply. There is no `git
+reset`, no stash and no checkout anywhere in this path.
 
 ## How the gate is produced
 

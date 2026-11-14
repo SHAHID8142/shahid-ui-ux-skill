@@ -37,6 +37,8 @@ export interface TxFile {
   postimageSha256: string;
   /** File mode in octal (e.g. 420 for 0644). */
   mode: number;
+  /** True when the transaction removes this file (rollback recreates it). */
+  deletion?: boolean;
 }
 
 export interface TransactionManifest {
@@ -84,7 +86,7 @@ export class Transaction {
     root: string,
     planId: string,
     contractVersion: number,
-    files: Array<{ path: string; postimage: string; mode?: number }>,
+    files: Array<{ path: string; postimage?: string; mode?: number; deletion?: boolean }>,
   ): Transaction {
     const manifest: TransactionManifest = {
       opId: randomUUID(),
@@ -95,8 +97,9 @@ export class Transaction {
       files: files.map((f) => ({
         path: f.path,
         preimageSha256: sha256(readFileSync(join(root, f.path))),
-        postimageSha256: sha256(f.postimage),
+        postimageSha256: f.deletion ? 'absent' : sha256(f.postimage ?? ''),
         mode: f.mode ?? 0o644,
+        ...(f.deletion ? { deletion: true } : {}),
       })),
     };
     const tx = new Transaction(root, manifest);
@@ -104,7 +107,8 @@ export class Transaction {
     // durable record FIRST: manifest + per-file postimages, all atomic
     atomicWrite(tx.manifestPath, JSON.stringify(manifest, null, 2));
     files.forEach((f, i) => {
-      atomicWrite(join(tx.dir, `postimage-${i}.bin`), f.postimage, f.mode ?? 0o644);
+      if (!f.deletion)
+        atomicWrite(join(tx.dir, `postimage-${i}.bin`), f.postimage ?? '', f.mode ?? 0o644);
       atomicWrite(join(tx.dir, `preimage-${i}.bin`), readFileSync(join(root, f.path)));
     });
     return tx;
@@ -141,11 +145,9 @@ export class Transaction {
     }
     const limit = stopAfter ?? this.manifest.files.length;
     for (let i = 0; i < limit; i += 1) {
-      atomicWrite(
-        join(this.root, this.manifest.files[i]!.path),
-        this.postimage(i),
-        this.manifest.files[i]!.mode,
-      );
+      const file = this.manifest.files[i]!;
+      if (file.deletion) rmSync(join(this.root, file.path), { force: true });
+      else atomicWrite(join(this.root, file.path), this.postimage(i), file.mode);
     }
     // state advances to 'applied' only after EVERY file — a crash mid-apply
     // leaves the manifest in 'prepared', and recover() classifies files by
@@ -172,7 +174,8 @@ export class Transaction {
       const current = existsSync(join(this.root, f.path))
         ? sha256(readFileSync(join(this.root, f.path)))
         : 'missing';
-      if (current !== f.preimageSha256 && current !== f.postimageSha256) {
+      const postimage = f.deletion ? 'missing' : f.postimageSha256;
+      if (current !== f.preimageSha256 && current !== postimage) {
         conflicts.push(f.path);
       }
     }
@@ -180,8 +183,22 @@ export class Transaction {
       return { status: 'conflict', conflicts };
     }
     this.manifest.files.forEach((f, i) => {
-      const target = mode === 'roll-forward' ? this.postimage(i) : this.preimage(i);
-      atomicWrite(join(this.root, f.path), target, f.mode);
+      const absolute = join(this.root, f.path);
+      if (mode === 'roll-forward' && f.deletion) rmSync(absolute, { force: true });
+      else if (
+        mode === 'roll-back' &&
+        f.deletion &&
+        !existsSync(join(this.dir, `postimage-${i}.bin`))
+      ) {
+        // restoring a deleted file: preimage + original mode
+        atomicWrite(absolute, this.preimage(i), f.mode);
+      } else {
+        atomicWrite(
+          absolute,
+          mode === 'roll-forward' ? this.postimage(i) : this.preimage(i),
+          f.mode,
+        );
+      }
     });
     this.manifest.state = mode === 'roll-forward' ? 'applied' : 'rolled-back';
     this.persistState();
@@ -191,7 +208,13 @@ export class Transaction {
   /** Verifies: every file hash matches its postimage. */
   verify(): boolean {
     for (const f of this.manifest.files) {
-      if (sha256(readFileSync(join(this.root, f.path))) !== f.postimageSha256) return false;
+      const absolute = join(this.root, f.path);
+      if (f.deletion) {
+        if (existsSync(absolute)) return false;
+        continue;
+      }
+      if (!existsSync(absolute)) return false;
+      if (sha256(readFileSync(absolute)) !== f.postimageSha256) return false;
     }
     this.manifest.state = 'verified';
     this.persistState();

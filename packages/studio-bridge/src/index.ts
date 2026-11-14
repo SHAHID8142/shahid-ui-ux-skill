@@ -31,6 +31,35 @@ export {
 } from './annotations.js';
 export { compileIntent, deriveRelationship, type CompileInput } from './intent-compiler.js';
 export {
+  ApplyEngine,
+  OperationReceipts,
+  interruptedTransactions,
+  type ApplyReceipt,
+  type ApplyRequest,
+  type ApplyStatus,
+  type GitSnapshot,
+  type RefusalReason,
+  type UndoResult,
+  type VerificationResult,
+  type VerificationStatus,
+  type VerifyFn,
+} from './apply.js';
+export {
+  applyAstEdit,
+  applyEditPlan,
+  locateElement,
+  parseSource,
+  type AstEdit,
+  type EditOperation,
+  type EditRefusalReason,
+  type EditResult,
+  type LocatedElement,
+  type LocateResult,
+  type ParsedSource,
+  type PlanResult,
+  type TargetRef,
+} from './editor.js';
+export {
   ActionBoundary,
   CapabilityAuthority,
   CaptureStore,

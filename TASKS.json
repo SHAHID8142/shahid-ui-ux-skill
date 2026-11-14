@@ -1758,9 +1758,27 @@
       ],
       "risk": "AST rewrite breaks unusual syntax",
       "rollback": "refuse + report on unknown syntax",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi); owner authorized strongest-quality implementation",
+      "phase": "build",
+      "owner": "pi",
+      "lease": null,
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0707.md",
+        "packages/studio-bridge/src/apply.ts",
+        "packages/studio-bridge/src/editor.ts",
+        "packages/studio-bridge/src/transaction.ts",
+        "packages/studio-bridge/tests/apply.test.ts",
+        "packages/studio-bridge/tests/editor.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0707.md",
+      "results": [
+        "AST targeting + byte-minimal splice (no printer reflow): TypeScript compiler locates the anchored JSX element, the write preserves every other byte, inserted code is re-indented to the file",
+        "refusal order proven by tests: receipt replay, unfinished transaction, approval grant, plan coverage, action boundary (DA-31+capability), preimage recheck, ambiguous owner, durable transaction, verification, receipt",
+        "typecheck/build verification required at construction; failure reverts exactly (real TS diagnostics test); undo is transaction-specific and refuses undo-conflict; no git reset anywhere",
+        "durable receipts survive restart; replayed operationId returns the stored receipt without a second write; crash recovery entry point rolls back prepared transactions",
+        "Transaction gained real file deletion with recoverable undo (preimage + mode); 45 new tests (158 package), mutation-checked; full pnpm verify exit 0 — 48 files / 426 tests"
+      ]
     },
     {
       "id": "T0708",

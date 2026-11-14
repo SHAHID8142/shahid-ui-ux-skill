@@ -381,3 +381,18 @@
   job. Also fixed BridgeServer.start() to resolve the actual ephemeral port
   (removes the fixed-port collision class the peer hit). Full `pnpm verify`
   exit 0 — 46 files / 381 tests. Receipt: VERIFICATION/T0806.md. Next: T0707.
+
+- 2026-11-14T19:10:00+06:00 | Pi (FreePi) | T0707 | Approval-gated apply + rollback.
+  Decision: AST for targeting/judgement, bytes for the write — `src/editor.ts`
+  (TypeScript compiler locates the anchored JSX element; byte-minimal splice
+  preserves every other byte; inserted code re-indented to the file; refuses
+  invalid JSX, self-closing insert, dropped anchor, duplicate anchor, ambiguity,
+  post-edit parse failure) and `src/apply.ts` (refusal order: receipt replay →
+  unfinished transaction → approval grant → plan coverage → action boundary DA-31
+  + single-use capability → preimage recheck → section owner → durable
+  transaction → typecheck/build verification → durable receipt; must be
+  constructed WITH a verifier; undo refuses undo-conflict; no git reset).
+  `src/transaction.ts` gained real file deletion with recoverable undo. 45 new
+  tests (158 in package), mutation-checked (one guard initially survived and its
+  missing test was added). Full `pnpm verify` exit 0 — 48 files / 426 tests.
+  Receipt: VERIFICATION/T0707.md. Next: T0700w dual-stack feasibility.
