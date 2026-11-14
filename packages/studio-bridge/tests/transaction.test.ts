@@ -9,7 +9,7 @@ import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { Transaction, sha256 } from '../src/transaction.js';
+import { Transaction } from '../src/transaction.js';
 
 function fixtureProject(): string {
   const dir = mkdtempSync(join(tmpdir(), 't0805-fixture-'));
