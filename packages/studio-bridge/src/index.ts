@@ -119,3 +119,4 @@ export {
 } from './transaction.js';
 
 export * from './astro-editor.js';
+export * from './conflicts.js';

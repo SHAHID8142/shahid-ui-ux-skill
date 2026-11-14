@@ -457,3 +457,15 @@
   (`sandbox: []`), two independent controls; no event hook on the model (peer finding:
   isolated worlds isolate JS state, not DOM events). 23 tests; studio-web 117/117.
   Receipt: VERIFICATION/T0803.md. Next: T0802.
+
+- 2026-11-14T21:25:00+06:00 | Pi (FreePi) | T0802 | Stale mapping + conflict handling.
+  `packages/studio-bridge/src/conflicts.ts`: `MappingConflictSession` classifies
+  file-changed / anchor-missing / anchor-duplicated / owner-changed / ambiguous-owner /
+  file-deleted and NEVER repairs — the byte-hash check runs before anchor resolution so
+  a user edit is reported as a conflict instead of being re-mapped onto their new code.
+  Annotations are preserved verbatim on failure (note, region, timestamp, recorded hash)
+  and offered exactly two honest actions: retry (re-reads and re-checks; not a bypass —
+  a still-gone anchor still conflicts) and export (versioned bundle of every annotation
+  plus every conflict). 13 failure-injection tests over real temp trees, mutation-checked
+  (hash check -> 3 failures, owner-changed -> 1). bridge 218/218. Receipt:
+  VERIFICATION/T0802.md. Next: T0790.

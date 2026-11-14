@@ -1884,9 +1884,22 @@
       ],
       "risk": "silent wrong-file edits",
       "rollback": "fail-closed is the default",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0802.md",
+        "packages/studio-bridge/src/conflicts.ts",
+        "packages/studio-bridge/tests/conflicts.test.ts"
+      ],
+      "results": [
+        "MappingConflictSession classifies stale mapping as file-changed / anchor-missing / anchor-duplicated / owner-changed / ambiguous-owner / file-deleted, never repairing",
+        "byte-hash check runs before anchor resolution so a user edit is reported as file-changed instead of being re-mapped onto their new code",
+        "annotations preserved verbatim on failure (note, region, timestamp, recorded hash) and an exportBundle carries every annotation plus every conflict with retryAvailable",
+        "retry re-reads and re-checks without bypassing: a still-gone anchor still conflicts; unknown/duplicate annotation ids are refused",
+        "13 failure-injection tests over real temp trees, mutation-checked (hash check -> 3 failures, owner-changed -> 1); bridge 218/218"
+      ]
     },
     {
       "id": "T0803",
