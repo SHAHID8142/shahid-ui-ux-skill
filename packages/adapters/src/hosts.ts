@@ -8,14 +8,25 @@
  */
 import type { HostAdapter, HostCapabilities } from './adapter-interface.js';
 
-function caps(triggering: HostCapabilities['skillTriggering'], cli: HostCapabilities['cliExecution'], jit: HostCapabilities['jitReferenceLoading'], studio: HostCapabilities['liveStudio']): HostCapabilities {
-  return { skillTriggering: triggering, cliExecution: cli, jitReferenceLoading: jit, liveStudio: studio };
+function caps(
+  triggering: HostCapabilities['skillTriggering'],
+  cli: HostCapabilities['cliExecution'],
+  jit: HostCapabilities['jitReferenceLoading'],
+  studio: HostCapabilities['liveStudio'],
+): HostCapabilities {
+  return {
+    skillTriggering: triggering,
+    cliExecution: cli,
+    jitReferenceLoading: jit,
+    liveStudio: studio,
+  };
 }
 
 export const HOST_ADAPTERS: HostAdapter[] = [
   {
     id: 'codex',
-    installMethod: 'generated AGENTS.md supplement + CLI wrapper (scripts/install generates host entry)',
+    installMethod:
+      'generated AGENTS.md supplement + CLI wrapper (scripts/install generates host entry)',
     smokeTest: 'node scripts/coord/smoke-host.mjs (run on the host machine)',
     capabilities: caps('expected', 'expected', 'expected', 'expected'),
     evidence: 'none yet — Codex host not exercised; tiers are expectations pending smoke',
@@ -39,14 +50,16 @@ export const HOST_ADAPTERS: HostAdapter[] = [
     installMethod: 'generated skill entry (FreePi skills dir)',
     smokeTest: 'node scripts/coord/smoke-host.mjs (run on the host machine)',
     capabilities: caps('verified', 'verified', 'verified', 'expected'),
-    evidence: 'evals/host-smoke/freepi-fe06295.json (T0902: identical smoke PASS 7/7; live Studio unexercised)',
+    evidence:
+      'evals/host-smoke/freepi-fe06295.json (T0902: identical smoke PASS 7/7; live Studio unexercised)',
   },
   {
     id: 'zcode',
     installMethod: 'repo-local AGENTS.md entry (this repository)',
     smokeTest: 'node scripts/coord/smoke-host.mjs',
     capabilities: caps('verified', 'verified', 'verified', 'expected'),
-    evidence: 'evals/host-smoke/zcode-b061cc4.json (T0902: identical smoke PASS 7/7; live Studio unexercised)',
+    evidence:
+      'evals/host-smoke/zcode-b061cc4.json (T0902: identical smoke PASS 7/7; live Studio unexercised)',
   },
 ];
 
@@ -58,7 +71,11 @@ export const HOST_ADAPTERS: HostAdapter[] = [
 export function generateHostEntry(hostId: string): string {
   const adapter = HOST_ADAPTERS.find((h) => h.id === hostId);
   if (!adapter) throw new Error(`unknown host "${hostId}"`);
-  const tier = adapter.capabilities.liveStudio === 'verified' && adapter.capabilities.cliExecution === 'verified' ? 'verified' : 'unverified';
+  const tier =
+    adapter.capabilities.liveStudio === 'verified' &&
+    adapter.capabilities.cliExecution === 'verified'
+      ? 'verified'
+      : 'unverified';
   switch (hostId) {
     case 'codex':
       return `# SUS host entry (generated — do not hand-edit)\n# tier: ${tier} | smoke: ${adapter.smokeTest}\nWhen the user says 'continue', read AGENTS.md and follow it.\n`;

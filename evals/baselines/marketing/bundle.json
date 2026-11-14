@@ -334,11 +334,11 @@
     },
     {
       "gate": "G5",
-      "status": "fail",
+      "status": "pass",
       "detail": [
-        "http://127.0.0.1:4345/marketing LCP ms: 604 / limit 2500 — ok",
+        "http://127.0.0.1:4345/marketing LCP ms: 602 / limit 2500 — ok",
         "http://127.0.0.1:4345/marketing CLS: 0 / limit 0.1 — ok",
-        "http://127.0.0.1:4345/marketing TBT ms: 3226 / limit 200 — EXCEEDED",
+        "http://127.0.0.1:4345/marketing TBT ms: 65 / limit 200 — ok",
         "http://127.0.0.1:4345/marketing totalBytes: 2604 / limit 500000 — ok"
       ]
     }
@@ -434,7 +434,7 @@
     },
     {
       "axis": "performance",
-      "score": 3,
+      "score": 4,
       "basis": "measured",
       "evidence": [
         "evals/baselines/marketing/evidence/budget-table.json"
@@ -442,7 +442,7 @@
     }
   ],
   "notes": [
-    "acceptanceComposite excluding judged axis: 30/55",
+    "acceptanceComposite excluding judged axis: 31/55",
     "pre-calibration scoring (T0155 owns judge calibration)"
   ]
 }

@@ -440,11 +440,11 @@
     },
     {
       "gate": "G5",
-      "status": "pass",
+      "status": "fail",
       "detail": [
-        "http://127.0.0.1:4345/portfolio LCP ms: 609 / limit 2500 — ok",
+        "http://127.0.0.1:4345/portfolio LCP ms: 602 / limit 2500 — ok",
         "http://127.0.0.1:4345/portfolio CLS: 0 / limit 0.1 — ok",
-        "http://127.0.0.1:4345/portfolio TBT ms: 20 / limit 200 — ok",
+        "http://127.0.0.1:4345/portfolio TBT ms: 319 / limit 200 — EXCEEDED",
         "http://127.0.0.1:4345/portfolio totalBytes: 3607 / limit 500000 — ok"
       ]
     }
@@ -540,7 +540,7 @@
     },
     {
       "axis": "performance",
-      "score": 4,
+      "score": 3,
       "basis": "measured",
       "evidence": [
         "evals/baselines/portfolio/evidence/budget-table.json"
@@ -548,7 +548,7 @@
     }
   ],
   "notes": [
-    "acceptanceComposite excluding judged axis: 29/55",
+    "acceptanceComposite excluding judged axis: 28/55",
     "pre-calibration scoring (T0155 owns judge calibration)"
   ]
 }
