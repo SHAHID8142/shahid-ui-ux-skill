@@ -120,3 +120,4 @@ export {
 
 export * from './astro-editor.js';
 export * from './conflicts.js';
+export * from './verification-loop.js';

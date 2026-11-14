@@ -1828,9 +1828,22 @@
       ],
       "risk": "loop latency",
       "rollback": "async verification with status surface",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0790.md",
+        "packages/studio-bridge/src/verification-loop.ts",
+        "packages/studio-bridge/tests/verification-loop.test.ts"
+      ],
+      "results": [
+        "five distinct outcomes: preview-failed, apply-failed, verification-failed, rollback-blocked, accepted — each with a different user action",
+        "DA-36 enforced at the decision point: transactionIntact() is consulted immediately before reverting and only then (call order asserted); a diverged tree is NEVER reverted, the report explains that the user edits were left untouched on purpose",
+        "failing gate yields explanation + affected operation + curated recovery steps + retry stance; soft gates are reported without reverting a completed change",
+        "diagnostics redacted by default (home paths, bearer tokens, sk_/pk_/rk_ incl. sk_live_, ghp_, emails, long digests) while keeping file:line and TS codes; caller redactor honoured; a throwing stage becomes a redacted failure, not a crashed loop",
+        "15 tests, mutation-checked (integrity gate -> 2 failures, redaction -> 1); bridge 233/233"
+      ]
     },
     {
       "id": "T0801",
