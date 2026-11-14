@@ -1907,9 +1907,23 @@
       ],
       "risk": "HMR state loss",
       "rollback": "full-page reload fallback",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0803.md",
+        "packages/studio-web/src/variants.ts",
+        "packages/studio-web/tests/variants.test.ts"
+      ],
+      "results": [
+        "VariantSession: provenance is a precondition (intent, model, prompt sha256 shape, run id, timestamp; intent must match) or the comparison is refused",
+        "A/B/C side by side at mobile/tablet/desktop simultaneously from ONE document per variant (390/768/1280) — documented and tested",
+        "discard is cheap by construction: payload released, provenance kept, bytes released reported and measurable; accept-one drops the rest and records the decision with applyStrategy full-page-reload (the recorded HMR rollback)",
+        "variant markup is data: script/iframe/object/base/inline-handler/javascript: refused at open, and every frame is fully sandboxed (no tokens) so one mistake is not a compromise",
+        "no event hook on the model (peer finding: isolated worlds isolate JS state, not DOM events); accepting is a trusted-host call",
+        "23 new tests, mutation-checked (discard release -> 4 failures; unsafe-markup rules -> 1 failure); studio-web 117/117"
+      ]
     },
     {
       "id": "T0804",

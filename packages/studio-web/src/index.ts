@@ -83,3 +83,17 @@ export type {
   SpatialEditResult,
   SpatialMove,
 } from './selection.js';
+
+export { DEFAULT_VIEWPORTS, MAX_VARIANTS, VariantSession } from './variants.js';
+export type {
+  AcceptDecision,
+  VariantFrame,
+  VariantInput,
+  VariantProvenance,
+  VariantRefusal,
+  VariantResult,
+  VariantSnapshot,
+  VariantView,
+  VariantViewport,
+  VariantViewportId,
+} from './variants.js';

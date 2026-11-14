@@ -443,3 +443,17 @@
   Result: T0700w CLOSED — GO on both stacks, zero harmful wrong-owner writes,
   evals/t0700w-VERDICT.md updated. studio-bridge 205/205 (16 new). Next: T0803/T0905,
   then production knowledge (T0400/T0405) which is now unblocked for both surfaces.
+
+- 2026-11-14T21:05:00+06:00 | Pi (FreePi) | T0803 | Variants + visual diff +
+  viewports. `packages/studio-web/src/variants.ts`: `VariantSession` where provenance
+  is a precondition (intent/model/prompt-sha256/run/timestamp, intent must match) —
+  an unattributable proposal never reaches the comparison; A/B/C side by side at
+  mobile/tablet/desktop simultaneously from ONE document per variant (390/768/1280,
+  asserted identical); `discard` releases only the payload and reports bytes, keeping
+  provenance (mutation-checked: 4 tests fail if the release is removed); accept-one
+  drops the rest and records the decision with `applyStrategy: 'full-page-reload'`
+  (the recorded HMR rollback); variant markup is data — script/iframe/object/base/
+  inline-handler/javascript: refused at open AND every frame fully sandboxed
+  (`sandbox: []`), two independent controls; no event hook on the model (peer finding:
+  isolated worlds isolate JS state, not DOM events). 23 tests; studio-web 117/117.
+  Receipt: VERIFICATION/T0803.md. Next: T0802.
