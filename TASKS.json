@@ -3037,14 +3037,19 @@
       ],
       "risk": "historical content exposure; irreversible without owner action",
       "rollback": "visibility can be reverted to private by owner decision",
-      "status": "pending",
+      "status": "done",
       "approval": "owner issue #11 (explicit visibility authorization)",
       "phase": "build",
-      "owner": null,
+      "owner": "zcode-glm",
       "lease": null,
-      "evidence": [],
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0011.md",
+        "docs/OWNER_DECISIONS_LOG.md",
+        ".github/workflows/ci.yml"
+      ],
       "children": [],
-      "results": []
+      "results": [],
+      "commit": "fe06295 + receipt commit"
     }
   ]
 }

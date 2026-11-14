@@ -290,3 +290,9 @@
   chase: run() lacked args default — spread threw, catch masked as exit-1-empty.
   Stale broken receipt removed, clean PASS receipt committed. verify exit 0.
   Owner restart pending — checkpoint complete.
+
+- 2026-11-14T07:50:00+06:00 | ZCode (GLM) | T0011 | Repo PUBLIC per owner issue #11
+  (D34). Preflight clean (secret scan 0 hits across all refs, no credential files,
+  deps standard, workflow least-privilege added). Anonymous read verified. CI green
+  on public standard runners (after the gate checker's ancestry catch on T0011 —
+  by design). Receipt: VERIFICATION/T0011.md. Issue #11 closed with evidence.
