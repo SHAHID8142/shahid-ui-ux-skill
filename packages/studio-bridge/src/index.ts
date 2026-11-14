@@ -117,3 +117,5 @@ export {
   type TxFile,
   type TxState,
 } from './transaction.js';
+
+export * from './astro-editor.js';

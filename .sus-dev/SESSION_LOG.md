@@ -429,3 +429,17 @@
   and the approval is checked before the capability, so a retry after a write dies as
   stale-approval — the test now asserts the guarantee, not the ordering. Package
   189/189. Next: T0700wc.
+
+- 2026-11-14T20:40:00+06:00 | Pi (FreePi) | T0700wc | Astro source editing — closed
+  the blocker T0700wb found. `src/astro-editor.ts`: frontmatter-aware tag tokenizer
+  (comments, doctype, quotes, `{}` nesting), matching-close by nesting depth, all five
+  operations as byte-minimal splices with inherited indentation (inline element becomes
+  multiline rather than mid-sentence splicing), and refusals for target-not-found
+  (incl. map-instance anchors, which cannot be edited one-at-a-time), ambiguous,
+  self-closing insert, empty content, duplicate anchor, lost anchor, unbalanced
+  template, and deleting <html>/<body>. Frontmatter and <style>/<script> bodies proven
+  untouched. The Astro half of the feasibility suite now runs the whole chain:
+  preview -> approval -> apply -> astro build verification -> exact undo -> denials.
+  Result: T0700w CLOSED — GO on both stacks, zero harmful wrong-owner writes,
+  evals/t0700w-VERDICT.md updated. studio-bridge 205/205 (16 new). Next: T0803/T0905,
+  then production knowledge (T0400/T0405) which is now unblocked for both surfaces.

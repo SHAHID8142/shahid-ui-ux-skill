@@ -16,6 +16,7 @@
  * is the task's stated rollback, so refusal is the designed path, not a crash.
  */
 import ts from 'typescript';
+import { editAstro } from './astro-editor.js';
 
 export type ParseProblem = { message: string; line: number; column: number };
 
@@ -248,6 +249,8 @@ function anchorsIn(sourceFile: ts.SourceFile, attribute: string): Map<string, nu
  *  4. an inserted element does not duplicate an existing anchor.
  */
 export function applyAstEdit(file: string, before: string, edit: AstEdit): EditResult {
+  // Astro is a different language: it has its own locator and refusal model.
+  if (/\.astro$/.test(file)) return editAstro(file, before, edit);
   const located = locateElement(file, before, edit.target);
   if (!located.ok) return { ok: false, reason: located.reason, detail: located.detail };
   const element = located.element;

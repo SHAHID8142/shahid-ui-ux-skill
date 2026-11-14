@@ -411,27 +411,10 @@ describe('astro stack (Astro commerce fixture)', () => {
   );
 
   it(
-    'fails closed on an Astro source instead of mangling it (editor support is T0700wc)',
-    () => {
-      const root = disposableCopy('astro');
-      try {
-        stampWorkspace(root);
-        const page = STACKS.astro.page;
-        const before = readFileSync(join(root, page), 'utf8');
-        const attempt = applyAstEdit(page, before, {
-          operation: 'insert-child',
-          target: { anchor: STACKS.astro.target },
-          content: STACKS.astro.content,
-        });
-        // The editor is JSX-only today. The safe outcome is a refusal that
-        // leaves the source byte-identical — never a partially written file.
-        expect(attempt.ok).toBe(false);
-        if (attempt.ok) return;
-        expect(attempt.reason).toBe('unparseable-source');
-        expect(readFileSync(join(root, page), 'utf8')).toBe(before);
-      } finally {
-        rmSync(root, { recursive: true, force: true });
-      }
+    'selection → owner → preview → approval → apply → astro build verification → undo',
+    async () => {
+      await assertFullChain('astro');
+      await assertDenials('astro');
     },
     TIMEOUT,
   );

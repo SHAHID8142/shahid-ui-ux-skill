@@ -16,31 +16,25 @@ before a write is accepted.
 | Anchor → single source owner | PASS | PASS |
 | Unknown ownership refuses (`unknown-owner`) | PASS | PASS |
 | Isolated preview + authentic approval | PASS | PASS |
-| Apply with byte-minimal write (approved diff == written diff) | PASS | **BLOCKED** |
-| Stack build verification gates the write | PASS | n/a (blocked before it) |
-| Undo restores exact bytes, second undo refused | PASS | n/a |
-| Page-derived instruction refused (`untrusted-provenance`) | PASS | n/a |
-| Retry after consumption refused, exactly one edit on disk | PASS | n/a |
+| Apply with byte-minimal write (approved diff == written diff) | PASS | PASS |
+| Stack build verification gates the write | PASS | PASS |
+| Undo restores exact bytes, second undo refused | PASS | PASS |
+| Page-derived instruction refused (`untrusted-provenance`) | PASS | PASS |
+| Retry after consumption refused, exactly one edit on disk | PASS | PASS |
 
 ## Verdict
 
-- **Next.js: GO.** The full chain works end-to-end on a disposable copy,
-  including denials and exact undo.
-- **Astro: GO up to the write, BLOCKED at the editor.** `src/editor.ts` is
-  JSX-only, so it refuses `.astro` with `unparseable-source` and leaves the file
-  byte-identical (verified). That is the correct fail-closed behaviour, but it
-  means the Astro stack cannot be edited at all today.
-- **Blocker task: T0700wc** (Astro source editing), recorded with its own
-  acceptance. T0700wb stays open until T0700wc lands and the Astro half of this
-  table turns PASS.
+- **Next.js: GO.**
+- **Astro: GO** — after T0700wc added the Astro editor. The first run of this
+  experiment found the editor was JSX-only and refused `.astro` fail-closed, which
+  is exactly the kind of gap a feasibility gate exists to find: the initial verdict
+  was a GO for one stack and a named blocker for the other, and T0700wc closed it.
+- **Both surfaces are unblocked for production knowledge work (T0400/T0405).**
 
 ## Effect on the rest of the build
 
-T0400/T0405 production-knowledge acceptance stays gated on this verdict as the
-reconciliation recorded, and this verdict is **not** a clean GO: it is a GO for
-Next.js and a named, bounded blocker for Astro. Knowledge work may proceed for
-the Next.js surface; the Astro surface waits for T0700wc rather than shipping an
-edit path that cannot write.
+T0400/T0405 production-knowledge acceptance is unblocked: both stacks complete
+the chain on disposable copies, with zero harmful wrong-owner writes.
 
 ## Guarantees the experiment actually observed
 

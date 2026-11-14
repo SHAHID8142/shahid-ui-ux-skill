@@ -3011,18 +3011,25 @@
       ],
       "risk": "Unsupported completion or unsafe mutation",
       "rollback": "Preserve original sources; block on failure",
-      "status": "pending",
-      "approval": "pending",
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
       "phase": "build",
-      "owner": null,
+      "owner": "pi",
       "lease": null,
-      "evidence": [],
+      "evidence": [
+        "evals/t0700w-VERDICT.md",
+        ".sus-dev/VERIFICATION/T0700wb.md",
+        ".sus-dev/VERIFICATION/T0700wc.md",
+        ".sus-dev/VERIFICATION/T0700wa.md"
+      ],
       "children": [
         "T0700wa",
         "T0700wb"
       ],
       "results": [
-        "split into T0700w-a (anchor stamping + owner resolution, done) and T0700w-b (end-to-end safe-write proof on both stacks, pending) — the parent closes only when both children close"
+        "GO on both stacks: stamp -> real build -> live selection 1.0 -> single owner -> isolated preview -> authentic approval -> apply -> stack build verification -> exact undo, with zero harmful wrong-owner writes and refusals for unknown ownership, page-derived provenance and replayed capability",
+        "the feasibility experiment paid for itself: it found the editor was JSX-only (Astro had no write path at all) and found a harness bug where successful applies were silently reverting",
+        "production knowledge work (T0400/T0405) is now unblocked for BOTH surfaces"
       ]
     },
     {
@@ -3088,7 +3095,7 @@
       ],
       "risk": "False GO verdict from a harness that skips a gate",
       "rollback": "Block on failure; fixtures are copies",
-      "status": "blocked",
+      "status": "done",
       "approval": "D33 live bus claim (pi)",
       "phase": "build",
       "owner": "pi",
@@ -3096,13 +3103,14 @@
       "evidence": [
         ".sus-dev/VERIFICATION/T0700wb.md",
         "evals/t0700w-VERDICT.md",
-        "packages/studio-bridge/tests/feasibility.test.ts"
+        "packages/studio-bridge/tests/feasibility.test.ts",
+        ".sus-dev/VERIFICATION/T0700wc.md"
       ],
-      "blocker": "Astro source editing does not exist: packages/studio-bridge/src/editor.ts is JSX-only and refuses .astro as unparseable-source (fail-closed, file untouched). Next.js stack passes the full chain; Astro passes stamping/build/selection/owner. T0700wc implements the Astro editor, after which this task re-runs and closes the parent.",
       "results": [
         "Next stack: stamp -> next build (real prerendered HTML) -> Playwright selection at confidence 1.0 -> owner resolution -> isolated preview -> approval -> apply -> next build verification -> undo restoring exact bytes; denials for page-derived provenance and retry after consumption, tree unchanged each time",
         "Astro stack: stamp -> astro build -> selection at confidence 1.0 -> owner resolution proven; apply is BLOCKED because the editor refuses .astro (fail-closed, verified byte-identical)",
-        "zero harmful wrong-owner writes observed on either stack; unknown ownership refuses by reason and the file is never touched"
+        "zero harmful wrong-owner writes observed on either stack; unknown ownership refuses by reason and the file is never touched",
+        "unblocked by T0700wc: the Astro stack now completes selection -> owner -> preview -> approval -> apply -> astro build verification -> exact undo, with the same denial classes as Next.js"
       ]
     },
     {
@@ -3128,15 +3136,24 @@
       ],
       "risk": "Corrupting a component by editing across template boundaries",
       "rollback": "Refuse rather than write; disposable copies in tests",
-      "status": "pending",
-      "approval": "pending",
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
       "phase": "build",
-      "owner": null,
+      "owner": "pi",
       "lease": null,
-      "evidence": [],
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0700wc.md",
+        "packages/studio-bridge/src/astro-editor.ts",
+        "packages/studio-bridge/tests/astro-editor.test.ts",
+        "packages/studio-bridge/tests/feasibility.test.ts"
+      ],
       "results": [
-        "created by T0700wb: the feasibility experiment found the editor is JSX-only, which blocks the Astro apply leg"
-      ]
+        "src/astro-editor.ts: frontmatter-aware tag tokenizer (quotes, {} nesting, comments, doctype), matching-close resolution by nesting depth, all five operations as byte-minimal splices, inserted code re-indented to the target",
+        "refusals: target-not-found (including map-instance anchors, which cannot be edited one-at-a-time), ambiguous-target, self-closing-insert, empty-content, would-duplicate-anchor, post-edit-target-lost, post-edit-parse-failure (template balance), and deleting <html>/<body>",
+        "frontmatter and <style>/<script> bodies verified untouched; unrelated bytes identical outside the edit",
+        "16 editor tests plus the Astro half of the feasibility suite now passes end-to-end: preview -> approval -> apply -> astro build verification -> exact undo -> denials"
+      ],
+      "commit": "recorded in .sus-dev/VERIFICATION/T0700wc.md"
     },
     {
       "id": "T1006",
