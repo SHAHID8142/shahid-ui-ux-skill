@@ -5,7 +5,7 @@
  * in the isolated world.
  */
 import { describe, expect, it } from 'vitest';
-import { AnnotationSession, SusAnnotation, type AnnotationData } from '@sus/schemas';
+import { AnnotationSession, SusAnnotation } from '@sus/schemas';
 import {
   buildAnnotation,
   deserializeSession,
