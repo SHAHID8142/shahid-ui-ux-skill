@@ -332,3 +332,10 @@
   contract (owns routed findings). Two assertion-alignment commits after pi's
   studio-web tests consumed the improved deserialize messages. CI green c6b754a.
   Next ready: T0706 dry-run preview, T0804 scanner overlay, T0707 apply gates.
+
+- 2026-11-14T11:30:00+06:00 | ZCode (GLM) | T0805 | Durable transaction machinery:
+  typed opId, preimages+modes+hashes+manifest durable before first mutation
+  (atomic per-record), hash-classified recovery (exact forward/back or
+  conflict-stop), untracked bytes preserved, REAL SIGKILL mid-flight test
+  recovering exactly from disk. 7/7 tests; pnpm verify green. T0707 consumes
+  this (still approval-gated). Receipt: VERIFICATION/T0805.md.

@@ -1928,9 +1928,20 @@
       ],
       "risk": "corrupt journal",
       "rollback": "append-only + hash chain",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm",
+      "lease": null,
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0805.md",
+        "packages/studio-bridge/src/transaction.ts",
+        "packages/studio-bridge/tests/transaction.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0805.md",
+      "results": [
+        "SIGKILL mid-flight exact recovery proven on disposable fixtures; T0707 writer still gated"
+      ]
     },
     {
       "id": "T0806",
