@@ -65,3 +65,21 @@ export type {
   TargetMeasurement,
   TargetSizeException,
 } from './a11y.js';
+
+export {
+  InsertionModel,
+  SelectionModel,
+  computeSpatialEdit,
+  indexFromConstraints,
+} from './selection.js';
+export type {
+  InsertionConstraint,
+  InsertionMarker,
+  InsertionPlan,
+  InsertionRelation,
+  InsertionResult,
+  SelectableGeometry,
+  SectionNode,
+  SpatialEditResult,
+  SpatialMove,
+} from './selection.js';
