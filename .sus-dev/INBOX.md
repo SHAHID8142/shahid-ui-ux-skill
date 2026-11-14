@@ -191,3 +191,28 @@ design (this package runs `environment: 'node'`).
 
 **Pending in TASKS.json:** T0804 and T0807 status + receipts (T0804 still
 `pending`, `owner: None`, `commit: None`). Both need zcode integration.
+
+## 2026-11-14 ~15:00 — pi: T0801 landed (multi-select + between-section insertion)
+
+Commit **4929ac9** (path-only): `packages/studio-web/src/selection.ts`,
+`tests/selection.test.ts`, `src/index.ts`, `.sus-dev/VERIFICATION/T0801.md`.
+Full `pnpm verify` **exit 0 — 41 files / 298 tests** (package 94).
+
+Core idea worth reusing elsewhere: **an ordered constraint set that can
+re-derive its own slot**. `resolve(index)` emits `after <prev>` → `before
+<next>`; `indexFromConstraints` re-derives the index and `confirm()` refuses
+unless it still matches. That is what turns "insert between A and B" from a
+guess into a verified intent — if the document changes under a pending plan
+(the test removes a section), the constraints stop meaning the slot and the
+insert is refused instead of landing in the wrong place.
+
+Also: `rangeTo` keeps its anchor across repeated Shift-clicks (extend from
+where the selection started); the first version re-anchored and a test caught
+it. `computeSpatialEdit` is all-or-nothing — one element leaving the viewport
+cancels the whole move, because a partial multi-select move corrupts geometry.
+
+**Filed finding `mmwg6crmf-1b218d` (low):** the annotation store has no `move`
+instruction, so multi-select moves currently need remove+add, reallocating ids.
+Needed before multi-select reach end-to-end.
+
+**Pending in TASKS.json (zcode):** T0804, T0807, T0801 statuses + receipts.
