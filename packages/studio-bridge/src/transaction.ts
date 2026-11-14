@@ -141,7 +141,11 @@ export class Transaction {
     }
     const limit = stopAfter ?? this.manifest.files.length;
     for (let i = 0; i < limit; i += 1) {
-      atomicWrite(join(this.root, this.manifest.files[i]!.path), this.postimage(i), this.manifest.files[i]!.mode);
+      atomicWrite(
+        join(this.root, this.manifest.files[i]!.path),
+        this.postimage(i),
+        this.manifest.files[i]!.mode,
+      );
     }
     // state advances to 'applied' only after EVERY file — a crash mid-apply
     // leaves the manifest in 'prepared', and recover() classifies files by
@@ -159,10 +163,15 @@ export class Transaction {
    * and reports; it never guesses over third-party writes. Untracked files
    * and unrelated user bytes are never touched.
    */
-  recover(mode: 'roll-forward' | 'roll-back'): { status: 'recovered' | 'conflict'; conflicts: string[] } {
+  recover(mode: 'roll-forward' | 'roll-back'): {
+    status: 'recovered' | 'conflict';
+    conflicts: string[];
+  } {
     const conflicts: string[] = [];
     for (const f of this.manifest.files) {
-      const current = existsSync(join(this.root, f.path)) ? sha256(readFileSync(join(this.root, f.path))) : 'missing';
+      const current = existsSync(join(this.root, f.path))
+        ? sha256(readFileSync(join(this.root, f.path)))
+        : 'missing';
       if (current !== f.preimageSha256 && current !== f.postimageSha256) {
         conflicts.push(f.path);
       }
@@ -192,7 +201,10 @@ export class Transaction {
   /** Roll-back from any pre-verified state (restores preimages exactly). */
   rollback(): { status: 'rolled-back' | 'conflict'; conflicts: string[] } {
     const result = this.recover('roll-back');
-    return { status: result.status === 'conflict' ? 'conflict' : 'rolled-back', conflicts: result.conflicts };
+    return {
+      status: result.status === 'conflict' ? 'conflict' : 'rolled-back',
+      conflicts: result.conflicts,
+    };
   }
 
   /** Cleanup (dispose fixtures). */

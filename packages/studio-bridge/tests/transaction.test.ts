@@ -92,7 +92,9 @@ describe('durable transaction recovery (T0805, DA-35)', () => {
     const tx = Transaction.prepare(root, 'plan-1', 1, FILES);
     tx.apply();
     tx.rollback();
-    expect(readFileSync(join(root, 'user-notes.md'), 'utf8')).toBe('my own scratch notes — preserve me');
+    expect(readFileSync(join(root, 'user-notes.md'), 'utf8')).toBe(
+      'my own scratch notes — preserve me',
+    );
     expect(existsSync(join(root, 'user-notes.md'))).toBe(true);
   });
 
