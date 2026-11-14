@@ -1645,7 +1645,17 @@
       "rollback": "store in viewport space + transforms",
       "status": "pending",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "pi",
+      "lease": {
+        "session": "pi",
+        "task": "T0704",
+        "branch": "chore/continuation-reconciliation",
+        "baseSha": "main",
+        "acquired": "2026-11-14T05:12:00Z",
+        "expires": "2026-11-14T08:12:00Z",
+        "fencingGeneration": 1
+      }
     },
     {
       "id": "T0705",
@@ -2016,7 +2026,17 @@
       "rollback": "version-pinned verification",
       "status": "pending",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm",
+      "lease": {
+        "session": "zcode-glm",
+        "task": "T0902",
+        "branch": "chore/continuation-reconciliation",
+        "baseSha": "main",
+        "acquired": "2026-11-14T05:12:00Z",
+        "expires": "2026-11-14T08:12:00Z",
+        "fencingGeneration": 1
+      }
     },
     {
       "id": "T0903",

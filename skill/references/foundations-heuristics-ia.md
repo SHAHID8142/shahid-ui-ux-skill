@@ -20,22 +20,38 @@ questions before screens exist (E1); answers go in the direction thesis.
    compare in one context; is total cost visible before commitment; is
    hesitation missing info or wrong order. Success measurable when price,
    availability and the next step are co-present at the decision point,
-   and cart/checkout transitions are designed states, not surprises.
+   and cart/checkout transitions are designed states, not surprises —
+   judged on the content-copy rubric axis with the truthfulness behavior
+   contract (T0406, commerce-truthfulness is non-waivable).
 3. **Operate (CMS/CRM admin)** (entry: dashboard/list). Questions: the top
-   recurring task; single vs bulk; where mid-task arrivals from
-   notifications land. Success measurable when the action completes with
-   explicit confirmation and the record's new state is visible in place;
-   empty/error states designed (G3).
+   recurring task; single vs bulk; notification arrivals; **role/permission
+   state** — who may see and act is a first-class flow decision; **record
+   identity under volume** — ten invoices at 375px keep number, status,
+   amount and action readable without lateral scroll (the preserved admin
+   baseline is the measured failure: overflow true, responsive-edge 1/5);
+   **destructive actions** — audit trail + recovery path before shipping.
+   Success measurable when the action confirms explicitly, the record's new
+   state is visible in place, role gates are visible, mobile essentials pass
+   the hardening matrix (T0551), and destructive actions are auditable (G3).
 4. **Portfolio** (entry: work index/external link). Questions: is the work
    scannable without opening everything; does each case state role and
    outcome, not only images. Success measurable when every project is
    reachable from one index view and each case pairs evidence with
-   context.
+   context — judged on the G9 semantics checks (single h1, heading ladder,
+   landmarks) plus the distinctiveness-pov rubric axis for the case
+   narrative.
 
 ## Heuristic evaluation — run per ACCEPTED section
 
 A finding states what you looked at plus concrete evidence (E2 kinds),
-never "could be better". Axis tags are T0151 rubric axes.
+never "could be better". Axis tags are T0151 rubric axes — the checklist
+below natively tags seven axes; the remaining five tag through these
+mappings: typography and color-surface findings come from the consistency
+and minimalist checks when the drift is typographic or chromatic;
+responsive-edge from the flexibility check measured against the hardening
+matrix (T0551); performance from the minimalist check's density budget;
+distinctiveness-pov from the consistency check's differentiation review.
+Findings outside these mappings stay untagged, never forced.
 
 1. **Visibility of status** (motion-interaction): async/save/delete give
    pending/done/error feedback. Finding: a result the user must infer.

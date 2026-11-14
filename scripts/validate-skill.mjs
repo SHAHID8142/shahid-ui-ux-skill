@@ -75,8 +75,12 @@ if (existsSync(join(SKILL, 'references'))) {
     if (!f.endsWith('.md')) continue;
     const text = readFileSync(join(SKILL, 'references', f), 'utf8');
     const t = tokens(text);
-    if (t > 2000) errors.push(`${f} exceeds 2k tokens (${t} est.)`);
-    lines.push(`[PASS] reference ${f} ≤ 2k tokens — ${t} est.`);
+    if (t > 2000) {
+      errors.push(`${f} exceeds 2k tokens (${t} est.)`);
+      lines.push(`[FAIL] reference ${f} exceeds 2k tokens — ${t} est.`);
+    } else {
+      lines.push(`[PASS] reference ${f} ≤ 2k tokens — ${t} est.`);
+    }
   }
 }
 

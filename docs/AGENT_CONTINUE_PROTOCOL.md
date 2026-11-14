@@ -191,3 +191,8 @@ A second agent/host works the same repository. Rules:
 4. **Split by lane**: knowledge/evaluation vs bridge/studio vs installer/adapters
    — claim across lanes, never the same files. Shared canonical records: edit
    only your own task's rows; reconcile on conflict preserving both entries.
+5. **Machine bus precedence (D33a)**: `scripts/coord/coordination.mjs` is
+   authoritative for claims/findings (INBOX is prose only). Per-task gate:
+   `node scripts/coord/coordination.mjs step --as <agent>` before work;
+   `claim --task T... --path ...` before touching paths; `resolve` findings
+   with what you did; `heartbeat` while working.

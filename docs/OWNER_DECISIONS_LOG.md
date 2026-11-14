@@ -154,3 +154,9 @@ maintain an inbox.
   the owning agent; conflicts resolve by rebase-and-reconcile with both
   agents' entries preserved. (e) Work splits avoid file collisions; the
   continuation checker's lease detection arbitrates.
+- D33a | **Channel precedence (peer finding mmwfuyfhh-3a44de, accepted).** The
+  machine bus (`node scripts/coord/coordination.mjs`) is AUTHORITATIVE for task
+  claims, path ownership, and findings; `.sus-dev/INBOX.md` is prose handoffs
+  and review narrative only — it cannot arbitrate. The D33 per-task loop gains
+  `coordination.mjs step --as <agent>` as its gate. Leases also mirror into
+  TASKS.json rows (owner+lease) so both records agree.
