@@ -1677,9 +1677,17 @@
       ],
       "risk": "over-constrained layouts",
       "rollback": "constraints advisory in preview",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0705.md",
+        "packages/schemas/src/visual-intent.ts",
+        "packages/studio-bridge/src/intent-compiler.ts",
+        "packages/studio-bridge/tests/intent-compiler.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0705.md"
     },
     {
       "id": "T0706",

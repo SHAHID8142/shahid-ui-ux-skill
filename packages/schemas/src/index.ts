@@ -159,3 +159,15 @@ export {
   type AnnotationData,
   type AnnotationSessionData,
 } from './annotations.js';
+export {
+  ALIGNMENTS,
+  REFLOW_MODES,
+  RELATIONSHIPS,
+  Constraint,
+  SusVisualIntent,
+  Target,
+  VisualIntent,
+  type ConstraintData,
+  type TargetData,
+  type VisualIntentData,
+} from './visual-intent.js';

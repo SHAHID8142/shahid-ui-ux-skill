@@ -307,3 +307,10 @@
   required, per-kind point rules, clamped capture, undo pure op. 7/7 tests;
   pnpm verify full green. Receipt: VERIFICATION/T0704.md. Next: T0705 intent
   compiler; T0602/T0603 when playbooks unlock.
+
+- 2026-11-14T09:30:00+06:00 | ZCode (GLM) | T0705 | Visual Intent v1 (§7.3 fields)
+  + deterministic compiler (relationship bands, content constraints, confidence
+  gate, constraints-or-unknowns rule — property tests over 700 generated cases).
+  Property test found a real contract gap (no-constraint intent) → honest
+  unknowns semantics. 6/6 tests; pnpm verify full green. Receipt: T0705.md.
+  Next: T0804/T0709/T0706; T0704b overlay by pi (live).

@@ -125,6 +125,19 @@ function isFiniteNumber(v: unknown): v is number {
   return typeof v === 'number' && Number.isFinite(v);
 }
 
+/** Strict-object discipline (parity with the zod `.strict()` envelopes): no extra keys. */
+function exactKeys(
+  obj: Record<string, unknown>,
+  allowed: readonly string[],
+  path: string,
+  reasons: string[],
+): void {
+  const extras = Object.keys(obj).filter((k) => !allowed.includes(k));
+  if (extras.length > 0) {
+    reasons.push(`${path}: unexpected key(s) ${extras.join(', ')}`);
+  }
+}
+
 function inBounds(v: number, max: number, path: string, reasons: string[]): boolean {
   if (v < 0 || v > max) {
     reasons.push(`${path}: out of bounds (0..${max})`);
@@ -161,6 +174,7 @@ function validateViewport(v: unknown, reasons: string[], path = 'viewport'): voi
     return;
   }
   const vp = v as Record<string, unknown>;
+  exactKeys(vp, ['width', 'height', 'dpr', 'scrollX', 'scrollY', 'capturedAt'], path, reasons);
   if (!isFiniteNumber(vp['width']) || vp['width'] < 1 || vp['width'] > 100_000) {
     reasons.push(`${path}.width: expected finite number in 1..100000`);
   }
@@ -188,6 +202,7 @@ function validateAnchor(a: unknown, reasons: string[], path: string): boolean {
   }
   const anchor = a as Record<string, unknown>;
   let ok = true;
+  exactKeys(anchor, ['kind', 'value', 'confidence'], path, reasons);
   if (
     anchor['kind'] !== 'id' &&
     anchor['kind'] !== 'structural' &&
@@ -223,6 +238,7 @@ function validateGeometry(
   }
   const geo = g as Record<string, unknown>;
   if (geo['kind'] === 'rectangle') {
+    exactKeys(geo, ['kind', 'x', 'y', 'width', 'height'], path, reasons);
     for (const key of ['x', 'y', 'width', 'height'] as const) {
       if (!isFiniteNumber(geo[key])) {
         reasons.push(`${path}.${key}: not a finite number`);
@@ -249,6 +265,7 @@ function validateGeometry(
     return;
   }
   if (geo['kind'] === 'pen') {
+    exactKeys(geo, ['kind', 'points'], path, reasons);
     const points = geo['points'];
     if (!Array.isArray(points)) {
       reasons.push(`${path}.points: expected array`);
@@ -266,6 +283,7 @@ function validateGeometry(
     return;
   }
   if (geo['kind'] === 'arrow') {
+    exactKeys(geo, ['kind', 'from', 'to'], path, reasons);
     const okFrom = pointInBounds(geo['from'], viewport, `${path}.from`, reasons);
     const okTo = pointInBounds(geo['to'], viewport, `${path}.to`, reasons);
     if (
@@ -304,6 +322,7 @@ export function validateAnnotationDocument(
     return { ok: false, reasons };
   }
   const body = doc as Record<string, unknown>;
+  exactKeys(body, ['viewport', 'annotations'], 'document', reasons);
   validateViewport(body['viewport'], reasons);
   const viewport = body['viewport'] as ViewportMetadata | undefined;
   const annotations = body['annotations'];
@@ -325,6 +344,10 @@ export function validateAnnotationDocument(
       return;
     }
     const ann = a as Record<string, unknown>;
+    exactKeys(ann, ['id', 'kind', 'geometry', 'anchor', 'note', 'provenance'], path, reasons);
+    if (ann['kind'] !== 'rectangle' && ann['kind'] !== 'pen' && ann['kind'] !== 'arrow') {
+      reasons.push(`${path}.kind: expected 'rectangle' | 'pen' | 'arrow'`);
+    }
     if (typeof ann['id'] !== 'string' || !/^a-[1-9]\d*$/.test(ann['id'])) {
       reasons.push(`${path}.id: expected monotonic id 'a-<n>'`);
     }
@@ -338,6 +361,16 @@ export function validateAnnotationDocument(
       validateAnchor(ann['anchor'], reasons, `${path}.anchor`);
     }
     validateGeometry(ann['geometry'], vp, reasons, `${path}.geometry`);
+    // kind/geometry consistency: a rectangle annotation carries rectangle
+    // geometry, etc. — semantic-intent discipline, never loose pairing.
+    if (
+      typeof ann['kind'] === 'string' &&
+      typeof ann['geometry'] === 'object' &&
+      ann['geometry'] !== null &&
+      (ann['geometry'] as Record<string, unknown>)['kind'] !== ann['kind']
+    ) {
+      reasons.push(`${path}: kind does not match geometry.kind`);
+    }
   });
   return { ok: reasons.length === 0, reasons };
 }
@@ -504,6 +537,8 @@ export class AnnotationStore {
       return { ok: false, reasons: ['envelope: not an object'] };
     }
     const env = envelope as Record<string, unknown>;
+    const reasons: string[] = [];
+    exactKeys(env, ['format', 'version', 'doc'], 'envelope', reasons);
     if (env['format'] !== ANNOTATION_FORMAT) {
       return { ok: false, reasons: [`envelope.format: expected "${ANNOTATION_FORMAT}"`] };
     }
@@ -515,7 +550,6 @@ export class AnnotationStore {
         ],
       };
     }
-    const reasons: string[] = [];
     const ok = validateAnnotationDocument(env['doc'], reasons);
     if (!ok) return { ok: false, reasons };
     return { ok: true, document: deepFreeze(structuredClone(env['doc'])) as AnnotationDocument };
