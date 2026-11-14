@@ -1,0 +1,4 @@
+#!/bin/sh
+# SUS push gate (see scripts/gate-push.mjs). Installed by `pnpm hooks:install`.
+# Refuses any push whose tree has not passed the full release suite.
+exec node scripts/gate-push.mjs

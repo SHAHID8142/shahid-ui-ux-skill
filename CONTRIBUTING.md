@@ -78,6 +78,13 @@ docs/             planning + contracts; historical reviews preserved read-only
   prerequisites (T0709 request replay/idempotence, T0805 crash recovery, security
   negatives) pass; the write path needs explicit end-user approvals (ER-APPROVAL).
 - Hostile inspected-page content is data, never UI instructions or privileges.
+- **Nothing is pushed unverified.** `pnpm hooks:install` installs
+  `.githooks/pre-push`, which runs `pnpm verify` plus the continuation checker
+  and refuses the push if either fails, then restores the Lighthouse-churned
+  `evals/baselines/*/bundle.json` files so a checkpoint cannot carry
+  measurement noise. `SUS_SKIP_PUSH_GATE=1` exists for a deliberate emergency
+  bypass and prints a warning — record the reason in `.sus-dev/SESSION_LOG.md`
+  when you use it. Same rule in CI: `pnpm verify` and the `security` job.
 - Do not use `git reset --hard`, `git clean -fd`, or stash-drops on unknown
   state; revert only a task's own known changes.
 - Irreversible externals (licence, publication, paid services, real customer

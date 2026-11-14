@@ -22,7 +22,9 @@
     "playbooks": "node scripts/validate-playbooks.mjs",
     "knowledge": "node scripts/validate-knowledge.mjs",
     "verify": "pnpm gates:full && pnpm lint && pnpm format:check && pnpm stylelint && pnpm typecheck && pnpm build && pnpm test",
-    "gates:full": "node scripts/check-gates.mjs && node scripts/validate-skill.mjs && node scripts/validate-knowledge.mjs && node scripts/validate-playbooks.mjs || test $? -eq 3"
+    "gates:full": "node scripts/check-gates.mjs && node scripts/validate-skill.mjs && node scripts/validate-knowledge.mjs && node scripts/validate-playbooks.mjs || test $? -eq 3",
+    "hooks:install": "git config core.hooksPath .githooks && echo \"push gate installed (.githooks/pre-push)\"",
+    "gate:push": "node scripts/gate-push.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
