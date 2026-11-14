@@ -413,6 +413,9 @@ export function resolveFinding(root, { agent, id, resolution }) {
     resolvedAt: nowIso(),
   };
   writeJson(file, updated);
+  // The resolver has, by definition, read the finding: clear its inbox copy so the
+  // step gate cannot stay blocked on a message that was already acted on.
+  markRead(root, { agent, ids: [rec.id] });
   sendMessage(root, {
     from: agent,
     to: rec.from,
@@ -710,6 +713,10 @@ async function runSelftest() {
     'finding resolves and notifies the reporter',
     r1.ok && listFindings(dir, { to: 'beta' }).length === 0,
   );
+  t(
+    'resolve clears the inbox copy (gate can be cleared)',
+    listInbox(dir, { agent: 'beta' }).every((m) => m.id !== f1.id),
+  );
   const dg = digest(dir, { agent: 'beta' });
   t(
     'digest reports peer targets + gate',
@@ -999,13 +1006,19 @@ async function main(argv) {
       const agent = resolveAgent(root, as);
       const d = digest(root, { agent });
       console.log(d.text);
-      const clean = d.unread.length === 0 && d.openToMe.length === 0;
+      if (d.unread.length > 0) {
+        markRead(root, { agent, ids: d.unread.map((m) => m.id) });
+        console.error(
+          `\n(step acknowledged ${d.unread.length} message(s) as read; open findings keep blocking until 'resolve')`,
+        );
+      }
+      const blocked = d.openToMe.length > 0;
       console.error(
-        clean
-          ? '\nSTEP GATE: clean — proceed, then claim task+paths before editing.'
-          : `\nSTEP GATE: BLOCKED — ${d.unread.length} unread message(s), ${d.openToMe.length} open finding(s) for you. Handle them first.`,
+        blocked
+          ? `\nSTEP GATE: BLOCKED — ${d.openToMe.length} open finding(s) for you. Resolve with 'resolve --id <id> --resolution "..."' first.`
+          : `\nSTEP GATE: clean — proceed, then claim task+paths before editing.`,
       );
-      return clean ? 0 : 1;
+      return blocked ? 1 : 0;
     }
 
     case 'watch': {
