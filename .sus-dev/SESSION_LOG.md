@@ -325,3 +325,10 @@
   timestamps, legal-transition envelope, version envelope; deserializeSession
   real-message fix. Owns the 3 routed findings — all implemented. 13/13 tests;
   pnpm verify green. Receipt: VERIFICATION/T0709.md. Next: T0706 dry-run preview.
+
+- 2026-11-14T10:40:00+06:00 | ZCode (GLM) | ROUND-CLOSE | Repo PUBLIC (T0011/issue-11
+  closed). T0902 closed both-hosts. T0704 substrate + T0704b overlay (pi) closed as
+  split delivery. T0705 Visual Intent v1 + compiler (property tests). T0709 lifecycle
+  contract (owns routed findings). Two assertion-alignment commits after pi's
+  studio-web tests consumed the improved deserialize messages. CI green c6b754a.
+  Next ready: T0706 dry-run preview, T0804 scanner overlay, T0707 apply gates.
