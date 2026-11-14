@@ -1648,7 +1648,7 @@
       "phase": "build",
       "owner": "zcode-glm",
       "lease": null,
-      "note": "pi bus claim TTL-expired and released; zcode implemented per lane split",
+      "note": "SPLIT DELIVERY: substrate (schemas + bridge serialization + undo) done by zcode-glm; overlay UI in flight by pi (live bus claim, packages/studio-web). Pi consumes SusAnnotation/buildAnnotation/serializeSession from the landed substrate. Integration point: pi commits overlay consuming the contract; zcode peer-checks.",
       "evidence": [
         ".sus-dev/VERIFICATION/T0704.md",
         "packages/schemas/src/annotations.ts",
@@ -3042,6 +3042,45 @@
       "children": [],
       "results": [],
       "commit": "fe06295 + receipt commit"
+    },
+    {
+      "id": "T0704b",
+      "m": "M7",
+      "title": "Annotation overlay UI (pi live claim — T0704 split delivery)",
+      "obj": "Overlay drawing (rect/pen/arrow) consuming the landed sus.annotation contract; serialization + undo wired to overlay",
+      "deps": [
+        "T0704"
+      ],
+      "files": [
+        "packages/studio-web/"
+      ],
+      "acc": [
+        "overlay drawing produces schema-valid annotations via buildAnnotation",
+        "keyboard/typed equivalents wired in the UI",
+        "axe-clean overlay region",
+        "undo wired to undoLastAnnotation"
+      ],
+      "tests": [
+        "studio-web drawing tests consuming the contract"
+      ],
+      "risk": "concurrent edit with substrate",
+      "rollback": "revert studio-web only",
+      "status": "pending",
+      "approval": "D33a live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "lease": {
+        "session": "pi",
+        "task": "T0704b",
+        "branch": "chore/continuation-reconciliation",
+        "baseSha": "main",
+        "acquired": "2026-11-14T12:28:00Z",
+        "expires": "2026-11-14T15:28:00Z",
+        "fencingGeneration": 1
+      },
+      "evidence": [],
+      "children": [],
+      "results": []
     }
   ]
 }

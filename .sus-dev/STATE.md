@@ -13,11 +13,11 @@ evidence — CI on free standard runners).
 Canonical task statuses: TASKS.json (61 of 96 done). No active lease.
 Concurrency: 2 workers (D33) — claim via lease before editing.
 
-Current task: none (between tasks). Last: T0704 annotations done (pi's expired claim released — noted in TASKS.json).
+Current task: none (between tasks). Pi holds T0704b (overlay UI, live lease — record T0704b created for the split delivery).
 
 Next exact steps: `pnpm verify` (exit 0) before every push. Ready set:
-T0704 annotations, T0804 scanner overlay, T0709 lifecycle contract, then
-T0705-T0708 chain → T0700w → T0400/T0405 playbooks → T0602/T0603 motion →
+T0705 intent compiler (after T0704b lands), T0804 scanner overlay, T0709
+lifecycle contract, then T0706-T0708 chain → T0700w → T0400/T0405 playbooks → T0602/T0603 motion →
 M8/M9/M10 → T1006 final verified private push.
 
 Blockers: standing B003 (licence/publication, later phase) and B004
