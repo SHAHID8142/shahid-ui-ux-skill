@@ -10,7 +10,8 @@
  * T0155 owns judge calibration. Judged axis is builder-judged and never gates.
  */
 import { createServer, type Server } from 'node:http';
-import { readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { chromium } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -61,8 +62,10 @@ async function scanSurface(surface: Surface): Promise<{
   g5: GateResult;
 }> {
   const url = `http://127.0.0.1:${PORT}/${surface}`;
-  const outDir = join(ROOT, surface, 'evidence');
-  rmSync(outDir, { recursive: true, force: true });
+  // captures + gate evidence go to a TEMP dir: committed evidence under
+  // evals/baselines/<surface>/evidence is the FROZEN baseline record —
+  // reruns validate reproducibility without churning committed files
+  const outDir = mkdtempSync(join(tmpdir(), `t0153-${surface}-`));
   const capture = await captureMatrix(url, outDir);
   const capture2 = await captureMatrix(url, join(outDir, 'rerun'));
   const browser = await chromium.launch();
@@ -237,6 +240,19 @@ describe('no-skill baselines on the 4-surface corpus (T0153)', () => {
 });
 
 function writeBundle(surface: Surface, bundle: EvidenceBundleData): void {
-  // committed evidence: bundle.json next to the shots
-  writeFileSync(join(ROOT, surface, 'bundle.json'), `${JSON.stringify(bundle, null, 2)}\n`);
+  // committed evidence: bundle.json next to the shots. Skip the write when
+  // the committed bundle is semantically identical (timestamps stripped) —
+  // prevents churn from every verification run.
+  const path = join(ROOT, surface, 'bundle.json');
+  const strip = (t: string): string =>
+    t
+      .replace(/"generatedAt": "[^"]*"/g, '"generatedAt": "<ts>"')
+      .replace(/"at": "[^"]*"/g, '"at": "<ts>"');
+  if (
+    existsSync(path) &&
+    strip(readFileSync(path, 'utf8')) === strip(JSON.stringify(bundle, null, 2))
+  ) {
+    return;
+  }
+  writeFileSync(path, `${JSON.stringify(bundle, null, 2)}\n`);
 }
