@@ -267,3 +267,8 @@
   injection, load-based reconnect, keyboard-navigable + axe-clean in-slice
   (kilo H3 honored). 5/5 tests; workspace 185/185. Receipt: VERIFICATION/T0702.md.
   Next: T0602/T0603 motion; T0703 anchors.
+
+- 2026-11-14T06:35:00+06:00 | ZCode (GLM) | T0703 | Selection + anchors: confidence
+  ladder (id 1.0 / structural 0.8 / text 0.7 / ambiguous 0.5+refusal+ranked),
+  unknown-target honesty, isolated-world posture. 6/6 tests; pnpm verify 0.
+  Receipt: VERIFICATION/T0703.md. T0402b sub-agent still running.

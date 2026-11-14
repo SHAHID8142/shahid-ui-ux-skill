@@ -14,3 +14,4 @@ export {
   type MessageEnvelopeData,
 } from './server.js';
 export { CdpOverlay, type AttachResult } from './cdp.js';
+export { resolveSelection, type Anchor, type AnchorKind, type SelectionResult, type RankedCandidate } from './select.js';

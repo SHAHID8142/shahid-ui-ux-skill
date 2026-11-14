@@ -1611,9 +1611,17 @@
       ],
       "risk": "selector fragility across renders",
       "rollback": "anchor on stable attributes first",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "zcode-glm-2026-11-13",
+      "lease": null,
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0703.md",
+        "packages/studio-bridge/src/select.ts",
+        "packages/studio-bridge/tests/select.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0703.md"
     },
     {
       "id": "T0704",
@@ -2728,7 +2736,17 @@
       "rollback": "foundation files versioned",
       "status": "pending",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "owner": "subagent-t0402b",
+      "lease": {
+        "session": "zcode-subagent-t0402b",
+        "task": "T0402b",
+        "branch": "chore/continuation-reconciliation",
+        "baseSha": "main",
+        "acquired": "2026-11-14T06:25:00Z",
+        "expires": "2026-11-14T08:25:00Z",
+        "fencingGeneration": 1
+      }
     },
     {
       "id": "T0006",
