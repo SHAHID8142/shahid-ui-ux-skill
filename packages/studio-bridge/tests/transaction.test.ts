@@ -5,7 +5,7 @@
  */
 import { execFileSync } from 'node:child_process';
 import { readdirSync } from 'node:fs';
-import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -132,5 +132,6 @@ describe('durable transaction recovery (T0805, DA-35)', () => {
     expect(readFileSync(join(root, 'page.tsx'), 'utf8')).toContain('after');
     expect(readFileSync(join(root, 'styles.css'), 'utf8')).toContain('blue');
     expect(readFileSync(join(root, 'user-notes.md'), 'utf8')).toContain('preserve me');
+    rmSync(scriptPath, { force: true }); // self-clean the generated child
   });
 });
