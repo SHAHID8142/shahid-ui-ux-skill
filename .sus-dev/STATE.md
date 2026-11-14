@@ -12,9 +12,7 @@ ADR-003 as amended (D29). Private dev-branch checkpoint pushes permitted (D30).
 Canonical task statuses: TASKS.json (58 of 95 done). No active lease.
 Concurrency: 2 workers (D33) — claim via lease before editing.
 
-Current task: T0704 (annotations — claimed by zcode-glm, starting next).
-Peer agent: claim freely from the pending set OUTSIDE packages/studio-bridge;
-coordinate via .sus-dev/INBOX.md.
+Current task: T0902 host smoke script (zcode-glm, lease recorded). Pi holds T0704 (lease pi, mirrored in TASKS.json). Peer agent: claim via bus + TASKS.json leases; coordinate via .sus-dev/INBOX.md.
 
 Next exact steps: `pnpm verify` (exit 0) before every push. Ready set:
 T0704 annotations (zcode-glm), T0902 host smoke script, T0602/T0603 motion
