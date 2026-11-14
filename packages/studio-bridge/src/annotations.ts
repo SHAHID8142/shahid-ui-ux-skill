@@ -76,7 +76,7 @@ export function deserializeSession(json: string): AnnotationSessionData {
   try {
     raw = JSON.parse(json);
   } catch (e) {
-    throw new Error(`invalid session JSON: ${String(e)}`);
+    throw new Error(`invalid session JSON: ${String(e)}`, { cause: e });
   }
   const parsed = AnnotationSession.safeParse(raw);
   if (!parsed.success) {
