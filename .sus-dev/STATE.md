@@ -18,7 +18,7 @@ coordinate via .sus-dev/INBOX.md.
 
 Next exact steps: `pnpm verify` (exit 0) before every push. Ready set:
 T0704 annotations (zcode-glm), T0902 host smoke script, T0602/T0603 motion
-playbooks + interruption suite, T0402b done, then T0705-T0709 chain →
+playbooks + interruption suite, then T0705-T0709 chain →
 T0700w → T0400/T0405 playbooks → M8/M9/M10 → T1006 final verified private push.
 
 Blockers: standing B003 (licence/publication, later phase) and B004
