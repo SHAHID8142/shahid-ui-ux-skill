@@ -113,7 +113,7 @@ export type ApplyResult =
   | { ok: true; document: AnnotationDocument }
   | { ok: false; reasons: string[] };
 
-interface ValidationContext {
+export interface ValidationContext {
   viewport: ViewportMetadata;
   /** When validating a parsed document, ids come from the file, not the store. */
   expectExplicitIds: boolean;
@@ -385,8 +385,8 @@ function validateGeometryForAdd(g: unknown, viewport: ViewportMetadata): string[
 // ---------- store ----------
 
 interface Snapshot {
+  /** Ids are content-frozen snapshots; the id counter never participates. */
   annotations: Annotation[];
-  nextId: number;
 }
 
 /** Deep-freezes so store results and parsed documents are immutable views. */
@@ -469,8 +469,9 @@ export class AnnotationStore {
     const snapshot = this.undoStack.pop();
     if (!snapshot) return { ok: false, reasons: ['undo: nothing to undo'] };
     this.redoStack.push(this.snapshot());
+    // Content rewinds; the id counter NEVER rewinds — a redone/undone id is
+    // never reused for different geometry (no aliasing hazard downstream).
     this.annotations = snapshot.annotations;
-    this.nextId = snapshot.nextId;
     return { ok: true, document: this.document() };
   }
 
@@ -479,7 +480,6 @@ export class AnnotationStore {
     if (!snapshot) return { ok: false, reasons: ['redo: nothing to redo'] };
     this.undoStack.push(this.snapshot());
     this.annotations = snapshot.annotations;
-    this.nextId = snapshot.nextId;
     return { ok: true, document: this.document() };
   }
 
@@ -493,10 +493,7 @@ export class AnnotationStore {
   }
 
   private snapshot(): Snapshot {
-    return {
-      annotations: structuredClone(this.annotations),
-      nextId: this.nextId,
-    };
+    return { annotations: structuredClone(this.annotations) };
   }
 
   /** Deep-frozen copy — callers cannot mutate store state through the result. */
@@ -550,8 +547,8 @@ export class AnnotationStore {
         ],
       };
     }
-    const ok = validateAnnotationDocument(env['doc'], reasons);
-    if (!ok) return { ok: false, reasons };
+    const result = validateAnnotationDocument(env['doc'], reasons);
+    if (!result.ok) return { ok: false, reasons };
     return { ok: true, document: deepFreeze(structuredClone(env['doc'])) as AnnotationDocument };
   }
 }
