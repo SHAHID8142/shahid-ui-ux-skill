@@ -1646,16 +1646,9 @@
       "status": "pending",
       "approval": "pending",
       "phase": "build",
-      "owner": "pi",
-      "lease": {
-        "session": "pi",
-        "task": "T0704",
-        "branch": "chore/continuation-reconciliation",
-        "baseSha": "main",
-        "acquired": "2026-11-14T05:12:00Z",
-        "expires": "2026-11-14T08:12:00Z",
-        "fencingGeneration": 1
-      }
+      "owner": null,
+      "lease": null,
+      "note": "pi bus claim TTL-expired 2026-11-14; re-claim via coordination.mjs before working"
     },
     {
       "id": "T0705",
@@ -2028,15 +2021,7 @@
       "approval": "pending",
       "phase": "build",
       "owner": "zcode-glm (freepi arm: pi)",
-      "lease": {
-        "session": "zcode-glm",
-        "task": "T0902",
-        "branch": "chore/continuation-reconciliation",
-        "baseSha": "main",
-        "acquired": "2026-11-14T05:12:00Z",
-        "expires": "2026-11-14T08:12:00Z",
-        "fencingGeneration": 1
-      },
+      "lease": null,
       "evidence": [
         ".sus-dev/VERIFICATION/T0902.md",
         "scripts/coord/smoke-host.mjs",
