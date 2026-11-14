@@ -160,3 +160,24 @@ maintain an inbox.
   and review narrative only — it cannot arbitrate. The D33 per-task loop gains
   `coordination.mjs step --as <agent>` as its gate. Leases also mirror into
   TASKS.json rows (owner+lease) so both records agree.
+
+## 2026-11-14 — repository visibility (D34, owner issue #11)
+
+Source: owner issue #11 "Owner-approved: make SUS repository public now to
+reduce GitHub Actions minutes (safe visibility migration)" — an explicit owner
+authorization channel per D32.
+
+- D34 | **Repository visibility: private → public during active development.**
+  Supersedes D30's "never change repository visibility" constraint FOR THIS
+  SPECIFIC CHANGE only; D30's other content (no public product launch, no
+  unfinished merges to main, no npm publication, BUILD_COMPLETE_PUSHED boundary,
+  final-audit sequencing) is untouched. Preflight ran before the flip: secret
+  pattern scan over all 22 refs' reachable history (0 hits), no .env/credential/
+  key files ever added, archive zip = owner's own PRD documents only, no large
+  binary blobs, PRs #1-7 + issues = our own review/decision text, dependency
+  licences standard (MIT-family registry packages), workflow hardened to
+  least-privilege `permissions: contents: read`, no `pull_request_target`,
+  no repository secrets in use. No LICENSE file: default all-rights-reserved —
+  repo visibility is NOT the D06 product-licence decision, which stays pending.
+  Post-flip verification required (visibility read-back, anonymous access,
+  fresh CI on the exact SHA) before issue #11 closes.

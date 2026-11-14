@@ -3010,6 +3010,40 @@
         "issue #9 handoff discrepancy fixed + checker hardened with 4 end-to-end negatives"
       ],
       "commit": "same commit as .sus-dev/VERIFICATION/T0010b.md"
+    },
+    {
+      "id": "T0011",
+      "m": "M1",
+      "title": "Public visibility migration (owner issue #11)",
+      "obj": "Preflight all refs/history for secrets + licensing, flip repo to public, verify CI on public runners, receipt + close issue",
+      "deps": [
+        "T0010b"
+      ],
+      "files": [
+        "docs/OWNER_DECISIONS_LOG.md",
+        ".sus-dev/VERIFICATION/T0011.md"
+      ],
+      "acc": [
+        "D34 decision recorded superseding D30 visibility constraint (scoped)",
+        "preflight: all refs/history secrets scan + licenses + Actions security documented",
+        "repo reads back public; fresh CI green on public runners; no release/merge to main",
+        "issue #11 closed with evidence"
+      ],
+      "tests": [
+        "git history secret scan",
+        "gh api visibility read-back",
+        "fresh CI run watch"
+      ],
+      "risk": "historical content exposure; irreversible without owner action",
+      "rollback": "visibility can be reverted to private by owner decision",
+      "status": "pending",
+      "approval": "owner issue #11 (explicit visibility authorization)",
+      "phase": "build",
+      "owner": null,
+      "lease": null,
+      "evidence": [],
+      "children": [],
+      "results": []
     }
   ]
 }

@@ -7,6 +7,9 @@ name: CI
     branches-ignore: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   verify:
     name: verify (node ${{ matrix.node }})
