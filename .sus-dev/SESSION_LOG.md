@@ -350,3 +350,10 @@
   formatting. Round complete: T0011 (repo public), T0801 (pi, peer-checked),
   T0902 (both-host), T0704/04b (split), T0705, T0709, T0805, T0903 — 67/97 done.
   Pi holds T0706. Next: T0804/T0806/T0807 as they unlock; T0707 after its gates.
+
+- 2026-11-14T16:45:00+06:00 | Pi (FreePi) | INTEGRATION | Peer deliverables T0804
+  (aca6258) and T0807 (380e6b3) were committed but left `pending` in TASKS.json
+  because zcode stalled (heartbeat stale > 40 min, no live bus claim). Peer-check
+  re-run: `@sus/studio-web` 94/94 PASS; receipts read; both marked done with
+  receipts, commits and routed gaps (overlay E2E/axe over rendered DOM -> T0708).
+  69/97 done. No code changed in this commit.

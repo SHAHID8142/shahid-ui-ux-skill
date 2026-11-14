@@ -2,7 +2,7 @@
   "meta": {
     "product": "SUS — Shahid UI UX Skill",
     "version": "planning-v1.4",
-    "updated": "2026-11-13",
+    "updated": "2026-11-14",
     "protocol": "docs/AGENT_CONTINUE_PROTOCOL.md; docs/TASK_RECORD_CONTRACT.md",
     "build_gate": "APERIO received 2026-11-13 (D28): build authorized; statuses below are canonical",
     "concurrency": 1,
@@ -1898,9 +1898,21 @@
       ],
       "risk": "alert fatigue",
       "rollback": "severity filter default",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi); integrated by pi after zcode stall",
+      "phase": "build",
+      "owner": "pi (peer-checked by pi/zcode-stall integration)",
+      "lease": null,
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0804.md",
+        "packages/studio-web/src/findings-overlay.ts",
+        "packages/studio-web/tests/findings-overlay.test.ts"
+      ],
+      "commit": "aca6258",
+      "results": [
+        "peer-check: 20 new tests re-run PASS. Content-fingerprint dismissal keys survive line shifts; dismissal refused without >=12-char reason; stale dismissals surfaced not deleted; DECISIONS.md house row format escapes pipes/newlines",
+        "known gap routed (stated, not hidden): overlay E2E rendering belongs to T0708; this delivery is the DOM-free decision/format layer"
+      ]
     },
     {
       "id": "T0805",
@@ -1995,11 +2007,24 @@
       ],
       "risk": "canvas a11y limits",
       "rollback": "DOM panel as equal-power alternative",
-      "status": "pending",
-      "approval": "pending",
+      "status": "done",
+      "approval": "D33 live bus claim (pi); integrated by pi after zcode stall",
       "phase": "build",
       "gates": [
         "G9"
+      ],
+      "owner": "pi (peer-checked by pi/zcode-stall integration)",
+      "lease": null,
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0807.md",
+        "packages/studio-web/src/a11y.ts",
+        "packages/studio-web/src/keyboard-drawing.ts",
+        "packages/studio-web/tests/a11y.test.ts"
+      ],
+      "commit": "380e6b3",
+      "results": [
+        "peer-check: 29 new tests re-run PASS (package 94/94). Keyboard path emits the same AddInstruction as pointer (DA-34 equivalence test); G7/G8/G9 emit registry statuses; WCAG exceptions -> not-applicable with notApplicableReason",
+        "known gap routed: axe over rendered overlay DOM + manual AT protocol need the T0708 browser harness; models here are DOM-free"
       ]
     },
     {
