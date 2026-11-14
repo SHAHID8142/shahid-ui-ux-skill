@@ -9,10 +9,10 @@ amended (D29). Checkpoint pushes to private dev branches permitted (D30).
 Canonical statuses: TASKS.json. Done: T0001-T0007 (M0 complete). No active lease.
 Concurrency 1.
 
-Current task: none (between tasks). Lease zcode-subagent-t0402b owns T0402b (knowledge authoring; main agent integrates on completion).
+Current task: T0704 (annotations — main agent, next). Peer agent: claim tasks via TASKS.json leases; see .sus-dev/INBOX.md.
 Next exact steps: `pnpm check` (exit 0 verified). Then ready set: T0602/T0603 (motion playbooks + interruption suite —
-tokens done), T0703 (element selection + stable anchors), then T0402b
-fixtures-deep + T0704-T0709 chain ->
+T0703 done (selection + anchors). Next: T0704 (annotations), T0402b done
+(heuristics/IA), then T0705-T0709 chain ->
 T0700w -> T0400/T0405 playbooks -> M8/M9/M10.
 Blockers: none open except standing B003 (licence/publication, later phase) and B004
 (irreversible externals during build). Active files: none after checkpoint.
