@@ -360,7 +360,6 @@ export function markRead(root, { agent, ids }) {
   return merged.length;
 }
 
-
 // ----------------------------------------------------------------- findings
 
 /**
@@ -393,7 +392,12 @@ export function fileFinding(root, f) {
 
 export function listFindings(root, { status = 'open', to = null, from = null } = {}) {
   return listJson(paths(root).findings)
-    .filter((f) => (status === 'all' || f.status === status) && (!to || f.to === to) && (!from || f.from === from))
+    .filter(
+      (f) =>
+        (status === 'all' || f.status === status) &&
+        (!to || f.to === to) &&
+        (!from || f.from === from),
+    )
     .sort((a, b) => String(a.at).localeCompare(String(b.at)));
 }
 
@@ -424,7 +428,9 @@ export function resolveFinding(root, { agent, id, resolution }) {
 // ------------------------------------------------------------------- digest
 
 function commitsSince(baseSha, limit = 5) {
-  const out = baseSha ? git(['log', '--oneline', `${baseSha}..HEAD`]) : git(['log', '--oneline', `-${limit}`]);
+  const out = baseSha
+    ? git(['log', '--oneline', `${baseSha}..HEAD`])
+    : git(['log', '--oneline', `-${limit}`]);
   return (out ?? '').split('\n').filter(Boolean).slice(0, limit);
 }
 
@@ -440,7 +446,9 @@ function dirtyUnder(snap, claimPaths) {
 export function digest(root, { agent }) {
   const snap = gitSnapshot();
   const lines = [];
-  lines.push(`COORDINATION DIGEST for ${agent} — ${snap.branch} @ ${snap.head}, dirty ${snap.dirty.length}`);
+  lines.push(
+    `COORDINATION DIGEST for ${agent} — ${snap.branch} @ ${snap.head}, dirty ${snap.dirty.length}`,
+  );
   lines.push('');
 
   const agents = listAgents(root);
@@ -459,9 +467,13 @@ export function digest(root, { agent }) {
   const others = listClaims(root).filter((c) => c.live && c.agent !== agent);
   if (others.length === 0) lines.push('  (no other live claims right now)');
   for (const c of others) {
-    lines.push(`  ${c.task} by ${c.agent}  (hb ${Math.round(ageSeconds(c.heartbeatAt))}s, base ${String(c.baseSha ?? '?').slice(0, 7)})`);
+    lines.push(
+      `  ${c.task} by ${c.agent}  (hb ${Math.round(ageSeconds(c.heartbeatAt))}s, base ${String(c.baseSha ?? '?').slice(0, 7)})`,
+    );
     if (c.note) lines.push(`    intent: ${c.note}`);
-    lines.push(`    scope : ${c.paths?.length ? c.paths.join(', ') : '(no paths claimed — ask them)'}`);
+    lines.push(
+      `    scope : ${c.paths?.length ? c.paths.join(', ') : '(no paths claimed — ask them)'}`,
+    );
     for (const line of commitsSince(c.baseSha)) lines.push(`    commit since claim: ${line}`);
     const dirty = dirtyUnder(snap, c.paths);
     for (const d of dirty.slice(0, 12)) lines.push(`    uncommitted: ${d}`);
@@ -473,14 +485,17 @@ export function digest(root, { agent }) {
   lines.push('');
   lines.push('MY CLAIMS');
   if (mine.length === 0) lines.push('  (none — claim before editing)');
-  for (const c of mine) lines.push(`  ${c.task}  ${c.paths?.length ? c.paths.join(', ') : '(no paths)'}`);
+  for (const c of mine)
+    lines.push(`  ${c.task}  ${c.paths?.length ? c.paths.join(', ') : '(no paths)'}`);
 
   const unread = listInbox(root, { agent });
   const openToMe = listFindings(root, { to: agent });
   const mineOpen = listFindings(root, { from: agent });
   lines.push('');
   lines.push('ACTION REQUIRED');
-  lines.push(`  unread messages ${unread.length} | findings for you ${openToMe.length} | your open findings ${mineOpen.length}`);
+  lines.push(
+    `  unread messages ${unread.length} | findings for you ${openToMe.length} | your open findings ${mineOpen.length}`,
+  );
   for (const m of unread.slice(-5)) {
     lines.push(`  [${m.type}] ${m.from}: ${oneLine(m.body, 140)}  (id ${m.id})`);
   }
@@ -676,6 +691,31 @@ async function runSelftest() {
   const parsed = parseArgv(['check-paths', '--path', 'a', '--path', 'b', '--strict']);
   t('repeated --path collected', multi(parsed.flags.path).length === 2);
 
+  const f1 = fileFinding(dir, {
+    from: 'alpha',
+    to: 'beta',
+    body: 'baseline regenerated with no code change',
+    fix: 'restore recorded numbers or justify the churn',
+    severity: 'high',
+    task: 'T1',
+    evidence: 'git diff evals/baselines',
+  });
+  t('finding is tracked', listFindings(dir, { to: 'beta' }).length === 1 && f1.severity === 'high');
+  t(
+    'finding notifies the reviewer inbox',
+    listInbox(dir, { agent: 'beta' }).some((m) => m.type === 'finding'),
+  );
+  const r1 = resolveFinding(dir, { agent: 'beta', id: f1.id, resolution: 'reverted the numbers' });
+  t(
+    'finding resolves and notifies the reporter',
+    r1.ok && listFindings(dir, { to: 'beta' }).length === 0,
+  );
+  const dg = digest(dir, { agent: 'beta' });
+  t(
+    'digest reports peer targets + gate',
+    dg.text.includes('PEER REVIEW TARGETS') && Array.isArray(dg.openToMe),
+  );
+
   const failed = results.filter((x) => !x.pass);
   for (const x of results)
     console.log(`${x.pass ? 'PASS' : 'FAIL'} ${x.name}${x.detail ? ` — ${x.detail}` : ''}`);
@@ -747,6 +787,13 @@ const HELP = `SUS inter-agent coordination bus
   ask        --as <id> --to <id> --body "..." [--task T]
   inbox      --as <id> [--all] [--json]
   wait       --as <id> [--timeout 120] [--type question]
+  finding    --as <id> --to <id> --body "problem" [--fix "how"] [--severity low|medium|high|critical]
+             [--task T] [--path p] [--evidence "cmd/exit/file:line"]
+  findings   [--status open|resolved|all] [--to id] [--from id]
+  resolve    --as <id> --id <findingId> --resolution "what you did"
+  digest     --as <id>            peer work by other agents + what they asked you
+  step       --as <id>            mandatory per-task gate (exit 1 when blocked)
+  watch      --as <id> [--interval 5] [--iterations 12]
   board      [--as <id>]
   check-paths --as <id> --path <p>... [--strict]
   negotiate  --as <id> --to <id> --offer "T0704 …" [--ask "..."]
@@ -900,6 +947,86 @@ async function main(argv) {
       }
       print(got, json);
       markRead(root, { agent, ids: got.map((m) => m.id) });
+      return 0;
+    }
+
+    case 'finding': {
+      const from = resolveAgent(root, as);
+      if (!flags.to) throw new UsageError('--to is required');
+      if (!flags.body) throw new UsageError('--body is required');
+      const rec = fileFinding(root, {
+        from,
+        to: flags.to,
+        body: flags.body,
+        task: typeof flags.task === 'string' ? flags.task : null,
+        paths: multi(flags.path),
+        severity: typeof flags.severity === 'string' ? flags.severity : 'medium',
+        fix: typeof flags.fix === 'string' ? flags.fix : '',
+        evidence: typeof flags.evidence === 'string' ? flags.evidence : '',
+      });
+      print(rec, json);
+      if (!json) console.error(`\nFiled ${rec.id} (${rec.severity}) against ${rec.to}.`);
+      return 0;
+    }
+
+    case 'findings':
+      print(
+        listFindings(root, {
+          status: typeof flags.status === 'string' ? flags.status : 'open',
+          to: typeof flags.to === 'string' ? flags.to : null,
+          from: typeof flags.from === 'string' ? flags.from : null,
+        }),
+        true,
+      );
+      return 0;
+
+    case 'resolve': {
+      const agent = resolveAgent(root, as);
+      if (!flags.id) throw new UsageError('--id is required');
+      if (!flags.resolution) throw new UsageError('--resolution is required');
+      const res = resolveFinding(root, { agent, id: flags.id, resolution: flags.resolution });
+      print(res, true);
+      return res.ok ? 0 : 1;
+    }
+
+    case 'digest': {
+      const agent = resolveAgent(root, as);
+      console.log(digest(root, { agent }).text);
+      return 0;
+    }
+
+    case 'step': {
+      const agent = resolveAgent(root, as);
+      const d = digest(root, { agent });
+      console.log(d.text);
+      const clean = d.unread.length === 0 && d.openToMe.length === 0;
+      console.error(
+        clean
+          ? '\nSTEP GATE: clean — proceed, then claim task+paths before editing.'
+          : `\nSTEP GATE: BLOCKED — ${d.unread.length} unread message(s), ${d.openToMe.length} open finding(s) for you. Handle them first.`,
+      );
+      return clean ? 0 : 1;
+    }
+
+    case 'watch': {
+      const agent = resolveAgent(root, as);
+      const interval = (flags.interval ? Number(flags.interval) : 5) * 1000;
+      const iterations = flags.iterations ? Number(flags.iterations) : 12;
+      let lastDirty = -1;
+      const seen = new Set(listInbox(root, { agent, includeSeen: true }).map((m) => m.id));
+      for (let i = 0; i < iterations; i += 1) {
+        const snap = gitSnapshot();
+        for (const m of listInbox(root, { agent, includeSeen: true })) {
+          if (seen.has(m.id)) continue;
+          seen.add(m.id);
+          console.log(`[${m.type}] ${m.from}: ${oneLine(m.body, 160)}`);
+        }
+        if (snap.dirty.length !== lastDirty) {
+          lastDirty = snap.dirty.length;
+          console.log(`dirty ${snap.dirty.length} (${snap.branch}@${snap.head})`);
+        }
+        if (i < iterations - 1) await sleep(interval);
+      }
       return 0;
     }
 
