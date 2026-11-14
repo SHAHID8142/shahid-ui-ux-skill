@@ -5,11 +5,7 @@
  * serialization emits sus.annotation-session (schema-validated), undo is
  * a pure list operation.
  */
-import {
-  AnnotationSession,
-  type AnnotationData,
-  type AnnotationSessionData,
-} from '@sus/schemas';
+import { AnnotationSession, type AnnotationData, type AnnotationSessionData } from '@sus/schemas';
 
 export interface DrawnAnnotation {
   data: AnnotationData;
@@ -18,7 +14,12 @@ export interface DrawnAnnotation {
 }
 
 /** Normalizes viewport pixel coords to 0..1 semantic space. */
-export function normalizePoint(x: number, y: number, vw: number, vh: number): { x: number; y: number } {
+export function normalizePoint(
+  x: number,
+  y: number,
+  vw: number,
+  vh: number,
+): { x: number; y: number } {
   if (vw <= 0 || vh <= 0) throw new Error('viewport must be positive');
   return {
     x: Math.min(1, Math.max(0, Number((x / vw).toFixed(4)))),
@@ -39,7 +40,9 @@ export function buildAnnotation(params: {
   author: string;
   at?: string;
 }): AnnotationData {
-  const points = params.pixels.map((p) => normalizePoint(p.x, p.y, params.viewport.width, params.viewport.height));
+  const points = params.pixels.map((p) =>
+    normalizePoint(p.x, p.y, params.viewport.width, params.viewport.height),
+  );
   const candidate: AnnotationData = {
     id: params.id,
     kind: params.kind,
@@ -53,7 +56,9 @@ export function buildAnnotation(params: {
   };
   const parsed = AnnotationSession.shape.annotations.element.safeParse(candidate);
   if (!parsed.success) {
-    throw new Error(`invalid annotation: ${parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ')}`);
+    throw new Error(
+      `invalid annotation: ${parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ')}`,
+    );
   }
   return parsed.data;
 }
@@ -61,13 +66,15 @@ export function buildAnnotation(params: {
 /** Session serialization: schema-validated, append-only list + undo helper. */
 export function serializeSession(session: AnnotationSessionData): string {
   const parsed = AnnotationSession.safeParse(session);
-  if (!parsed.success) throw new Error(`invalid session: ${parsed.error.issues.map(String).join('; ')}`);
+  if (!parsed.success)
+    throw new Error(`invalid session: ${parsed.error.issues.map(String).join('; ')}`);
   return JSON.stringify(parsed.data, null, 2);
 }
 
 export function deserializeSession(json: string): AnnotationSessionData {
   const parsed = AnnotationSession.safeParse(JSON.parse(json));
-  if (!parsed.success) throw new Error(`invalid session JSON: ${parsed.error.issues.map(String).join('; ')}`);
+  if (!parsed.success)
+    throw new Error(`invalid session JSON: ${parsed.error.issues.map(String).join('; ')}`);
   return parsed.data;
 }
 

@@ -10,14 +10,15 @@ BUILD_COMPLETE_PUSHED=false. Architecture: ADR-001/002/004/005/006 adopted,
 ADR-003 as amended (D29). Repository is PUBLIC (D34, issue #11 closed with
 evidence — CI on free standard runners).
 
-Canonical task statuses: TASKS.json (61 of 96 done). No active lease.
+Canonical task statuses: TASKS.json (63 of 97 done: T0704 substrate + T0704b overlay + T0902 both-host + T0011 visibility). No active lease.
 Concurrency: 2 workers (D33) — claim via lease before editing.
 
-Current task: none (between tasks). Pi holds T0704b (overlay UI, live lease — record T0704b created for the split delivery).
+Current task: none (between tasks). T0704 split delivery COMPLETE (substrate zcode + overlay pi, integrated). Pi peer-reviewed substrate: PASS + 3 LOW → T0709.
 
 Next exact steps: `pnpm verify` (exit 0) before every push. Ready set:
-T0705 intent compiler (after T0704b lands), T0804 scanner overlay, T0709
-lifecycle contract, then T0706-T0708 chain → T0700w → T0400/T0405 playbooks → T0602/T0603 motion →
+T0709 lifecycle contract (owns the 3 routed LOW findings: createdAt format,
+deserialize error mapping, session version envelope), T0706 dry-run preview,
+then T0707 apply gates → T0700w → T0400/T0405 playbooks → T0602/T0603 motion →
 M8/M9/M10 → T1006 final verified private push.
 
 Blockers: standing B003 (licence/publication, later phase) and B004

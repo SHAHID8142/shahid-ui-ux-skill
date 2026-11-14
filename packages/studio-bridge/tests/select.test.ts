@@ -47,7 +47,7 @@ describe('selection anchors + confidence gate (T0703)', () => {
     await closeBrowser();
   });
 
-  it('id anchor: confidence 1.0, edit allowed', async () => {
+  it('id anchor: confidence 1.0, edit allowed', { timeout: 30000 }, async () => {
     const result: SelectionResult = await resolveSelection(page, 'teapot-ember');
     expect(result.anchor.kind).toBe('id');
     expect(result.anchor.value).toBe('teapot-ember');

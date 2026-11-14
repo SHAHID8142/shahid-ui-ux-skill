@@ -6,14 +6,17 @@
  */
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
-import { VisualIntent, type AnnotationData, type VisualIntentData } from '@sus/schemas';
+import { VisualIntent, type AnnotationData } from '@sus/schemas';
 import { compileIntent, deriveRelationship } from '../src/intent-compiler.js';
 
 const annotationArb = fc.record({
   id: fc.string({ minLength: 3, maxLength: 12 }),
   kind: fc.constantFrom('rectangle', 'pen', 'arrow'),
   points: fc.array(
-    fc.record({ x: fc.double({ min: 0, max: 1, noNaN: true }), y: fc.double({ min: 0, max: 1, noNaN: true }) }),
+    fc.record({
+      x: fc.double({ min: 0, max: 1, noNaN: true }),
+      y: fc.double({ min: 0, max: 1, noNaN: true }),
+    }),
     { minLength: 2, maxLength: 6 },
   ),
   label: fc.string({ minLength: 5, maxLength: 40 }),
@@ -25,7 +28,10 @@ const annotationArb = fc.record({
 });
 
 const geometryArb = fc.array(
-  fc.record({ x: fc.double({ min: 0, max: 1, noNaN: true }), y: fc.double({ min: 0, max: 1, noNaN: true }) }),
+  fc.record({
+    x: fc.double({ min: 0, max: 1, noNaN: true }),
+    y: fc.double({ min: 0, max: 1, noNaN: true }),
+  }),
   { maxLength: 8 },
 );
 
@@ -135,7 +141,9 @@ describe('targeted compiler behavior (T0705)', () => {
     });
     expect(intent.target.susId).toBe('hero-title');
     expect(intent.relationship).toBe('above');
-    expect(intent.constraints.some((c) => c.kind === 'content' && c.text?.includes('Start free'))).toBe(true);
+    expect(
+      intent.constraints.some((c) => c.kind === 'content' && c.text?.includes('Start free')),
+    ).toBe(true);
     expect(intent.unknowns).toHaveLength(0);
   });
 

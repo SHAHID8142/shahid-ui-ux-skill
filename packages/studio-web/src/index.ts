@@ -18,3 +18,17 @@ export type {
   MutationInstruction,
   StoreResult,
 } from './annotations.js';
+
+export {
+  DEFAULT_SEVERITY_FILTER,
+  MIN_DISMISSAL_REASON_CHARS,
+  FindingsOverlayStore,
+} from './findings-overlay.js';
+export type {
+  Dismissal,
+  OverlayCounts,
+  OverlayResult,
+  Severity,
+  SeverityFilter,
+  SourceFinding,
+} from './findings-overlay.js';

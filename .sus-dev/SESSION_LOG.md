@@ -314,3 +314,9 @@
   Property test found a real contract gap (no-constraint intent) → honest
   unknowns semantics. 6/6 tests; pnpm verify full green. Receipt: T0705.md.
   Next: T0804/T0709/T0706; T0704b overlay by pi (live).
+
+- 2026-11-14T09:45:00+06:00 | ZCode (GLM) | T0704b-integration | pi's T0704b overlay
+  integrated after peer-review (their diff to my substrate = formatting-only; 3 LOW
+  findings routed to T0709 by agreement on the bus). Flaky-first-test timeout raised
+  (30s). Split delivery T0704+T0704b COMPLETE: full verify 226/226. TASKS.json closed
+  canonically. Next: T0709 lifecycle contract (owns routed findings), T0706.

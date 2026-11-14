@@ -37,10 +37,18 @@ export const Annotation = z
   .strict()
   .superRefine((a, ctx) => {
     if (a.kind === 'rectangle' && a.points.length !== 2) {
-      ctx.addIssue({ code: 'custom', message: 'rectangle needs exactly 2 corner points', path: ['points'] });
+      ctx.addIssue({
+        code: 'custom',
+        message: 'rectangle needs exactly 2 corner points',
+        path: ['points'],
+      });
     }
     if (a.kind === 'arrow' && a.points.length !== 2) {
-      ctx.addIssue({ code: 'custom', message: 'arrow needs exactly 2 points (tail, head)', path: ['points'] });
+      ctx.addIssue({
+        code: 'custom',
+        message: 'arrow needs exactly 2 points (tail, head)',
+        path: ['points'],
+      });
     }
     if (a.kind === 'pen' && a.points.length < 3) {
       ctx.addIssue({ code: 'custom', message: 'pen stroke needs >= 3 points', path: ['points'] });
@@ -50,7 +58,9 @@ export const Annotation = z
 export const AnnotationSession = z
   .object({
     pageUrl: z.string().url(),
-    viewport: z.object({ width: z.number().int().positive(), height: z.number().int().positive() }).strict(),
+    viewport: z
+      .object({ width: z.number().int().positive(), height: z.number().int().positive() })
+      .strict(),
     annotations: z.array(Annotation),
   })
   .strict()
@@ -62,7 +72,9 @@ export const AnnotationSession = z
   });
 
 /** Undo: remove the last annotation; safe on empty (returns unchanged). */
-export function undoLast(session: z.infer<typeof AnnotationSession>): z.infer<typeof AnnotationSession> {
+export function undoLast(
+  session: z.infer<typeof AnnotationSession>,
+): z.infer<typeof AnnotationSession> {
   return { ...session, annotations: session.annotations.slice(0, -1) };
 }
 

@@ -17,6 +17,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@sus/scanners": "workspace:*",
     "@sus/schemas": "workspace:*",
     "@sus/studio-bridge": "workspace:*"
   },

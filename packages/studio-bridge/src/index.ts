@@ -21,5 +21,12 @@ export {
   type SelectionResult,
   type RankedCandidate,
 } from './select.js';
-export { buildAnnotation, normalizePoint, serializeSession, deserializeSession, undoLastAnnotation, type DrawnAnnotation } from './annotations.js';
+export {
+  buildAnnotation,
+  normalizePoint,
+  serializeSession,
+  deserializeSession,
+  undoLastAnnotation,
+  type DrawnAnnotation,
+} from './annotations.js';
 export { compileIntent, deriveRelationship, type CompileInput } from './intent-compiler.js';

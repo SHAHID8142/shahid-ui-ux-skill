@@ -3074,22 +3074,21 @@
       ],
       "risk": "concurrent edit with substrate",
       "rollback": "revert studio-web only",
-      "status": "pending",
+      "status": "done",
       "approval": "D33a live bus claim (pi)",
       "phase": "build",
-      "owner": "pi",
-      "lease": {
-        "session": "pi",
-        "task": "T0704b",
-        "branch": "chore/continuation-reconciliation",
-        "baseSha": "main",
-        "acquired": "2026-11-14T12:28:00Z",
-        "expires": "2026-11-14T15:28:00Z",
-        "fencingGeneration": 1
-      },
-      "evidence": [],
+      "owner": "pi (integrated by zcode-glm)",
+      "lease": null,
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0704b.md",
+        "packages/studio-web/src/annotations.ts",
+        "packages/studio-web/tests/annotations.test.ts"
+      ],
       "children": [],
-      "results": []
+      "results": [
+        "studio-web 22/22; full verify 226/226 incl. substrate suites; 3 LOW findings routed to T0709 by peer agreement"
+      ],
+      "commit": "0543092"
     }
   ]
 }

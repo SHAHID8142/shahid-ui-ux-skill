@@ -3,11 +3,7 @@
  * Intent v1 (constraints, not pixels — §7.3). Deterministic; ambiguous
  * targets produce focused unknowns[] instead of guesses.
  */
-import {
-  VisualIntent,
-  type VisualIntentData,
-  type AnnotationData,
-} from '@sus/schemas';
+import { VisualIntent, type VisualIntentData, type AnnotationData } from '@sus/schemas';
 import type { Anchor } from './select.js';
 
 export interface CompileInput {
@@ -64,7 +60,9 @@ export function compileIntent(input: CompileInput): VisualIntentData {
   };
   const relationship = deriveRelationship(input.geometry, band);
   if (relationship === undefined && input.geometry.length > 0) {
-    unknowns.push('drawn box straddles the target band — clarify whether the new element goes above or below');
+    unknowns.push(
+      'drawn box straddles the target band — clarify whether the new element goes above or below',
+    );
   } else if (relationship) {
     constraints.push({ kind: 'relationship', relationship });
   }
@@ -77,7 +75,9 @@ export function compileIntent(input: CompileInput): VisualIntentData {
   // no expressible constraint → honest unknown (schema permits
   // unknowns-only intents; a silent guess is never produced)
   if (constraints.length === 0 && relationship === undefined) {
-    unknowns.push('no actionable spatial/content constraint captured — clarify the intended change');
+    unknowns.push(
+      'no actionable spatial/content constraint captured — clarify the intended change',
+    );
   }
 
   const intent: VisualIntentData = {
@@ -101,7 +101,9 @@ export function compileIntent(input: CompileInput): VisualIntentData {
 
   const parsed = VisualIntent.safeParse(intent);
   if (!parsed.success) {
-    throw new Error(`compiled intent invalid: ${parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ')}`);
+    throw new Error(
+      `compiled intent invalid: ${parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ')}`,
+    );
   }
   return parsed.data;
 }

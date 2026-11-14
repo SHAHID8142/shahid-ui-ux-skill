@@ -210,6 +210,9 @@ importers:
 
   packages/studio-web:
     dependencies:
+      '@sus/scanners':
+        specifier: workspace:*
+        version: link:../scanners
       '@sus/schemas':
         specifier: workspace:*
         version: link:../schemas

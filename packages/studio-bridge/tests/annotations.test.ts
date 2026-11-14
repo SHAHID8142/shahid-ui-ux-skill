@@ -38,15 +38,20 @@ describe('annotation contract (T0704, DA-34)', () => {
   });
 
   it('malformed: rectangle with 3 points rejected', () => {
-    expect(() => buildAnnotation({ ...base, pixels: base.pixels.concat({ x: 1, y: 1 }) })).toThrow(/exactly 2/);
+    expect(() => buildAnnotation({ ...base, pixels: base.pixels.concat({ x: 1, y: 1 }) })).toThrow(
+      /exactly 2/,
+    );
   });
 
   it('out-of-bounds pixel (beyond viewport) clamps to 1; negative viewport throws', () => {
-    const clamped = buildAnnotation({ ...base, pixels: [{ x: 5000, y: -20 }, ...base.pixels.slice(1)] });
+    const clamped = buildAnnotation({
+      ...base,
+      pixels: [{ x: 5000, y: -20 }, ...base.pixels.slice(1)],
+    });
     expect(clamped.points[0]).toEqual({ x: 1, y: 0 });
-    expect(() =>
-      buildAnnotation({ ...base, viewport: { width: 0, height: 0 } }),
-    ).toThrow(/viewport must be positive/);
+    expect(() => buildAnnotation({ ...base, viewport: { width: 0, height: 0 } })).toThrow(
+      /viewport must be positive/,
+    );
   });
 
   it('missing typedEquivalent or keyboardPath is rejected (DA-34 non-drawing equivalents)', () => {
@@ -56,7 +61,11 @@ describe('annotation contract (T0704, DA-34)', () => {
 
   it('session rejects duplicate ids; serialization round-trips', () => {
     const a = buildAnnotation(base);
-    const session = { pageUrl: a.pageUrl, viewport: { width: 1440, height: 900 }, annotations: [a] };
+    const session = {
+      pageUrl: a.pageUrl,
+      viewport: { width: 1440, height: 900 },
+      annotations: [a],
+    };
     expect(AnnotationSession.safeParse(session).success).toBe(true);
     const dup = { ...session, annotations: [a, { ...a, id: 'a-1' }] };
     expect(AnnotationSession.safeParse(dup).success).toBe(false);
