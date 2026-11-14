@@ -1710,9 +1710,24 @@
       ],
       "risk": "diff readability",
       "rollback": "unified + split views",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi (main-integration role; zcode stalled)",
+      "lease": null,
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0706.md",
+        "packages/studio-bridge/src/preview.ts",
+        "packages/studio-bridge/src/diff.ts",
+        "packages/studio-bridge/tests/preview.test.ts"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T0706.md",
+      "results": [
+        "dry-run proposal: files affected, before/after hashes, unified + row-aligned split diff, mapping confidence, responsive alternative (not-captured when unknown), intent unknowns carried forward",
+        "propose->reject leaves the consuming tree byte-identical (tree hash test); workspace is a disposable mkdtemp outside the root; no apply/write export exists",
+        "explicit out-of-page approval -> single-use grant bound to proposal hash; verifyGrant refuses stale-base, hash-mismatch, expired, rejected (peer finding mmwg0nchr honoured: never an in-page DOM event)",
+        "34 new tests + mutation check; full pnpm verify exit 0 (45 files / 349 tests)"
+      ]
     },
     {
       "id": "T0707",

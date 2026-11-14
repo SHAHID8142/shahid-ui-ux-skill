@@ -31,6 +31,32 @@ export {
 } from './annotations.js';
 export { compileIntent, deriveRelationship, type CompileInput } from './intent-compiler.js';
 export {
+  PreviewSession,
+  responsiveAlternativeFor,
+  PREVIEW_CONTEXT_LINES,
+  type ApprovalDecision,
+  type ApprovalGrant,
+  type GrantCheck,
+  type Proposal,
+  type ProposalFile,
+  type ProposalOperation,
+  type ProposalSummary,
+  type ProposedEdit,
+  type ResponsiveAlternative,
+} from './preview.js';
+export {
+  buildHunks,
+  diffLines,
+  diffStats,
+  splitDiff,
+  unifiedDiff,
+  toLines,
+  type DiffStats,
+  type Hunk,
+  type LineOp,
+  type SplitRow,
+} from './diff.js';
+export {
   Transaction,
   sha256,
   type TransactionManifest,

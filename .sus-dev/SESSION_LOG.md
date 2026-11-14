@@ -357,3 +357,14 @@
   re-run: `@sus/studio-web` 94/94 PASS; receipts read; both marked done with
   receipts, commits and routed gaps (overlay E2E/axe over rendered DOM -> T0708).
   69/97 done. No code changed in this commit.
+
+- 2026-11-14T17:20:00+06:00 | Pi (FreePi) | T0706 | Dry-run proposal preview +
+  source diff. `packages/studio-bridge/src/diff.ts` (LCS line diff, unified +
+  row-aligned split view) and `src/preview.ts` (disposable mkdtemp workspace
+  outside the root, proposal with before/after hashes, confidence, responsive
+  alternative derived from intent or honestly `not-captured`, unknowns carried
+  forward, `requiresApproval: true`, single-use content-bound ApprovalGrant with
+  stale-base/expired/hash-mismatch refusal, path-escape refusal). 34 new tests;
+  mutation check proved the two load-bearing tests bite. Full `pnpm verify`
+  exit 0 — 45 files / 349 tests. Receipt: VERIFICATION/T0706.md. Next: T0806
+  (last T0707 prerequisite).
