@@ -746,3 +746,12 @@
   while pristine clones failed (T1010); three static assertions keep the new job from being quieted
   with a pnpm build. Simulated locally in /tmp/clonetest (install 0, setup 0, verify 0, 70 files / 749
   tests); the Linux run is the CI job itself. Receipt: VERIFICATION/T1011.md.
+
+- 2026-11-16T00:45:00+06:00 | Pi (FreePi) | T1011 result | The fresh-clone CI job went red on its first
+  Linux run for a reason worth keeping: its browser-libs step ran `pnpm --filter … exec playwright` in
+  the warmed checkout where nothing is installed — the very failure RESUME_ON_NEW_MACHINE.md §2.1
+  documents. Fixed by running it inside the fresh tree after that tree's install, and by using
+  fetch-depth: 0 (the run also warned "source repository is shallow, ignoring --local"). Run
+  43751035048: all four jobs green, and the fresh-clone log shows setup, the ensure-built line and 70
+  files / 752 tests passing on a tree that had never been built. The documented path is now verified
+  on Linux on every push.
