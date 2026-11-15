@@ -1,6 +1,6 @@
 # Dogfood reference implementations — redacted summary (T0906)
 
-Generated: 2026-11-15T10:11:09.552Z
+Generated: 2026-11-15T10:22:30.092Z
 Overall: **fail**
 
 The full evidence bundle (screenshots, page HTML, measurements) is private and

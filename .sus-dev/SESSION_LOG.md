@@ -634,3 +634,10 @@
   fixture is the evaluation ruler — patching it in place would silently rewrite the baselines.
   Bundle stays in git-ignored evals/evidence/dogfood-private; only a redacted summary is committed.
   8 evaluator tests, verify 642. Receipt: VERIFICATION/T0906.md. Next: T1001.
+
+- 2026-11-15T20:25:00+06:00 | Pi (FreePi) | T1001 | Cross-module regression suite.
+  `pnpm regression` runs verify + demo:loop + dogfood in one command (129.8s, exit 0) and writes a
+  report naming the revision, branch and dirty state. Aggregation fails closed: an empty run fails,
+  not-run prevents pass, missing Playwright downgrades rather than drops. `pnpm reach` (audit H6) is
+  now inside verify and proves all 94 finished non-M10 tasks have backing — it caught T0001, a done
+  claim with nothing behind it. 14 new tests. Receipt: VERIFICATION/T1001.md. Next: T1002.

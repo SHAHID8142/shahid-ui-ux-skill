@@ -2502,9 +2502,25 @@
       ],
       "risk": "suite fragility",
       "rollback": "tiered: blocking vs nightly",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1001.md",
+        "scripts/regression.mjs",
+        "scripts/lib/regression.mjs",
+        "scripts/check-reachability.mjs",
+        "scripts/lib/reachability.mjs",
+        "evals/reports/regression-latest.md"
+      ],
+      "results": [
+        "single command `pnpm regression` runs verify + demo:loop + dogfood, measured 129.8s (under the 10 minute acceptance) and writes a report naming the exact revision, branch and dirty state",
+        "fail-closed aggregation: an empty run fails, a stage that did not run is not-run and prevents pass, a missing Playwright downgrades the E2E stages to not-run rather than dropping them",
+        "reachability (audit H6) is now part of pnpm verify: every finished non-M10 task must be backed by an ancestry commit id, a tracked receipt, a delivered file or recorded evidence — 94/94 backed (79 commit, 10 receipt, 4 files, 1 evidence)",
+        "T0001 was a done claim with nothing behind it until the check existed; it is now backed by its recorded evidence path rather than exempted",
+        "14 new tests (7 reachability, 7 regression aggregation) pin the negative cases; full verify exit 0"
+      ]
     },
     {
       "id": "T1002",
