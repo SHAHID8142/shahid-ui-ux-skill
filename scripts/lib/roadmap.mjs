@@ -140,7 +140,7 @@ export function parseRoadmapTable(roadmapText) {
  * Violations the build must fail on. `codes` are stable so a negative fixture can
  * assert the *reason* a roadmap is rejected, not merely that it was.
  */
-export function checkRoadmap({ tasksDoc, roadmapText }) {
+export function checkRoadmap({ tasksDoc, roadmapText, countClaimFiles = [] }) {
   const violations = [];
   const text = String(roadmapText ?? '');
   const rows = parseRoadmapTable(text);
@@ -197,12 +197,56 @@ export function checkRoadmap({ tasksDoc, roadmapText }) {
     });
   }
 
+  violations.push(...checkCountClaims({ tasksDoc, files: countClaimFiles }));
+
   return {
     ok: violations.length === 0,
     rows: rows.length,
     milestones: summaries.length,
     violations,
   };
+}
+
+/**
+ * Documents that may state a "N of M done" figure. The count has drifted twice in
+ * this repository (STATE.md, then docs/BUILD_COMPLETION_HANDOFF.md saying "97 of
+ * 100"), and a public page that under-reports progress is what a reader acts on.
+ * Documents that describe a past revision must not carry a live count at all —
+ * that is why the fix there is to remove the number, not to update it.
+ */
+export const COUNT_CLAIM_FILES = [
+  'README.md',
+  'ROADMAP.md',
+  'HANDOFF.md',
+  'docs/BUILD_COMPLETION_HANDOFF.md',
+];
+
+const COUNT_CLAIM = /(\d+)\s+of\s+(\d+)\s+done/g;
+
+/** Every `N of M done` claim in `text`, as `{ done, total }`. */
+export function parseCountClaims(text) {
+  return [...String(text ?? '').matchAll(COUNT_CLAIM)].map((match) => ({
+    done: Number(match[1]),
+    total: Number(match[2]),
+  }));
+}
+
+/** Violations for a count claim that disagrees with TASKS.json. */
+export function checkCountClaims({ tasksDoc, files }) {
+  const violations = [];
+  const tasks = tasksOf(tasksDoc);
+  const done = tasks.filter(isDone).length;
+  const total = tasks.length;
+  for (const { file, text } of files ?? []) {
+    for (const claim of parseCountClaims(text)) {
+      if (claim.done === done && claim.total === total) continue;
+      violations.push({
+        code: 'count-claim-stale',
+        detail: `${file} says "${claim.done} of ${claim.total} done" but TASKS.json has ${done} of ${total}`,
+      });
+    }
+  }
+  return violations;
 }
 
 /** ROADMAP.md with its generated table replaced. Used by `--write`. */

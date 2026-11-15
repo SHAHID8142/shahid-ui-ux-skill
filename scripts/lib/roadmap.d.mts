@@ -41,5 +41,15 @@ export function tasksCell(tasksDoc: unknown): (id: string) => string;
 export function renderRoadmapTable(tasksDoc: unknown): string[];
 export function renderRoadmapBlock(tasksDoc: unknown): string;
 export function parseRoadmapTable(roadmapText: string): RoadmapRow[];
-export function checkRoadmap(input: { tasksDoc: unknown; roadmapText: string }): RoadmapResult;
+export const COUNT_CLAIM_FILES: string[];
+export function parseCountClaims(text: string): Array<{ done: number; total: number }>;
+export function checkCountClaims(input: {
+  tasksDoc: unknown;
+  files: Array<{ file: string; text: string }>;
+}): RoadmapViolation[];
+export function checkRoadmap(input: {
+  tasksDoc: unknown;
+  roadmapText: string;
+  countClaimFiles?: Array<{ file: string; text: string }>;
+}): RoadmapResult;
 export function withGeneratedTable(roadmapText: string, tasksDoc: unknown): string;

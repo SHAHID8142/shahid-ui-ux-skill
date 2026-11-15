@@ -3784,14 +3784,17 @@
         "scripts/lib/roadmap.d.mts",
         "scripts/check-roadmap.mjs",
         "ROADMAP.md",
-        "packages/schemas/tests/roadmap.test.ts"
+        "packages/schemas/tests/roadmap.test.ts",
+        "README.md",
+        "docs/BUILD_COMPLETION_HANDOFF.md"
       ],
       "acc": [
         "ROADMAP.md's milestone table is generated from TASKS.json between start/end markers and matches it exactly",
         "the build fails when a milestone row's status or task span disagrees with TASKS.json, naming which milestone and why",
         "the build fails when TASKS.json assigns tasks to a milestone the roadmap does not describe",
         "a negative fixture proves the checker rejects a stale status cell rather than passing everything",
-        "the page a reader sees is correct: no milestone is described as pending when its tasks are done"
+        "the page a reader sees is correct: no milestone is described as pending when its tasks are done",
+        "no public status document states a progress figure that disagrees with TASKS.json"
       ],
       "tests": [
         "packages/schemas/tests/roadmap.test.ts (aggregation, rendering, parse, drift detection, negative controls, the real file)",
@@ -3813,7 +3816,8 @@
         "the first draft written by this task was itself wrong in three cells (M1 task span, M10 count, M10 span) and the new checker caught all three before it was wired into the build - the checker was validated against a real mistake on its first run",
         "--write only replaces the marked block, so the narrative sections stay hand-written and the generator cannot eat context",
         "two drift directions are covered: roadmap says something TASKS.json does not, and TASKS.json holds a milestone the roadmap never mentions",
-        "not claimed: the roadmap's prose sections are human-written and are not gated; only the table is generated"
+        "not claimed: the roadmap's prose sections are human-written and are not gated; only the table is generated",
+        "the same class was found once more while reconciling: docs/BUILD_COMPLETION_HANDOFF.md still said '97 of 100 done' and README still denied that implementation was authorised (D28); the checker now also reads a declared list of status-bearing documents and the handoff document names no live count because it describes a past revision"
       ],
       "commit": "same commit as .sus-dev/VERIFICATION/T1009.md"
     }

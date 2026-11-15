@@ -11,8 +11,10 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
+  checkCountClaims,
   checkRoadmap,
   milestoneIds,
+  parseCountClaims,
   parseRoadmapTable,
   renderRoadmapBlock,
   renderRoadmapTable,
@@ -147,6 +149,35 @@ describe('checkRoadmap', () => {
     expect(result.violations.map((violation) => violation.code)).toContain(
       'roadmap-markers-missing',
     );
+  });
+});
+
+describe('count claims in public status documents', () => {
+  it('reads both numbers from a sentence a person wrote', () => {
+    expect(parseCountClaims('- **Tasks:** 97 of 100 done in `TASKS.json`.')).toEqual([
+      { done: 97, total: 100 },
+    ]);
+  });
+
+  it('accepts a claim that matches the task document', () => {
+    const files = [{ file: 'README.md', text: 'all good: 3 of 4 done' }];
+    expect(checkCountClaims({ tasksDoc, files })).toEqual([]);
+  });
+
+  it('fails a stale count — the README/handoff failure this class caused twice', () => {
+    const files = [{ file: 'docs/BUILD_COMPLETION_HANDOFF.md', text: '**Tasks:** 97 of 100 done' }];
+    const violations = checkCountClaims({ tasksDoc, files });
+    expect(violations).toHaveLength(1);
+    expect(violations[0].code).toBe('count-claim-stale');
+    expect(violations[0].detail).toContain('3 of 4');
+  });
+
+  it('passes the repository documents as they stand', () => {
+    const files = ['README.md', 'ROADMAP.md', 'HANDOFF.md', 'docs/BUILD_COMPLETION_HANDOFF.md'].map(
+      (file) => ({ file, text: readFileSync(file, 'utf8') }),
+    );
+    const tasks = JSON.parse(readFileSync('TASKS.json', 'utf8'));
+    expect(checkCountClaims({ tasksDoc: tasks, files })).toEqual([]);
   });
 });
 

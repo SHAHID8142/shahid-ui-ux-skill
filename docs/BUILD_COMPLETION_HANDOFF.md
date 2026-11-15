@@ -12,9 +12,11 @@ builder, not the auditor; the independent audit is a separate, owner-commissione
 - **Repository visibility:** **public** (owner decision D34, which supersedes the earlier
   "private" instruction). No product release is authorized by that decision — the
   *repository* is public, the *product* is unpublished.
-- **Tasks:** 97 of 100 done in `TASKS.json`. The three remaining are `T1003` (independent
-  audit), `T1005` (release approval) and this checkpoint `T1006`; the first two are
-  owner-only actions and are intentionally not started.
+- **Tasks at the verified revision:** all but three of them — `T1003` (independent audit),
+  `T1005` (release approval) and this checkpoint `T1006`. The first two are owner-only actions
+  and are intentionally not started. Later work (T1007–T1009) landed after this handoff; the
+  live count is in `.sus-dev/STATE.md` and `TASKS.json`, and `pnpm roadmap` regenerates the
+  public view. This document deliberately names no current count, so it cannot go stale.
 
 ## 1. What was built
 

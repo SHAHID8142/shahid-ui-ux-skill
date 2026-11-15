@@ -12,7 +12,7 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { checkRoadmap, withGeneratedTable } from './lib/roadmap.mjs';
+import { COUNT_CLAIM_FILES, checkRoadmap, withGeneratedTable } from './lib/roadmap.mjs';
 
 const ROOT = process.cwd();
 const ROADMAP = join(ROOT, 'ROADMAP.md');
@@ -32,7 +32,17 @@ if (write) {
   process.exit(0);
 }
 
-const result = checkRoadmap({ tasksDoc, roadmapText });
+// Status-bearing documents that state a progress figure must agree with the
+// canonical task document (a stale count tells a reader the wrong thing).
+const countClaimFiles = COUNT_CLAIM_FILES.map((file) => {
+  try {
+    return { file, text: readFileSync(join(ROOT, file), 'utf8') };
+  } catch {
+    return { file, text: '' };
+  }
+});
+
+const result = checkRoadmap({ tasksDoc, roadmapText, countClaimFiles });
 
 console.log('SUS roadmap consistency');
 console.log('============================================================');

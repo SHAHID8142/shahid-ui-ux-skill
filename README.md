@@ -45,15 +45,16 @@ and security-reporting route.
 
 **Latest review:** [Deep audit — 2026-11-13](docs/DEEP_AUDIT_2026-11-13.md) records 48 findings,
 standards checks, research/learning refinements and full Live Studio contracts. The owner confirmed
-that the full scope and mandatory browser drawing/writing Studio remain required. Recommendations
-are pending; no product implementation or scope reduction was authorized by the audit.
+that the full scope and mandatory browser drawing/writing Studio remain required. Implementation
+was authorised the same day (owner decision D28, 2026-11-13); no scope reduction was authorised,
+and publication (T1005) is still the owner's decision.
 
 ## Layout
 
 ```text
 SUS/
 ├── README.md                          # this index
-├── ROADMAP.md                         # living milestone status (points at TASKS.json)
+├── ROADMAP.md                         # milestone table generated from TASKS.json (`pnpm roadmap`)
 ├── TASKS.json                         # full WBS: canonical task backlog, validated IDs + deps
 ├── HANDOFF.md                         # fresh-context resume file (protocol §D)
 ├── DECISIONS.md                       # append-only decision record
