@@ -5,7 +5,10 @@ what was verified, at which revision, and what is deliberately not done. It is w
 builder, not the auditor; the independent audit is a separate, owner-commissioned step.
 
 - **Branch:** `chore/continuation-reconciliation`
-- **Verified revision:** `2f344df5cce2764dcd20b4af2fcbff2dc2f9d52c` (see §2 for the exact run)
+- **Verified revision (code):** `2f344df5cce2764dcd20b4af2fcbff2dc2f9d52c` (see §2 for the exact run)
+- **Remote checkpoint:** `1e5213bef73dd304f01885c8579f4da334870687`; every commit after the
+  verified revision touches documentation, state records, generated summaries and one
+  `.gitignore` note, with no source change (`git diff --name-only 2f344df..1e5213b`).
 - **Repository visibility:** **public** (owner decision D34, which supersedes the earlier
   "private" instruction). No product release is authorized by that decision — the
   *repository* is public, the *product* is unpublished.
@@ -94,7 +97,18 @@ Fresh-context continuity lives in `AGENTS.md`, `docs/AGENT_CONTINUE_PROTOCOL.md`
 `HANDOFF.md`, `.sus-dev/STATE.md` and `TASKS.json` — with `TASKS.json` as the only authority
 on task status.
 
-## 6. Completion flags
+## 6. Checkpoint history after the verified revision
+
+| Commit | What it adds | Why the verified revision still stands |
+| --- | --- | --- |
+| `2f344df` | the code and knowledge base | the run in §2 was made at this revision |
+| `1fd463f` | this handoff, the T1006 receipt, TASKS/STATE record | documentation only |
+| `1e5213b` | a tracked note where the generated full-loop bundles live, plus the `.gitignore` negation that keeps it | configuration and documentation; it fixed a remote-CI check that the local gate could not see, because the bundles were still on the local disk |
+
+Remote CI status on the pushed commit: **success** (`gh run list` — run 43706523472, 4 m 28 s,
+both Node 22 and Node 24 matrices).
+
+## 7. Completion flags
 
 `BUILD_COMPLETE_PUSHED` is set in `.sus-dev/STATE.md` only after the remote SHA was confirmed
 equal to the pushed commit and the pre-push gate passed on that exact tree. The independent
