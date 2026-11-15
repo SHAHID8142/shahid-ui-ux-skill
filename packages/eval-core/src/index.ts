@@ -32,3 +32,14 @@ export {
   type GateStatus,
 } from './harness/a11y-budgets.js';
 export { runHardeningMatrix, type HardeningResult, type MatrixCell } from './hardening.js';
+
+export {
+  SETTLE_MS,
+  evaluateTransitionOracles,
+  informationTokens,
+  type GateVerdict as TransitionGateVerdict,
+  type Modality,
+  type Observation,
+  type OracleCase,
+  type Scenario,
+} from './harness/transition-oracle.js';

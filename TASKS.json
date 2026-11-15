@@ -1537,11 +1537,25 @@
       ],
       "risk": "flaky timing tests",
       "rollback": "deterministic virtual clock where possible",
-      "status": "pending",
-      "approval": "pending",
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
       "phase": "build",
       "gates": [
         "G6"
+      ],
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0603.md",
+        "packages/eval-core/src/harness/transition-oracle.ts",
+        "packages/eval-core/tests/transition-oracle.test.ts"
+      ],
+      "results": [
+        "evaluateTransitionOracles consumes recorded observation traces only (never the generator), so agreement is with observable behaviour rather than with the declarations",
+        "flash-as-only-feedback fails a sub-60ms visual-only state with no text change while allowing a fast state whose text changed (the text is the feedback); mutation-checked",
+        "state converges after interruption/rapid toggle/cancel, and oscillation after the last input is reported as state-diverged",
+        "stale async detected by sequence monotonicity; unmount-left-interactive and hover-only-modality covered for keyboard/touch/no-hover",
+        "reduced-motion parity compares information tokens in both directions (lost and added), per kilo M2",
+        "emits the G6 verdict fail-closed (no cases, no observations = failure) and reports every failure at once; 21 tests, mutation-checked, GATE_REGISTRY G6 updated to implemented"
       ]
     },
     {

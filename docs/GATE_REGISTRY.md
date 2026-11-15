@@ -13,7 +13,7 @@ reconciliation requirement that the critical security gate is non-waivable
 | G3 | No placeholder content | commit | T0303, T0305 | not-run |
 | G4 | A11y floor | acceptance | T0152b | implemented (fail-closed evaluator + negatives) |
 | G5 | Perf budget | acceptance | T0152b | implemented (fail-closed evaluator + negatives) |
-| G6 | Motion parity | acceptance | T0603 | not-run |
+| G6 | Motion parity | acceptance | T0603 | implemented (behavioural transition oracles, fail-closed; verdict emitter in eval-core) |
 | G7 | Reflow | acceptance | T0551, T0152 | not-run (harness fields exist) |
 | G8 | Target size | acceptance | T0152, T0152b | not-run (harness fields exist) |
 | G9 | Semantics | acceptance | T0807, T0403 | not-run |

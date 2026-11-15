@@ -543,3 +543,16 @@
   was the gate being wrong — rings must not animate, so explicit immediacy is now accepted).
   Content corrected where it was genuinely weaker than claimed; gate relaxed only where it was
   wrong. Receipt: VERIFICATION/T0602.md. Next: T0603.
+
+- 2026-11-15T01:35:00+06:00 | Pi (FreePi) | T0603 | G6 behavioural transition oracles.
+  `packages/eval-core/src/harness/transition-oracle.ts` decides from recorded observation
+  traces ONLY (never the generator — an oracle sharing the generator's assumptions can only
+  agree with itself): flash-as-only-feedback (sub-60ms visual-only with no text change),
+  state-diverged (settled elsewhere or oscillated), stale-async-applied (sequence
+  monotonicity), unmount-left-interactive, hover-only-modality, and reduced-motion
+  information parity in both directions (lost/added, kilo M2). Fails closed on empty cases or
+  empty traces and reports every failure at once. Deterministic: explicit ms offsets, no
+  timers, so the recorded flake risk is designed out. 21 tests, mutation-checked; fixed three
+  strict-index accesses for noUncheckedIndexedAccess. GATE_REGISTRY G6 -> implemented.
+  Honest limit: this computes the verdict, T0906 captures the traces. Receipt:
+  VERIFICATION/T0603.md. Next: T0405b.
