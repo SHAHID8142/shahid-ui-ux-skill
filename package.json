@@ -28,7 +28,8 @@
     "handoff": "node scripts/check-handoff.mjs",
     "directions": "node scripts/check-direction.mjs",
     "motion": "node scripts/check-motion.mjs",
-    "parts": "node scripts/check-playbook-parts.mjs"
+    "parts": "node scripts/check-playbook-parts.mjs",
+    "demo:loop": "pnpm --filter @sus/studio-bridge demo:loop"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

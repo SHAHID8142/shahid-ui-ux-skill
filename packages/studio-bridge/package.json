@@ -14,7 +14,8 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "demo:loop": "SUS_DEMO=1 vitest run tests/full-loop.demo.test.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

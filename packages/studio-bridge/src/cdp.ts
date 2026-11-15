@@ -31,7 +31,9 @@ const OVERLAY_SCRIPT = `
   const style = document.createElement('style');
   style.textContent = [
     '#sus-overlay-root { position: fixed; inset: auto 0 0 0; z-index: 2147483000; }',
-    '#sus-overlay-toolbar { display: flex; gap: 8px; padding: 8px; background: rgba(20,22,26,0.92); }',
+    // the status text inherits this colour: without it the live region was
+    // default-black on a near-black bar (axe: color-contrast, found by T0708)
+    '#sus-overlay-toolbar { display: flex; gap: 8px; padding: 8px; color: #e8eaf0; background: rgba(20,22,26,0.92); }',
     '#sus-overlay-toolbar button { min-width: 44px; min-height: 24px; color: #e8eaf0; background: transparent; border: 1px solid #565d68; }',
     '#sus-overlay-toolbar button[aria-pressed="true"] { outline: 2px solid #8ab4ff; }',
     '#sus-overlay-toolbar button:focus-visible { outline: 2px solid #8ab4ff; outline-offset: 2px; }',
@@ -39,7 +41,11 @@ const OVERLAY_SCRIPT = `
   document.documentElement.appendChild(style);
   document.body.appendChild(root);
 
-  // Bridge state lives ONLY in this isolated world:
+  // Bridge STATE lives only in this isolated world. The chrome's *behaviour* is
+  // bound from the main world (BIND_CHROME): listeners registered inside an
+  // isolated world never fire for genuine input, so binding them here made the
+  // toolbar look keyboard-navigable while doing nothing (T0708). The DOM —
+  // aria-pressed and the live region — is the only channel between the worlds.
   window.__susBridge = {
     world: 'isolated',
     activeTool: null,
@@ -49,6 +55,40 @@ const OVERLAY_SCRIPT = `
   };
 })();
 `;
+
+/**
+ * Binds the overlay chrome to real activation, in the MAIN world.
+ *
+ * Idempotent per document; the handler touches only the DOM it owns and never
+ * bridge state, so the hostile-page guard still holds.
+ */
+const BIND_CHROME = `(() => {
+  if (window.__susOverlayChromeBound) return;
+  window.__susOverlayChromeBound = true;
+  const status = document.getElementById('sus-overlay-status');
+  const buttons = {
+    select: document.getElementById('sus-overlay-select'),
+    annotate: document.getElementById('sus-overlay-annotate'),
+  };
+  const activate = (tool) => {
+    for (const key of Object.keys(buttons)) {
+      const button = buttons[key];
+      if (button) button.setAttribute('aria-pressed', String(key === tool));
+    }
+    if (status) status.textContent = tool + ' tool active';
+  };
+  for (const key of Object.keys(buttons)) {
+    const button = buttons[key];
+    if (!button) continue;
+    button.addEventListener('click', () => activate(key));
+    button.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        activate(key);
+      }
+    });
+  }
+})();`;
 
 export interface AttachResult {
   attached: boolean;
@@ -95,10 +135,11 @@ export class CdpOverlay {
     // — survives dev-server restarts/navigations even where worldName replay
     // is unreliable)
     this.loadHandler = () => {
-      void this.injectIntoFreshWorld();
+      void this.injectIntoFreshWorld().then(() => this.page?.evaluate(BIND_CHROME));
     };
     page.on('load', this.loadHandler);
     await this.injectIntoFreshWorld();
+    await page.evaluate(BIND_CHROME);
 
     const isolatedWorldOk = await this.session.send('Runtime.evaluate', {
       expression: 'typeof window.__susBridge === "object" && window.__susBridge.world',

@@ -1874,9 +1874,22 @@
       ],
       "risk": "demo-only polish",
       "rollback": "demo is the acceptance test, not marketing",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0708.md",
+        "packages/studio-bridge/tests/full-loop.demo.test.ts",
+        "evals/evidence/full-loop"
+      ],
+      "results": [
+        "pnpm demo:loop runs the whole chain on a disposable Astro fixture: stamped sources, real astro build, served page, Chromium with video",
+        "overlay keyboard path is now operable, not just focusable: isolated-world listeners never fire for real input, so chrome activation moved to a main-world BIND_CHROME while bridge state stays isolated",
+        "axe runs over the whole page (0 violations, 38 rules) and caught a contrast failure in the overlay live region once the status had text",
+        "apply uses the real editor postimage and the stack build as verifier; undo restores byte-identically and a replay is refused",
+        "evidence bundle written per run (manifest.json + loop.webm); a copy-before-close bug produced a 0-byte video, now asserted via videoBytes and a bundle-error.json on failure"
+      ]
     },
     {
       "id": "T0790",

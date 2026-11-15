@@ -56,6 +56,22 @@ describe('CDP overlay injection (T0702)', () => {
     expect(attachResult.mainWorldIsolated).toBe(true);
   });
 
+  it('overlay buttons are operable by keyboard, not merely focusable (T0708)', async () => {
+    // a focusable toolbar that does nothing is a keyboard path in name only:
+    // this asserts the activation itself, through real key events
+    let reached = false;
+    for (let attempt = 0; attempt < 40 && !reached; attempt += 1) {
+      await page.keyboard.press('Tab');
+      reached =
+        (await page.evaluate(() => (document.activeElement as HTMLElement | null)?.id)) ===
+        'sus-overlay-select';
+    }
+    expect(reached).toBe(true);
+    await page.keyboard.press('Enter');
+    await expect.poll(() => page.getAttribute('#sus-overlay-select', 'aria-pressed')).toBe('true');
+    expect(await page.textContent('#sus-overlay-status')).toContain('select');
+  });
+
   it('reconnects after a navigation/dev-server-style restart (new document re-injection)', async () => {
     await page.reload({ waitUntil: 'networkidle' });
     const stillThere = await page.evaluate(

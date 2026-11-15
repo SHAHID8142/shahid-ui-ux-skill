@@ -566,3 +566,12 @@
   WAI-ARIA APG, HTML, CSS prefers-reduced-motion), convention for our own decisions — no
   invented research citations, and a test asserts conventions stay labelled. 21 tests,
   mutation-checked. Receipt: VERIFICATION/T0405b.md. Next: T0408.
+
+- 2026-11-15T13:55:00+06:00 | Pi (FreePi) | T0708 | Full loop demo, end to end.
+  `pnpm demo:loop` stamps, builds, serves and drives the Astro commerce fixture in Chromium,
+  then runs intent -> diff -> approve -> apply -> verify -> undo and writes a bundle with a real
+  video (65 KB). Three real defects surfaced and were fixed: overlay buttons were focusable but
+  inert (isolated-world listeners never fire for genuine input, so activation moved to a
+  main-world binder with state left isolated), the overlay live region failed axe contrast, and
+  `page.video().path()` is a Promise so the earlier bundle shipped a 0-byte video. axe runs over
+  the whole page, not the section under test. Receipt: VERIFICATION/T0708.md. Next: T0408.
