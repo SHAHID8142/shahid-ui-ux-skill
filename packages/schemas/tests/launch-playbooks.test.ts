@@ -37,6 +37,13 @@ const SECOND_WAVE = [
   'breadcrumb',
   'avatar',
   'badge',
+  // second-wave primitives B (T0812)
+  'tooltip',
+  'progress',
+  'skeleton',
+  'file-upload',
+  'date-picker',
+  'command-palette',
 ];
 
 /** Batch 1 (T0405). Commerce lives in T0405c; data table and record forms in T0407. */
@@ -426,5 +433,41 @@ describe('second-wave primitives A (T0811)', () => {
   it('avatar and badge never carry meaning by colour alone', () => {
     expect(allText('avatar.json').toLowerCase()).toContain('colour alone');
     expect(allText('badge.json').toLowerCase()).toContain('not the only signal');
+  });
+});
+
+describe('second-wave primitives B (T0812)', () => {
+  const B = ['tooltip', 'progress', 'skeleton', 'file-upload', 'date-picker', 'command-palette'];
+
+  it('each primitive declares at least two variants with an explicit matrix', () => {
+    for (const id of B) {
+      const playbook = load(`${id}.json`);
+      expect(playbook.stateMachine.variants.length, id).toBeGreaterThanOrEqual(2);
+      expect(playbook.variantMatrix.length, id).toBe(playbook.stateMachine.variants.length);
+    }
+  });
+
+  it('file upload covers progress, failure, retry and cancel per file', () => {
+    const text = allText('file-upload.json').toLowerCase();
+    for (const marker of ['progress', 'failed', 'retry resumes', 'cancel stops the transfer']) {
+      expect(text).toContain(marker);
+    }
+  });
+
+  it('date picker covers keyboard operation and locale-format typed entry', () => {
+    const text = allText('date-picker.json').toLowerCase();
+    expect(text).toContain('pageup/pagedown');
+    expect(text).toContain("locale's format");
+    expect(text).toContain('time zone');
+  });
+
+  it('tooltip is reachable without a pointer and never carries the only label', () => {
+    const text = allText('tooltip.json').toLowerCase();
+    expect(text).toContain('keyboard focus as well as hover');
+    expect(text).toContain('never carries the only copy');
+  });
+
+  it('command palette filters by permission before ranking', () => {
+    expect(allText('command-palette.json').toLowerCase()).toContain('permission-filtered first');
   });
 });

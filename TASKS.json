@@ -3077,9 +3077,25 @@
       ],
       "risk": "complex state matrices",
       "rollback": "per-playbook acceptance",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0812.md",
+        "skill/references/playbooks/tooltip.json",
+        "skill/references/playbooks/progress.json",
+        "skill/references/playbooks/skeleton.json",
+        "skill/references/playbooks/file-upload.json",
+        "skill/references/playbooks/date-picker.json",
+        "skill/references/playbooks/command-palette.json"
+      ],
+      "results": [
+        "file-upload: per-file queued/uploading/done/failed/cancelled states, resumable retry of the failed file only, cancel states what happened to the partial, constraints stated then server-enforced, keyboard and paste paths beside drag",
+        "date-picker: typed entry in the locale format plus unpadded ISO, full keyboard grid (arrows, PageUp/PageDown, Home/End, Enter, Escape with focus return), refusals carry reasons, calendar dates and instants stored distinctly with the zone shown",
+        "tooltip reachable on focus as well as hover with aria-describedby and Escape dismissal; progress determinate only with a real total, announced ~1/s, 100% is an outcome; skeleton only for known shapes at final geometry with a stated wait after ~10s; command palette permission-filters before ranking with aria-activedescendant and sequence-id stale rejection",
+        "36 playbooks valid, motion gate clean, 12 parts present, 38 playbook tests, full verify 634 tests"
+      ]
     },
     {
       "id": "T0402b",

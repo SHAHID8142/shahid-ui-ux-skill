@@ -1,0 +1,287 @@
+{
+  "id": "skeleton",
+  "surface": "operate",
+  "component": "skeleton",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Whether this surface should show a skeleton, a spinner or nothing at all",
+      "usingRules": ["skeleton-only-when-shape-is-known"]
+    },
+    {
+      "order": 2,
+      "decide": "That the skeleton occupies exactly the final geometry, so nothing moves on arrival",
+      "usingRules": ["skeleton-reserves-geometry"]
+    },
+    {
+      "order": 3,
+      "decide": "How long the skeleton may show before it becomes a lie",
+      "usingRules": ["skeleton-timeout"]
+    },
+    {
+      "order": 4,
+      "decide": "What happens on failure and on empty, from the skeleton's point of view",
+      "usingRules": ["skeleton-hands-over"]
+    },
+    {
+      "order": 5,
+      "decide": "How the shimmer behaves and what reduced-motion replaces it with",
+      "usingRules": ["skeleton-motion-honesty"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "skeleton-only-when-shape-is-known",
+      "kind": "convention",
+      "statement": "A skeleton is used only when the shape of the arriving content is known and stable; an unknown shape gets a spinner, and a wait under 300 ms gets nothing."
+    },
+    {
+      "id": "skeleton-reserves-geometry",
+      "kind": "convention",
+      "statement": "The skeleton occupies the final width and height of every element it stands in for, so replacing it moves nothing; a skeleton that resizes is a layout shift with extra steps."
+    },
+    {
+      "id": "skeleton-timeout",
+      "kind": "convention",
+      "statement": "After about ten seconds the skeleton becomes a stated wait with an explanation and an escape, because a shimmer that never resolves reads as a broken product."
+    },
+    {
+      "id": "skeleton-hands-over",
+      "kind": "convention",
+      "statement": "Failure and emptiness replace the skeleton explicitly; the skeleton is never left showing under an error toast, which is indistinguishable from still loading."
+    },
+    {
+      "id": "skeleton-motion-honesty",
+      "kind": "convention",
+      "statement": "The shimmer is a slow opacity pulse in the 60\u2013240 ms band, is hidden from assistive technology, and becomes a static tint under reduced-motion without losing the reserved space."
+    }
+  ],
+  "stateMachine": {
+    "component": "skeleton",
+    "variants": ["text", "blocks"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "the skeleton belongs to one request id; a response for a superseded request does not remove the skeleton",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "loading",
+        "trigger": "the request starts",
+        "motion": {
+          "motion": "the skeleton fades in over 120ms after a 300 ms delay",
+          "reducedMotion": "the skeleton appears instantly with no fade and no pulse"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the content arrives",
+        "motion": {
+          "motion": "content cross-fades over 160ms in the same geometry",
+          "reducedMotion": "content appears instantly with no cross-fade"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the request fails",
+        "motion": {
+          "motion": "the skeleton is replaced by the error state over 120ms",
+          "reducedMotion": "the error replaces the skeleton instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "the request is retried",
+        "motion": {
+          "motion": "the skeleton returns over 120ms",
+          "reducedMotion": "the skeleton returns instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "disabled",
+        "trigger": "the wait exceeds the timeout",
+        "motion": {
+          "motion": "the shimmer stops over 120ms and becomes a stated wait",
+          "reducedMotion": "the stated wait appears instantly with no shimmer"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "disabled",
+        "to": "loading",
+        "trigger": "the reader restarts the wait",
+        "motion": {
+          "motion": "the skeleton pulses resume over 120ms",
+          "reducedMotion": "the static tint returns without motion"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the control",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "the pressed/open state is released",
+        "motion": {
+          "motion": "the state settles back over 120ms",
+          "reducedMotion": "the state settles instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "the confirmation clears",
+        "motion": {
+          "motion": "the confirmation fades over 140ms",
+          "reducedMotion": "the confirmation disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      }
+    ]
+  },
+  "sections": {
+    "intent": "Hold the reader's place while content loads, so the page does not jump and the wait is legible.",
+    "useCases": [
+      "load a dashboard's first paint",
+      "open a record's activity list",
+      "fetch a table page"
+    ],
+    "nicheDifferences": [
+      "Skeletons are a promise about geometry",
+      "Used without reserved space they cause the exact shift they were meant to prevent"
+    ],
+    "inputs": [
+      "the final geometry of each region",
+      "the realistic load time",
+      "whether the content shape varies",
+      "the failure and empty treatments"
+    ],
+    "anatomy": [
+      "placeholder lines matching the final text metrics",
+      "block placeholders for media",
+      "a stated wait after the timeout",
+      "an error state that replaces the placeholder"
+    ],
+    "styling": [
+      "one neutral tint per surface with no gradients that imply progress",
+      "placeholder radius matches the real element",
+      "the shimmer never appears on the largest surface only"
+    ],
+    "a11y": [
+      "marked aria-hidden so the placeholders are not read out",
+      "the region announces loading once, politely, not per placeholder",
+      "the timeout text is in the reading order"
+    ],
+    "responsive": [
+      "placeholder counts drop from 6 to 3 lines below 640 px so the geometry still matches",
+      "the reserved space never collapses when the viewport changes",
+      "media placeholders keep their aspect ratio"
+    ],
+    "copy": [
+      "a stated wait reads 'This is taking longer than usual \u2014 check your connection or retry'",
+      "no 'Loading...' repeated in every placeholder",
+      "errors name the failing region"
+    ],
+    "alternatives": [
+      "a spinner when the shape is unknown",
+      "optimistic content when the data is predictable",
+      "a stated wait immediately for known-slow operations"
+    ],
+    "references": [
+      {
+        "label": "SUS primitive convention (this project)",
+        "date": "2026-11-15",
+        "grade": "convention"
+      },
+      {
+        "label": "Core Web Vitals \u2014 cumulative layout shift",
+        "date": "2026-11-14",
+        "grade": "convention"
+      },
+      {
+        "label": "WCAG 2.2 SC 2.2.2 Pause, Stop, Hide",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      }
+    ],
+    "acceptance": [
+      "the skeleton matches the final geometry so nothing moves on arrival",
+      "no skeleton appears for waits under 300 ms",
+      "after about ten seconds the skeleton becomes a stated wait with an escape",
+      "failure and emptiness replace the skeleton rather than appearing over it",
+      "reduced-motion shows a static tint with the same reserved space"
+    ],
+    "failureCases": [
+      "the shimmer pulses forever under an error toast",
+      "six placeholder lines become one 40 px line of content and the page jumps",
+      "the skeleton is announced line by line to a screen reader",
+      "a skeleton is shown for a 120 ms cached response, producing a flash"
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "text",
+      "enabled": ["default", "focus-visible", "active", "disabled", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "hover",
+          "reason": "placeholder text is not interactive and has no hover state"
+        }
+      ]
+    },
+    {
+      "variant": "blocks",
+      "enabled": ["default", "hover", "focus-visible", "disabled", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "active",
+          "reason": "a placeholder block cannot be pressed; the real content replaces it before interaction"
+        }
+      ]
+    }
+  ]
+}

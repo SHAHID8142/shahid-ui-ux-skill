@@ -1,0 +1,278 @@
+{
+  "id": "progress",
+  "surface": "operate",
+  "component": "progress",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Whether the wait is determinate (we know how much is left) or indeterminate",
+      "usingRules": ["progress-determinate-honesty"]
+    },
+    {
+      "order": 2,
+      "decide": "How the value is exposed to assistive technology and updated without spamming",
+      "usingRules": ["progress-aria"]
+    },
+    {
+      "order": 3,
+      "decide": "When the work finishes, and how completion differs from success",
+      "usingRules": ["progress-completion-is-not-success"]
+    },
+    {
+      "order": 4,
+      "decide": "What the reader can do while waiting, including cancelling",
+      "usingRules": ["progress-cancellable"]
+    },
+    {
+      "order": 5,
+      "decide": "How long is too long, and what replaces the bar then",
+      "usingRules": ["progress-escapes-to-background"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "progress-determinate-honesty",
+      "kind": "convention",
+      "statement": "A determinate bar only appears when the value is real; an invented percentage that jumps from 90% to waiting is worse than an indeterminate spinner."
+    },
+    {
+      "id": "progress-aria",
+      "kind": "convention",
+      "statement": "The bar is role=progressbar with aria-valuenow/min/max, and updates are throttled to at most one announcement per second so a screen reader is not flooded."
+    },
+    {
+      "id": "progress-completion-is-not-success",
+      "kind": "convention",
+      "statement": "Reaching 100% means the work ended, not that it succeeded; the outcome (passed, failed, partially applied) is stated in text afterwards."
+    },
+    {
+      "id": "progress-cancellable",
+      "kind": "convention",
+      "statement": "Anything longer than two seconds offers cancel, and cancelling states what remains (nothing, or a partial result) rather than silently stopping."
+    },
+    {
+      "id": "progress-escapes-to-background",
+      "kind": "convention",
+      "statement": "Work longer than about ten seconds becomes a job with its own state the reader can leave and return to, instead of a bar that owns the page."
+    }
+  ],
+  "stateMachine": {
+    "component": "progress",
+    "variants": ["determinate", "indeterminate"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "progress values are monotonic per run id; a value from an earlier run is discarded so a restart never shows a bar moving backwards, and the fill is driven by the value rather than by a second state",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "loading",
+        "trigger": "the work starts",
+        "motion": {
+          "motion": "the bar appears at 0% over 120ms",
+          "reducedMotion": "the bar appears instantly at its current value"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the work reaches 100%",
+        "motion": {
+          "motion": "the bar fills over 160ms and is replaced by the outcome text",
+          "reducedMotion": "the bar is replaced instantly by the outcome text"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the work fails or is cancelled",
+        "motion": {
+          "motion": "the bar stops in place over 120ms and gains the outcome text",
+          "reducedMotion": "the stopped bar and outcome appear instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "default",
+        "trigger": "the reader dismisses the outcome",
+        "motion": {
+          "motion": "the bar and message fade over 140ms",
+          "reducedMotion": "they disappear instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the control",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "the pressed/open state is released",
+        "motion": {
+          "motion": "the state settles back over 120ms",
+          "reducedMotion": "the state settles instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "the confirmation clears",
+        "motion": {
+          "motion": "the confirmation fades over 140ms",
+          "reducedMotion": "the confirmation disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the control becomes available again",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "unavailability is a permission or load fact, not an animation; the control states why instead of moving"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "sections": {
+    "intent": "Tell the reader that work is happening, how much is left when that is knowable, and what happened when it stopped.",
+    "useCases": [
+      "watch a long import run",
+      "see that a save is in flight",
+      "follow a multi-file upload"
+    ],
+    "nicheDifferences": [
+      "Progress is a promise about time, and a fake bar breaks trust more than a spinner does",
+      "The honest split is determinate when the total is known, indeterminate otherwise"
+    ],
+    "inputs": [
+      "whether a total exists and is stable",
+      "how long the work typically takes",
+      "whether it can be cancelled",
+      "whether it can continue in the background"
+    ],
+    "anatomy": [
+      "a track and a fill",
+      "a value label when determinate",
+      "a cancel action for long work",
+      "an outcome line after completion"
+    ],
+    "styling": [
+      "a 4 px track with a single accent fill, no gradient stripes",
+      "the label sits beside, not inside, the bar",
+      "the bar does not animate when reduced-motion is set"
+    ],
+    "a11y": [
+      "role=progressbar with aria-valuenow/min/max and a text value",
+      "updates throttled to about one announcement per second",
+      "completion announced once with the outcome",
+      "cancel is a real button reachable before the bar"
+    ],
+    "responsive": [
+      "the bar keeps its width to the container at 320 px with the label wrapping below",
+      "long file names truncate in the middle above the bar",
+      "the bar never becomes a full-screen overlay"
+    ],
+    "copy": [
+      "'Importing 412 of 1 200 rows'",
+      "completion reads 'Import finished \u2014 1 188 rows added, 12 skipped'",
+      "cancelling reads 'Cancelled after 412 rows; nothing was saved'"
+    ],
+    "alternatives": [
+      "a spinner when the total is unknown",
+      "a job list when the work outlives the page",
+      "an inline status line for sub-second saves"
+    ],
+    "references": [
+      {
+        "label": "WAI-ARIA Authoring Practices Guide",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WCAG 2.2 SC 4.1.3 Status Messages",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "SUS primitive convention (this project)",
+        "date": "2026-11-15",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "a determinate bar only appears with a real total",
+      "the value is exposed with aria-valuenow and announced at most about once a second",
+      "100% is followed by an outcome, not by a claim of success",
+      "work over two seconds offers cancel and says what remains",
+      "reduced-motion stops the fill animation without losing the value"
+    ],
+    "failureCases": [
+      "the bar jumps to 90% and waits there for a minute",
+      "the reader cancels and the partial result is silently kept",
+      "every pixel of progress is announced to the screen reader",
+      "a finished bar is treated as success although three rows failed"
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "determinate",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "a progress bar is not interactive; the cancel action beside it carries availability"
+        }
+      ]
+    },
+    {
+      "variant": "indeterminate",
+      "enabled": ["default", "hover", "focus-visible", "active", "disabled", "loading", "error"],
+      "refused": [
+        {
+          "state": "success",
+          "reason": "an indeterminate run has no percentage to complete; its end is an outcome, not a fill"
+        }
+      ]
+    }
+  ]
+}

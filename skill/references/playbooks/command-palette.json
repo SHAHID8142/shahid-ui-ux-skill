@@ -1,0 +1,295 @@
+{
+  "id": "command-palette",
+  "surface": "operate",
+  "component": "command-palette",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "What the palette is for: navigation, actions, or both, and what it may not do",
+      "usingRules": ["palette-actions-not-a-menu"]
+    },
+    {
+      "order": 2,
+      "decide": "How results rank, and why recency and permissions outrank fuzzy score",
+      "usingRules": ["palette-ranking"]
+    },
+    {
+      "order": 3,
+      "decide": "How focus, the dialog contract and the return path work",
+      "usingRules": ["palette-focus-contract"]
+    },
+    {
+      "order": 4,
+      "decide": "How an async search stays honest under fast typing",
+      "usingRules": ["palette-stale-results"]
+    },
+    {
+      "order": 5,
+      "decide": "How destructive commands are represented",
+      "usingRules": ["palette-destructive"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "palette-actions-not-a-menu",
+      "kind": "convention",
+      "statement": "The palette is an accelerator for people who already know the product; it never becomes the only route to a feature, and every command exists somewhere visible."
+    },
+    {
+      "id": "palette-ranking",
+      "kind": "convention",
+      "statement": "Ranking is permission-filtered first, then exact prefix, then fuzzy match, then recency \u2014 and the list never shows a command the reader cannot run."
+    },
+    {
+      "id": "palette-focus-contract",
+      "kind": "convention",
+      "statement": "The palette is a modal dialog with its input focused on open, arrows move the active option, Enter runs it, Escape closes and returns focus to whatever had it before."
+    },
+    {
+      "id": "palette-stale-results",
+      "kind": "convention",
+      "statement": "The query is debounced about 150 ms, each request carries a sequence id, and a slower earlier response never replaces the newer result list."
+    },
+    {
+      "id": "palette-destructive",
+      "kind": "convention",
+      "statement": "A destructive command is never the default active option, is labelled with the object it affects, and asks for confirmation rather than running on Enter."
+    },
+    {
+      "id": "palette-explains-itself",
+      "kind": "convention",
+      "statement": "Each row states its scope (where the command applies) and its shortcut, so two commands with the same name are distinguishable before one is run."
+    }
+  ],
+  "stateMachine": {
+    "component": "command-palette",
+    "variants": ["global", "inline"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "requests carry a sequence id and only the newest may paint; a response for a superseded query is discarded even if it arrives later",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "active",
+        "trigger": "the palette shortcut is pressed",
+        "motion": {
+          "motion": "the dialog and backdrop fade in over 160ms",
+          "reducedMotion": "the dialog appears instantly with the input focused"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "loading",
+        "trigger": "the query needs a server search",
+        "motion": {
+          "motion": "a pending row appears under the input over 120ms",
+          "reducedMotion": "the pending row appears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "results arrive",
+        "motion": {
+          "motion": "the list cross-fades to the new results over 140ms without moving the input",
+          "reducedMotion": "the list swaps instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the search fails",
+        "motion": {
+          "motion": "a retry row appears in place of the results over 120ms",
+          "reducedMotion": "the retry row appears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "retry is pressed",
+        "motion": {
+          "motion": "the pending row returns over 120ms",
+          "reducedMotion": "the pending row returns instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "Escape is pressed or a command runs",
+        "motion": {
+          "motion": "the dialog fades out over 120ms",
+          "reducedMotion": "the dialog disappears instantly and focus returns to the opener"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "a result is chosen",
+        "motion": {
+          "motion": "the dialog closes over 120ms as the action starts",
+          "reducedMotion": "the dialog disappears instantly and the action starts"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the control",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the control becomes available again",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "unavailability is a permission or load fact, not an animation; the control states why instead of moving"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "sections": {
+    "intent": "Let someone who knows where they are going get there in two keystrokes, without becoming the only door into the product.",
+    "useCases": [
+      "jump to a record by name",
+      "run 'Create invoice' from anywhere",
+      "switch workspace without the sidebar"
+    ],
+    "nicheDifferences": [
+      "Palettes are loved by power users and dangerous as the only navigation, because they require knowing the name of the thing",
+      "The discipline is permissions-first ranking and never hiding a feature behind a command"
+    ],
+    "inputs": [
+      "the command set and which commands are role-scoped",
+      "whether search is local or server-side",
+      "the shortcuts already bound in the product",
+      "which commands are destructive"
+    ],
+    "anatomy": [
+      "an input with a search role",
+      "a grouped result list with an active option",
+      "a scope label and shortcut per row",
+      "a pending and a retry row",
+      "a footer with the keyboard hints"
+    ],
+    "styling": [
+      "a centred dialog 560 px wide, results in 44 px rows, groups labelled in small caps",
+      "the active row is distinguished by a background plus a left bar",
+      "shortcuts are right-aligned in tabular numerals"
+    ],
+    "a11y": [
+      "role=dialog with aria-modal, the input as combobox, the list as listbox with aria-activedescendant",
+      "arrows move the active option without moving focus out of the input",
+      "Enter runs the active option and Escape closes",
+      "result counts are announced politely, never per keystroke"
+    ],
+    "responsive": [
+      "below 640 px the dialog is a full-height sheet with the input pinned to the top",
+      "results scroll internally so the footer hints stay visible",
+      "long command names truncate in the middle with the full name as the accessible name"
+    ],
+    "copy": [
+      "commands are verbs with their object: 'Archive project Atlas'",
+      "the empty state reads 'No commands match \"atlas\" \u2014 3 commands are unavailable for your role'",
+      "shortcut hints are visible, not only in documentation"
+    ],
+    "alternatives": [
+      "a search field in the sidebar when the need is finding one record",
+      "a keyboard shortcut sheet for discoverability",
+      "a menu bar for products with a stable command surface"
+    ],
+    "references": [
+      {
+        "label": "WAI-ARIA Authoring Practices Guide",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WCAG 2.2 SC 2.1.1 Keyboard",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "SUS primitive convention (this project)",
+        "date": "2026-11-15",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "results are permission-filtered so no unavailable command appears",
+      "the input keeps focus while arrows move the active option",
+      "Escape closes and returns focus to the previous element",
+      "a stale response never replaces newer results",
+      "a destructive command is never the default and asks for confirmation"
+    ],
+    "failureCases": [
+      "the palette becomes the only way to reach a feature",
+      "a fuzzy score outranks an exact prefix so Enter runs the wrong command",
+      "each keystroke announces the full result count",
+      "Delete runs on Enter because it was top of the list"
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "global",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "the palette shortcut is either available or the command does not exist for this role"
+        }
+      ]
+    },
+    {
+      "variant": "inline",
+      "enabled": ["default", "focus-visible", "active", "disabled", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "hover",
+          "reason": "an inline palette is driven by the input; rows carry the hover states"
+        }
+      ]
+    }
+  ]
+}

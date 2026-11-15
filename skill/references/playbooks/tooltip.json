@@ -1,0 +1,302 @@
+{
+  "id": "tooltip",
+  "surface": "any",
+  "component": "tooltip",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Whether the label belongs in the interface instead of behind a hover",
+      "usingRules": ["tooltip-not-for-essential-labels"]
+    },
+    {
+      "order": 2,
+      "decide": "How the tooltip is reachable without a pointer, and how long it stays",
+      "usingRules": ["tooltip-focus-and-touch"]
+    },
+    {
+      "order": 3,
+      "decide": "How the tooltip is described to assistive technology without duplicating the name",
+      "usingRules": ["tooltip-describedby"]
+    },
+    {
+      "order": 4,
+      "decide": "Placement, collision and stability while the pointer moves",
+      "usingRules": ["tooltip-placement"]
+    },
+    {
+      "order": 5,
+      "decide": "What happens when the tooltip content is a paragraph",
+      "usingRules": ["tooltip-not-a-popover"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "tooltip-not-for-essential-labels",
+      "kind": "convention",
+      "statement": "A tooltip never carries the only copy of a label or an instruction; if the value matters, it is in the interface, visible and copyable."
+    },
+    {
+      "id": "tooltip-focus-and-touch",
+      "kind": "convention",
+      "statement": "The tooltip appears on keyboard focus as well as hover, dismisses on Escape without moving focus, and on touch it appears on tap with a second tap outside to dismiss."
+    },
+    {
+      "id": "tooltip-describedby",
+      "kind": "convention",
+      "statement": "The trigger references the tooltip with aria-describedby (not aria-labelledby) so the accessible name stays the control's own label and the hint is announced after it."
+    },
+    {
+      "id": "tooltip-placement",
+      "kind": "convention",
+      "statement": "The tooltip sits 8 px from the trigger, flips and shifts to stay inside the viewport, never covers the trigger, and does not follow the pointer."
+    },
+    {
+      "id": "tooltip-not-a-popover",
+      "kind": "convention",
+      "statement": "Interactive content, formatted paragraphs and anything a reader must select is a popover or a dialog, because a hover tooltip cannot be reached on touch."
+    }
+  ],
+  "stateMachine": {
+    "component": "tooltip",
+    "variants": ["hover", "focus"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "no async content in a tooltip; if the hint depends on a request it is a popover and must own a sequence id",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "active",
+        "trigger": "the trigger is hovered or focused for 300 ms",
+        "motion": {
+          "motion": "the tooltip fades in over 120ms after the delay",
+          "reducedMotion": "the tooltip appears instantly with no fade and no delay"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "the pointer leaves or focus moves or Escape is pressed",
+        "motion": {
+          "motion": "the tooltip fades out over 100ms",
+          "reducedMotion": "the tooltip disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "disabled",
+        "trigger": "the trigger is disabled",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "unavailability is a permission or load fact, not an animation; the control states why instead of moving"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the control",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the pending work completes",
+        "motion": {
+          "motion": "the result fades in over 140ms",
+          "reducedMotion": "the result appears instantly and is announced"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the pending work fails",
+        "motion": {
+          "motion": "the error appears over 120ms",
+          "reducedMotion": "the error appears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "the action is retried",
+        "motion": {
+          "motion": "the control returns to pending over 120ms",
+          "reducedMotion": "the control returns to pending instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "the confirmation clears",
+        "motion": {
+          "motion": "the confirmation fades over 140ms",
+          "reducedMotion": "the confirmation disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the control becomes available again",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "unavailability is a permission or load fact, not an animation; the control states why instead of moving"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "sections": {
+    "intent": "Explain a control's effect in a few words without adding permanent chrome, while staying reachable for keyboards and touch.",
+    "useCases": [
+      "explain an icon-only button's purpose",
+      "show the full value of a truncated cell",
+      "name a keyboard shortcut"
+    ],
+    "nicheDifferences": [
+      "Tooltips are the most commonly inaccessible affordance in admin products, because they are usually hover-only",
+      "The rule that saves them is small: same content on focus, dismissable with Escape"
+    ],
+    "inputs": [
+      "whether the fact is a name, a hint or a value",
+      "the longest realistic hint",
+      "the trigger's position near edges",
+      "whether touch is a primary input"
+    ],
+    "anatomy": [
+      "a trigger that is a real button or a focusable element",
+      "a tooltip element with role=tooltip and an id",
+      "aria-describedby on the trigger",
+      "an 8 px offset and collision handling"
+    ],
+    "styling": [
+      "inverted surface (ink background, paper text) at 14 px with one 300 px max width",
+      "a 4 px arrow only when it clarifies the anchor",
+      "no shadow stack; one shadow level"
+    ],
+    "a11y": [
+      "role=tooltip and aria-describedby, never a duplicate accessible name",
+      "Escape dismisses without moving focus",
+      "the tooltip is not a focus target and never contains focusable children",
+      "the trigger keeps a visible focus ring while the tooltip is shown"
+    ],
+    "responsive": [
+      "hints never exceed two lines at 320 px",
+      "the tooltip never covers the trigger or the value it explains",
+      "on touch a 44 px trigger is required because the hint is discovered by tap"
+    ],
+    "copy": [
+      "hints are imperative and short: 'Copy link', 'Save (\u2318S)'",
+      "no 'Click here to...' inside a tooltip",
+      "errors never live only in a tooltip"
+    ],
+    "alternatives": [
+      "a popover when the content is interactive",
+      "inline helper text when the hint is always relevant",
+      "an expanded label when the icon-only control is used often"
+    ],
+    "references": [
+      {
+        "label": "WAI-ARIA Authoring Practices Guide",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WCAG 2.2 SC 1.4.13 Content on Hover or Focus",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "SUS primitive convention (this project)",
+        "date": "2026-11-15",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "the hint appears on focus as well as hover and dismisses with Escape",
+      "the trigger keeps its own accessible name and references the hint with aria-describedby",
+      "the tooltip flips to stay inside the viewport and never covers the trigger",
+      "a tap shows the hint on touch",
+      "interactive or long content is a popover, not a tooltip"
+    ],
+    "failureCases": [
+      "the only explanation for an icon button is a hover tooltip",
+      "the tooltip disappears when the pointer moves toward it",
+      "the hint is announced as the control's name and the label is lost",
+      "a paragraph of text is placed inside a hover tooltip"
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "hover",
+      "enabled": ["default", "hover", "focus-visible", "active"],
+      "refused": [
+        {
+          "state": "loading",
+          "reason": "a hover hint has no content to load; anything that loads is a popover"
+        },
+        {
+          "state": "error",
+          "reason": "a failed hint is simply not shown; the control keeps its own label"
+        },
+        {
+          "state": "success",
+          "reason": "there is nothing to confirm in a hover hint"
+        },
+        {
+          "state": "disabled",
+          "reason": "a disabled trigger cannot be hovered, so the hint has no surface"
+        }
+      ]
+    },
+    {
+      "variant": "focus",
+      "enabled": ["default", "focus-visible", "active", "disabled", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "hover",
+          "reason": "the focus variant is only about keyboard reachability"
+        }
+      ]
+    }
+  ]
+}

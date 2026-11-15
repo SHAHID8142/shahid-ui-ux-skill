@@ -1,0 +1,306 @@
+{
+  "id": "file-upload",
+  "surface": "operate",
+  "component": "file-upload",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "What is accepted: types, sizes, counts, and which of those the server also enforces",
+      "usingRules": ["upload-constraints-stated-and-enforced"]
+    },
+    {
+      "order": 2,
+      "decide": "How each file reports queued, uploading, done, failed and cancelled, independently",
+      "usingRules": ["upload-per-file-state"]
+    },
+    {
+      "order": 3,
+      "decide": "How retry works without re-sending what already succeeded",
+      "usingRules": ["upload-retry-is-resumable"]
+    },
+    {
+      "order": 4,
+      "decide": "What cancel means: stop the transfer, keep the partial or discard it",
+      "usingRules": ["upload-cancel-is-explicit"]
+    },
+    {
+      "order": 5,
+      "decide": "Whether dropping is the only route, and how paste and keyboard upload work",
+      "usingRules": ["upload-keyboard-and-paste"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "upload-constraints-stated-and-enforced",
+      "kind": "convention",
+      "statement": "Accepted types, maximum size and maximum count are stated before the drop and enforced again on the server, because the client check is a courtesy and the server check is the rule."
+    },
+    {
+      "id": "upload-per-file-state",
+      "kind": "convention",
+      "statement": "Each file owns its own state and progress; one failing file never marks the batch failed, and the batch summary counts done, failed and remaining out loud."
+    },
+    {
+      "id": "upload-retry-is-resumable",
+      "kind": "convention",
+      "statement": "Retry resumes from the last confirmed chunk or restarts that file only; a retry that re-sends the whole batch is a data-loss risk on a metered connection."
+    },
+    {
+      "id": "upload-cancel-is-explicit",
+      "kind": "convention",
+      "statement": "Cancel stops the transfer, removes the partial where the server supports it, and says so; cancelling mid-upload never leaves an orphan file nobody can see."
+    },
+    {
+      "id": "upload-keyboard-and-paste",
+      "kind": "convention",
+      "statement": "The dropzone is a real button with a file input behind it, paste works for images where the context implies it, and dragging is never the only path."
+    },
+    {
+      "id": "upload-name-and-size-matter",
+      "kind": "convention",
+      "statement": "Every queued file shows its name (mid-truncated), size and type, because two files called screenshot.png are the normal case, not the edge case."
+    }
+  ],
+  "stateMachine": {
+    "component": "file-upload",
+    "variants": ["dropzone", "compact"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "progress and results are keyed by file id and upload attempt; a progress event from a cancelled or superseded attempt is discarded",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "active",
+        "trigger": "files are dragged over the dropzone",
+        "motion": {
+          "motion": "the border brightens over 120ms and the hint changes",
+          "reducedMotion": "the border brightens instantly with no movement"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "active",
+        "to": "loading",
+        "trigger": "the drop is accepted and the transfer starts",
+        "motion": {
+          "motion": "each row appears with its own progress bar over 120ms",
+          "reducedMotion": "rows appear instantly with a text percentage"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "a file completes",
+        "motion": {
+          "motion": "the row's bar fills and turns to the done state over 160ms",
+          "reducedMotion": "the row jumps to done instantly and is announced once"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "a file fails",
+        "motion": {
+          "motion": "that row gains an error line and a retry over 120ms while other rows continue",
+          "reducedMotion": "the row gains the error instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "retry is pressed for one file",
+        "motion": {
+          "motion": "the row returns to its pending state over 120ms",
+          "reducedMotion": "the row returns to pending instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "active",
+        "trigger": "cancel is pressed mid-transfer",
+        "motion": {
+          "motion": "the row stops and states what was discarded over 120ms",
+          "reducedMotion": "the row stops instantly and the statement appears"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "the drag leaves the dropzone",
+        "motion": {
+          "motion": "the border returns over 100ms",
+          "reducedMotion": "the border returns instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "the completed list is cleared",
+        "motion": {
+          "motion": "the rows fade over 140ms",
+          "reducedMotion": "the rows disappear instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the control",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the control becomes available again",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "unavailability is a permission or load fact, not an animation; the control states why instead of moving"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "sections": {
+    "intent": "Get files from the reader's device to the server with an honest per-file account of what is queued, moving, done, failed or cancelled.",
+    "useCases": [
+      "attach three invoices to a record",
+      "replace a broken image",
+      "retry a failed 40 MB upload without starting over"
+    ],
+    "nicheDifferences": [
+      "Uploads are the state machine most products get wrong, because they are the only common flow with N parallel async objects",
+      "The reader needs per-file truth, not a batch spinner"
+    ],
+    "inputs": [
+      "accepted types, size limits and count limits, and where they are enforced",
+      "whether the server supports resumable chunks and deletion of partials",
+      "the largest realistic file and the slowest realistic connection",
+      "whether paste is meaningful here"
+    ],
+    "anatomy": [
+      "a dropzone that is also a button",
+      "a hidden file input",
+      "a queue where each row owns state, name, size and progress",
+      "per-row retry and cancel",
+      "a batch summary line"
+    ],
+    "styling": [
+      "rows are 56 px, name mid-truncated, size right-aligned in tabular numerals",
+      "progress is a 4 px bar under the name plus a text percentage",
+      "failed rows use the danger colour plus an icon and text"
+    ],
+    "a11y": [
+      "the dropzone is a button with a visible label; drag is an enhancement",
+      "each row's state is text as well as colour",
+      "progress announces at most about once a second per file",
+      "retry and cancel are buttons with the file name in their accessible name"
+    ],
+    "responsive": [
+      "at 320 px each row becomes two lines: name, then state and size",
+      "the queue never becomes a horizontally scrolled table",
+      "the dropzone stays 44 px tall and full-width on touch"
+    ],
+    "copy": [
+      "an empty queue reads 'Drop files here, or choose from your device \u2014 PDF, PNG up to 20 MB'",
+      "a failure reads 'Invoice-2026-03.pdf failed: 28 MB is over the 20 MB limit'",
+      "a cancel reads 'Cancelled after 4.1 MB; the partial file was removed'"
+    ],
+    "alternatives": [
+      "a camera capture when the file is a photo taken now",
+      "a link-based import for files already in cloud storage",
+      "a background job with email notification for very large sets"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 SC 3.3.1 Error Identification",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WAI-ARIA Authoring Practices Guide",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "SUS primitive convention (this project)",
+        "date": "2026-11-15",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "constraints are stated before the drop and enforced on the server",
+      "each file reports queued, uploading, done, failed or cancelled independently",
+      "retry resumes the failed file only and never re-sends completed files",
+      "cancel states exactly what happened to the partial",
+      "the dropzone is operable by keyboard and paste works where meaningful"
+    ],
+    "failureCases": [
+      "one failed file marks the whole batch failed and hides the nine that succeeded",
+      "retry restarts every file, wasting the completed ones",
+      "cancel leaves a partial upload on the server with no record",
+      "drag is the only path and a keyboard user cannot upload at all"
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "dropzone",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "an unavailable uploader explains why in place rather than rendering a dead dropzone"
+        }
+      ]
+    },
+    {
+      "variant": "compact",
+      "enabled": ["default", "hover", "focus-visible", "disabled", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "active",
+          "reason": "a compact attach button has no drop target; it opens the picker instead"
+        }
+      ]
+    }
+  ]
+}

@@ -22,3 +22,11 @@ production: focus return and roving focus (tabs, drawer, dropdown), state in the
 (pagination, tabs, accordion), unsaved-work guards (drawer), destructive separation
 (dropdown), hierarchy over history (breadcrumb) and meaning that survives colour blindness
 (avatar presence, badge status).
+
+## Second-wave primitives B (T0812)
+
+tooltip, progress, skeleton, file upload, date picker and command palette. The two with the
+largest state surfaces are specified accordingly: file upload carries per-file queued /
+uploading / done / failed / cancelled with resumable retry and an explicit cancel, and the date
+picker carries typed locale entry alongside a full keyboard grid, with calendar dates and
+instants stored distinctly so nothing shifts by a day.

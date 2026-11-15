@@ -618,3 +618,11 @@
   shared builder keeps the gate-critical shape (outbound transition per state, exact variant matrix)
   in one place, and the gates still rejected two real content errors. 33 playbook tests, verify 629.
   Receipt: VERIFICATION/T0811.md. Next: T0812.
+
+- 2026-11-15T18:10:00+06:00 | Pi (FreePi) | T0812 | Second-wave primitives B (6).
+  file-upload (per-file states, resumable retry of the failed file only, cancel that says what
+  happened to the partial, server-enforced constraints, keyboard/paste paths) and date-picker
+  (typed locale + ISO entry, full keyboard grid with focus return, refusals with reasons, dates and
+  instants modelled distinctly) carry the complex matrices the task named; tooltip, progress,
+  skeleton and command-palette complete the set. 38 playbook tests, verify 634.
+  Receipt: VERIFICATION/T0812.md. Next: T0906.

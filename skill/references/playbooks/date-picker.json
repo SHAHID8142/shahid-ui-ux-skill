@@ -1,0 +1,312 @@
+{
+  "id": "date-picker",
+  "surface": "operate",
+  "component": "date-picker",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "What is being chosen: a date, a range, a time, or a recurring schedule",
+      "usingRules": ["date-picker-mode-first"]
+    },
+    {
+      "order": 2,
+      "decide": "How a typed date is parsed, and in which locale and format it is displayed",
+      "usingRules": ["date-picker-typed-entry"]
+    },
+    {
+      "order": 3,
+      "decide": "The keyboard model for the grid and how the reader reaches it",
+      "usingRules": ["date-picker-grid-keys"]
+    },
+    {
+      "order": 4,
+      "decide": "How invalid, out-of-range and past dates are refused, with a reason",
+      "usingRules": ["date-picker-refuses-with-reason"]
+    },
+    {
+      "order": 5,
+      "decide": "How time zones and relative entry ('tomorrow') are handled",
+      "usingRules": ["date-picker-timezone"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "date-picker-mode-first",
+      "kind": "convention",
+      "statement": "A single date is a text input with a calendar as an optional aid; a range uses two inputs with a shared calendar; a recurring schedule is not a date picker at all."
+    },
+    {
+      "id": "date-picker-typed-entry",
+      "kind": "convention",
+      "statement": "Typing is always possible and always faster: the input accepts the locale's format and an unpadded ISO form, displays the locale format, and never silently reinterprets a day/month swap."
+    },
+    {
+      "id": "date-picker-grid-keys",
+      "kind": "convention",
+      "statement": "Arrows move by day, PageUp/PageDown by month, Home/End to the week's edges, Enter selects and Escape closes back to the input; the grid has a roving tabindex and announces the full date."
+    },
+    {
+      "id": "date-picker-refuses-with-reason",
+      "kind": "convention",
+      "statement": "A disabled day states why (before the project start, not a business day) via aria-disabled plus an explanation near the input, and a typed out-of-range date is refused with the same reason."
+    },
+    {
+      "id": "date-picker-timezone",
+      "kind": "convention",
+      "statement": "The chosen date is stored with its meaning stated: a calendar date stays a date, an instant is stored in UTC with the zone shown, and the interface never silently converts one into the other."
+    }
+  ],
+  "stateMachine": {
+    "component": "date-picker",
+    "variants": ["input", "range"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "a month grid request applies only to the month currently displayed; a slower previous month never replaces the grid the reader is looking at",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "active",
+        "trigger": "the calendar is opened from the input",
+        "motion": {
+          "motion": "the calendar fades and offsets into place over 160ms",
+          "reducedMotion": "the calendar appears instantly in place"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "the calendar is closed or Escape is pressed",
+        "motion": {
+          "motion": "the calendar fades out over 120ms",
+          "reducedMotion": "the calendar disappears instantly and focus returns to the input"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "loading",
+        "trigger": "a month of availability is fetched",
+        "motion": {
+          "motion": "available days show a static muted state over 120ms",
+          "reducedMotion": "the muted day states appear instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "availability arrives",
+        "motion": {
+          "motion": "available days enable over 140ms",
+          "reducedMotion": "days enable instantly without transition"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "availability fails",
+        "motion": {
+          "motion": "the grid stays navigable with a note that availability is unknown over 120ms",
+          "reducedMotion": "the note appears instantly above the grid"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "error",
+        "trigger": "a typed date is refused",
+        "motion": {
+          "motion": "the field's error text expands over 120ms",
+          "reducedMotion": "the error text appears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "active",
+        "trigger": "the reader corrects the date and opens the calendar",
+        "motion": {
+          "motion": "the calendar opens over 160ms with the corrected month shown",
+          "reducedMotion": "the calendar appears instantly on the corrected month"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "default",
+        "trigger": "the invalid value is cleared",
+        "motion": {
+          "motion": "the error text collapses over 100ms",
+          "reducedMotion": "the error text disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the control",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "the confirmation clears",
+        "motion": {
+          "motion": "the confirmation fades over 140ms",
+          "reducedMotion": "the confirmation disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the control becomes available again",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "unavailability is a permission or load fact, not an animation; the control states why instead of moving"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "sections": {
+    "intent": "Let a reader enter or choose a date quickly by keyboard, in their own format, and know exactly which day the product will store.",
+    "useCases": [
+      "set a due date by typing",
+      "pick a sprint range",
+      "see which days are unavailable and why"
+    ],
+    "nicheDifferences": [
+      "Dates are where locale, time zone and keyboard meet, and the classic bug is a day that shifts by one",
+      "The picker's job is to remove ambiguity, not to look like a calendar"
+    ],
+    "inputs": [
+      "whether the value is a calendar date, an instant, or a range",
+      "the locales and formats in use",
+      "business-day or availability rules",
+      "the time zone the reader is in versus the one stored"
+    ],
+    "anatomy": [
+      "a text input with a format hint",
+      "a calendar button that opens a labelled dialog",
+      "a month grid with roving tabindex",
+      "an error line for refused values"
+    ],
+    "styling": [
+      "the calendar is 320 px wide with 44 px day targets",
+      "selected range ends are distinguished from the range body",
+      "today has a ring, not a fill, so selection stays legible"
+    ],
+    "a11y": [
+      "the input has a label and a format example in its description",
+      "the grid is a role=grid with roving tabindex and arrow/Home/End/PageUp/PageDown support",
+      "selected days expose aria-selected and the full date as their name",
+      "disabled days use aria-disabled with a reason near the input",
+      "Escape closes and restores focus to the input"
+    ],
+    "responsive": [
+      "at 320 px the calendar becomes a full-width sheet with the same keyboard model",
+      "the input accepts the locale's date order while the hint shows it",
+      "the range variant stacks the two inputs above the calendar"
+    ],
+    "copy": [
+      "the format hint reads 'DD/MM/YYYY, e.g. 14/11/2026'",
+      "a refusal reads 'That date is before the project start (1 Nov 2026)'",
+      "a range reads 'From 14 Nov 2026 to 28 Nov 2026'"
+    ],
+    "alternatives": [
+      "three separate selects for day, month and year when the range is wide",
+      "a relative entry field ('in 2 weeks') when scheduling is approximate",
+      "a schedule builder for recurring patterns"
+    ],
+    "references": [
+      {
+        "label": "WAI-ARIA Authoring Practices Guide",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WCAG 2.2 SC 3.3.1 Error Identification",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "ISO 8601-1:2019 date and time representation",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      }
+    ],
+    "acceptance": [
+      "typing a date works in the locale format and an unpadded ISO form",
+      "arrows, PageUp/PageDown, Home/End, Enter and Escape all work on the grid",
+      "a refused date states the range and the reason in text",
+      "a calendar date and an instant are stored distinctly, with the zone shown",
+      "the calendar returns focus to the input when it closes"
+    ],
+    "failureCases": [
+      "the picker shows MM/DD while the locale expects DD/MM, so 03/04 becomes March",
+      "the grid cannot be reached or driven by keyboard",
+      "a selected date shifts by one day when the reader crosses a time zone",
+      "unavailable days are greyed with no explanation"
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "input",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "a disabled date field is replaced by plain text stating the fixed date"
+        }
+      ]
+    },
+    {
+      "variant": "range",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "a range with one untouchable end is two separate fields with different permissions"
+        }
+      ]
+    }
+  ]
+}
