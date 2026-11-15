@@ -1,0 +1,325 @@
+{
+  "id": "search-filters",
+  "surface": "operate",
+  "component": "search-filters",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Which criteria actually narrow the operator's decision, and which are merely available in the schema",
+      "usingRules": ["filters-earn-their-place"]
+    },
+    {
+      "order": 2,
+      "decide": "Where the criteria live (URL, never component state) so sharing, refresh and the card reflow keep them",
+      "usingRules": ["filters-state-in-url", "filters-continuity-across-layout"]
+    },
+    {
+      "order": 3,
+      "decide": "How typing becomes a request: debounce window, cancellation, and which response wins",
+      "usingRules": ["filters-debounce-cancels"]
+    },
+    {
+      "order": 4,
+      "decide": "How the result count and active criteria are announced without stealing focus",
+      "usingRules": ["filters-announce-count"]
+    },
+    {
+      "order": 5,
+      "decide": "How long identifiers, translated labels and zero-result states render without clipping or lying",
+      "usingRules": ["filters-long-ids", "filters-two-empties"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "filters-earn-their-place",
+      "kind": "convention",
+      "statement": "A filter earns its place by changing the result set in a way the operator decides on; a facet that every record shares is removed from the toolbar, not disabled."
+    },
+    {
+      "id": "filters-state-in-url",
+      "kind": "convention",
+      "statement": "Query, filters and sort are serialised into the URL so a shared link, a refresh and a back-navigation all restore the same view."
+    },
+    {
+      "id": "filters-continuity-across-layout",
+      "kind": "convention",
+      "statement": "When the results reflow from table to cards at 640 px, the active criteria, the page and the focused control survive the change; nothing is reset because the layout changed."
+    },
+    {
+      "id": "filters-debounce-cancels",
+      "kind": "convention",
+      "statement": "Typing debounces for 250 ms and cancels the in-flight request; a response that arrives after a newer query is discarded, never rendered over it."
+    },
+    {
+      "id": "filters-announce-count",
+      "kind": "convention",
+      "statement": "Every settled result set announces its count and active criteria through a polite live region, while focus stays in the search field or the toolbar."
+    },
+    {
+      "id": "filters-long-ids",
+      "kind": "convention",
+      "statement": "Identifiers longer than 24 characters truncate in the middle with the full value exposed as the accessible name, because the discriminating part of an id is usually its tail."
+    },
+    {
+      "id": "filters-two-empties",
+      "kind": "convention",
+      "statement": "No records exist and no records match are separate states with separate actions: create one, or clear the filters."
+    },
+    {
+      "id": "filters-error-keeps-state",
+      "kind": "convention",
+      "statement": "A failed query keeps the previous results visible and the criteria editable, with the error announced; it never replaces the operator's view with an error page."
+    }
+  ],
+  "stateMachine": {
+    "component": "search-filters",
+    "variants": ["inline", "panel"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "latest query wins; responses for superseded queries are discarded by sequence number, and a response whose query no longer matches the field is never rendered",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "focus-visible",
+        "trigger": "the search field or a chip receives focus",
+        "motion": {
+          "motion": "focus ring appears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "focus-visible",
+        "to": "loading",
+        "trigger": "the debounce window elapses and a query is sent",
+        "motion": {
+          "motion": "results dim to 60% over 120ms and a progress bar appears in the toolbar",
+          "reducedMotion": "results freeze without dimming; the progress bar's text status carries the state"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the winning response arrives",
+        "motion": {
+          "motion": "results fade in over 140ms",
+          "reducedMotion": "results swap instantly and the live region announces the count"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the request fails or times out",
+        "motion": {
+          "motion": "error banner slides down 160ms above the preserved results",
+          "reducedMotion": "banner appears instantly above the preserved results"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "loading",
+        "trigger": "a filter chip is toggled",
+        "motion": {
+          "motion": "chip settles over 120ms while results dim",
+          "reducedMotion": "chip state swaps instantly; results freeze without dimming"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "default",
+        "trigger": "the operator dismisses the error",
+        "motion": {
+          "motion": "banner collapses over 100ms",
+          "reducedMotion": "banner disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "all filters are cleared",
+        "motion": {
+          "motion": "chips fade out over 120ms and the full set returns",
+          "reducedMotion": "chips disappear instantly and the full set returns"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "disabled",
+        "trigger": "the surface is read-only for this role",
+        "motion": {
+          "motion": "none",
+          "noneReason": "a permission boundary is not an animation; controls simply stop being operable and say why",
+          "reducedMotion": "same"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves the control",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the role regains permission",
+        "motion": {
+          "motion": "none",
+          "noneReason": "returning permission restores operability; a control does not animate its own permissions",
+          "reducedMotion": "same"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "active",
+        "to": "success",
+        "trigger": "a chip's pending toggle is applied",
+        "motion": {
+          "motion": "the chip settles over 120ms while results dim",
+          "reducedMotion": "the chip state swaps instantly and results freeze without dimming"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      }
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "inline",
+      "enabled": ["default", "hover", "focus-visible", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "active",
+          "reason": "an inline toolbar has no pressed state of its own; chips carry it"
+        },
+        {
+          "state": "disabled",
+          "reason": "the inline variant only renders when the role may search"
+        }
+      ]
+    },
+    {
+      "variant": "panel",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    }
+  ],
+  "sections": {
+    "intent": "Let an operator narrow a long record set to the few rows that decide their next action, and let the narrowing survive a refresh, a shared link and a layout change.",
+    "useCases": [
+      "find one record by a fragment of its title",
+      "narrow to a status and a date window",
+      "hand a colleague a link that opens the same filtered view"
+    ],
+    "nicheDifferences": [
+      "Operate surfaces are used repeatedly by the same person, so the state of the criteria is worth more than the novelty of the control: the toolbar must be boring, fast and remember."
+    ],
+    "inputs": [
+      "the record schema and which fields are genuinely discriminating",
+      "whether results arrive server-side or are filtered client-side",
+      "the longest realistic value per column, including ids",
+      "the roles that may search and the ones that may not"
+    ],
+    "anatomy": [
+      "search field with a visible label and a clear action",
+      "filter chips with removable semantics",
+      "sort control",
+      "result count live region",
+      "results region that keeps its scroll position",
+      "error banner above the preserved results"
+    ],
+    "styling": [
+      "the toolbar is one row of 44 px controls; chips wrap to a second row rather than shrinking",
+      "active chips are distinguished by border weight as well as colour",
+      "the progress bar is 2 px and lives in the toolbar, never over the results"
+    ],
+    "a11y": [
+      "chips are real buttons with aria-pressed, and each has an accessible name that names its facet",
+      "the result count is announced in a polite live region, never as a focus move",
+      "Escape clears the field, and the field is reachable with a single shortcut from the page",
+      "long identifiers keep the full value in the accessible name when truncated visually"
+    ],
+    "responsive": [
+      "below 640 px the toolbar collapses into a 'Filters (3)' button that opens a sheet, while the criteria stay in the URL",
+      "the sheet is a dialog with focus trapped and Escape to close",
+      "the results region reflows from table to cards without losing scroll position or criteria"
+    ],
+    "copy": [
+      "the empty states name the action: 'No records yet \u2014 create the first one' and 'No records match these filters \u2014 clear them'",
+      "the error names the failure and the recovery, never 'Something went wrong'",
+      "counts read as '24 records' / '1 record', not '24 results found!'"
+    ],
+    "alternatives": [
+      "a query builder for analysts who need boolean nesting",
+      "saved views when the same filter set is reopened weekly",
+      "facets with counts when the schema has many shared values"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 SC 1.4.10 Reflow",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WAI-ARIA APG \u2014 combobox and live regions",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "SUS issue #10 \u2014 filter/sort/search continuity across layout changes",
+        "date": "2026-11-15",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "typing 250 ms produces exactly one request and the latest response wins",
+      "the URL contains the criteria and reloading restores them",
+      "reflowing to cards at 640 px keeps the criteria, page and focus",
+      "a 40 % longer translated label does not clip or push controls out of the row",
+      "a failed query leaves the previous results on screen and announces the error"
+    ],
+    "failureCases": [
+      "a stale response overwrites newer results because the sequence number was not checked",
+      "the toolbar resets when the layout changes from table to cards",
+      "an id truncated at the end hides the only discriminating characters",
+      "an empty state offers no action and the operator is stuck"
+    ]
+  }
+}

@@ -592,3 +592,13 @@
   row to experimental; real state: freepi verified, zcode stale, three hosts without evidence,
   none supported because Live Studio is unexercised. 16 tests + snapshot, full verify 617 tests.
   Receipt: VERIFICATION/T0905.md. Next: T0809.
+
+- 2026-11-15T15:55:00+06:00 | Pi (FreePi) | T0809 | Second-wave Operate playbooks.
+  search-filters (URL-held criteria that survive the 640 px table-to-card reflow, 250 ms
+  debounce with cancellation, mid-truncated ids, translated-label growth, two distinct empties),
+  settings (permission-gated controls disabled with reason rather than hidden, dirty/save/error
+  with idempotency key, destructive section separated) and dashboard-widgets (independent
+  failure, reserved height, zero vs no-data, keyboard reorder). The motion and variant gates
+  caught three real content errors, fixed in content not in the checker. 26 playbook tests,
+  full verify 622 tests. Issue #10 stays open pending the T0811 reference implementation.
+  Receipt: VERIFICATION/T0809.md. Next: T0810.

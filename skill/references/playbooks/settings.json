@@ -1,0 +1,312 @@
+{
+  "id": "settings",
+  "surface": "operate",
+  "component": "settings",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Which settings a person can change without a second opinion, and which need permission or a consequence warning",
+      "usingRules": ["settings-permission-not-hiding"]
+    },
+    {
+      "order": 2,
+      "decide": "How the page distinguishes saved, dirty and saving, so nobody leaves with unsaved changes",
+      "usingRules": ["settings-dirty-is-visible", "settings-save-idempotent"]
+    },
+    {
+      "order": 3,
+      "decide": "Which changes apply immediately and which wait for an explicit save, and how that difference is signalled",
+      "usingRules": ["settings-apply-timing"]
+    },
+    {
+      "order": 4,
+      "decide": "How a failed save keeps the operator's edits while telling them what to do next",
+      "usingRules": ["settings-error-keeps-edits"]
+    },
+    {
+      "order": 5,
+      "decide": "How destructive settings are separated from the rest and what confirms them",
+      "usingRules": ["settings-destructive-separated"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "settings-permission-not-hiding",
+      "kind": "convention",
+      "statement": "A setting the role cannot change is shown disabled with the reason and the role that can change it; hiding it makes the product look broken and invites support tickets."
+    },
+    {
+      "id": "settings-dirty-is-visible",
+      "kind": "convention",
+      "statement": "Unsaved changes are visible without scrolling: the save bar appears, the page warns on navigation, and the count of changed fields is announced."
+    },
+    {
+      "id": "settings-save-idempotent",
+      "kind": "convention",
+      "statement": "Saving disables the button on press, guards the handler, and sends an idempotency key so a double submit or a retry cannot apply the change twice."
+    },
+    {
+      "id": "settings-apply-timing",
+      "kind": "convention",
+      "statement": "A toggle that takes effect on save says so next to the control; a toggle that applies immediately shows its pending state until the server confirms."
+    },
+    {
+      "id": "settings-error-keeps-edits",
+      "kind": "convention",
+      "statement": "A failed save keeps every edited value in place, names which field failed and why, and offers a retry that reuses the same idempotency key."
+    },
+    {
+      "id": "settings-destructive-separated",
+      "kind": "convention",
+      "statement": "Destructive settings (delete workspace, revoke all sessions) live in their own section, carry the typed confirmation the action deserves, and never share a save button with reversible ones."
+    }
+  ],
+  "stateMachine": {
+    "component": "settings",
+    "variants": ["sectioned", "tabbed"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "a save response applies only to the local revision it was sent for; edits made while the request was in flight keep the page dirty instead of being marked saved",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "active",
+        "trigger": "a field is edited",
+        "motion": {
+          "motion": "the save bar rises 160ms from the bottom edge",
+          "reducedMotion": "the save bar appears in place without movement"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "active",
+        "to": "loading",
+        "trigger": "Save is pressed",
+        "motion": {
+          "motion": "the button label swaps to a pending label over 120ms",
+          "reducedMotion": "the label swaps instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the server confirms the revision",
+        "motion": {
+          "motion": "the save bar settles and fades over 180ms",
+          "reducedMotion": "the bar disappears instantly and the live region announces the save"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the save fails",
+        "motion": {
+          "motion": "the save bar turns to the error state over 140ms and stays",
+          "reducedMotion": "the error state appears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "Discard is pressed",
+        "motion": {
+          "motion": "the save bar retreats over 120ms",
+          "reducedMotion": "the bar disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "the confirmation is acknowledged",
+        "motion": {
+          "motion": "confirmation fades over 160ms",
+          "reducedMotion": "confirmation disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "Retry is pressed",
+        "motion": {
+          "motion": "the button returns to pending over 120ms",
+          "reducedMotion": "the button swaps instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "disabled",
+        "trigger": "the role loses permission while the page is open",
+        "motion": {
+          "motion": "none",
+          "noneReason": "a permission boundary has no transition; the control becomes inert and states why",
+          "reducedMotion": "same"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves the control",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the area",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the role regains permission",
+        "motion": {
+          "motion": "none",
+          "noneReason": "returning permission restores operability; a control does not animate its own permissions",
+          "reducedMotion": "same"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "sectioned",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    },
+    {
+      "variant": "tabbed",
+      "enabled": ["default", "hover", "focus-visible", "active", "disabled", "loading", "error"],
+      "refused": [
+        {
+          "state": "success",
+          "reason": "a tab has no success state of its own; the save bar owns that feedback"
+        }
+      ]
+    }
+  ],
+  "sections": {
+    "intent": "Let one person change how their workspace behaves, know exactly what has been saved, and recover from a failed save without retyping.",
+    "useCases": [
+      "turn off the daily digest",
+      "change the workspace timezone",
+      "grant a colleague editor access",
+      "revoke every session after a laptop is lost"
+    ],
+    "nicheDifferences": [
+      "Settings are visited rarely and changed nervously: the cost of a wrong click is a workspace-wide consequence",
+      "Certainty therefore outranks brevity, and every irreversible action is separated from the reversible ones"
+    ],
+    "inputs": [
+      "which settings apply immediately and which on save",
+      "the roles that may change each section",
+      "the destructive actions and their confirmation strength",
+      "the fields whose change requires a re-authentication"
+    ],
+    "anatomy": [
+      "section headings with one-line consequences",
+      "labelled controls with the current value visible",
+      "an inline save bar carrying changed-field count",
+      "per-field error text",
+      "a separate destructive section"
+    ],
+    "styling": [
+      "the save bar is a single elevated surface with one primary action",
+      "disabled controls keep readable contrast and carry the reason as text, not only as a tooltip",
+      "destructive controls are the only place a red action appears on the page"
+    ],
+    "a11y": [
+      "each toggle is a labelled switch with its state in text, not colour alone",
+      "saving announces through a polite live region and moves focus to the first invalid field on failure",
+      "permission reasons are associated with the disabled control via aria-describedby",
+      "destructive confirmations require typing the resource name and are operable by keyboard"
+    ],
+    "responsive": [
+      "the save bar is sticky above the thumb zone on small screens and never covers the last field",
+      "tabbed variants become a single scroll with anchored section links",
+      "long values wrap instead of truncating, because a truncated timezone is a wrong timezone"
+    ],
+    "copy": [
+      "each section states the consequence in one line under its heading",
+      "errors name the field, the reason and the next action; they never say 'invalid input'",
+      "destructive copy names the object and the irreversibility: 'Delete workspace Acme \u2014 this cannot be undone'"
+    ],
+    "alternatives": [
+      "inline editing for one-line settings",
+      "an advanced JSON view for teams who manage configuration as code",
+      "organisation policy inheritance when many workspaces share defaults"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 SC 3.3.1 Error Identification",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WAI-ARIA APG \u2014 switch pattern",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "NIST SP 800-63B-4 \u00a73.1.1.2 (revocation on compromise)",
+        "date": "2026-08-26",
+        "grade": "normative-standard"
+      }
+    ],
+    "acceptance": [
+      "editing any field makes the save bar appear and announces the changed count",
+      "a double press sends exactly one request and the second is refused by the key",
+      "a failed save preserves every edit and names the failing field",
+      "a permission-denied control is disabled with its reason and the owning role",
+      "deleting requires typing the resource name and is not offered next to the save button"
+    ],
+    "failureCases": [
+      "an edit is lost because the page navigated without warning",
+      "a retry after a timeout applies the change twice",
+      "a hidden permission-gated control makes the operator think the feature is missing",
+      "a failure replaces the form with an error page and the edits are gone"
+    ]
+  }
+}

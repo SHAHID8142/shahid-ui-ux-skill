@@ -2896,9 +2896,23 @@
       ],
       "risk": "scope creep",
       "rollback": "matrix governs",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0809.md",
+        "skill/references/playbooks/search-filters.json",
+        "skill/references/playbooks/settings.json",
+        "skill/references/playbooks/dashboard-widgets.json"
+      ],
+      "results": [
+        "search-filters carries issue #10 continuity: criteria live in the URL so the 640 px table-to-card reflow keeps view and focus; 250 ms debounce cancels in-flight requests so stale responses cannot overwrite newer results",
+        "long identifiers truncate in the middle with the full value as accessible name; a 40 % longer translated label must not clip the toolbar",
+        "settings shows permission-gated controls disabled with their reason and owning role instead of hiding them, and a failed save keeps every edited value; save is disable/handler-guard/idempotency-key protected",
+        "dashboard widgets fail independently, reserve final height to avoid layout shift, distinguish zero from no-data, and support keyboard reorder with announced positions",
+        "all three carry the 12-part standard and exact variant matrices; 19 playbooks valid, motion gate clean, 26 playbook tests, full verify 622 tests"
+      ]
     },
     {
       "id": "T0810",

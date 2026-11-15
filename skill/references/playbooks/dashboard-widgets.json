@@ -1,0 +1,306 @@
+{
+  "id": "dashboard-widgets",
+  "surface": "operate",
+  "component": "dashboard-widgets",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Which questions the dashboard answers in its first viewport, and which widgets merely display data",
+      "usingRules": ["dash-widget-earns-space"]
+    },
+    {
+      "order": 2,
+      "decide": "How each widget reports its own loading, empty and failure without taking the page down",
+      "usingRules": ["dash-independent-failure"]
+    },
+    {
+      "order": 3,
+      "decide": "How reserved space prevents the layout from jumping while numbers arrive",
+      "usingRules": ["dash-no-layout-shift"]
+    },
+    {
+      "order": 4,
+      "decide": "How a widget is opened, filtered and reordered by keyboard alone",
+      "usingRules": ["dash-keyboard-reorder"]
+    },
+    {
+      "order": 5,
+      "decide": "How zero differs from no data, and what each says",
+      "usingRules": ["dash-zero-is-a-value"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "dash-widget-earns-space",
+      "kind": "convention",
+      "statement": "A widget earns its space by answering a question the operator acts on; a metric nobody has ever clicked through to is removed from the first viewport rather than shrunk."
+    },
+    {
+      "id": "dash-independent-failure",
+      "kind": "convention",
+      "statement": "Each widget loads, fails and retries on its own; one failing query never blanks the dashboard or blocks the others."
+    },
+    {
+      "id": "dash-no-layout-shift",
+      "kind": "convention",
+      "statement": "Every widget reserves its final height before data arrives, so numbers replacing skeletons do not move anything the operator is about to click."
+    },
+    {
+      "id": "dash-keyboard-reorder",
+      "kind": "convention",
+      "statement": "Reordering is available from the keyboard with explicit move actions and announced positions, never drag-only."
+    },
+    {
+      "id": "dash-zero-is-a-value",
+      "kind": "convention",
+      "statement": "Zero and no-data are different: zero is measured and reads as 0 with its period, no data says that nothing was collected and why."
+    },
+    {
+      "id": "dash-refresh-announced",
+      "kind": "convention",
+      "statement": "A refresh announces which widget updated and when, without moving focus or re-reading the whole grid."
+    }
+  ],
+  "stateMachine": {
+    "component": "dashboard-widgets",
+    "variants": ["kpi", "chart", "list"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "a widget keeps the newest response per filter; responses for an abandoned filter are dropped by sequence number and never repaint the widget",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "loading",
+        "trigger": "the widget's range or filter changes",
+        "motion": {
+          "motion": "skeleton shimmers in place over 200ms, never changing size",
+          "reducedMotion": "a static placeholder with the same dimensions replaces shimmer"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "data arrives",
+        "motion": {
+          "motion": "values cross-fade over 140ms",
+          "reducedMotion": "values swap instantly; the live region announces the new value"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the widget's query fails",
+        "motion": {
+          "motion": "the widget's own error appears over 120ms inside its frame",
+          "reducedMotion": "the error appears instantly inside the same frame"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "active",
+        "trigger": "the operator drills into a segment",
+        "motion": {
+          "motion": "the selected segment brightens over 100ms and the rest dim",
+          "reducedMotion": "the selection changes instantly with no dimming"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "active",
+        "to": "success",
+        "trigger": "the drill-down is cleared",
+        "motion": {
+          "motion": "the widget returns to its full range over 120ms",
+          "reducedMotion": "the full range returns instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "Retry is pressed inside the widget",
+        "motion": {
+          "motion": "the error hands back to the skeleton over 120ms",
+          "reducedMotion": "the skeleton appears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "disabled",
+        "trigger": "the widget's data source is not entitled for this workspace",
+        "motion": {
+          "motion": "none",
+          "noneReason": "an entitlement boundary is a fact, not a transition; the frame stays and states what is missing",
+          "reducedMotion": "same"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves the control",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the area",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the role regains permission",
+        "motion": {
+          "motion": "none",
+          "noneReason": "returning permission restores operability; a control does not animate its own permissions",
+          "reducedMotion": "same"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "kpi",
+      "enabled": ["default", "hover", "focus-visible", "disabled", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "active",
+          "reason": "a single figure has nothing to select; drill-down is the chart's job"
+        }
+      ]
+    },
+    {
+      "variant": "chart",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "a chart with no entitlement is not rendered at all rather than shown inert"
+        }
+      ]
+    },
+    {
+      "variant": "list",
+      "enabled": ["default", "hover", "focus-visible", "active", "disabled", "loading", "error"],
+      "refused": [
+        {
+          "state": "success",
+          "reason": "a list has no success state; the rows themselves are the result"
+        }
+      ]
+    }
+  ],
+  "sections": {
+    "intent": "Answer the three or four questions an operator opens the product with, and keep answering them honestly when one source is slow, empty or broken.",
+    "useCases": [
+      "check today's volume against yesterday",
+      "spot which queue is growing",
+      "drill into one segment to see what changed",
+      "reorder the grid so the morning check is first"
+    ],
+    "nicheDifferences": [
+      "A dashboard is opened many times a day by the same person; novelty is worthless and stability is everything. Widgets therefore behave like instruments, not cards."
+    ],
+    "inputs": [
+      "the questions the operator actually acts on",
+      "the freshness and latency of each source",
+      "the entitlements that gate each widget",
+      "the widest realistic label and value per widget"
+    ],
+    "anatomy": [
+      "a grid with reserved height per widget",
+      "a per-widget frame carrying title, period and refresh time",
+      "a value or series area",
+      "a per-widget error and retry",
+      "a reorder affordance usable by keyboard"
+    ],
+    "styling": [
+      "figures use tabular numerals so digits do not jitter between refreshes",
+      "the grid keeps one accent for the current period and neutral tone for comparisons",
+      "borders define frames; shadows are not used to imply elevation the grid does not have"
+    ],
+    "a11y": [
+      "each widget is a labelled region with its title as the accessible name",
+      "values and periods are exposed as text, not only inside a canvas or SVG",
+      "refreshes announce through a polite live region naming the widget and the time",
+      "reordering uses explicit move buttons with announced positions"
+    ],
+    "responsive": [
+      "below 768 px the grid becomes one column in priority order, never a horizontal scroller",
+      "charts keep a minimum height of 160 px and re-render to the narrower width instead of being cropped",
+      "the period selector becomes a single control that states the active range"
+    ],
+    "copy": [
+      "each widget states its period and last update time",
+      "empty data says what was not collected and why, and offers the action that would start collecting",
+      "errors name the source and the retry, never 'Unable to load'"
+    ],
+    "alternatives": [
+      "a single question-first page when the operator needs one answer, not a grid",
+      "an exported report for weekly review instead of a live dashboard",
+      "alerting when the number matters more than watching it"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 SC 1.3.1 Info and Relationships",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WAI-ARIA APG \u2014 regions and live regions",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "Core Web Vitals: cumulative layout shift",
+        "date": "2026-11-14",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "each widget loads, fails and retries independently while the rest stays usable",
+      "no widget changes height when data replaces its skeleton",
+      "zero renders as 0 with its period and no-data explains the absence",
+      "the grid can be reordered with the keyboard and the new position is announced",
+      "a refresh announces the widget and time without moving focus"
+    ],
+    "failureCases": [
+      "one failing query blanks the entire dashboard",
+      "skeletons collapse and the operator clicks the wrong widget when numbers arrive",
+      "zero is rendered as no-data and the operator believes collection stopped",
+      "reordering is drag-only and impossible from the keyboard"
+    ]
+  }
+}

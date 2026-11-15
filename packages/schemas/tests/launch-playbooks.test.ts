@@ -20,6 +20,9 @@ const DIR = join(__dirname, '../../../skill/references/playbooks');
 const files = readdirSync(DIR).filter((file) => file.endsWith('.json'));
 const load = (file: string) => JSON.parse(readFileSync(join(DIR, file), 'utf8'));
 
+/** Second wave (T0809): Operate-focused components added after the launch set. */
+const SECOND_WAVE = ['search-filters', 'settings', 'dashboard-widgets'];
+
 /** Batch 1 (T0405). Commerce lives in T0405c; data table and record forms in T0407. */
 const BATCH_1 = [
   'navbar',
@@ -54,8 +57,12 @@ describe('batch-1 launch set is exactly what it claims', () => {
   it('the operate set exists and is complete (T0407)', () => {
     const present = files.map((file) => file.replace('.json', ''));
     for (const id of OPERATE) expect(present, id).toContain(id);
-    // the promised launch set is now fully present, in one place
-    expect(present.length).toBe(BATCH_1.length + COMMERCE.length + OPERATE.length);
+    // the promised launch set is now fully present, in one place (plus the
+    // second wave from T0809 onward, which is added to this count as it lands)
+    for (const id of SECOND_WAVE) expect(present, id).toContain(id);
+    expect(present.length).toBe(
+      BATCH_1.length + COMMERCE.length + OPERATE.length + SECOND_WAVE.length,
+    );
   });
 
   it('the data table covers sort, filter, empty, loading, error and pagination', () => {
@@ -293,5 +300,53 @@ describe('forward compatibility with the T0600 state-machine schema', () => {
       for (const state of load(file).stateMachine.states)
         expect(vocabulary.has(state), file).toBe(true);
     }
+  });
+});
+
+/** Everything a reader or an agent can learn from the playbook, flattened. */
+const allText = (file: string): string => {
+  const playbook = load(file);
+  const strings: string[] = [];
+  const walk = (value: unknown): void => {
+    if (typeof value === 'string') strings.push(value);
+    else if (Array.isArray(value)) value.forEach(walk);
+    else if (value && typeof value === 'object') Object.values(value).forEach(walk);
+  };
+  walk(playbook);
+  return strings.join(' ');
+};
+
+describe('second-wave operate playbooks (T0809, issue #10)', () => {
+  it('filter/sort/search continuity across layout changes is a stated rule, not a hope', () => {
+    const text = allText('search-filters.json');
+    expect(text).toContain('URL');
+    expect(text.toLowerCase()).toContain('reflow');
+    expect(text).toMatch(/640 px/);
+  });
+
+  it('long identifiers and translated labels have explicit treatments', () => {
+    const text = allText('search-filters.json').toLowerCase();
+    expect(text).toContain('24 characters');
+    expect(text).toContain('translated');
+  });
+
+  it('empty, error and loading states are each named with their own action', () => {
+    const text = allText('search-filters.json').toLowerCase();
+    for (const marker of ['no records yet', 'no records match', 'error']) {
+      expect(text).toContain(marker);
+    }
+  });
+
+  it('dashboard widgets fail independently and reserve their height', () => {
+    const text = allText('dashboard-widgets.json').toLowerCase();
+    expect(text).toContain('independently');
+    expect(text).toContain('reserves its final height');
+  });
+
+  it('settings never hide a permission-gated control and never lose edits on failure', () => {
+    const text = allText('settings.json');
+    expect(text).toContain('disabled with the reason');
+    expect(text.toLowerCase()).toContain('keeps every edited value');
+    expect(text.toLowerCase()).toContain('idempotency key');
   });
 });
