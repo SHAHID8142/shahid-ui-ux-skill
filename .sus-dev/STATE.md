@@ -35,6 +35,10 @@ count it cannot keep true. Rehearsed twice after the fix, the second time **from
 install → setup → verify, exit 0 (70 files + 3 skipped, 749 tests + 5 skipped), with
 `[INFO] 7 build artifact(s) missing — building once` the only new line.
 
+`pnpm regression` — the headline "everything" command the README advertises — was run at the
+checkpoint `4aac091` with a clean tree: **pass**, all three stages (verify 115.5s, demo-loop 4.0s,
+dogfood 24.2s), report in `evals/reports/regression-latest.md`.
+
 Next exact steps: nothing in the build is eligible; the remaining work is T1003 (independent
 audit) and T1005 (release approval), both owner-commissioned, plus the standing issue #9 rule.
 Nothing may touch `main` or publish without the owner.
