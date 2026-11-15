@@ -1,6 +1,6 @@
 # Development state
 
-Updated: 2026-11-15T22:30:00+06:00
+Updated: 2026-11-15T23:00:00+06:00
 docs/RESUME_ON_NEW_MACHINE.md (install, branch, `pnpm setup`, `pnpm verify`). Host: Pi (FreePi),
 main-integration role; the ZCode peer heartbeat is stale. A second agent/host cooperates per
 D33: claim tasks via TASKS.json leases; read `.sus-dev/INBOX.md`.
@@ -23,8 +23,11 @@ announced counts, twelve records, 47-character identifiers, 200% text). `pnpm do
 15/15. What was not run is named in the receipts: a real screen-reader session, browser zoom (text
 scaling stands in), real translations, volume beyond twelve rows.
 
-ROADMAP.md is now a generated view of TASKS.json (`pnpm roadmap`), which closed the last place a
-reader could be misled: it had said every milestone was "pending" with 100/102 done.
+ROADMAP.md is now a generated view of TASKS.json (`pnpm roadmap`), and any status document that
+states a stale progress figure now fails the build — which closed the places a public reader could
+be misled: the roadmap said every milestone was "pending" with 100/102 done, the build handoff said
+"97 of 100", and the README still denied that implementation was authorised. CI green on `e788e90`
+(run 43736564619).
 
 Next exact steps: nothing in the build is eligible; the remaining work is T1003 (independent
 audit) and T1005 (release approval), both owner-commissioned, plus the standing issue #9 rule.
@@ -33,9 +36,10 @@ Nothing may touch `main` or publish without the owner.
 Blockers: standing B003 (licence/publication, later phase) and B004 (irreversible externals
 during build). Active files: none after checkpoint.
 
-Latest checks: 2026-11-15T21:40 +06:00 — `pnpm verify` green (68 files + 3 skipped, 716 tests +
-5 skipped), `SUS_DOGFOOD=1 pnpm dogfood` green 15/15, and **CI success on the final checkpoint** (run
-43729821619 on `a92328a`, then run 43730851959 on `de231fc` for the flaky-hook fix). Owner issue #10 is CLOSED; issue #9 stays open by design (it is the standing
+Latest checks: 2026-11-15T23:00 +06:00 — `pnpm verify` green (69 files + 3 skipped, 739 tests +
+5 skipped), `SUS_DOGFOOD=1 pnpm dogfood` green 15/15, **CI run 43736564619 success on `e788e90`**.
+Owner issue #10 is CLOSED; issue #9 stays open by design (it is the standing continuous-execution
+rule, and closing it would end the rule while the product is unpublished).
 continuous-execution rule, and closing it would end the rule while the product is unpublished). Bootstrap defect fixed: `pnpm setup`
 used `pnpm exec playwright install chromium`, which fails at the workspace root ("Command
 playwright not found"); it is now filtered to `@sus/eval-core`, which is the package that

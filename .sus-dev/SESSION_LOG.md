@@ -721,3 +721,10 @@
   wrote was wrong in three cells and the new checker caught all three on its first run. Reverted-
   by-hand negative control: M1 forced back to "pending" → exit 1 with both violations named.
   Receipt: VERIFICATION/T1009.md.
+
+- 2026-11-15T23:00:00+06:00 | Pi (FreePi) | T1009 extension | A stale progress figure anywhere in the
+  public surface now fails the build: docs/BUILD_COMPLETION_HANDOFF.md still said "97 of 100 done"
+  and README still denied that implementation was authorised (D28). Added `checkCountClaims` with a
+  declared document list (code `count-claim-stale`); the handoff document now names no live count
+  because it describes a past revision. Commits 9a952b9 and e788e90; CI runs 43735394584 and
+  43736564619 success. verify 739 tests, dogfood 15/15.
