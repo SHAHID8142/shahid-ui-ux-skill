@@ -29,7 +29,10 @@ pnpm verify     # expect: 64 files, 679 tests, exit 0
 ### 2.1 What `pnpm setup` does, and why it is one command
 
 It runs `git config core.hooksPath .githooks` (installs `.githooks/pre-push`, the push gate),
-`pnpm exec playwright install chromium` (needed by `demo:loop`, `dogfood` and `regression`),
+`pnpm --filter @sus/eval-core exec playwright install chromium` (needed by `demo:loop`, `dogfood`
+and `regression`; the root-level `pnpm exec playwright ...` fails with "Command playwright not
+found", because playwright is a dependency of the workspace packages and not of the root — that
+was fixed on 2026-11-15 after a fresh machine hit it),
 and `node scripts/check-handoff.mjs`, which refuses to call a machine ready when the recorded
 state is internally inconsistent (a dirty working tree is deliberately fine here, because this
 command runs mid-task as often as it runs on a fresh clone). Every step it performs is one a fresh clone is
@@ -75,7 +78,7 @@ Almost every difference is environmental, and each has a named cause:
 
 | Symptom | Cause | Fix |
 | --- | --- | --- |
-| `pnpm demo:loop` / `dogfood` fail with "browser not found" | Chromium is installed per machine | `pnpm exec playwright install chromium` |
+| `pnpm demo:loop` / `dogfood` fail with "browser not found" | Chromium is installed per machine | `pnpm --filter @sus/eval-core exec playwright install chromium` |
 | `pnpm verify` fails on `format:check` after your own edits | Prettier reformats on write | `npx prettier --write <files>` |
 | Push refused with `RESUME REQUIRES TASK-RECOVERY REVIEW` | dirty working tree (expected mid-task) | commit or revert the intended change |
 | Push refused with "next-step task IDs are not already done" | `.sus-dev/STATE.md` names a finished task | update the `Next exact steps:` line |

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-15T10:48:23.602Z",
+  "generatedAt": "2026-11-15T14:32:40.407Z",
   "sites": [
     {
       "site": "marketing",
@@ -89,20 +89,16 @@
         {
           "id": "a11y-wcag-aa",
           "rule": "G4",
-          "status": "fail",
-          "measured": 1,
-          "failures": [
-            "color-contrast (2 nodes)"
-          ]
+          "status": "pass",
+          "measured": 0,
+          "failures": []
         },
         {
           "id": "reflow-390",
           "rule": "search-filters.filters-continuity-across-layout",
-          "status": "fail",
-          "measured": 343,
-          "failures": [
-            "horizontal scroll of 343px at 390px"
-          ]
+          "status": "pass",
+          "measured": 0,
+          "failures": []
         },
         {
           "id": "focus-visible",
@@ -126,13 +122,10 @@
           "failures": []
         }
       ],
-      "status": "fail"
+      "status": "pass"
     }
   ],
-  "status": "fail",
+  "status": "pass",
   "notRun": [],
-  "findings": [
-    "admin: 'a11y-wcag-aa' failed — color-contrast (2 nodes). Rule: G4.",
-    "admin: 'reflow-390' failed — horizontal scroll of 343px at 390px. Rule: search-filters.filters-continuity-across-layout."
-  ]
+  "findings": []
 }

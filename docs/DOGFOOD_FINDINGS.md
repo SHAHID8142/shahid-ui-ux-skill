@@ -55,3 +55,32 @@ refresh so the ruler and the report stay in step.
 - The findings are intentionally left unfixed so that the next run can show the same
   two failures until the baseline decision is made. A dogfood report that always says
   "pass" is a broken instrument.
+
+## Follow-up — 2026-11-15 (T1007, issue #10)
+
+The two findings above were left open because the writer believed fixing the fixture would
+change every baseline number. That was checked, not assumed:
+
+- `evals/baselines/admin/page.html` is a **separate static capture** (the hand-written
+  `Tahoma`/`.sidebar` page from the no-skill generation), not a build of `fixtures/admin`.
+  Nothing regenerates the baselines from the fixture, and after this change `git status`
+  shows `evals/baselines/**` unmodified.
+- The fixture's own dogfood numbers are recomputed on every run and no grade is derived from
+  them.
+
+So the reference implementation was fixed, and the findings above are kept verbatim as the
+record of what the run found.
+
+| Finding | Now | Evidence |
+| --- | --- | --- |
+| F1 — 343px document overflow at 390px | **fixed**: 0 overflow at 320/390/768/1440; below 640px each record is a self-labelled block card from the same markup | `packages/eval-core/tests/admin-responsive.test.ts`, `.sus-dev/VERIFICATION/T1007.md` |
+| F2 — 4.46:1 muted text | **fixed**: `--muted: #5f6775`, 5.28:1 on the page background and 5.70:1 on panels | same test (axe at 390px and 1440px) |
+
+Re-run result (`SUS_DOGFOOD=1 pnpm dogfood`, 2026-11-15): all three sites pass all five checks;
+admin `reflow-390` measured 343 → 0 and admin `a11y-wcag-aa` 1 → 0. The redacted summary in
+`evals/evidence/dogfood/` carries the new numbers.
+
+What this follow-up does **not** prove: the fixture still has four synthetic rows and no
+empty/loading/error states, and no assistive-technology session has been run on it. Issue #10
+therefore stays open for those acceptance items. A dogfood run that says "pass" on five checks
+still says nothing about the other thirty-one playbooks.

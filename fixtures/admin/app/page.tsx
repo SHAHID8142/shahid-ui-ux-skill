@@ -82,26 +82,38 @@ export default function AdminPage() {
 
         <section id="content-queue" aria-labelledby="queue-title">
           <h2 id="queue-title">Content queue</h2>
+          {/*
+            One table, two layouts (issue #10). The same `<table>` markup carries a
+            real table on desktop and self-labelled stacked records below the reflow
+            threshold, so there is no duplicated presentation to keep in sync and no
+            second copy for a screen reader to meet twice. Each cell repeats its
+            column name in `data-label`, which the narrow layout paints through
+            `td::before`; the `<thead>` stays in the accessibility tree instead of
+            being removed with `display: none`.
+          */}
           <table>
+            <caption className="visually-hidden">
+              Content queue: entry, status, editor, updated, actions
+            </caption>
             <thead>
               <tr>
-                <th>Entry</th>
-                <th>Status</th>
-                <th>Editor</th>
-                <th>Updated</th>
-                <th>Actions</th>
+                <th scope="col">Entry</th>
+                <th scope="col">Status</th>
+                <th scope="col">Editor</th>
+                <th scope="col">Updated</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
               {queue.map((row) => (
                 <tr key={row.id} id={row.id}>
-                  <td>{row.title}</td>
-                  <td>
+                  <td data-label="Entry">{row.title}</td>
+                  <td data-label="Status">
                     <span className={`status ${row.status.toLowerCase()}`}>{row.status}</span>
                   </td>
-                  <td>{row.editor}</td>
-                  <td>{row.updated}</td>
-                  <td>
+                  <td data-label="Editor">{row.editor}</td>
+                  <td data-label="Updated">{row.updated}</td>
+                  <td data-label="Actions">
                     <button type="button" className="row-action">
                       Open
                     </button>

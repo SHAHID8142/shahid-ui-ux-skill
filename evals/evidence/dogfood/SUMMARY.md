@@ -1,7 +1,7 @@
 # Dogfood reference implementations — redacted summary (T0906)
 
-Generated: 2026-11-15T10:48:23.602Z
-Overall: **fail**
+Generated: 2026-11-15T14:32:40.407Z
+Overall: **pass**
 
 The full evidence bundle (screenshots, page HTML, measurements) is private and
 git-ignored pending the artifact-level consent, licensing and PII/secret checks in
@@ -19,13 +19,12 @@ T0906 acceptance. This file carries counts and rule ids only.
 | commerce | focus-visible | `tabs.tabs-roving-focus` | pass | <a> paints a focus ring |
 | commerce | reduced-motion-quiet | `accordion.accordion-reveal-height` | pass | 0 |
 | commerce | labelled-controls | `form-input-validation` | pass | 0 |
-| admin | a11y-wcag-aa | `G4` | fail | 1 |
-| admin | reflow-390 | `search-filters.filters-continuity-across-layout` | fail | 343 |
+| admin | a11y-wcag-aa | `G4` | pass | 0 |
+| admin | reflow-390 | `search-filters.filters-continuity-across-layout` | pass | 0 |
 | admin | focus-visible | `tabs.tabs-roving-focus` | pass | <a> paints a focus ring |
 | admin | reduced-motion-quiet | `accordion.accordion-reveal-height` | pass | 0 |
 | admin | labelled-controls | `form-input-validation` | pass | 0 |
 
 ## Findings
 
-- admin: 'a11y-wcag-aa' failed — color-contrast (2 nodes). Rule: G4.
-- admin: 'reflow-390' failed — horizontal scroll of 343px at 390px. Rule: search-filters.filters-continuity-across-layout.
+None: every check ran and passed on this run.

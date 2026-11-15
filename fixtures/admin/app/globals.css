@@ -5,6 +5,19 @@
   --panel: #fff;
   --accent: #14508c;
   --line: #dcdfe7;
+
+  /* Muted text: 5.28:1 on --bg and 5.70:1 on --panel. The previous #6a7284
+     measured 4.46:1 on --bg — 0.04 below AA, and invisible to review (F2). */
+  --muted: #5f6775;
+}
+
+.visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 * {
@@ -21,7 +34,11 @@ body {
 
 #admin-shell {
   display: grid;
-  grid-template-columns: 14rem 1fr;
+
+  /* minmax(0, 1fr), not 1fr: a `1fr` track refuses to shrink below its content's
+     min-content width, which is how the five-column table pushed the whole
+     document 343px wide at 390px (F1). */
+  grid-template-columns: 14rem minmax(0, 1fr);
   min-height: 100vh;
 }
 
@@ -55,6 +72,7 @@ body {
 
 #admin-content {
   padding: 1.25rem 2rem;
+  min-inline-size: 0;
 }
 
 #admin-topbar {
@@ -71,7 +89,7 @@ body {
 }
 
 .env-note {
-  color: #6a7284;
+  color: var(--muted);
   font-size: 0.8125rem;
 }
 
@@ -99,7 +117,7 @@ body {
 }
 
 .kpi-delta {
-  color: #6a7284;
+  color: var(--muted);
   font-size: 0.8125rem;
 }
 
@@ -110,12 +128,17 @@ body {
   border: 1px solid var(--line);
 }
 
+#content-queue {
+  min-inline-size: 0;
+}
+
 #content-queue th,
 #content-queue td {
   padding: 0.55rem 0.75rem;
   border-bottom: 1px solid var(--line);
   text-align: left;
   font-size: 0.9375rem;
+  overflow-wrap: anywhere;
 }
 
 .status {
@@ -152,7 +175,90 @@ body {
 }
 
 #admin-footer {
-  color: #6a7284;
+  color: var(--muted);
   font-size: 0.8125rem;
   margin-top: 2rem;
+}
+
+/* Tablet: the fixed sidebar becomes a wrapping top bar so the content column
+   keeps its full width instead of being squeezed. */
+@media (width <= 52rem) {
+  #admin-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #admin-sidebar {
+    padding: 0.75rem 1rem;
+  }
+
+  #admin-sidebar .wordmark {
+    margin: 0 0 0.25rem;
+  }
+
+  #admin-sidebar ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+  }
+
+  #admin-content {
+    padding: 1rem;
+  }
+}
+
+/* Reflow threshold (rule `table-content-adaptive`): below 40rem each record is a
+   self-labelled card — same fields, same order, one DOM. Row data never drives
+   the page wider, and `overflow-x: hidden` is not used anywhere to hide it. */
+@media (width <= 40rem) {
+  #content-queue table,
+  #content-queue tbody,
+  #content-queue tr,
+  #content-queue td {
+    display: block;
+  }
+
+  #content-queue table {
+    background: transparent;
+    border: 0;
+  }
+
+  #content-queue thead {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  #content-queue tr {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  #content-queue tr + tr {
+    margin-block-start: 0.5rem;
+  }
+
+  #content-queue td {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: 0.5rem;
+    align-items: baseline;
+    border: 0;
+    padding: 0.3rem 0;
+  }
+
+  #content-queue td::before {
+    content: attr(data-label);
+    color: var(--muted);
+    font-size: 0.8125rem;
+  }
+
+  .row-action {
+    min-block-size: 2.75rem;
+    padding-inline: 0.9rem;
+  }
 }

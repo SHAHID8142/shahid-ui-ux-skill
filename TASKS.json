@@ -2639,7 +2639,8 @@
         "T1002",
         "T1003",
         "T1004",
-        "T1006"
+        "T1006",
+        "T1007"
       ],
       "files": [],
       "acc": [
@@ -3495,6 +3496,61 @@
         "remote visibility recorded honestly: repository is public per D34, which supersedes the earlier private-visibility acceptance clause; product remains unpublished and no release approval is claimed",
         "BUILD_COMPLETE_PUSHED=true only after the pre-push gate passed and the remote SHA matched the pushed commit; six unimplemented gates remain reported as not-run (G2/G3/G7/G8/G9/G10), never as pass"
       ]
+    },
+    {
+      "id": "T1007",
+      "m": "M10",
+      "title": "Admin reference implementation: content-adaptive mobile records (issue #10, F1/F2)",
+      "obj": "Fix the two measured dogfood findings on the SUS-guided admin reference implementation and prove the reflow: no document overflow at 320/390/768/1440, table-to-self-labelled-card below 40rem from one DOM, muted text >= AA, with a negative control that still fails",
+      "deps": [
+        "T0407",
+        "T0906",
+        "T1001"
+      ],
+      "files": [
+        "fixtures/admin/app/page.tsx",
+        "fixtures/admin/app/globals.css",
+        "fixtures/admin/tests/responsive-contract.test.tsx",
+        "packages/eval-core/tests/admin-responsive.test.ts",
+        "docs/DOGFOOD_FINDINGS.md",
+        "package.json",
+        "docs/RESUME_ON_NEW_MACHINE.md"
+      ],
+      "acc": [
+        "issue #10: no unintended document-level horizontal overflow at 320/390/768/1440 CSS px, verified by measurement not by inspection",
+        "issue #10: semantic desktop table and usable stacked-record mobile layout from the same markup (no duplicate presentation), each card field self-labelled in header order",
+        "issue #10: negative control - forcing the pre-fix desktop layout at 390px still overflows and compresses cells, so the gate can fail",
+        "F2 closed: muted text meets AA on both surfaces (5.28:1 / 5.70:1), asserted by axe at 390px and 1440px",
+        "no-skill baseline artifacts untouched: evals/baselines/* remain a separate labelled negative reference"
+      ],
+      "tests": [
+        "packages/eval-core/tests/admin-responsive.test.ts (8 browser assertions incl. negative control)",
+        "fixtures/admin/tests/responsive-contract.test.tsx (5 static markup/CSS contract assertions)",
+        "pnpm dogfood (3 sites x 5 checks)",
+        "pnpm verify"
+      ],
+      "risk": "changing the fixture that dogfood checks could be mistaken for editing the benchmark ruler",
+      "rollback": "revert this commit; evals/baselines/* are independent static captures and are unaffected in either direction",
+      "status": "done",
+      "approval": "D32 issue #10 triage (owner issue, actionable finding); implementation authorized by D28",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1007.md",
+        "evals/evidence/dogfood/SUMMARY.md",
+        "docs/DOGFOOD_FINDINGS.md"
+      ],
+      "results": [
+        "F1 closed by measurement: document overflow 368px->0 at 320, 298px->0 at 390, 0 at 768/1440; cause was a `1fr` grid track that cannot shrink below min-content plus no narrow layout at all",
+        "narrow layout is the same DOM: table row display at >=768, self-labelled block card <=640, five td::before labels equal to the header row in order, thead kept in the accessibility tree",
+        "negative control re-applies the pre-fix rules at 390px and asserts overflow > 0 and narrowest cell < 80px: the gate's ability to fail is itself tested",
+        "F2 closed: --muted #5f6775 replaces #6a7284 (4.46:1 -> 5.28:1 on --bg, 5.70:1 on --panel); axe at 390px and 1440px reports no serious or critical violation",
+        "pnpm dogfood: all 15 checks pass (admin reflow-390 measured 343 -> 0, admin a11y-wcag-aa 1 -> 0); findings kept verbatim in docs/DOGFOOD_FINDINGS.md with a follow-up section",
+        "reconciled rather than overruled the T1006 'blocked on baseline refresh' note: evals/baselines/*/page.html are independent static captures, nothing regenerates them from fixtures/admin, and git status shows them unmodified",
+        "bootstrap defect fixed: `pnpm setup` could never install Chromium because playwright is a workspace-package dependency (`Command \"playwright\" not found` at the root); now filtered to @sus/eval-core, and both documents corrected",
+        "issue #10 remains OPEN for the unverified acceptance items: empty/loading/error/stale states, translated/RTL labels, 200% text scaling and browser zoom, many-record volume, and a real assistive-technology session"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T1007.md"
     },
     {
       "id": "T0103b",

@@ -676,3 +676,18 @@
   "continue" on the new machine. Added `pnpm setup` (push gate + Chromium + recorded-state check,
   deliberately tolerant of a dirty tree) and a three-line bootstrap block at the top of AGENTS.md so
   a bare "continue" on a fresh clone performs the bootstrap before anything else. `pnpm verify` 679.
+
+- 2026-11-15T20:45:00+06:00 | Pi (FreePi) | T1007 (issue #10) | Admin reference implementation reflows.
+  First command on this machine: `pnpm verify` failed 10 tests — every one
+  `chromium_headless_shell-1254 … doesn't exist`. The documented `pnpm setup` cannot install it
+  (`pnpm exec playwright` at the root → "Command playwright not found"), so the bootstrap was
+  repaired to `pnpm --filter @sus/eval-core exec playwright install chromium` and both documents
+  corrected. Then the issue #10 triage: the two dogfood findings (F1 343px overflow at 390px,
+  F2 4.46:1 muted text) were fixed in the fixture, not in the baselines — `evals/baselines/*`
+  are independent static captures and show unmodified in git, so the ruler is untouched.
+  Reflow is one DOM: table row ≥768px, self-labelled block card ≤640px, five `td::before` labels
+  in header order, `<thead>` kept in the accessibility tree. 8 browser assertions including a
+  negative control that re-applies the pre-fix rules and must still overflow; 5 static contract
+  assertions in the fixture. `pnpm dogfood` now 15/15 (admin 343→0, axe 1→0). Issue #10 stays
+  open for its unverified items (states, translated labels, zoom, volume, AT session).
+  Receipt: VERIFICATION/T1007.md. Next: issue #10 states/volume slice.
