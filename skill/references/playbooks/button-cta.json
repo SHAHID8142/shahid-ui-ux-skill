@@ -43,7 +43,7 @@
     {
       "id": "btn-double-submit",
       "kind": "convention",
-      "statement": "A pressed button cannot issue a second request until the first settles; the guard lives in the handler, not in the spinner."
+      "statement": "A pressed button disables until the first request settles, the guard lives in the handler rather than the spinner, and the request carries an idempotency key reused on retry."
     },
     {
       "id": "btn-motion-decided",

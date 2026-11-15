@@ -28,7 +28,7 @@
     {
       "id": "cart-quantity-truth",
       "kind": "convention",
-      "statement": "Quantity edits re-read the server value; the UI never keeps an optimistic quantity that the server rejected."
+      "statement": "Quantity edits disable the stepper while in flight and the handler refuses a second update for the same line; the edit re-reads the server value, the UI never keeps an optimistic quantity that the server rejected, and the write carries an idempotency key so a retried update cannot double the quantity."
     },
     {
       "id": "cart-removal-undo",

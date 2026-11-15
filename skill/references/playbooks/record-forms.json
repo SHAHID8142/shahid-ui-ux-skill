@@ -48,7 +48,7 @@
     {
       "id": "record-double-submit",
       "kind": "convention",
-      "statement": "Submit disables on press and the handler refuses a second in-flight save for the same record."
+      "statement": "Submit disables on press, the handler refuses a second in-flight save for the same record, and the write carries an idempotency key so a retried save cannot create a duplicate record."
     },
     {
       "id": "record-error-preserves-input",

@@ -532,3 +532,14 @@
   recoverable deletion, failed save keeps typed work, handler-level double-submit guard.
   Launch set complete (16 playbooks) with a completeness test. Receipt: VERIFICATION/T0407.md.
   Next: T0602.
+
+- 2026-11-15T00:55:00+06:00 | Pi (FreePi) | T0602 | Motion plans + interruption behaviour.
+  `skill/references/motion-interruption.md` (duration band 60-240ms, three interruption
+  answers, the rule that a server-outcome transition may never be cancel-restart, the three
+  click-duplication mechanisms, focus-preservation rules) and `scripts/check-motion.mjs` wired
+  into verify as `pnpm motion`. The gate earned its place immediately by finding five real
+  gaps: pdp/cart-summary/record-forms/button-cta named double-submit but no idempotency key,
+  cart-summary had no handler-level guard, and focus rings declared no duration (that last one
+  was the gate being wrong — rings must not animate, so explicit immediacy is now accepted).
+  Content corrected where it was genuinely weaker than claimed; gate relaxed only where it was
+  wrong. Receipt: VERIFICATION/T0602.md. Next: T0603.

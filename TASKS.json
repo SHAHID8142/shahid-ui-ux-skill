@@ -1498,9 +1498,22 @@
       ],
       "risk": "motion perf on low-end devices",
       "rollback": "compositor-friendly property rule",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0602.md",
+        "skill/references/motion-interruption.md",
+        "scripts/check-motion.mjs"
+      ],
+      "results": [
+        "motion-interruption.md states the duration band (60-240ms from fast/base/slow categories), the three interruption answers and the rule that a transition reporting a server outcome may never be cancel-restart",
+        "no click duplication enforced as three mechanisms (disable on press, handler-level refusal, idempotency key reused on retry) and gated: the checker found that pdp, cart-summary, record-forms and button-cta named some guards but not the key, and all were corrected",
+        "focus preserved across animated change: focus follows intent not animation, dialogs record their trigger and return focus even when closed mid-exit, reduced motion must not change the focus path; the gate requires the focus rule where focus travels",
+        "check-motion.mjs wired into verify (pnpm motion): refuses evasive reduced-motion equivalents, requires a duration or explicit immediacy, rejects out-of-band durations and cancel-restart on committed transitions",
+        "16 playbooks obey the rules; knowledge lint 8 files; playbook lint 16/16"
+      ]
     },
     {
       "id": "T0603",
