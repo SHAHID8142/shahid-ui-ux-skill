@@ -10,7 +10,7 @@ BUILD_COMPLETE_PUSHED=false. Architecture: ADR-001/002/004/005/006 adopted,
 ADR-003 as amended (D29). Repository is PUBLIC (D34, issue #11 closed with
 evidence — CI on free standard runners).
 
-Canonical task statuses: TASKS.json (95 of 100 done). T0706 preview, T0806
+Canonical task statuses: TASKS.json (96 of 100 done). T0706 preview, T0806
 security/G13, T0707 apply + rollback, T0700w CLOSED — dual-stack feasibility is GO
 on both Next.js and Astro, including the Astro editor (T0700wc). zcode stale.
 Concurrency: 2 workers (D33) — claim via lease before editing.
@@ -20,7 +20,7 @@ stale-mapping/conflict detection done; verification loop done (five distinct out
 DA-36 revert-only-when-intact, redacted diagnostics). Next: T0408 asset strategy and
 licensing record.
 
-Next exact steps: T1002 benchmark protocol -> T1004 docs and claim-checker -> T1006 final verified checkpoint.
+Next exact steps: T1004 docs and claim-checker -> T1006 final verified checkpoint.
 
 Blockers: standing B003 (licence/publication, later phase) and B004
 (irreversible externals during build). Active files: none after checkpoint.

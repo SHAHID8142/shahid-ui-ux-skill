@@ -2546,9 +2546,24 @@
       ],
       "risk": "recruiting raters",
       "rollback": "owner + recruited designers; protocol published regardless",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1002.md",
+        "evals/benchmarks/PROTOCOL.md",
+        "evals/benchmarks/seals.json",
+        "evals/benchmarks/results/status.json",
+        "scripts/lib/benchmark.mjs"
+      ],
+      "results": [
+        "protocol published in evals/benchmarks/PROTOCOL.md: arms (baseline measured, sus-assisted not-run, human not-run), dev/calibration/held-out separation, blinding with recorded seed, pinned conditions, per-surface reporting instead of a pooled headline, raw-data-private policy",
+        "held-out briefs are sealed by SHA-256 and the seal is asserted against the real files in pnpm verify, so editing the held-out set fails the build",
+        "sampling rationale is computed not asserted: 0.5-point effect with sd 0.8 needs 41 per arm, sd 1.0 needs 63; the protocol declares a 1.0-point minimum claimable effect and states plainly that n=20 is underpowered for 0.5",
+        "pnpm benchmark measures the baseline arm deterministically on all four surfaces (axe, reflow at 390px, focus ring, reduced-motion quiet, labelled controls) and records both other arms as not-run",
+        "claim gate returns allowed:false with reasons sus-assisted/human not-run; 12 protocol tests, full verify exit 0 (668 tests)"
+      ]
     },
     {
       "id": "T1003",

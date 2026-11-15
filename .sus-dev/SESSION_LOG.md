@@ -641,3 +641,11 @@
   not-run prevents pass, missing Playwright downgrades rather than drops. `pnpm reach` (audit H6) is
   now inside verify and proves all 94 finished non-M10 tasks have backing — it caught T0001, a done
   claim with nothing behind it. 14 new tests. Receipt: VERIFICATION/T1001.md. Next: T1002.
+
+- 2026-11-15T21:10:00+06:00 | Pi (FreePi) | T1002 | Benchmark protocol.
+  Published the protocol with three arms: baseline measured deterministically on all four surfaces,
+  sus-assisted and human not-run (no artefacts, no participants — no invented result). Held-out
+  briefs sealed by SHA-256 and asserted in verify; power computed (41/arm for a 0.5-point effect,
+  63 for sd 1.0) so n=20 is described as a floor with a 1.0-point minimum claimable effect; claim
+  gate returns allowed:false. The baseline arm itself fails a11y on commerce/admin and reflow on
+  admin — unflattering and real. 12 tests, verify 668. Receipt: VERIFICATION/T1002.md. Next: T1004.

@@ -35,7 +35,8 @@
     "support:status": "node scripts/generate-support.mjs --status",
     "dogfood": "pnpm --filter @sus/eval-core dogfood",
     "reach": "node scripts/check-reachability.mjs",
-    "regression": "node scripts/regression.mjs"
+    "regression": "node scripts/regression.mjs",
+    "benchmark": "pnpm --filter @sus/eval-core benchmark"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

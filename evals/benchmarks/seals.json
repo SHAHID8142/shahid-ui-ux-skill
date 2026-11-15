@@ -1,0 +1,9 @@
+{
+  "note": "SHA-256 of each held-out brief as of T1002. Content is never inlined in reports; a seal mismatch means the set was edited after being set aside.",
+  "sealedAt": "2026-11-15",
+  "briefs": {
+    "onboarding.md": "7420a6ced91c664e8e36c37d10aaf7d40bfa7c6d97fdcdb3dcf71ac4557665de",
+    "pricing.md": "02a63c60ac8b3334a23300880f713184ab5017d3b65e56cb560ca87ba33a42c9",
+    "search-filters.md": "2ca2b57fabd5b468595b0c057133ab27b2cde355858c5a175a3d7e5fa83a8ab5"
+  }
+}

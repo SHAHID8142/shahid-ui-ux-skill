@@ -1,0 +1,208 @@
+{
+  "status": {
+    "generatedAt": "2026-11-15T10:31:46.749Z",
+    "protocol": "evals/benchmarks/PROTOCOL.md",
+    "reproducibleBy": "pnpm benchmark",
+    "heldOutInspected": false,
+    "arms": {
+      "baseline": {
+        "status": "measured",
+        "note": "no-skill baseline pages under evals/baselines, measured deterministically",
+        "surfaces": [
+          {
+            "site": "marketing",
+            "checks": [
+              {
+                "id": "a11y-wcag-aa",
+                "rule": "G4",
+                "status": "pass",
+                "measured": 0,
+                "failures": []
+              },
+              {
+                "id": "reflow-390",
+                "rule": "search-filters.filters-continuity-across-layout",
+                "status": "pass",
+                "measured": 0,
+                "failures": []
+              },
+              {
+                "id": "focus-visible",
+                "rule": "tabs.tabs-roving-focus",
+                "status": "pass",
+                "measured": "<a> paints a focus ring",
+                "failures": []
+              },
+              {
+                "id": "reduced-motion-quiet",
+                "rule": "accordion.accordion-reveal-height",
+                "status": "pass",
+                "measured": 0,
+                "failures": []
+              },
+              {
+                "id": "labelled-controls",
+                "rule": "form-input-validation",
+                "status": "pass",
+                "measured": 0,
+                "failures": []
+              }
+            ],
+            "status": "pass"
+          },
+          {
+            "site": "commerce",
+            "checks": [
+              {
+                "id": "a11y-wcag-aa",
+                "rule": "G4",
+                "status": "fail",
+                "measured": 1,
+                "failures": [
+                  "color-contrast (6 nodes)"
+                ]
+              },
+              {
+                "id": "reflow-390",
+                "rule": "search-filters.filters-continuity-across-layout",
+                "status": "pass",
+                "measured": 0,
+                "failures": []
+              },
+              {
+                "id": "focus-visible",
+                "rule": "tabs.tabs-roving-focus",
+                "status": "pass",
+                "measured": "<a> paints a focus ring",
+                "failures": []
+              },
+              {
+                "id": "reduced-motion-quiet",
+                "rule": "accordion.accordion-reveal-height",
+                "status": "pass",
+                "measured": 0,
+                "failures": []
+              },
+              {
+                "id": "labelled-controls",
+                "rule": "form-input-validation",
+                "status": "pass",
+                "measured": 0,
+                "failures": []
+              }
+            ],
+            "status": "fail"
+          },
+          {
+            "site": "admin",
+            "checks": [
+              {
+                "id": "a11y-wcag-aa",
+                "rule": "G4",
+                "status": "fail",
+                "measured": 1,
+                "failures": [
+                  "color-contrast (5 nodes)"
+                ]
+              },
+              {
+                "id": "reflow-390",
+                "rule": "search-filters.filters-continuity-across-layout",
+                "status": "fail",
+                "measured": 264,
+                "failures": [
+                  "horizontal scroll of 264px"
+                ]
+              },
+              {
+                "id": "focus-visible",
+                "rule": "tabs.tabs-roving-focus",
+                "status": "pass",
+                "measured": "<a> paints a focus ring",
+                "failures": []
+              },
+              {
+                "id": "reduced-motion-quiet",
+                "rule": "accordion.accordion-reveal-height",
+                "status": "pass",
+                "measured": 0,
+                "failures": []
+              },
+              {
+                "id": "labelled-controls",
+                "rule": "form-input-validation",
+                "status": "pass",
+                "measured": 0,
+                "failures": []
+              }
+            ],
+            "status": "fail"
+          },
+          {
+            "site": "portfolio",
+            "checks": [
+              {
+                "id": "a11y-wcag-aa",
+                "rule": "G4",
+                "status": "pass",
+                "measured": 0,
+                "failures": []
+              },
+              {
+                "id": "reflow-390",
+                "rule": "search-filters.filters-continuity-across-layout",
+                "status": "pass",
+                "measured": 1,
+                "failures": []
+              },
+              {
+                "id": "focus-visible",
+                "rule": "tabs.tabs-roving-focus",
+                "status": "pass",
+                "measured": "<a> paints a focus ring",
+                "failures": []
+              },
+              {
+                "id": "reduced-motion-quiet",
+                "rule": "accordion.accordion-reveal-height",
+                "status": "pass",
+                "measured": 0,
+                "failures": []
+              },
+              {
+                "id": "labelled-controls",
+                "rule": "form-input-validation",
+                "status": "pass",
+                "measured": 0,
+                "failures": []
+              }
+            ],
+            "status": "pass"
+          }
+        ]
+      },
+      "sus-assisted": {
+        "status": "not-run",
+        "note": "no SUS-assisted artefacts generated for the held-out set yet"
+      },
+      "human": {
+        "status": "not-run",
+        "note": "no participants recruited; blinding and sample size are specified in the protocol"
+      }
+    },
+    "deterministicChecks": [
+      "a11y-wcag-aa",
+      "reflow-390",
+      "focus-visible",
+      "reduced-motion-quiet",
+      "labelled-controls"
+    ]
+  },
+  "gate": {
+    "allowed": false,
+    "reasons": [
+      "sus-assisted: not-run",
+      "human: not-run"
+    ]
+  }
+}

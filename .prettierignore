@@ -23,3 +23,5 @@ evals/**/capture.json
 packages/tokens/exports/
 # T1001 generated regression reports
 evals/reports/
+# T1002 benchmark outputs are machine-generated, like the regression reports
+evals/benchmarks/results/
