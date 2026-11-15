@@ -703,3 +703,12 @@
   found by the screenshot review and fixed. `docs/MOBILE_RECORD_PATTERNS.md` documents table vs
   card vs disclosure with the rule used. verify 714 tests, dogfood 15/15. Receipt: VERIFICATION/T1008.md.
   Next: nothing eligible; T1003/T1005 are owner-commissioned.
+
+- 2026-11-15T21:40:00+06:00 | Pi (FreePi) | T1008 CI follow-up | Run 43728500241 failed two tests that
+  passed locally, and both were real: a heading whose longest word could not wrap (8px over a 320px
+  viewport at 200% text on the runner's wider fonts) and a test that waited for a sentence the
+  previous load already produced. Fixed at the cause — `overflow-wrap: break-word` on body, and the
+  test now waits for the applied result and applies a wide font stack itself so Mac and runner
+  measure the same page. Commits 03386d2 and a92328a; CI run 43729821619 success. Owner issue #10
+  closed with the not-run items named (screen-reader session, browser zoom, real translations,
+  volume beyond twelve rows). Issue #9 stays open by design.
