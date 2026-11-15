@@ -31,8 +31,8 @@ Blockers: standing B003 (licence/publication, later phase) and B004 (irreversibl
 during build). Active files: none after checkpoint.
 
 Latest checks: 2026-11-15T21:40 +06:00 — `pnpm verify` green (68 files + 3 skipped, 716 tests +
-5 skipped), `SUS_DOGFOOD=1 pnpm dogfood` green 15/15, and **CI run 43729821619 success on
-a92328a**. Owner issue #10 is CLOSED; issue #9 stays open by design (it is the standing
+5 skipped), `SUS_DOGFOOD=1 pnpm dogfood` green 15/15, and **CI success on the final checkpoint** (run
+43729821619 on `a92328a`, then run 43730851959 on `de231fc` for the flaky-hook fix). Owner issue #10 is CLOSED; issue #9 stays open by design (it is the standing
 continuous-execution rule, and closing it would end the rule while the product is unpublished). Bootstrap defect fixed: `pnpm setup`
 used `pnpm exec playwright install chromium`, which fails at the workspace root ("Command
 playwright not found"); it is now filtered to `@sus/eval-core`, which is the package that
