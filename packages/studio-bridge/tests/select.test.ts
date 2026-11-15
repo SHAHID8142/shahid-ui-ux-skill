@@ -35,6 +35,10 @@ describe('selection anchors + confidence gate (T0703)', () => {
   let page: import('playwright').Page;
   let closeBrowser: () => Promise<void>;
 
+  // A browser launch inside a hook gets vitest's 10s default, which a loaded
+  // machine can miss — the same fragility that made the T1008 push gate fail
+  // after the suite had passed. Every other browser hook in the repo already
+  // states its timeout; this one now does too.
   beforeAll(async () => {
     const { chromium } = await import('playwright');
     const browser = await chromium.launch();
@@ -42,10 +46,12 @@ describe('selection anchors + confidence gate (T0703)', () => {
     page = await context.newPage();
     await page.goto(URL, { waitUntil: 'networkidle' });
     closeBrowser = () => browser.close();
-  });
+  }, 120000);
 
   afterAll(async () => {
-    await closeBrowser();
+    // A failed beforeAll leaves this undefined; the error that matters is the
+    // hook failure, not a TypeError from the cleanup.
+    await closeBrowser?.();
   });
 
   it('id anchor: confidence 1.0, edit allowed', { timeout: 30000 }, async () => {
