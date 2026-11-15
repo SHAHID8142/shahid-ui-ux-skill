@@ -483,3 +483,13 @@
   and restructured `meta.concurrency` to separate host workers (2) from the owner's
   sub-agent ceiling (2). 10 fixtures in packages/schemas (5 negative from the real drifts),
   mutation-checked. Receipt: VERIFICATION/ISSUE-12.md. Next: T0400.
+
+- 2026-11-14T22:40:00+06:00 | Pi (FreePi) | T0400 | Direction derivation from the brief.
+  `skill/references/direction.md` (3 candidates -> thesis -> anti-references, worked example as
+  the specification), `packages/schemas/src/direction.ts` (`sus.direction-derivation` v1 +
+  `checkDerivation`), `evals/directions/fixture-marketing-01.json`, `scripts/check-direction.mjs`
+  wired into the release suite as `pnpm directions` (exit 3 when no records, so it cannot fake
+  success). The semantic checks are the point: `unknown-default`, `chosen-refuses-nothing-blocking`,
+  `duplicate-thesis`, `unexplained-rejection`, `anti-references-borrowed` — severities come from the
+  existing anti-slop taxonomy, so there is no second definition of slop. 11 tests, mutation-checked.
+  Receipt: VERIFICATION/T0400.md. Next: T0405.

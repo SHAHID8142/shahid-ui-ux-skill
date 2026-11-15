@@ -1,0 +1,51 @@
+{
+  "briefId": "fixture-marketing-01",
+  "surface": "marketing",
+  "candidates": [
+    {
+      "id": "c1",
+      "thesis": "The product is a tool for a weekly ritual, so the page behaves like a printed schedule: grid, rules, restrained type.",
+      "composition": "12-column ledger grid with visible rules; hero is a single week row, not a centred headline stack.",
+      "typeMove": "one serif for headings, tabular numerals for every figure, no display weights",
+      "palette": "ink on paper white plus one signal red used only for the current day",
+      "antiReferences": ["centred hero with a giant adjective", "gradient mesh background"],
+      "defaultsRefused": ["template-speak", "dark-urgency"]
+    },
+    {
+      "id": "c2",
+      "thesis": "The product removes coordination overhead, so the page shows two people agreeing in one screen rather than describing features.",
+      "composition": "split pane that mirrors two calendars and closes the gap between them on scroll",
+      "typeMove": "two type sizes only; hierarchy through alignment, not weight",
+      "palette": "two dark neutrals and a shared-state highlight, no accent colour for decoration",
+      "antiReferences": ["three-column feature card row", "illustrated characters high-fiving"],
+      "defaultsRefused": ["fake-precision", "generic-voice"]
+    },
+    {
+      "id": "c3",
+      "thesis": "The product is trustworthy because it is boring on purpose, so the page reads like documentation with a single worked example.",
+      "composition": "single measured column with a live example pinned beside each claim",
+      "typeMove": "one grotesk at three sizes, code-grade line height, generous leading",
+      "palette": "monochrome with a single focus outline colour reused from the product",
+      "antiReferences": ["testimonial carousel", "logo wall used as proof"],
+      "defaultsRefused": ["hedge-storm"]
+    }
+  ],
+  "decision": {
+    "chosen": "c2",
+    "why": "The brief names coordination cost as the job, and c2 shows the cost disappearing instead of asserting it; c1's ritual framing is a real idea but asks the reader to accept a metaphor before any evidence.",
+    "rejected": [
+      {
+        "id": "c1",
+        "reason": "the metaphor needs explaining on a page with eight seconds of attention"
+      },
+      {
+        "id": "c3",
+        "reason": "documentation framing undersells the one-motion demo the brief asks for"
+      }
+    ]
+  },
+  "antiReferences": [
+    "no stock illustrations of teams",
+    "no claim without a visible mechanism on the same screen"
+  ]
+}

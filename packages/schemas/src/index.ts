@@ -72,6 +72,14 @@ export {
 } from './research-evidence.js';
 export { SusSlopTaxonomy, TAXONOMY, type SlopCategoryData } from './slop-taxonomy.js';
 export {
+  DirectionCandidate,
+  DirectionDerivation,
+  SusDirectionDerivation,
+  checkDerivation,
+  type DerivationViolation,
+  type DirectionDerivationRecord,
+} from './direction.js';
+export {
   REQUIRED_SEMANTIC_ROLES,
   SusTokens,
   SusTokensFile,

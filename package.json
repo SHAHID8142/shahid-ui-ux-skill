@@ -21,11 +21,12 @@
     "skill": "node scripts/validate-skill.mjs",
     "playbooks": "node scripts/validate-playbooks.mjs",
     "knowledge": "node scripts/validate-knowledge.mjs",
-    "verify": "pnpm handoff && pnpm gates:full && pnpm lint && pnpm format:check && pnpm stylelint && pnpm typecheck && pnpm build && pnpm test",
+    "verify": "pnpm handoff && pnpm gates:full && pnpm lint && pnpm format:check && pnpm stylelint && pnpm typecheck && pnpm build && (pnpm directions || test $? -eq 3) && pnpm test",
     "gates:full": "node scripts/check-gates.mjs && node scripts/validate-skill.mjs && node scripts/validate-knowledge.mjs && node scripts/validate-playbooks.mjs || test $? -eq 3",
     "hooks:install": "git config core.hooksPath .githooks && echo \"push gate installed (.githooks/pre-push)\"",
     "gate:push": "node scripts/gate-push.mjs",
-    "handoff": "node scripts/check-handoff.mjs"
+    "handoff": "node scripts/check-handoff.mjs",
+    "directions": "node scripts/check-direction.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
