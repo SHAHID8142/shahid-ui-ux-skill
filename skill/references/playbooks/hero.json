@@ -1,0 +1,136 @@
+{
+  "id": "hero",
+  "surface": "marketing",
+  "component": "Hero section",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "The single claim the hero makes, traced to the recorded direction thesis",
+      "usingRules": ["hero-one-claim", "hero-thesis-trace"]
+    },
+    {
+      "order": 2,
+      "decide": "What appears above the fold at 390px within the height budget, in reading order",
+      "usingRules": ["hero-fold-budget"]
+    },
+    {
+      "order": 3,
+      "decide": "The primary action and the evidence placed next to it",
+      "usingRules": ["hero-one-claim", "hero-evidence-adjacent"]
+    },
+    {
+      "order": 4,
+      "decide": "Media strategy and its measured weight against the surface budget",
+      "usingRules": ["hero-baseline-floor"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "hero-one-claim",
+      "kind": "convention",
+      "statement": "One claim per hero; a second headline-sized statement splits attention and is removed rather than shrunk."
+    },
+    {
+      "id": "hero-thesis-trace",
+      "kind": "convention",
+      "statement": "The hero states the direction thesis recorded in evals/directions; a hero that cannot be traced to a thesis is generic however polished."
+    },
+    {
+      "id": "hero-fold-budget",
+      "kind": "convention",
+      "statement": "At 390x844 the claim and the primary action both fit without scrolling; evidence may follow."
+    },
+    {
+      "id": "hero-evidence-adjacent",
+      "kind": "convention",
+      "statement": "Any number in the hero is a registered claim or is absent; proximity to the call to action does not license a figure."
+    },
+    {
+      "id": "hero-baseline-floor",
+      "kind": "authoritative",
+      "statement": "Hero media respects the surface budget and keeps the page at or above the measured baseline floor.",
+      "source": "sus-baseline-floor"
+    }
+  ],
+  "stateMachine": {
+    "component": "hero",
+    "variants": ["static", "video-loop"],
+    "states": ["default", "hover", "focus-visible", "loading"],
+    "transitions": [
+      {
+        "from": "default",
+        "to": "loading",
+        "trigger": "the player initialises",
+        "motion": {
+          "motion": "none",
+          "noneReason": "nothing has changed for the reader yet; a spinner would announce a detail",
+          "reducedMotion": "the poster frame remains until the first frame is decodable"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "default",
+        "trigger": "the first frame is decodable",
+        "motion": {
+          "motion": "opacity 200ms",
+          "reducedMotion": "poster swaps instantly to the first frame"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "hover",
+        "trigger": "pointer over the hero action",
+        "motion": {
+          "motion": "opacity 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "hover",
+        "to": "focus-visible",
+        "trigger": "keyboard focus moves to the action",
+        "motion": {
+          "motion": "ring appears with no delay",
+          "reducedMotion": "instant ring"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves",
+        "motion": {
+          "motion": "ring removed instantly",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      }
+    ],
+    "staleResponseRule": "a looping asset that fails to load leaves the poster frame and the claim intact; it never blanks the hero"
+  },
+  "variantMatrix": [
+    {
+      "variant": "static",
+      "enabled": ["default", "hover", "focus-visible"],
+      "refused": [
+        {
+          "state": "loading",
+          "reason": "nothing loads, so there is no loading state to show"
+        }
+      ]
+    },
+    {
+      "variant": "video-loop",
+      "enabled": ["default", "hover", "focus-visible", "loading"],
+      "refused": []
+    }
+  ]
+}

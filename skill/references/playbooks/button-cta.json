@@ -1,0 +1,231 @@
+{
+  "id": "button-cta",
+  "surface": "any",
+  "component": "Button and call to action",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Whether the control is an action or a navigation, and therefore a button or a link",
+      "usingRules": ["btn-role-first"]
+    },
+    {
+      "order": 2,
+      "decide": "The variant set, limited to distinct intents the page actually needs",
+      "usingRules": ["btn-variant-intent", "btn-loading-label"]
+    },
+    {
+      "order": 3,
+      "decide": "Loading, success and error behaviour, including the label in each",
+      "usingRules": ["btn-loading-label", "btn-double-submit"]
+    },
+    {
+      "order": 4,
+      "decide": "Motion for every transition and its reduced-motion equivalent",
+      "usingRules": ["btn-motion-decided"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "btn-role-first",
+      "kind": "convention",
+      "statement": "An action is a button and a destination is a link; role is decided before styling and never inferred from appearance."
+    },
+    {
+      "id": "btn-variant-intent",
+      "kind": "convention",
+      "statement": "Each variant maps to one intent; two variants that differ only in hue are one variant with a mistake."
+    },
+    {
+      "id": "btn-loading-label",
+      "kind": "convention",
+      "statement": "During loading the label states what is happening in the same grammatical form as the action (Saving...), and the control keeps its width."
+    },
+    {
+      "id": "btn-double-submit",
+      "kind": "convention",
+      "statement": "A pressed button cannot issue a second request until the first settles; the guard lives in the handler, not in the spinner."
+    },
+    {
+      "id": "btn-motion-decided",
+      "kind": "convention",
+      "statement": "Every state transition carries an explicit motion decision, and motion none states why."
+    }
+  ],
+  "stateMachine": {
+    "component": "button",
+    "variants": ["primary", "secondary", "ghost", "danger"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "transitions": [
+      {
+        "from": "default",
+        "to": "hover",
+        "trigger": "pointer over the control",
+        "motion": {
+          "motion": "background 90ms",
+          "reducedMotion": "instant background change, text unchanged"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "pointer leaves",
+        "motion": {
+          "motion": "background 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "focus-visible",
+        "trigger": "keyboard focus",
+        "motion": {
+          "motion": "ring appears with no delay",
+          "reducedMotion": "instant ring"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "active",
+        "trigger": "Enter or Space press",
+        "motion": {
+          "motion": "transform 60ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "loading",
+        "trigger": "the action starts",
+        "motion": {
+          "motion": "none",
+          "noneReason": "the press is already over; animating the start delays the only feedback that matters",
+          "reducedMotion": "label swaps instantly; no spinner that hides the label"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the request resolves",
+        "motion": {
+          "motion": "opacity 120ms",
+          "reducedMotion": "label swaps instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the request rejects",
+        "motion": {
+          "motion": "none",
+          "noneReason": "error feedback must not wait for a fade",
+          "reducedMotion": "label and error text appear instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "the user retries",
+        "motion": {
+          "motion": "none",
+          "noneReason": "a retry is a deliberate act and needs no transition",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "success acknowledged or the view moves on",
+        "motion": {
+          "motion": "opacity 120ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      }
+    ],
+    "staleResponseRule": "a response for a superseded request is discarded; the control reflects the latest request only"
+  },
+  "variantMatrix": [
+    {
+      "variant": "primary",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    },
+    {
+      "variant": "secondary",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    },
+    {
+      "variant": "ghost",
+      "enabled": ["default", "hover", "focus-visible", "active", "disabled"],
+      "refused": [
+        {
+          "state": "loading",
+          "reason": "a ghost button is for non-committal actions; async work uses a primary control"
+        },
+        {
+          "state": "success",
+          "reason": "nothing to confirm without an async action"
+        },
+        {
+          "state": "error",
+          "reason": "errors attach to the async control that owns the request"
+        }
+      ]
+    },
+    {
+      "variant": "danger",
+      "enabled": ["default", "hover", "focus-visible", "active", "disabled", "loading", "error"],
+      "refused": [
+        {
+          "state": "success",
+          "reason": "a destructive action confirms by consequence, not by a success tick on the button"
+        }
+      ]
+    }
+  ]
+}

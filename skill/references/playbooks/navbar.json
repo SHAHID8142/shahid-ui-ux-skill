@@ -1,0 +1,143 @@
+{
+  "id": "navbar",
+  "surface": "any",
+  "component": "Navigation bar",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Which destinations are primary and what the one action the bar exists to reach is",
+      "usingRules": ["nav-primary-action", "nav-density"]
+    },
+    {
+      "order": 2,
+      "decide": "Collapse threshold: how many items survive at 768/1024 before an overflow menu appears",
+      "usingRules": ["nav-density", "nav-overflow-keyboard"]
+    },
+    {
+      "order": 3,
+      "decide": "Current-page signalling that does not rely on colour alone",
+      "usingRules": ["nav-current-not-colour"]
+    },
+    {
+      "order": 4,
+      "decide": "Sticky or static, and what it costs in reading space",
+      "usingRules": ["nav-baseline-floor"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "nav-primary-action",
+      "kind": "convention",
+      "statement": "The bar carries at most one visually dominant action; a second primary action makes both secondary."
+    },
+    {
+      "id": "nav-density",
+      "kind": "convention",
+      "statement": "Items are removed at the breakpoint where labels truncate, not where the design feels tight; the collapsed form is a menu, not smaller text."
+    },
+    {
+      "id": "nav-overflow-keyboard",
+      "kind": "convention",
+      "statement": "The overflow menu is reachable and dismissable by keyboard alone, with Escape returning focus to the trigger."
+    },
+    {
+      "id": "nav-current-not-colour",
+      "kind": "convention",
+      "statement": "The current destination carries a non-colour cue (weight, rule or position) in addition to colour."
+    },
+    {
+      "id": "nav-baseline-floor",
+      "kind": "authoritative",
+      "statement": "The built bar keeps the page at or above the measured no-skill baseline floor for its surface.",
+      "source": "sus-baseline-floor"
+    }
+  ],
+  "stateMachine": {
+    "component": "navbar",
+    "variants": ["horizontal", "collapsed"],
+    "states": ["default", "hover", "focus-visible", "active", "disabled"],
+    "transitions": [
+      {
+        "from": "default",
+        "to": "hover",
+        "trigger": "pointer over a destination",
+        "motion": {
+          "motion": "background 90ms",
+          "reducedMotion": "instant background change, label unchanged"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "pointer leaves",
+        "motion": {
+          "motion": "background 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "focus-visible",
+        "trigger": "keyboard focus",
+        "motion": {
+          "motion": "ring appears with no delay",
+          "reducedMotion": "instant ring, no fade"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "active",
+        "trigger": "Enter or Space on the destination",
+        "motion": {
+          "motion": "none",
+          "noneReason": "navigation is immediate; animating a page change costs a frame for no information",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "active",
+        "trigger": "pointer press",
+        "motion": {
+          "motion": "background 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "navigation completes",
+        "motion": {
+          "motion": "none",
+          "noneReason": "the new document starts at its own default state",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "allow"
+      }
+    ],
+    "staleResponseRule": "the collapsed menu closes on route change, but a late close must not close a menu the user has reopened"
+  },
+  "variantMatrix": [
+    {
+      "variant": "horizontal",
+      "enabled": ["default", "hover", "focus-visible", "active", "disabled"],
+      "refused": []
+    },
+    {
+      "variant": "collapsed",
+      "enabled": ["default", "hover", "focus-visible", "active", "disabled"],
+      "refused": []
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "id": "pricing-table",
+  "surface": "marketing",
+  "component": "Pricing table",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Which plan differences are decisions and which are noise, then remove the noise",
+      "usingRules": ["price-diff-decisions"]
+    },
+    {
+      "order": 2,
+      "decide": "The default plan and how it is marked without relying on colour or scale alone",
+      "usingRules": ["price-default-marked"]
+    },
+    {
+      "order": 3,
+      "decide": "How price, currency, billing period and trial terms are stated exactly",
+      "usingRules": ["price-stated-exactly"]
+    },
+    {
+      "order": 4,
+      "decide": "Mobile reading order and the reason for it",
+      "usingRules": ["price-mobile-order"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "price-diff-decisions",
+      "kind": "convention",
+      "statement": "The comparison lists only differences that change a purchase decision; identical benefits appear once, outside the grid."
+    },
+    {
+      "id": "price-default-marked",
+      "kind": "convention",
+      "statement": "The recommended plan carries a text label as well as visual emphasis; emphasis alone is not a recommendation."
+    },
+    {
+      "id": "price-stated-exactly",
+      "kind": "convention",
+      "statement": "Price, currency, billing period and trial end are literal text; no figure is computed at render time that a user cannot read."
+    },
+    {
+      "id": "price-mobile-order",
+      "kind": "convention",
+      "statement": "On narrow viewports the recommended plan comes first in reading order, not the cheapest, and the order is stated."
+    }
+  ],
+  "stateMachine": {
+    "component": "pricing-plan",
+    "variants": ["standard", "recommended"],
+    "states": ["default", "hover", "focus-visible", "active"],
+    "transitions": [
+      {
+        "from": "default",
+        "to": "hover",
+        "trigger": "pointer over the plan action",
+        "motion": {
+          "motion": "background 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "pointer leaves the plan action",
+        "motion": {
+          "motion": "background 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "focus-visible",
+        "trigger": "keyboard focus",
+        "motion": {
+          "motion": "ring appears with no delay",
+          "reducedMotion": "instant ring"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves",
+        "motion": {
+          "motion": "ring removed instantly",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "active",
+        "trigger": "the plan is selected",
+        "motion": {
+          "motion": "none",
+          "noneReason": "selection navigates to checkout; an animation would delay a commercial action",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "checkout opens or the selection is abandoned",
+        "motion": {
+          "motion": "none",
+          "noneReason": "the destination document is already at its default state",
+          "reducedMotion": "instant"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "standard",
+      "enabled": ["default", "hover", "focus-visible", "active"],
+      "refused": []
+    },
+    {
+      "variant": "recommended",
+      "enabled": ["default", "hover", "focus-visible", "active"],
+      "refused": []
+    }
+  ]
+}

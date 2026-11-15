@@ -493,3 +493,17 @@
   `duplicate-thesis`, `unexplained-rejection`, `anti-references-borrowed` — severities come from the
   existing anti-slop taxonomy, so there is no second definition of slop. 11 tests, mutation-checked.
   Receipt: VERIFICATION/T0400.md. Next: T0405.
+
+- 2026-11-14T23:20:00+06:00 | Pi (FreePi) | T0405 | Launch playbooks batch 1 with full state matrices.
+  Ten playbooks (navbar, hero, button-cta, form-input-validation, card, pricing-table, footer,
+  empty-loading-error, modal-dialog, toast-notification); commerce set is T0405c, data
+  table/record forms T0407, enforced by a test that fails if a later batch appears here.
+  Playbook contract gained `variantMatrix`: every (variant,state) pair declared enabled or
+  refused WITH A REASON, exact union, no undeclared variants, no uncovered variants — so
+  "the matrix is complete" is checked, not assured (ghost buttons have no success, info
+  dialogs no error, error toasts cannot confirm). 64 transitions each with motion +
+  interruption + rapidToggle + information-preserving reducedMotion; 23 motion:none
+  decisions, all sync-feedback paths, all with reasons. surfaces.md updated honestly.
+  13 tests mutation-checked; playbook lint 10/10; receipt VERIFICATION/T0405.md.
+  Flagged: provenance catalog has only 3 claim ids, so most rules are `convention` — a
+  T0301 research gap, not something authoring can fix. Next: T0405c.

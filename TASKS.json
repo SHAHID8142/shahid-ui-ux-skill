@@ -1071,9 +1071,22 @@
       ],
       "risk": "playbook drift from code",
       "rollback": "fixtures bind playbooks to reality",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0405.md",
+        "skill/references/playbooks/",
+        "packages/schemas/tests/launch-playbooks.test.ts"
+      ],
+      "results": [
+        "batch 1 (10 components) authored as playbooks with 12-part structure: navbar, hero, button-cta, form-input-validation, card, pricing-table, footer, empty-loading-error, modal-dialog, toast-notification; commerce set is T0405c and data table/record forms T0407, enforced by a test that fails if a later batch appears",
+        "variant-vs-state matrix complete by construction: the playbook contract requires every (variant,state) pair declared enabled or refused with a reason, exact union, no rows for undeclared variants, no declared variant without a row",
+        "64 transitions, each with motion spec + interruption + rapidToggle + information-preserving reducedMotion; 23 motion:none decisions all on sync-feedback paths with reasons (schema refuses none without one)",
+        "state machines validate against the T0600 sus.state-machine contract and use only its state vocabulary; components with loading declare staleResponseRule",
+        "13 tests mutation-checked (exactness -> 1 failure, variant coverage -> 1 failure); playbook lint 10/10; knowledge lint 7 files"
+      ]
     },
     {
       "id": "T0406",

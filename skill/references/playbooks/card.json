@@ -1,0 +1,138 @@
+{
+  "id": "card",
+  "surface": "any",
+  "component": "Card",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Whether the whole card is a link or only its title, and the keyboard model that follows",
+      "usingRules": ["card-one-target"]
+    },
+    {
+      "order": 2,
+      "decide": "The one piece of information that makes a card scannable in a list",
+      "usingRules": ["card-scan-anchor"]
+    },
+    {
+      "order": 3,
+      "decide": "Media weight and its ratio at 390px",
+      "usingRules": ["card-media-ratio"]
+    },
+    {
+      "order": 4,
+      "decide": "Hover and focus treatment that still works on touch",
+      "usingRules": ["card-hover-not-only"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "card-one-target",
+      "kind": "convention",
+      "statement": "A card has exactly one activation target; nested interactive children either leave the card or the card stops being clickable."
+    },
+    {
+      "id": "card-scan-anchor",
+      "kind": "convention",
+      "statement": "Every card in a list exposes the same anchor (title, price, date) in the same position so scanning works without reading."
+    },
+    {
+      "id": "card-media-ratio",
+      "kind": "convention",
+      "statement": "Media keeps a fixed aspect ratio per list; mixed ratios break comparison and cause layout shift."
+    },
+    {
+      "id": "card-hover-not-only",
+      "kind": "convention",
+      "statement": "Hover is never the only affordance: focus is styled at least as clearly and touch receives the same information without hover."
+    }
+  ],
+  "stateMachine": {
+    "component": "card",
+    "variants": ["static", "interactive"],
+    "states": ["default", "hover", "focus-visible", "active"],
+    "transitions": [
+      {
+        "from": "default",
+        "to": "hover",
+        "trigger": "pointer over the card",
+        "motion": {
+          "motion": "elevation 120ms",
+          "reducedMotion": "instant elevation change, no information carried by the shadow"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "pointer leaves",
+        "motion": {
+          "motion": "elevation 120ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "focus-visible",
+        "trigger": "keyboard focus",
+        "motion": {
+          "motion": "ring appears with no delay",
+          "reducedMotion": "instant ring"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "active",
+        "trigger": "activation",
+        "motion": {
+          "motion": "none",
+          "noneReason": "activation replaces the view; a press animation delays it",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "activation completes or is cancelled",
+        "motion": {
+          "motion": "none",
+          "noneReason": "the next document or the restored card is already at its default state",
+          "reducedMotion": "instant"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "static",
+      "enabled": ["default"],
+      "refused": [
+        {
+          "state": "hover",
+          "reason": "a static card is not a control and does not react to pointer"
+        },
+        {
+          "state": "focus-visible",
+          "reason": "not focusable by design"
+        },
+        {
+          "state": "active",
+          "reason": "nothing to activate"
+        }
+      ]
+    },
+    {
+      "variant": "interactive",
+      "enabled": ["default", "hover", "focus-visible", "active"],
+      "refused": []
+    }
+  ]
+}

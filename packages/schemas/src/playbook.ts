@@ -8,7 +8,7 @@
  */
 import { z } from 'zod';
 import { defineSusSchema } from './versioning.js';
-import { ComponentStateMachine } from './interaction.js';
+import { ComponentStateMachine, ComponentStates } from './interaction.js';
 
 export const RuleKind = z.enum(['authoritative', 'advisory', 'convention']);
 
@@ -54,6 +54,29 @@ export const Playbook = z
     rules: z.array(PlaybookRule).min(1),
     /** Variant-vs-state machine (T0600) when the component has states. */
     stateMachine: ComponentStateMachine.optional(),
+    /**
+     * T0405 variant-vs-state matrix. A component with variants has a different
+     * state set per variant (a ghost button has no `success`; a disabled-only
+     * placeholder has no `hover`). Without this cell-level record, "the matrix is
+     * complete" is an assurance: an unlisted pair silently inherits the default
+     * behaviour. Here every (variant, state) pair is declared either enabled or
+     * refused *with a reason*, and the union must be exact.
+     */
+    variantMatrix: z
+      .array(
+        z
+          .object({
+            variant: z.string().min(1),
+            enabled: z.array(z.enum(ComponentStates)),
+            refused: z
+              .array(
+                z.object({ state: z.enum(ComponentStates), reason: z.string().min(8) }).strict(),
+              )
+              .default([]),
+          })
+          .strict(),
+      )
+      .optional(),
   })
   .strict()
   .superRefine((p, ctx) => {
@@ -77,6 +100,83 @@ export const Playbook = z
         }
       }
     }
+    // T0405: the variant-vs-state matrix must be exact when present.
+    if (p.variantMatrix && p.stateMachine) {
+      const states = new Set(p.stateMachine.states);
+      const seen = new Set<string>();
+      for (const row of p.variantMatrix) {
+        if (!p.stateMachine.variants.includes(row.variant)) {
+          ctx.addIssue({
+            code: 'custom',
+            message: `variantMatrix names "${row.variant}", which the state machine does not declare`,
+            path: ['variantMatrix'],
+          });
+        }
+        const enabled = new Set(row.enabled);
+        const refused = row.refused.map((entry) => entry.state);
+        if (new Set(refused).size !== refused.length) {
+          ctx.addIssue({
+            code: 'custom',
+            message: `variant "${row.variant}" refuses the same state twice`,
+            path: ['variantMatrix'],
+          });
+        }
+        for (const state of enabled) {
+          if (!states.has(state)) {
+            ctx.addIssue({
+              code: 'custom',
+              message: `variant "${row.variant}" enables "${state}", which the state machine does not list`,
+              path: ['variantMatrix'],
+            });
+          }
+          if (refused.includes(state)) {
+            ctx.addIssue({
+              code: 'custom',
+              message: `variant "${row.variant}" both enables and refuses "${state}"`,
+              path: ['variantMatrix'],
+            });
+          }
+          seen.add(`${row.variant}:${state}`);
+        }
+        for (const state of refused) {
+          if (!states.has(state)) {
+            ctx.addIssue({
+              code: 'custom',
+              message: `variant "${row.variant}" refuses "${state}", which the state machine does not list`,
+              path: ['variantMatrix'],
+            });
+          }
+          seen.add(`${row.variant}:${state}`);
+        }
+        // exactness: every machine state is accounted for in this row
+        for (const state of p.stateMachine.states) {
+          if (!enabled.has(state) && !refused.includes(state)) {
+            ctx.addIssue({
+              code: 'custom',
+              message: `variant "${row.variant}" says nothing about state "${state}" — declare it enabled or refused with a reason`,
+              path: ['variantMatrix'],
+            });
+          }
+        }
+      }
+      for (const variant of p.stateMachine.variants) {
+        const covered = p.variantMatrix.some((row) => row.variant === variant);
+        if (!covered) {
+          ctx.addIssue({
+            code: 'custom',
+            message: `variant "${variant}" has no row in the variant matrix`,
+            path: ['variantMatrix'],
+          });
+        }
+      }
+    } else if (p.variantMatrix && !p.stateMachine) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'variantMatrix requires a stateMachine',
+        path: ['variantMatrix'],
+      });
+    }
+
     // steps are ordered and complete
     const orders = p.steps.map((s) => s.order);
     if (new Set(orders).size !== orders.length || orders.some((o, i) => o !== i + 1)) {

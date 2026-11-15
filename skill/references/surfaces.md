@@ -5,10 +5,10 @@ this file never names guidance that does not exist (G3).
 
 | Surface | Status (2026-11-14) |
 |---|---|
-| Marketing | evaluation corpus + briefs exist; playbooks not yet built (M4) |
-| Commerce | evaluation corpus exists; playbooks not yet built (M4) |
-| Operate (CMS/CRM admin) | evaluation corpus exists; playbooks not yet built (M4) |
-| Portfolio + docs | evaluation corpus exists; playbooks not yet built (M4) |
+| Marketing | evaluation corpus + briefs exist; batch-1 playbooks built (navbar, hero, button-cta, form-input-validation, card, pricing-table, footer, empty-loading-error, modal-dialog, toast-notification); commerce playbooks are T0405c |
+| Commerce | evaluation corpus exists; shared batch-1 playbooks cover the common components; commerce-specific playbooks (product grid, PDP, cart, checkout) are T0405c |
+| Operate (CMS/CRM admin) | evaluation corpus exists; shared batch-1 playbooks apply; data table and record forms are T0407 |
+| Portfolio + docs | evaluation corpus exists; shared batch-1 playbooks apply; case-study and article layouts are second wave |
 
 Deterministic tooling available now: rubric scoring, capture harness, axe +
 Lighthouse gates, evidence-bundle validation, anti-slop scanner (from M3),

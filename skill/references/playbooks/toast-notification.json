@@ -1,0 +1,130 @@
+{
+  "id": "toast-notification",
+  "surface": "any",
+  "component": "Toast and notification",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Whether the message is a toast at all, or belongs inline next to what it describes",
+      "usingRules": ["toast-only-transient"]
+    },
+    {
+      "order": 2,
+      "decide": "Politeness, and whether the message may disappear on its own",
+      "usingRules": ["toast-live-region", "toast-persist-errors"]
+    },
+    {
+      "order": 3,
+      "decide": "Placement that does not cover the control the user is using",
+      "usingRules": ["toast-placement"]
+    },
+    {
+      "order": 4,
+      "decide": "Entry and exit motion and the reduced-motion equivalent",
+      "usingRules": ["toast-motion-kept"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "toast-only-transient",
+      "kind": "convention",
+      "statement": "Toasts carry transient confirmation or a repairable warning; anything the user must act on belongs inline or in a dialog."
+    },
+    {
+      "id": "toast-live-region",
+      "kind": "convention",
+      "statement": "Toasts are announced through a polite live region and error toasts through an assertive one; neither steals focus."
+    },
+    {
+      "id": "toast-persist-errors",
+      "kind": "convention",
+      "statement": "An error toast does not auto-dismiss; a confirmation may, after a duration long enough to read it twice."
+    },
+    {
+      "id": "toast-placement",
+      "kind": "convention",
+      "statement": "Toasts never cover the primary action or the focused control, and they do not stack beyond three."
+    },
+    {
+      "id": "toast-motion-kept",
+      "kind": "convention",
+      "statement": "Reduced motion removes the slide but keeps position, duration and the live-region announcement."
+    }
+  ],
+  "stateMachine": {
+    "component": "toast",
+    "variants": ["confirmation", "error"],
+    "states": ["default", "hover", "focus-visible", "success", "error"],
+    "transitions": [
+      {
+        "from": "default",
+        "to": "success",
+        "trigger": "the action confirms",
+        "motion": {
+          "motion": "slide and fade 180ms",
+          "reducedMotion": "appears instantly in place, announcement unchanged"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "error",
+        "trigger": "the action fails",
+        "motion": {
+          "motion": "slide and fade 180ms",
+          "reducedMotion": "appears instantly and does not auto-dismiss"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "pointer leaves",
+        "motion": {
+          "motion": "none",
+          "noneReason": "hover only pauses the timer; the toast does not move",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus moves on",
+        "motion": {
+          "motion": "none",
+          "noneReason": "focus dismissal is immediate",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "allow"
+      }
+    ],
+    "staleResponseRule": "a toast for a superseded action is dropped rather than shown late"
+  },
+  "variantMatrix": [
+    {
+      "variant": "confirmation",
+      "enabled": ["default", "hover", "focus-visible", "success"],
+      "refused": [
+        {
+          "state": "error",
+          "reason": "a confirmation variant cannot report a failure"
+        }
+      ]
+    },
+    {
+      "variant": "error",
+      "enabled": ["default", "hover", "focus-visible", "error"],
+      "refused": [
+        {
+          "state": "success",
+          "reason": "an error variant cannot confirm success"
+        }
+      ]
+    }
+  ]
+}

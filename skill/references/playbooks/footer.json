@@ -1,0 +1,97 @@
+{
+  "id": "footer",
+  "surface": "any",
+  "component": "Footer",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Which links survive, grouped by the question they answer",
+      "usingRules": ["footer-grouping"]
+    },
+    {
+      "order": 2,
+      "decide": "Legal and contact information this product type must present",
+      "usingRules": ["footer-legal-presence"]
+    },
+    {
+      "order": 3,
+      "decide": "Heading and landmark structure so the footer is skippable",
+      "usingRules": ["footer-landmark"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "footer-grouping",
+      "kind": "convention",
+      "statement": "Footer links are grouped by the question they answer, with headings; a flat list of forty links is not navigation."
+    },
+    {
+      "id": "footer-legal-presence",
+      "kind": "convention",
+      "statement": "Legal, contact and policy links are present before launch; their absence is a blocker, not a polish item."
+    },
+    {
+      "id": "footer-landmark",
+      "kind": "convention",
+      "statement": "The footer is a contentinfo landmark with real headings so screen-reader navigation can skip it."
+    }
+  ],
+  "stateMachine": {
+    "component": "footer-link",
+    "variants": ["link"],
+    "states": ["default", "hover", "focus-visible"],
+    "transitions": [
+      {
+        "from": "default",
+        "to": "hover",
+        "trigger": "pointer over the link",
+        "motion": {
+          "motion": "underline 90ms",
+          "reducedMotion": "instant underline"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "pointer leaves",
+        "motion": {
+          "motion": "underline 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "focus-visible",
+        "trigger": "keyboard focus",
+        "motion": {
+          "motion": "ring appears with no delay",
+          "reducedMotion": "instant ring"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves",
+        "motion": {
+          "motion": "ring removed instantly",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      }
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "link",
+      "enabled": ["default", "hover", "focus-visible"],
+      "refused": []
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "id": "modal-dialog",
+  "surface": "any",
+  "component": "Modal and dialog",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Whether the interaction must block the page at all, or can be inline",
+      "usingRules": ["modal-necessity"]
+    },
+    {
+      "order": 2,
+      "decide": "Initial focus, focus trap and the return target",
+      "usingRules": ["modal-focus-contract"]
+    },
+    {
+      "order": 3,
+      "decide": "Dismissal routes: Escape, outside press, explicit close, and which are refused",
+      "usingRules": ["modal-dismissal"]
+    },
+    {
+      "order": 4,
+      "decide": "Motion in and out, and what reduced motion preserves",
+      "usingRules": ["modal-motion-kept"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "modal-necessity",
+      "kind": "convention",
+      "statement": "A modal is used only when the page underneath must not proceed; otherwise the content is a section, a drawer or a page."
+    },
+    {
+      "id": "modal-focus-contract",
+      "kind": "convention",
+      "statement": "Focus moves into the dialog on open, is trapped while open and returns to the trigger on close; the trigger is recorded, not guessed."
+    },
+    {
+      "id": "modal-dismissal",
+      "kind": "convention",
+      "statement": "Escape and the close control always dismiss; a destructive dialog may refuse outside-press dismissal but must say that it does."
+    },
+    {
+      "id": "modal-motion-kept",
+      "kind": "convention",
+      "statement": "Reduced motion removes travel and scaling but keeps the dialog, its focus behaviour and its dismissal routes identical."
+    }
+  ],
+  "stateMachine": {
+    "component": "dialog",
+    "variants": ["info", "confirm-destructive"],
+    "states": ["default", "focus-visible", "loading", "success", "error"],
+    "transitions": [
+      {
+        "from": "default",
+        "to": "focus-visible",
+        "trigger": "the dialog opens",
+        "motion": {
+          "motion": "opacity and scale 160ms",
+          "reducedMotion": "the dialog appears instantly at full size with focus already inside"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "loading",
+        "trigger": "the confirm action starts",
+        "motion": {
+          "motion": "none",
+          "noneReason": "the dialog must not appear to close before it has closed",
+          "reducedMotion": "the label states the work; the dialog stays open"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the action completes",
+        "motion": {
+          "motion": "opacity 160ms",
+          "reducedMotion": "the dialog closes instantly and focus returns to the trigger"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the action fails",
+        "motion": {
+          "motion": "none",
+          "noneReason": "an error that fades in reads as optional",
+          "reducedMotion": "the error appears inside the dialog instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "retry",
+        "motion": {
+          "motion": "none",
+          "noneReason": "retry is deliberate and needs no transition",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      }
+    ],
+    "staleResponseRule": "a dialog closed while a request is in flight ignores the late result rather than reopening"
+  },
+  "variantMatrix": [
+    {
+      "variant": "info",
+      "enabled": ["default", "focus-visible"],
+      "refused": [
+        {
+          "state": "loading",
+          "reason": "an informational dialog performs no work"
+        },
+        {
+          "state": "success",
+          "reason": "nothing to confirm"
+        },
+        {
+          "state": "error",
+          "reason": "no request to fail"
+        }
+      ]
+    },
+    {
+      "variant": "confirm-destructive",
+      "enabled": ["default", "focus-visible", "loading", "success", "error"],
+      "refused": []
+    }
+  ]
+}

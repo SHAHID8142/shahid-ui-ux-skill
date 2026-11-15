@@ -1,0 +1,176 @@
+{
+  "id": "form-input-validation",
+  "surface": "any",
+  "component": "Form, input and validation",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Which fields the job actually requires, and which are merely nice",
+      "usingRules": ["form-minimum-fields"]
+    },
+    {
+      "order": 2,
+      "decide": "Label and help placement, and whether the label is visible at all times",
+      "usingRules": ["form-persistent-label"]
+    },
+    {
+      "order": 3,
+      "decide": "When validation runs and what each message says",
+      "usingRules": ["input-validation-timing", "input-error-wording"]
+    },
+    {
+      "order": 4,
+      "decide": "Error announcement and focus movement for assistive technology",
+      "usingRules": ["input-error-announced"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "form-minimum-fields",
+      "kind": "convention",
+      "statement": "A field that does not change a decision is removed; the form asks only what the task needs."
+    },
+    {
+      "id": "form-persistent-label",
+      "kind": "convention",
+      "statement": "Labels stay visible at all times; placeholder text never substitutes for a label because it disappears exactly when it is needed."
+    },
+    {
+      "id": "input-validation-timing",
+      "kind": "convention",
+      "statement": "Validation runs on blur and on submit; as-you-type errors are limited to formats the user cannot get right by finishing."
+    },
+    {
+      "id": "input-error-wording",
+      "kind": "convention",
+      "statement": "An error says what is wrong and how to fix it in the user's terms (Use 8 characters or more), never Invalid input."
+    },
+    {
+      "id": "input-error-announced",
+      "kind": "convention",
+      "statement": "Errors are announced through a live region and the first invalid field receives focus on submit; colour is never the only error signal."
+    }
+  ],
+  "stateMachine": {
+    "component": "input",
+    "variants": ["text", "email", "password", "textarea"],
+    "states": ["default", "hover", "focus-visible", "disabled", "loading", "error", "success"],
+    "transitions": [
+      {
+        "from": "default",
+        "to": "hover",
+        "trigger": "pointer over the field",
+        "motion": {
+          "motion": "border 90ms",
+          "reducedMotion": "instant border change"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "pointer leaves the field",
+        "motion": {
+          "motion": "border 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "focus-visible",
+        "trigger": "the field receives focus",
+        "motion": {
+          "motion": "ring appears with no delay",
+          "reducedMotion": "instant ring"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "loading",
+        "trigger": "async validation starts",
+        "motion": {
+          "motion": "none",
+          "noneReason": "a spinner beside a field competes with the caret",
+          "reducedMotion": "the field keeps its text; the pending state is textual"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "validation fails",
+        "motion": {
+          "motion": "none",
+          "noneReason": "error text must be readable the moment it is true",
+          "reducedMotion": "the message appears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "validation passes",
+        "motion": {
+          "motion": "none",
+          "noneReason": "a cleared error needs no animation to be understood",
+          "reducedMotion": "the message clears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "focus-visible",
+        "trigger": "the user edits the field",
+        "motion": {
+          "motion": "none",
+          "noneReason": "moving an error under a caret distracts from the fix",
+          "reducedMotion": "the message stays until re-validated"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "blur",
+        "motion": {
+          "motion": "border 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      }
+    ],
+    "staleResponseRule": "validation results for an older value are ignored; the field shows the verdict for what it currently contains"
+  },
+  "variantMatrix": [
+    {
+      "variant": "text",
+      "enabled": ["default", "hover", "focus-visible", "disabled", "loading", "error", "success"],
+      "refused": []
+    },
+    {
+      "variant": "email",
+      "enabled": ["default", "hover", "focus-visible", "disabled", "loading", "error", "success"],
+      "refused": []
+    },
+    {
+      "variant": "password",
+      "enabled": ["default", "hover", "focus-visible", "disabled", "loading", "error", "success"],
+      "refused": []
+    },
+    {
+      "variant": "textarea",
+      "enabled": ["default", "hover", "focus-visible", "disabled", "loading", "error", "success"],
+      "refused": []
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "id": "empty-loading-error",
+  "surface": "any",
+  "component": "Empty, loading and error states",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Which of the three states this surface can reach, and what triggers each",
+      "usingRules": ["state-reachability"]
+    },
+    {
+      "order": 2,
+      "decide": "What the empty state offers as a next action",
+      "usingRules": ["empty-offers-action"]
+    },
+    {
+      "order": 3,
+      "decide": "The loading shape that matches the final content",
+      "usingRules": ["loading-shape-matches"]
+    },
+    {
+      "order": 4,
+      "decide": "Error wording that names the cause and offers the retry",
+      "usingRules": ["error-names-cause"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "state-reachability",
+      "kind": "convention",
+      "statement": "A state is authored only if it can be reached; a loading state for a synchronous render is dead code that misleads reviewers."
+    },
+    {
+      "id": "empty-offers-action",
+      "kind": "convention",
+      "statement": "An empty state names why it is empty and offers the action that fills it; No results alone is a dead end."
+    },
+    {
+      "id": "loading-shape-matches",
+      "kind": "convention",
+      "statement": "Loading placeholders match the shape of the content that replaces them so the page does not jump when data arrives."
+    },
+    {
+      "id": "error-names-cause",
+      "kind": "convention",
+      "statement": "An error names what failed, keeps the user's input and offers a retry; it never replaces the page with a generic message."
+    }
+  ],
+  "stateMachine": {
+    "component": "content-region",
+    "variants": ["list", "detail"],
+    "states": ["default", "loading", "error", "success"],
+    "transitions": [
+      {
+        "from": "default",
+        "to": "loading",
+        "trigger": "a request is issued",
+        "motion": {
+          "motion": "none",
+          "noneReason": "a fade into a placeholder reads as content arriving twice",
+          "reducedMotion": "the placeholder appears instantly in the final shape"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "data arrives",
+        "motion": {
+          "motion": "opacity 120ms",
+          "reducedMotion": "content appears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the request fails",
+        "motion": {
+          "motion": "none",
+          "noneReason": "error feedback must not wait for a fade",
+          "reducedMotion": "the error appears instantly and the input is preserved"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "the user retries",
+        "motion": {
+          "motion": "none",
+          "noneReason": "retry is deliberate and needs no transition",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "loading",
+        "trigger": "refresh",
+        "motion": {
+          "motion": "none",
+          "noneReason": "refresh keeps the current content until the new content is ready",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      }
+    ],
+    "staleResponseRule": "a response for a superseded request never replaces the current content; late errors for old requests are dropped"
+  },
+  "variantMatrix": [
+    {
+      "variant": "list",
+      "enabled": ["default", "loading", "error", "success"],
+      "refused": []
+    },
+    {
+      "variant": "detail",
+      "enabled": ["default", "loading", "error", "success"],
+      "refused": []
+    }
+  ]
+}
