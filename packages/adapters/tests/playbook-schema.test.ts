@@ -107,6 +107,21 @@ describe('playbook contract (T0404)', () => {
       }),
     ],
     stateMachine: machine,
+    // T0405b: the twelve-part standard is part of the contract now
+    sections: {
+      intent: 'let the user commit to one action with clear feedback',
+      useCases: ['form submission'],
+      inputs: ['intent', 'whether it writes to a server'],
+      anatomy: ['button element'],
+      styling: ['variant maps to intent'],
+      a11y: ['real button element for actions'],
+      responsive: ['minimum 44x44 touch target'],
+      copy: ['label is a verb in the user terms'],
+      alternatives: ['a link styled as a button for navigation'],
+      references: [{ label: 'WCAG 2.2 SC 2.1.1', date: '2026-11-14', grade: 'normative-standard' }],
+      acceptance: ['double activation issues one request'],
+      failureCases: ['double submit creating two records'],
+    },
   };
 
   it('accepts a valid playbook', () => {

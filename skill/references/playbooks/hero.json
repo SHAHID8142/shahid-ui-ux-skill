@@ -132,5 +132,70 @@
       "enabled": ["default", "hover", "focus-visible", "loading"],
       "refused": []
     }
-  ]
+  ],
+  "sections": {
+    "intent": "State one claim and offer one action above the fold without promising anything the product cannot show.",
+    "useCases": ["Marketing landing page opening", "Campaign page", "Product launch page"],
+    "nicheDifferences": [
+      "Commerce heroes carry price context; portfolio heroes carry authorship",
+      "Docs heroes are usually absent and replaced by search"
+    ],
+    "inputs": [
+      "Direction thesis from evals/directions",
+      "Registered claims available",
+      "Surface performance budget",
+      "Primary action"
+    ],
+    "anatomy": [
+      "Claim heading",
+      "Supporting line",
+      "Primary action",
+      "Evidence slot",
+      "Media slot"
+    ],
+    "styling": [
+      "One claim at display size; supporting line stays body size",
+      "Media respects the surface budget rather than filling the viewport",
+      "No gradient behind text for contrast rescue"
+    ],
+    "a11y": [
+      "Heading order starts at h1",
+      "Media that conveys meaning has a text alternative; decorative media is hidden from AT",
+      "Looping video respects prefers-reduced-motion"
+    ],
+    "responsive": [
+      "Claim and action both visible at 390x844 without scrolling",
+      "Media crops rather than squashes",
+      "Text remains readable at 200% zoom"
+    ],
+    "copy": [
+      "Numbers must be registered claims or absent",
+      "No superlatives that cannot be evidenced"
+    ],
+    "alternatives": [
+      "A quiet type-led hero is legitimate when the product is documentation",
+      "Splitting into two claims is not an alternative; it is a defect"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 AA success criteria 1.4.3, 2.1.1, 2.4.7, 4.1.3",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "Project convention: hero claim traces to the direction thesis (T0400)",
+        "date": "2026-11-14",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "Claim readable at 200% zoom without horizontal scroll",
+      "No unregistered figure appears"
+    ],
+    "failureCases": [
+      "Hero video blocks LCP",
+      "Second headline competes with the first",
+      "Evidence figure with no claim id"
+    ]
+  }
 }

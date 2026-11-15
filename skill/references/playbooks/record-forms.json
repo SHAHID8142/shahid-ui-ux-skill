@@ -226,5 +226,77 @@
         }
       ]
     }
-  ]
+  ],
+  "sections": {
+    "intent": "Let an operator create or amend a record without overwriting a colleague or losing typed work.",
+    "useCases": ["New customer record", "Editing an order note", "Conflicted concurrent edit"],
+    "nicheDifferences": [
+      "Finance records need audit trails; support records need internal-only fields",
+      "Bulk imports need validation previews"
+    ],
+    "inputs": [
+      "Field set with obligations",
+      "Save model",
+      "Conflict policy",
+      "Deletion recoverability"
+    ],
+    "anatomy": [
+      "Grouped fields with legends",
+      "Save/cancel actions",
+      "Conflict banner",
+      "Delete control separated from save"
+    ],
+    "styling": [
+      "Required fields marked, not just asterisked without a key",
+      "Conflict banner visually distinct from validation error",
+      "Destructive action separated from primary save"
+    ],
+    "a11y": [
+      "Grouped fields use fieldset/legend",
+      "Errors focus the first invalid field",
+      "Conflict choice reachable by keyboard",
+      "Save result announced"
+    ],
+    "responsive": [
+      "Single column at 390px",
+      "Primary save never overlaps an input",
+      "Long forms keep the save action reachable"
+    ],
+    "copy": [
+      "Save model stated on the form",
+      "Conflict states what changed and by whom if known",
+      "Deletion states the consequence"
+    ],
+    "alternatives": [
+      "Autosave per field is legitimate for long-lived edits",
+      "A modal form is legitimate only for two to three fields"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 AA success criteria 1.4.3, 2.1.1, 2.4.7, 4.1.3",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "HTML Living Standard: interactive content and labelling",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "Project convention: one stated save model and idempotent writes (T0407)",
+        "date": "2026-11-14",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "Failed save preserves every value",
+      "Concurrent edit surfaces as a choice",
+      "Double submit creates one record"
+    ],
+    "failureCases": [
+      "Silent overwrite of a colleague's edit",
+      "Values lost on validation error",
+      "Two records from one submission"
+    ]
+  }
 }

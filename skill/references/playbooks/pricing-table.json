@@ -132,5 +132,65 @@
       "enabled": ["default", "hover", "focus-visible", "active"],
       "refused": []
     }
-  ]
+  ],
+  "sections": {
+    "intent": "Support one purchase decision by showing only the differences that change it.",
+    "useCases": ["SaaS plan comparison", "Membership tiers", "One-off purchase options"],
+    "nicheDifferences": [
+      "Usage-based pricing needs an estimator, not a grid",
+      "Enterprise tiers need a contact route instead of a fourth column"
+    ],
+    "inputs": [
+      "Plan list with prices",
+      "Billing periods",
+      "Trial terms",
+      "Recommended plan rationale"
+    ],
+    "anatomy": ["Plan header", "Price block", "Difference list", "Action per plan", "Term notes"],
+    "styling": [
+      "Recommendation marked with text as well as emphasis",
+      "Prices share alignment and numeral style",
+      "Feature rows justified to the grid, not to the column"
+    ],
+    "a11y": [
+      "Comparison readable as a list in DOM order",
+      "Recommendation conveyed in text",
+      "Price changes announced if billing toggles"
+    ],
+    "responsive": [
+      "Recommended plan first in reading order on narrow viewports",
+      "Rows become per-plan blocks instead of horizontal scroll",
+      "Billing toggle reachable by keyboard"
+    ],
+    "copy": [
+      "Price, currency and period stated literally",
+      "Trial end stated as a date or explicit duration",
+      "No savings claim without a registered figure"
+    ],
+    "alternatives": [
+      "A single recommended plan with an upgrade path is legitimate",
+      "A contact-sales column is preferable to a fourth price tier"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 AA success criteria 1.4.3, 2.1.1, 2.4.7, 4.1.3",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "Project convention: differences that change a decision only (T0405)",
+        "date": "2026-11-14",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "Every price readable without interaction",
+      "Recommended plan identifiable without colour"
+    ],
+    "failureCases": [
+      "Computed price that disagrees with checkout",
+      "Emphasis-only recommendation",
+      "Horizontal scrolling comparison at 390px"
+    ]
+  }
 }

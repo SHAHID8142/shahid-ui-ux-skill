@@ -2683,9 +2683,22 @@
       ],
       "risk": "breadth over depth",
       "rollback": "coverage matrix governs scope",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0405b.md",
+        "scripts/check-playbook-parts.mjs",
+        "packages/schemas/src/playbook.ts"
+      ],
+      "results": [
+        "the gap was the standard, not the count: parts 1-6 were satisfied while accessibility, responsive, alternatives, graded references and failure cases were implied rather than recorded",
+        "playbook contract now requires sections covering PRD 6 parts 1-4 and 7-12 (parts 5/6 satisfied by stateMachine + variantMatrix), with references carrying YYYY-MM-DD dates and evidence grades",
+        "pnpm parts gate wired into verify counts all twelve parts per playbook and names the missing PRD numbers instead of failing at a schema path",
+        "all 16 launch playbooks rewritten to the standard with honest grading: normative-standard only for real specifications (WCAG 2.2, WAI-ARIA APG, HTML, CSS prefers-reduced-motion), convention for our own decisions, no invented research citations",
+        "21 tests including four new 12-part/reference tests, mutation-checked (making a11y optional fails one)"
+      ]
     },
     {
       "id": "T0405c",

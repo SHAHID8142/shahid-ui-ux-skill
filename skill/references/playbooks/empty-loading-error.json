@@ -124,5 +124,75 @@
       "enabled": ["default", "loading", "error", "success"],
       "refused": []
     }
-  ]
+  ],
+  "sections": {
+    "intent": "Keep the user oriented when there is nothing to show, something is arriving, or something failed.",
+    "useCases": [
+      "First-run empty list",
+      "Filtered empty result",
+      "Slow data fetch",
+      "Failed fetch"
+    ],
+    "nicheDifferences": [
+      "Operate surfaces must preserve the operator's working position",
+      "Commerce empty carts suggest products, not apologies"
+    ],
+    "inputs": [
+      "Which states are reachable",
+      "Content shape for placeholders",
+      "Retry capability",
+      "Wording ownership"
+    ],
+    "anatomy": ["State container", "Explanation", "Primary action", "Retry control for errors"],
+    "styling": [
+      "Placeholder geometry matches final content",
+      "Error styling distinguished from empty styling",
+      "No spinner for sub-100ms operations"
+    ],
+    "a11y": [
+      "Loading and error states announced politely",
+      "Retry reachable by keyboard",
+      "Focus not moved into a loading region"
+    ],
+    "responsive": [
+      "Placeholder count adapts to columns",
+      "Error text wraps without truncation",
+      "Actions remain visible at 390px"
+    ],
+    "copy": [
+      "Empty states name the reason and offer the action",
+      "Errors name the cause and the retry",
+      "No generic Something went wrong"
+    ],
+    "alternatives": [
+      "Optimistic rendering with a subtle pending mark is legitimate for cheap reads",
+      "A modal error is never an alternative to inline"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 AA success criteria 1.4.3, 2.1.1, 2.4.7, 4.1.3",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WAI-ARIA Authoring Practices Guide, patterns index",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "Project convention: two distinct empties (T0407)",
+        "date": "2026-11-14",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "Filtered empty offers clearing filters",
+      "Failed load keeps prior rows and offers retry"
+    ],
+    "failureCases": [
+      "Table blanked on error",
+      "Loading replaces rows and loses position",
+      "Empty state with no action"
+    ]
+  }
 }

@@ -169,5 +169,67 @@
         }
       ]
     }
-  ]
+  ],
+  "sections": {
+    "intent": "Let a shopper compare a set of products by the attributes that decide the purchase.",
+    "useCases": ["Category browsing", "Search results", "Related products"],
+    "nicheDifferences": [
+      "Fashion needs fit and size context; electronics need spec highlights",
+      "B2B catalogues need stock and lead time"
+    ],
+    "inputs": ["Comparable attribute list", "Image ratio", "Stock and price data", "Result count"],
+    "anatomy": [
+      "Result count",
+      "Filter controls",
+      "Grid of product cards",
+      "Pagination or load-more"
+    ],
+    "styling": [
+      "One ratio per grid",
+      "Price alignment consistent across cards",
+      "Out-of-stock treatment distinct from discounted"
+    ],
+    "a11y": [
+      "Filter results announced",
+      "Focus preserved after filtering",
+      "Card activation keyboard accessible",
+      "Alt text describes the product, not the file"
+    ],
+    "responsive": [
+      "One column at 390px with the same attribute order",
+      "Images lazy-loaded with reserved space",
+      "No layout shift as images decode"
+    ],
+    "copy": [
+      "Availability stated as observed fact",
+      "Price includes currency and tax basis",
+      "No invented scarcity"
+    ],
+    "alternatives": [
+      "A list view is legitimate for specification comparison",
+      "A table is preferable when many numeric attributes matter"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 AA success criteria 1.4.3, 2.1.1, 2.4.7, 4.1.3",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "Project convention: comparable attributes in fixed order (T0405c)",
+        "date": "2026-11-14",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "Filtering announces the new count",
+      "No placeholder price appears",
+      "Zero visible layout shift on image load"
+    ],
+    "failureCases": [
+      "Mixed image ratios",
+      "Stale results after rapid filter changes",
+      "Scarcity claim not backed by data"
+    ]
+  }
 }

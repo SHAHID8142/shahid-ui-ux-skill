@@ -216,5 +216,72 @@
       ],
       "refused": []
     }
-  ]
+  ],
+  "sections": {
+    "intent": "Turn a cart into a completed order without ever charging twice or losing entered details.",
+    "useCases": ["Guest checkout", "Stored-method checkout", "Redirect-based payment"],
+    "nicheDifferences": [
+      "Digital goods skip shipping; wholesale needs purchase-order flow",
+      "Subscription checkout needs a renewal statement"
+    ],
+    "inputs": [
+      "Step prerequisites",
+      "Payment state vocabulary",
+      "Idempotency mechanism",
+      "Order-state lookup"
+    ],
+    "anatomy": [
+      "Progress indicator",
+      "Step form",
+      "Amount summary",
+      "Payment control",
+      "Result screen"
+    ],
+    "styling": [
+      "Amount visible on every step",
+      "Payment errors adjacent to the control",
+      "Progress steps labelled as text"
+    ],
+    "a11y": [
+      "Step changes announced",
+      "Errors focus the offending field",
+      "Payment result announced assertively"
+    ],
+    "responsive": [
+      "Single column at 390px",
+      "Payment control not covered by a sticky bar",
+      "Card fields usable with mobile keyboards"
+    ],
+    "copy": [
+      "Decline reasons actionable",
+      "Unknown state stated as unknown, never as failure",
+      "Renewal and cancellation terms stated"
+    ],
+    "alternatives": [
+      "A single-page checkout is legitimate when there are two fields",
+      "Guest-only checkout is legitimate for low-value goods"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 AA success criteria 1.4.3, 2.1.1, 2.4.7, 4.1.3",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "Project convention: closed payment-state vocabulary with unknown as a state (T0405c)",
+        "date": "2026-11-14",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "Repeated submit authorises once",
+      "A timeout surfaces as unknown, not declined",
+      "Failure preserves cart, address and method"
+    ],
+    "failureCases": [
+      "Double authorisation on retry",
+      "Timeout reported as decline",
+      "Empty step after a failed payment"
+    ]
+  }
 }

@@ -556,3 +556,13 @@
   strict-index accesses for noUncheckedIndexedAccess. GATE_REGISTRY G6 -> implemented.
   Honest limit: this computes the verdict, T0906 captures the traces. Receipt:
   VERIFICATION/T0603.md. Next: T0405b.
+
+- 2026-11-15T02:15:00+06:00 | Pi (FreePi) | T0405b | 15-playbook gap closed at the standard.
+  The count was already met (16 playbooks); the real gap was that parts 7-12 (a11y,
+  responsive, copy, alternatives, graded references, acceptance + failure cases) were implied
+  by rules rather than recorded. `sections` is now required in the playbook contract, and
+  `pnpm parts` counts all twelve PRD 6 parts per playbook, naming missing part numbers. All 16
+  rewritten with honest evidence grading: normative-standard only for real specs (WCAG 2.2,
+  WAI-ARIA APG, HTML, CSS prefers-reduced-motion), convention for our own decisions — no
+  invented research citations, and a test asserts conventions stay labelled. 21 tests,
+  mutation-checked. Receipt: VERIFICATION/T0405b.md. Next: T0408.

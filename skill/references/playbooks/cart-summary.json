@@ -155,5 +155,60 @@
         }
       ]
     }
-  ]
+  ],
+  "sections": {
+    "intent": "Show what is about to be bought, what it costs, and what is still uncertain.",
+    "useCases": ["Cart review before checkout", "Quantity correction", "Removal and undo"],
+    "nicheDifferences": [
+      "Digital carts need licence and delivery-by-email notes",
+      "Wholesale carts need tier pricing and MOQ"
+    ],
+    "inputs": ["Line items", "Server totals", "Tax and shipping basis", "Availability per line"],
+    "anatomy": ["Line list", "Quantity controls", "Totals block", "Checkout action"],
+    "styling": [
+      "Totals align to one column",
+      "Estimated and final labels visually distinct",
+      "Removal control separated from quantity controls"
+    ],
+    "a11y": [
+      "Quantity changes announced",
+      "Removal reachable by keyboard with undo",
+      "Totals readable as a list"
+    ],
+    "responsive": [
+      "Lines stack with totals last",
+      "Checkout action remains reachable",
+      "No horizontal scroll for quantity controls"
+    ],
+    "copy": [
+      "Estimate vs final stated at the point of display",
+      "Undo states what will be restored",
+      "Disabled checkout states the reason"
+    ],
+    "alternatives": [
+      "A drawer cart is legitimate for single-page commerce",
+      "Server-only totals are preferable to client recomputation"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 AA success criteria 1.4.3, 2.1.1, 2.4.7, 4.1.3",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "Project convention: labelled estimates and optimistic-quantity refusal (T0405c)",
+        "date": "2026-11-14",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "Totals match the server after each change",
+      "Undo restores the removed line exactly"
+    ],
+    "failureCases": [
+      "Client-computed total disagreeing with checkout",
+      "Optimistic quantity kept after rejection",
+      "Removal with no recovery"
+    ]
+  }
 }

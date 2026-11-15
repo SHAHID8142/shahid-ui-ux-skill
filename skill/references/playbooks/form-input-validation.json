@@ -172,5 +172,77 @@
       "enabled": ["default", "hover", "focus-visible", "disabled", "loading", "error", "success"],
       "refused": []
     }
-  ]
+  ],
+  "sections": {
+    "intent": "Collect exactly what the task needs and tell the user how to fix a problem without losing their work.",
+    "useCases": [
+      "Account creation",
+      "Checkout details",
+      "Admin record editing",
+      "Search refinement"
+    ],
+    "nicheDifferences": [
+      "Commerce forms add address and payment constraints",
+      "Operate forms need field-level save semantics",
+      "Search inputs validate almost nothing"
+    ],
+    "inputs": [
+      "Required fields derived from the job",
+      "Format constraints",
+      "Server-side validation rules",
+      "Whether validation is async"
+    ],
+    "anatomy": ["Visible label", "Help text", "Control", "Error text slot", "Pending indicator"],
+    "styling": [
+      "Error state changes border and text, never colour alone",
+      "Focus ring visible against the field's own background",
+      "Help and error occupy reserved space to avoid shift"
+    ],
+    "a11y": [
+      "Label programmatically associated",
+      "Errors announced in a live region",
+      "First invalid field focused on submit",
+      "Autocomplete attributes present where known"
+    ],
+    "responsive": [
+      "Single column at all widths for data entry",
+      "Inputs do not zoom on focus at 390px (16px minimum text)",
+      "Keyboard type matches the expected value"
+    ],
+    "copy": [
+      "Errors state the fix, not the rule id",
+      "No error text that blames the user",
+      "Placeholder never carries instructions that vanish"
+    ],
+    "alternatives": [
+      "Inline validation on blur is preferable to a summary-only error list",
+      "A review step is legitimate for high-risk submissions"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 AA success criteria 1.4.3, 2.1.1, 2.4.7, 4.1.3",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "HTML Living Standard: interactive content and labelling",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "Project convention: validate on blur and submit (T0405)",
+        "date": "2026-11-14",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "Submit with an empty required field focuses that field and announces the message",
+      "Entered values survive a failed save"
+    ],
+    "failureCases": [
+      "Error clears on irrelevant keystroke",
+      "Placeholder-only label",
+      "Async validation result applied to a stale value"
+    ]
+  }
 }

@@ -252,5 +252,78 @@
       ],
       "refused": []
     }
-  ]
+  ],
+  "sections": {
+    "intent": "Let an operator compare and act on records without losing their place in the list.",
+    "useCases": ["Record management", "Order queues", "Audit review"],
+    "nicheDifferences": [
+      "Support queues need SLA columns; finance needs amount alignment",
+      "Audit views need an immutable timestamp column"
+    ],
+    "inputs": [
+      "Decision columns",
+      "Sort/filter/pagination state",
+      "Row action set",
+      "Reflow threshold"
+    ],
+    "anatomy": [
+      "Toolbar with filters",
+      "Header row with sort controls",
+      "Body rows",
+      "Row actions",
+      "Pagination controls"
+    ],
+    "styling": [
+      "Numeric columns right-aligned with tabular numerals",
+      "Row density chosen once per product",
+      "Selection state distinct from hover"
+    ],
+    "a11y": [
+      "Real table semantics with scope on headers",
+      "Sort announced with the new order",
+      "Row activation reachable by keyboard",
+      "Selection count announced"
+    ],
+    "responsive": [
+      "Table-to-card reflow below the threshold",
+      "No horizontal scrolling for row data",
+      "Card keeps the same field order as columns"
+    ],
+    "copy": [
+      "Empty-with-filters wording differs from empty-without-records",
+      "Errors name the failed operation",
+      "Column headers are nouns, not internal field names"
+    ],
+    "alternatives": [
+      "A list view is legitimate for five or fewer columns",
+      "Infinite scroll is not an alternative to pagination for operational work"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 AA success criteria 1.4.3, 2.1.1, 2.4.7, 4.1.3",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WAI-ARIA Authoring Practices Guide, patterns index",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "Project convention: two distinct empties and URL-carried state (T0407)",
+        "date": "2026-11-14",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "Sort and filter survive a reload",
+      "Failed page keeps rows and offers retry",
+      "Table-to-card preserves field order"
+    ],
+    "failureCases": [
+      "Skeleton replacing rows and losing position",
+      "Silent stale result applied",
+      "Horizontal scrolling at 390px"
+    ]
+  }
 }

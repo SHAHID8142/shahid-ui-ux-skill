@@ -52,6 +52,55 @@ export const Playbook = z
       )
       .min(1),
     rules: z.array(PlaybookRule).min(1),
+    /**
+     * T0405b: the PRD §6 twelve-part structure, made checkable. Parts 5 (variants
+     * vs states) and 6 (motion + reduced alternative) are satisfied by
+     * `stateMachine`; the rest are recorded here so a playbook cannot be "done"
+     * while silently omitting accessibility, responsive behaviour or failure cases.
+     */
+    sections: z
+      .object({
+        /** 1. Intent and use cases, including niche differences. */
+        intent: z.string().min(20),
+        useCases: z.array(z.string().min(8)).min(1),
+        nicheDifferences: z.array(z.string().min(8)).default([]),
+        /** 2. Inputs the author must have before deciding. */
+        inputs: z.array(z.string().min(4)).min(2),
+        /** 3. Anatomy and semantics. */
+        anatomy: z.array(z.string().min(4)).min(1),
+        /** 4. Visual styling decisions (roles, not values). */
+        styling: z.array(z.string().min(8)).min(1),
+        /** 7. Accessibility and keyboard/touch behaviour. */
+        a11y: z.array(z.string().min(8)).min(1),
+        /** 8. Responsive adaptations and data edge cases. */
+        responsive: z.array(z.string().min(8)).min(1),
+        /** 9. Copy/content and SEO where applicable; empty array when N/A is a decision. */
+        copy: z.array(z.string().min(8)),
+        /** 10. Legitimate alternatives, anti-patterns and contraindications. */
+        alternatives: z.array(z.string().min(8)).min(1),
+        /** 11. Research references with dates and evidence grades. */
+        references: z
+          .array(
+            z
+              .object({
+                label: z.string().min(4),
+                date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'reference date: YYYY-MM-DD'),
+                grade: z.enum([
+                  'normative-standard',
+                  'research',
+                  'professional-article',
+                  'convention',
+                ]),
+              })
+              .strict(),
+          )
+          .min(1),
+        /** 12. Acceptance tests and the failure cases they cover. */
+        acceptance: z.array(z.string().min(8)).min(1),
+        failureCases: z.array(z.string().min(8)).min(1),
+      })
+      .strict(),
+
     /** Variant-vs-state machine (T0600) when the component has states. */
     stateMachine: ComponentStateMachine.optional(),
     /**

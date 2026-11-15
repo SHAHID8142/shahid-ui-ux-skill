@@ -93,5 +93,71 @@
       "enabled": ["default", "hover", "focus-visible"],
       "refused": []
     }
-  ]
+  ],
+  "sections": {
+    "intent": "Answer the questions the page did not: who made this, how to reach them, what the terms are.",
+    "useCases": [
+      "Site-wide legal and contact routes",
+      "Sitemap completeness",
+      "Locale or theme switch"
+    ],
+    "nicheDifferences": [
+      "Commerce needs policy links and business identity",
+      "Docs need version and edit links",
+      "Portfolio needs contact and availability"
+    ],
+    "inputs": ["Required legal links for the jurisdiction", "Grouping taxonomy", "Locale options"],
+    "anatomy": [
+      "contentinfo landmark",
+      "Grouped link lists with headings",
+      "Legal line",
+      "Locale/theme controls"
+    ],
+    "styling": [
+      "Secondary weight, not faint grey that fails contrast",
+      "Groups separated by spacing rather than boxes",
+      "Legal line readable at 12px equivalent minimum"
+    ],
+    "a11y": [
+      "contentinfo landmark with headings",
+      "Link text self-describing out of context",
+      "Controls reachable by keyboard in DOM order"
+    ],
+    "responsive": [
+      "Groups stack without reordering",
+      "No collapsed footer that hides legal links",
+      "Tap targets 44x44"
+    ],
+    "copy": ["Legal entity name and contact route present", "No link labelled Read more"],
+    "alternatives": [
+      "A minimal footer is legitimate when the product has no accounts",
+      "Removing legal links is never a legitimate alternative"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 AA success criteria 1.4.3, 2.1.1, 2.4.7, 4.1.3",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "HTML Living Standard: interactive content and labelling",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "Project convention: group by the question answered (T0405)",
+        "date": "2026-11-14",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "Every footer link is unique and descriptive",
+      "Legal block present before launch"
+    ],
+    "failureCases": [
+      "Contrast-failing grey links",
+      "Forty-link flat list",
+      "Footer missing the contact route"
+    ]
+  }
 }

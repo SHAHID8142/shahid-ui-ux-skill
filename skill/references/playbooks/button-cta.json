@@ -227,5 +227,82 @@
         }
       ]
     }
-  ]
+  ],
+  "sections": {
+    "intent": "Let the user commit to one action with immediate, unambiguous feedback about what happened.",
+    "useCases": [
+      "Form submission",
+      "Add to cart",
+      "Dialog confirmation",
+      "Destructive confirmation"
+    ],
+    "nicheDifferences": [
+      "Operate consoles tolerate compact buttons; marketing pages need a larger single action",
+      "Commerce buttons must state the amount when it is the commitment"
+    ],
+    "inputs": [
+      "Intent of the action",
+      "Whether it writes to a server",
+      "The asynchronous duration",
+      "Result vocabulary"
+    ],
+    "anatomy": [
+      "Button element with a stable label width",
+      "Optional leading icon",
+      "Loading label",
+      "Success/error state text"
+    ],
+    "styling": [
+      "Variant maps to intent, not to colour preference",
+      "Disabled state is visibly distinct and explained",
+      "Focus ring never overlaps the label"
+    ],
+    "a11y": [
+      "Real button element for actions, link for navigation",
+      "Loading state announced through the label change",
+      "Error text associated with the control",
+      "Keyboard and touch both produce the same result"
+    ],
+    "responsive": [
+      "Minimum 44x44 touch target",
+      "Label wraps rather than truncates at 320px",
+      "Full-width only where the layout calls for it"
+    ],
+    "copy": [
+      "Label is a verb in the user's terms",
+      "Loading label keeps the same verb form",
+      "Error names the failure and the retry"
+    ],
+    "alternatives": [
+      "A link styled as a button is legitimate for navigation",
+      "A spinner-only state is not an alternative; it hides the label"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 AA success criteria 1.4.3, 2.1.1, 2.4.7, 4.1.3",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "HTML Living Standard: interactive content and labelling",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "Project convention: three click-duplication guards (T0602)",
+        "date": "2026-11-14",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "Double activation issues one request",
+      "Label width unchanged between states",
+      "State change announced"
+    ],
+    "failureCases": [
+      "Double submit creating two records",
+      "Disabled with no explanation",
+      "Success shown for an unconfirmed request"
+    ]
+  }
 }

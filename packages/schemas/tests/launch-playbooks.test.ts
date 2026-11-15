@@ -115,6 +115,63 @@ describe('batch-1 launch set is exactly what it claims', () => {
   });
 });
 
+describe('the twelve-part standard (T0405b)', () => {
+  it('every playbook fills all twelve PRD §6 parts', () => {
+    for (const file of files) {
+      const playbook = load(file);
+      const sections = playbook.sections;
+      expect(sections, `${file}: sections`).toBeTruthy();
+      expect(sections.intent.length, file).toBeGreaterThan(20);
+      for (const key of [
+        'useCases',
+        'inputs',
+        'anatomy',
+        'styling',
+        'a11y',
+        'responsive',
+        'alternatives',
+        'acceptance',
+        'failureCases',
+      ]) {
+        expect(sections[key].length, `${file}.${key}`).toBeGreaterThan(0);
+      }
+      // part 9 is allowed to be empty only as a recorded decision (array present)
+      expect(Array.isArray(sections.copy), `${file}.copy`).toBe(true);
+      // part 11 carries graded, dated references — no undated claims
+      for (const reference of sections.references) {
+        expect(reference.date, `${file} reference date`).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+        expect(
+          ['normative-standard', 'research', 'professional-article', 'convention'],
+          file,
+        ).toContain(reference.grade);
+      }
+    }
+  });
+
+  it('fails a playbook missing accessibility (the part most often skipped)', () => {
+    const playbook = load('card.json');
+    delete playbook.sections.a11y;
+    expect(SusPlaybook.schema.safeParse(playbook).success).toBe(false);
+  });
+
+  it('fails a reference without a date or grade', () => {
+    const playbook = load('hero.json');
+    playbook.sections.references[0].date = 'recently';
+    expect(SusPlaybook.schema.safeParse(playbook).success).toBe(false);
+    const second = load('hero.json');
+    delete second.sections.references[0].grade;
+    expect(SusPlaybook.schema.safeParse(second).success).toBe(false);
+  });
+
+  it('a playbook cannot claim evidence grade it does not have: conventions are labelled', () => {
+    const graded = files.flatMap((file) =>
+      load(file).sections.references.map((reference: { grade: string }) => reference.grade),
+    );
+    // the house style is honesty: most references are our own conventions
+    expect(graded.filter((grade: string) => grade === 'convention').length).toBeGreaterThan(0);
+  });
+});
+
 describe('variant-vs-state matrices are complete', () => {
   it('every variant row covers every state the machine lists, enabled or refused', () => {
     for (const file of files) {

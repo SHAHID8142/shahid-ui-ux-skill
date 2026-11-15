@@ -136,5 +136,76 @@
       "enabled": ["default", "focus-visible", "loading", "success", "error"],
       "refused": []
     }
-  ]
+  ],
+  "sections": {
+    "intent": "Interrupt the page only when the underlying task cannot proceed without an answer.",
+    "useCases": [
+      "Destructive confirmation",
+      "Focused data entry",
+      "Detail preview that must not lose context"
+    ],
+    "nicheDifferences": [
+      "Operate dialogs often need record context behind them",
+      "Commerce dialogs must show the amount being committed"
+    ],
+    "inputs": [
+      "Whether blocking is required",
+      "Trigger element",
+      "Dismissal policy",
+      "Result vocabulary"
+    ],
+    "anatomy": ["Dialog container with role", "Heading", "Body", "Actions", "Close control"],
+    "styling": [
+      "Elevation and backdrop separate the dialog from the page",
+      "Destructive action visually distinct from cancel",
+      "Maximum height with internal scroll rather than page scroll"
+    ],
+    "a11y": [
+      "Initial focus inside the dialog",
+      "Focus trapped while open",
+      "Escape dismisses",
+      "Focus returns to the trigger"
+    ],
+    "responsive": [
+      "Full-height sheet on narrow viewports",
+      "Actions remain reachable without covering fields",
+      "Backdrop scroll lock without layout shift"
+    ],
+    "copy": [
+      "Heading names the decision",
+      "Confirm label repeats the action verb",
+      "Refusal consequences stated"
+    ],
+    "alternatives": [
+      "An inline disclosure is preferable for non-blocking content",
+      "A drawer is legitimate for contextual forms"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 AA success criteria 1.4.3, 2.1.1, 2.4.7, 4.1.3",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WAI-ARIA Authoring Practices Guide, patterns index",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "Project convention: focus contract with a recorded trigger (T0405)",
+        "date": "2026-11-14",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "Focus never escapes the open dialog",
+      "Trigger receives focus on close",
+      "Escape always dismisses"
+    ],
+    "failureCases": [
+      "Focus lost to body on close",
+      "Backdrop click dismissing a destructive confirmation",
+      "Background scroll while dialog is open"
+    ]
+  }
 }

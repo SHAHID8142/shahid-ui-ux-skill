@@ -139,5 +139,81 @@
       "enabled": ["default", "hover", "focus-visible", "active", "disabled"],
       "refused": []
     }
-  ]
+  ],
+  "sections": {
+    "intent": "Let a visitor reach any primary destination in one action while keeping the current location obvious.",
+    "useCases": [
+      "Top-level site navigation",
+      "Application section switching",
+      "Docs sidebar replacement on narrow viewports"
+    ],
+    "nicheDifferences": [
+      "Documentation sites need a sidebar equivalent, not a marketing bar",
+      "Admin consoles need an account/tenant switcher inside the bar"
+    ],
+    "inputs": [
+      "Destination list with priority",
+      "Primary action",
+      "Breakpoint widths in the design system",
+      "Whether the page scrolls under the bar"
+    ],
+    "anatomy": [
+      "Landmark nav element",
+      "Brand link",
+      "Primary destinations",
+      "Overflow trigger",
+      "Primary action",
+      "Current-location indicator"
+    ],
+    "styling": [
+      "One dominant action only; everything else recedes",
+      "Current destination marked by weight or rule, not hue alone",
+      "Height stays constant between states to avoid shift"
+    ],
+    "a11y": [
+      "Skip link precedes the bar",
+      "Overflow menu is keyboard operable with Escape returning focus",
+      "Current page uses aria-current",
+      "Targets at least 44x44 on touch"
+    ],
+    "responsive": [
+      "Collapse at the width labels truncate, not earlier",
+      "Collapsed bar keeps the primary action visible",
+      "No horizontal scrolling at 320px"
+    ],
+    "copy": [
+      "Destination labels are nouns the user recognises, not internal codenames",
+      "Overflow trigger reads Menu, not More stuff"
+    ],
+    "alternatives": [
+      "A sidebar is preferable when destinations exceed seven",
+      "A tab bar suits three or fewer peers with equal weight"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 AA success criteria 1.4.3, 2.1.1, 2.4.7, 4.1.3",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WAI-ARIA Authoring Practices Guide, patterns index",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "Project convention: collapse on label truncation (T0405)",
+        "date": "2026-11-14",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "Every destination reachable by keyboard in two actions or fewer",
+      "Current page identifiable with CSS disabled"
+    ],
+    "failureCases": [
+      "Focus lost when the overflow menu closes",
+      "Bar height changes on scroll and shifts content",
+      "Colour-only current indication"
+    ]
+  }
 }

@@ -222,5 +222,69 @@
       ],
       "refused": []
     }
-  ]
+  ],
+  "sections": {
+    "intent": "Support one decision: buy this configuration, with price, availability and result all telling the same story.",
+    "useCases": ["Single product purchase", "Configuration selection", "Preorder"],
+    "nicheDifferences": [
+      "Apparel needs size and fit guidance; electronics need compatibility",
+      "Digital goods need licence terms rather than shipping"
+    ],
+    "inputs": ["Variant matrix", "Price per variant", "Availability feed", "Delivery statements"],
+    "anatomy": [
+      "Media gallery",
+      "Product title",
+      "Price block",
+      "Variant selectors",
+      "Buy control",
+      "Availability line",
+      "Detail sections"
+    ],
+    "styling": [
+      "Buy control is the single dominant action",
+      "Price changes announced rather than animated",
+      "Gallery does not push the buy control below the fold at 390px"
+    ],
+    "a11y": [
+      "Variant selectors grouped with labels",
+      "Price change announced in a live region",
+      "Gallery keyboard operable",
+      "Buy control reachable before detail sections"
+    ],
+    "responsive": [
+      "Buy control reachable within one scroll at 390px",
+      "Sticky buy bar does not overlap content",
+      "Gallery uses native aspect ratios"
+    ],
+    "copy": [
+      "Availability as observed fact",
+      "Delivery estimate with its basis",
+      "No countdown without a real reservation"
+    ],
+    "alternatives": [
+      "A quick-view dialog is legitimate from a grid",
+      "Hiding price behind a quote form is a decision that must be stated"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 AA success criteria 1.4.3, 2.1.1, 2.4.7, 4.1.3",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "Project convention: variant truth (price, availability, image together) (T0405c)",
+        "date": "2026-11-14",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "Variant change updates price, availability and image together",
+      "Add to cart confirms inline with a cart route"
+    ],
+    "failureCases": [
+      "Stale price after variant change",
+      "Sold-out variant still purchasable",
+      "Two add-to-cart requests from one press"
+    ]
+  }
 }

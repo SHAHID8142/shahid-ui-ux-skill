@@ -126,5 +126,71 @@
         }
       ]
     }
-  ]
+  ],
+  "sections": {
+    "intent": "Confirm or warn about something transient without taking over the screen.",
+    "useCases": ["Save confirmation", "Background job finished", "Recoverable warning"],
+    "nicheDifferences": [
+      "Operate toasts must not obscure a control mid-task",
+      "Commerce confirmations need a route to the cart"
+    ],
+    "inputs": [
+      "Urgency",
+      "Whether the message needs action",
+      "Placement safe zone",
+      "Duration policy"
+    ],
+    "anatomy": ["Live region container", "Message", "Optional action", "Dismiss control"],
+    "styling": [
+      "Stack limit of three",
+      "Positioning avoids the primary action",
+      "Error toasts persist until dismissed"
+    ],
+    "a11y": [
+      "Polite live region for confirmations, assertive for errors",
+      "Never steals focus",
+      "Dismissible by keyboard",
+      "Pause on hover and focus"
+    ],
+    "responsive": [
+      "Full width at 390px with safe-area insets",
+      "Never covers a focused control",
+      "Stacked items remain distinguishable"
+    ],
+    "copy": [
+      "States the outcome, not the mechanism",
+      "Action label is a verb",
+      "No error toast without a retry path"
+    ],
+    "alternatives": [
+      "Inline status beneath the control is preferable when context matters",
+      "A dialog is required when the user must decide"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 AA success criteria 1.4.3, 2.1.1, 2.4.7, 4.1.3",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WAI-ARIA Authoring Practices Guide, patterns index",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "Project convention: errors never auto-dismiss (T0405)",
+        "date": "2026-11-14",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "Announcement happens without focus change",
+      "Error toast persists until dismissed"
+    ],
+    "failureCases": [
+      "Toast covering the submit button",
+      "Confirmation disappearing before it is read",
+      "Focus stolen by the notification"
+    ]
+  }
 }
