@@ -172,9 +172,16 @@ describe('admin fixture — invoice list states (issue #10)', () => {
     try {
       await page.focus('#invoice-sort');
       await page.selectOption('#invoice-sort', 'amount');
-      await page.waitForFunction(() =>
-        /page 1 of 3/.test(document.querySelector('#invoice-status-line')?.textContent ?? ''),
-      );
+      // Wait for the sort to have been applied, not for a sentence that the
+      // previous load already produced: on a slower runner the status line is
+      // still saying "Loading invoices…" when a text-only wait would return.
+      await page.waitForFunction(() => {
+        const line = document.querySelector('#invoice-status-line')?.textContent ?? '';
+        const firstAmount = document.querySelector(
+          '#invoice-list tbody tr td:nth-child(3)',
+        )?.textContent;
+        return !/Loading/.test(line) && firstAmount === '$2,140.00';
+      });
       const live = page.locator('#invoice-status-line');
       expect(await live.getAttribute('role')).toBe('status');
       expect(await live.getAttribute('aria-live')).toBe('polite');
@@ -308,6 +315,13 @@ describe('admin fixture — invoice list states (issue #10)', () => {
         () => document.querySelectorAll('#invoice-list tbody tr').length === 1,
       );
       const facts = await page.evaluate(() => {
+        // A wider font stack than the platform default, because the CI runner's
+        // fonts are wider than a Mac's: the same 200% text that fits locally
+        // pushed the document 8px past a 320px viewport there, from one heading
+        // whose single longest word could not wrap.
+        const fontStyle = document.createElement('style');
+        fontStyle.textContent = "* { font-family: Verdana, 'DejaVu Sans', sans-serif !important }";
+        document.head.append(fontStyle);
         const translated: Record<string, string> = {
           Invoice: 'Rechnungsnummer',
           Client: 'Kundenname',

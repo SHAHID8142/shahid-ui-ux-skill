@@ -28,6 +28,12 @@ body {
   margin: 0;
   font-family: system-ui, sans-serif;
   line-height: 1.5;
+
+  /* A single word can be wider than a 320px line at 200% text size — "Workspace"
+     at 48px measured 296px against a 256px box and pushed the document 8px past
+     the viewport. `break-word` lets it wrap instead (unlike `anywhere`, it does
+     not shrink min-content, so table columns still size sensibly). */
+  overflow-wrap: break-word;
   color: var(--fg);
   background: var(--bg);
 }
@@ -300,10 +306,21 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+#settings-form input,
+#settings-form select,
+#settings-form button {
+  font: inherit;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
 #settings-form form {
   display: grid;
   gap: 0.5rem;
-  max-width: 24rem;
+
+  /* `min(24rem, 100%)`: at 200% text a flat 24rem is 768px, and the text input's
+     intrinsic width pushed the document 8px wider than a 320px screen. */
+  max-width: min(24rem, 100%);
   background: var(--panel);
   border: 1px solid var(--line);
   padding: 1rem;
