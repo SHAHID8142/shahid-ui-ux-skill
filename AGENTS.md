@@ -1,5 +1,6 @@
 # SUS agent entry
 
+On a fresh clone or a new machine, start with `docs/RESUME_ON_NEW_MACHINE.md`.
 On `continue`, read `docs/AGENT_CONTINUE_PROTOCOL.md`, `HANDOFF.md`,
 `.sus-dev/STATE.md`, `TASKS.json`, `docs/OWNER_DECISIONS_LOG.md`, and
 `docs/EFFECTIVE_REQUIREMENTS.json`. Inspect Git status, branch, HEAD, recent commits,

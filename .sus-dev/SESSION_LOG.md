@@ -664,3 +664,10 @@
   triaged (#12 closed, #10 scoped and left open, #9 open by design). Handoff written honestly,
   including the D34 public-repository supersession and the six gates still reported not-run.
   BUILD_COMPLETE_PUSHED=true. Receipt: VERIFICATION/T1006.md. Next: stop — T1003/T1005 are owner-only.
+
+- 2026-11-15T17:35:00+06:00 | Pi (FreePi) | machine handoff | Owner is switching computers.
+  Wrote docs/RESUME_ON_NEW_MACHINE.md (state locations, first-run commands including
+  `pnpm hooks:install` and `pnpm exec playwright install chromium`, the git-ignored artefacts that
+  must be regenerated rather than restored, current position 98/100 with T1003/T1005 owner-only, and
+  an environment-difference table). Pointed HANDOFF.md, AGENTS.md, README.md and STATE.md at it and
+  left a bus message for zcode. No open leases; nothing was held outside the repository.

@@ -10,6 +10,12 @@ are permitted (D30); the repository is PUBLIC (D34, supersedes D30's visibility
 clause) but the product is NOT published and no `main` merge happens unfinished.
 
 Task status is exclusively TASKS.json; do not infer completion from older reports.
+
+> **Moving to another machine?** Nothing is held locally: clone, `git switch
+> chore/continuation-reconciliation`, then follow `docs/RESUME_ON_NEW_MACHINE.md`.
+> Build complete at 98/100 tasks; T1003 (independent audit) and T1005 (release approval)
+> are owner-only, and nothing further is authorized until they happen.
+
 Latest checkpoint, current task and exact next command are in .sus-dev/STATE.md.
 Unpushed commits are recoverable only in this workspace or a full transfer including
 .git; a different machine cannot fetch dev-branch checkpoints unless they were pushed.

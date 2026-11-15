@@ -1,0 +1,81 @@
+# Resuming on a different machine
+
+Everything needed to continue lives in this repository. There is no machine-local state,
+no agent memory and no uncommitted work to carry across: if the clone is on the branch below
+and `pnpm verify` passes, you are exactly where the build left off.
+
+## 1. What state exists, and where
+
+| Question | Answer lives in |
+| --- | --- |
+| What is done, what is next | `TASKS.json` — the **only** authority on task status |
+| Why it was built this way | `docs/OWNER_DECISIONS_LOG.md`, `docs/adr/` |
+| What was verified, at which revision | `docs/BUILD_COMPLETION_HANDOFF.md`, `.sus-dev/VERIFICATION/*.md` |
+| Where we stopped | `.sus-dev/STATE.md` (resumption view; `SUS agent entry` in `AGENTS.md` explains the order) |
+| Peer-agent messages | `.sus-dev/INBOX.md`, bus: `node scripts/coord/coordination.mjs inbox --as <agent>` |
+| How to continue at all | `docs/AGENT_CONTINUE_PROTOCOL.md` (canonical procedure) |
+| Narrated history | `.sus-dev/SESSION_LOG.md` |
+
+## 2. First run on the new machine
+
+```bash
+git clone https://github.com/SHAHID8142/shahid-ui-ux-skill.git
+cd shahid-ui-ux-skill
+git switch chore/continuation-reconciliation      # the build branch
+pnpm install --frozen-lockfile
+pnpm hooks:install                                 # REQUIRED: installs .githooks/pre-push (the push gate)
+pnpm exec playwright install chromium              # REQUIRED for pnpm demo:loop, dogfood, regression
+pnpm verify                                        # expect: 64 files, 679 tests, exit 0
+```
+
+`pnpm hooks:install` is not optional. A fresh clone has no `core.hooksPath`, so the push gate
+is silently absent and an unverified push becomes possible — which is exactly the thing the
+gate exists to prevent. `pnpm verify` does not detect the missing hook; check it explicitly:
+
+```bash
+git config --get core.hooksPath   # must print .githooks
+```
+
+## 3. What does **not** travel with the clone
+
+These are git-ignored on purpose (see `docs/LIMITATIONS.md`); regenerate, never restore:
+
+| Path | Regenerate with | Why it is not committed |
+| --- | --- | --- |
+| `evals/evidence/full-loop/<timestamp>/` | `pnpm demo:loop` | one snapshot per run; the durable record is the receipt and the regression report |
+| `evals/evidence/dogfood-private/` | `pnpm dogfood` | may contain personal data; stays private until consent/licensing/PII checks |
+| `evals/benchmarks/results/` (measurements) | `pnpm benchmark` | machine-dependent numbers; the *status* file the claim gate reads is committed |
+| `evals/baselines/*/bundle.json` | rewritten by `pnpm verify` | churned by Lighthouse; the gate restores them, and commits must use `git add -A ':!evals/baselines'` |
+
+`evals/reports/regression-latest.md` and the per-revision JSON **are** committed, so the last
+verified revision is visible without re-running anything.
+
+## 4. Where the work actually stands
+
+- **98 of 100 tasks done.** The two remaining are owner actions, not build work:
+  **T1003** (independent audit) and **T1005** (release approval).
+- **T1006 (final verified checkpoint) is complete and pushed.** The verified code revision is
+  recorded in `docs/BUILD_COMPLETION_HANDOFF.md` §2, with the checkpoint history in §6.
+- **Nothing is published.** The repository is public (D34); the product is not released.
+- **Do not start new build work** unless the owner authorizes it: the current instruction set
+  ends at "stop before T1003".
+
+## 5. If the new machine behaves differently
+
+Almost every difference is environmental, and each has a named cause:
+
+| Symptom | Cause | Fix |
+| --- | --- | --- |
+| `pnpm demo:loop` / `dogfood` fail with "browser not found" | Chromium is installed per machine | `pnpm exec playwright install chromium` |
+| `pnpm verify` fails on `format:check` after your own edits | Prettier reformats on write | `npx prettier --write <files>` |
+| Push refused with `RESUME REQUIRES TASK-RECOVERY REVIEW` | dirty working tree (expected mid-task) | commit or revert the intended change |
+| Push refused with "next-step task IDs are not already done" | `.sus-dev/STATE.md` names a finished task | update the `Next exact steps:` line |
+| Regression is slower than 132 s | cold machine / cold CI runner | expected; timings in the handoff are warm numbers |
+| `pnpm support` reports drift | support matrix is hash-checked against the current artefact | `pnpm support:write`, then verify |
+
+## 6. Continuity rule for the next agent
+
+Read in this order and trust the earlier entries more than the later ones: the owner's current
+instruction, `docs/OWNER_DECISIONS_LOG.md`, `docs/EFFECTIVE_REQUIREMENTS.json`, the baseline PRD,
+ADRs, `TASKS.json`, `.sus-dev/STATE.md`, then `HANDOFF.md` and historical reports. Actual files
+outrank every summary, including this one.

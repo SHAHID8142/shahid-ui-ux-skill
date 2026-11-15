@@ -1,6 +1,6 @@
 # Development state
 
-Updated: 2026-11-14T19:10:00+06:00 (Asia/Dhaka). Host: Pi (FreePi) taking the
+Updated: 2026-11-15T17:30:00+06:00 (Asia/Dhaka). Moving machines: resume with docs/RESUME_ON_NEW_MACHINE.md (install, branch, hooks:install, playwright chromium, verify). Host: Pi (FreePi) taking the
 main-integration role because the ZCode peer heartbeat is stale (>40 min). A second agent/host (pi, FreePi)
 cooperates per D33: claim tasks via TASKS.json leases; read `.sus-dev/INBOX.md`.
 

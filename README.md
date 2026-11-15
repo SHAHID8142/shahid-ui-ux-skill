@@ -27,6 +27,7 @@ with evidence and stay a learner, not a believer in its training data.
   permitted**, enforced by `pnpm claims`), no product publication, and no independent audit.
 - **Task status lives in one place:** `TASKS.json`. This file does not track progress.
 
+Resuming on another machine: [`docs/RESUME_ON_NEW_MACHINE.md`](docs/RESUME_ON_NEW_MACHINE.md).
 Read [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md) before trusting anything here, and
 [`docs/MAINTENANCE.md`](docs/MAINTENANCE.md) for the owner, review calendar, upgrade window
 and security-reporting route.
