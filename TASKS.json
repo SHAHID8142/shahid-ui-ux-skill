@@ -1177,9 +1177,22 @@
       ],
       "risk": "licensing mistakes",
       "rollback": "licensing field mandatory",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0408.md",
+        "skill/references/art-direction.md",
+        "packages/schemas/src/direction.ts"
+      ],
+      "results": [
+        "imagery is a required field of the direction record: strategy, rationale, per-asset licence, focal points, budgets and a fallback",
+        "licensing is checkable, not a boolean: name, proofRef, attribution text when required, expiry with a renewal owner, provider for stock and generated assets",
+        "weight budgets check the sum against a surface ceiling, because per-asset budgets that each pass can still ship a 4 MB page; zero bytes is valid only for css-only assets",
+        "a hero focal point at exact centre fails as unchosen; duplicate asset ids fail because they double-count the budget",
+        "15 new tests mutation-checked (disabling the attribution rule fails one); full verify exit 0, 601 tests"
+      ]
     },
     {
       "id": "T0409",

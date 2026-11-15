@@ -43,6 +43,8 @@ Load only what the task needs (keeps context small):
   agent's own defaults, the user's brief, and project conventions.
 - `references/surfaces.md` — per-surface-mode guidance (M4 playbooks land
   there as they are built; the file names what exists so far, honestly).
+- `references/art-direction.md` — the imagery plan every direction record must
+  carry: asset strategy, licensing record, focal points, weight budgets.
 - `scripts/` — deterministic checks (scanner, validators) run via the SUS
   CLI, not by prompt instructions.
 

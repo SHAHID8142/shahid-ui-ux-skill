@@ -118,3 +118,139 @@ describe('the record has to argue', () => {
     expect(result.violations.every((v) => v.code.startsWith('schema:'))).toBe(true);
   });
 });
+
+describe('imagery plan is part of the direction record (T0408)', () => {
+  const withImagery = () => {
+    const record = clone();
+    record.imagery = {
+      strategy: 'photography-led',
+      rationale:
+        'a single real photograph of a working desk at dusk carries the claim better than three flat illustrations',
+      assets: [
+        {
+          id: 'asset-hero',
+          role: 'hero',
+          source: 'commissioned',
+          provider: 'Studio Barents CB-114',
+          licence: {
+            name: 'Commission, full commercial rights',
+            permitsCommercial: true,
+            requiresAttribution: false,
+            expiresAt: null,
+            proofRef: 'contracts/CB-114.pdf#page=2',
+          },
+          focalPoint: { x: 0.42, y: 0.36 },
+          budgetBytes: 180000,
+        },
+        {
+          id: 'asset-fade',
+          role: 'texture',
+          source: 'css-only',
+          licence: {
+            name: 'Authored in CSS (no third-party rights)',
+            permitsCommercial: true,
+            requiresAttribution: false,
+            expiresAt: null,
+            proofRef: 'skill/references/art-direction.md#textures',
+          },
+          focalPoint: { x: 0.5, y: 0.9 },
+          budgetBytes: 0,
+        },
+      ],
+      totalBudgetBytes: 400000,
+      fallback: 'type-only fallback: the hero becomes the week row, 0 bytes',
+    };
+    return record;
+  };
+
+  it('accepts a plan with licences, focal points and budgets', () => {
+    expect(checkDerivation(withImagery()).ok).toBe(true);
+  });
+
+  it('rejects an asset whose licence forbids commercial use', () => {
+    const record = withImagery();
+    // @ts-expect-error deliberately invalid: the literal type guards this
+    record.imagery.assets[0].licence.permitsCommercial = false;
+    expect(checkDerivation(record).ok).toBe(false);
+  });
+
+  it('rejects a licence record with no proof reference', () => {
+    const record = withImagery();
+    delete record.imagery.assets[0].licence.proofRef;
+    const codes = checkDerivation(record).violations.map((v) => v.code);
+    expect(codes.some((code) => code.includes('proofRef'))).toBe(true);
+  });
+
+  it('fails a stock or generated asset with no recorded provider', () => {
+    const record = withImagery();
+    record.imagery.assets[0].source = 'stock';
+    delete record.imagery.assets[0].provider;
+    expect(checkDerivation(record).violations.map((v) => v.code)).toContain('provider-unrecorded');
+  });
+
+  it('fails required attribution with no attribution text', () => {
+    const record = withImagery();
+    record.imagery.assets[0].licence.requiresAttribution = true;
+    expect(checkDerivation(record).violations.map((v) => v.code)).toContain(
+      'attribution-text-missing',
+    );
+  });
+
+  it('fails an expiring licence with no renewal owner', () => {
+    const record = withImagery();
+    record.imagery.assets[0].licence.expiresAt = '2027-01-01';
+    expect(checkDerivation(record).violations.map((v) => v.code)).toContain('expiry-without-owner');
+  });
+
+  it('fails a type-only strategy that ships assets', () => {
+    const record = withImagery();
+    record.imagery.strategy = 'type-only';
+    expect(checkDerivation(record).violations.map((v) => v.code)).toContain(
+      'type-only-with-assets',
+    );
+  });
+
+  it('fails a strategy that names no assets', () => {
+    const record = withImagery();
+    record.imagery.assets = [];
+    expect(checkDerivation(record).violations.map((v) => v.code)).toContain(
+      'strategy-without-assets',
+    );
+  });
+
+  it('fails a weight budget the assets overrun in total', () => {
+    const record = withImagery();
+    record.imagery.totalBudgetBytes = 100000;
+    const codes = checkDerivation(record).violations.map((v) => v.code);
+    expect(codes).toContain('weight-budget-exceeded');
+    expect(codes).toContain('asset-exceeds-total-budget');
+  });
+
+  it('fails an unchosen hero focal point (exact centre)', () => {
+    const record = withImagery();
+    record.imagery.assets[0].focalPoint = { x: 0.5, y: 0.5 };
+    expect(checkDerivation(record).violations.map((v) => v.code)).toContain('focal-point-unchosen');
+  });
+
+  it('fails a zero budget on anything the browser has to download', () => {
+    const record = withImagery();
+    record.imagery.assets[0].budgetBytes = 0;
+    expect(checkDerivation(record).violations.map((v) => v.code)).toContain(
+      'zero-budget-without-css',
+    );
+  });
+
+  it('fails duplicate asset ids that would double-count the budget', () => {
+    const record = withImagery();
+    record.imagery.assets[1].id = record.imagery.assets[0].id;
+    expect(checkDerivation(record).violations.map((v) => v.code)).toContain('duplicate-asset-id');
+  });
+
+  it('requires the imagery plan at all — a direction with none is incomplete', () => {
+    const record = clone();
+    delete record.imagery;
+    const result = checkDerivation(record);
+    expect(result.ok).toBe(false);
+    expect(result.violations.map((v) => v.code)).toContain('schema:imagery');
+  });
+});

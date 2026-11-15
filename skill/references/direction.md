@@ -61,13 +61,42 @@ by `node scripts/check-direction.mjs`:
       { "id": "c3", "reason": "why it lost, in the brief's terms" }
     ]
   },
-  "antiReferences": ["project-level refusal, not a copy of a candidate's"]
+  "antiReferences": ["project-level refusal, not a copy of a candidate's"],
+  "imagery": {
+    "strategy": "photography-led",
+    "rationale": "why this strategy serves this product",
+    "assets": [
+      {
+        "id": "asset-hero",
+        "role": "hero",
+        "source": "commissioned",
+        "provider": "required for stock and generated assets",
+        "licence": {
+          "name": "the licence as it is actually called",
+          "permitsCommercial": true,
+          "requiresAttribution": false,
+          "expiresAt": null,
+          "proofRef": "where the proof lives"
+        },
+        "focalPoint": { "x": 0.42, "y": 0.36 },
+        "budgetBytes": 180000
+      }
+    ],
+    "totalBudgetBytes": 400000,
+    "fallback": "what renders when the asset never arrives"
+  }
 }
 ```
 
 Failure codes, each load-bearing: `unknown-default` (a refusal naming a
 taxonomy id that does not exist), `chosen-refuses-nothing-blocking`,
 `duplicate-thesis`, `unexplained-rejection`, `anti-references-borrowed`.
+
+`imagery` is **required** (T0408): asset strategy, a licensing record per asset,
+focal points and weight budgets — see [art-direction.md](art-direction.md) for the
+rules and their codes. A direction without a checked imagery plan is incomplete,
+because the three failures that actually ship (no licence, crop eats the subject,
+unbudgeted weight) are all decided at this point, not later.
 
 A worked example lives at `evals/directions/fixture-marketing-01.json`; read it
 next to this file, because the example is the specification.

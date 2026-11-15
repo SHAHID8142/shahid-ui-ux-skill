@@ -575,3 +575,11 @@
   main-world binder with state left isolated), the overlay live region failed axe contrast, and
   `page.video().path()` is a Promise so the earlier bundle shipped a 0-byte video. axe runs over
   the whole page, not the section under test. Receipt: VERIFICATION/T0708.md. Next: T0408.
+
+- 2026-11-15T14:40:00+06:00 | Pi (FreePi) | T0408 | Imagery plan is part of the direction record.
+  Licensing is now checkable per asset (name, proofRef, attribution text, expiry + renewal
+  owner, provider for stock/generated) and `permitsCommercial` is a literal true, so a
+  non-commercial asset cannot be described at all. Weight budgets check the SUM against a
+  surface ceiling; zero bytes only for css-only assets; a hero focal point at exact centre fails
+  as unchosen. 15 tests, mutation-checked, full verify 601 tests. Receipt:
+  VERIFICATION/T0408.md. Next: T0905.

@@ -44,6 +44,66 @@ export const DirectionCandidate = z
   })
   .strict();
 
+/**
+ * T0408 — the imagery plan is part of the direction record, not a later
+ * afterthought. The failure this guards is the one that ships: a hero image with
+ * no known licence, no focal point (so the crop eats the subject on mobile) and
+ * no weight budget (so the LCP element is a 1.4 MB JPEG).
+ *
+ * Licensing is mandatory per asset and cannot be a bare boolean: a licence name
+ * plus a proof reference is what makes it checkable later.
+ */
+export const ImageryAsset = z
+  .object({
+    id: z.string().min(2),
+    role: z.enum(['hero', 'section', 'texture', 'illustration', 'icon', 'photograph']),
+    source: z.enum([
+      'commissioned',
+      'stock',
+      'generated',
+      'own-photograph',
+      'css-only',
+      'svg-authored',
+    ]),
+    /** Who/what produced it — required for stock and generated assets. */
+    provider: z.string().min(2).optional(),
+    licence: z
+      .object({
+        name: z.string().min(2),
+        /** The deal-breaker: a licence that forbids commercial use kills the asset. */
+        permitsCommercial: z.literal(true),
+        requiresAttribution: z.boolean(),
+        attributionText: z.string().min(4).optional(),
+        expiresAt: z.string().nullable().optional(),
+        renewalOwner: z.string().min(2).optional(),
+        /** Where the proof lives (contract ref, receipt, licence URL id). */
+        proofRef: z.string().min(4),
+      })
+      .strict(),
+    /** Focal point in normalised frame coordinates, 0..1 from the top-left. */
+    focalPoint: z.object({ x: z.number().min(0).max(1), y: z.number().min(0).max(1) }).strict(),
+    /**
+     * What this asset is allowed to weigh, in bytes. Zero is legitimate only for
+     * an asset that is drawn by the CSS engine and never transferred; any other
+     * zero is an unset field pretending to be a decision.
+     */
+    budgetBytes: z.number().int().min(0),
+  })
+  .strict();
+
+export const ImageryPlan = z
+  .object({
+    strategy: z.enum(['photography-led', 'illustration-led', 'type-only', 'product-ui', 'mixed']),
+    /** Why this strategy serves this product — not "images make it pop". */
+    rationale: z.string().min(20),
+    assets: z.array(ImageryAsset),
+    /** The ceiling for the whole surface, in bytes. */
+    totalBudgetBytes: z.number().int().positive(),
+    /** What renders when an asset fails, is blocked, or never arrives. */
+    fallback: z.string().min(8),
+  })
+  .strict();
+
 export const DirectionDerivation = z
   .object({
     briefId: z.string().min(1),
@@ -62,6 +122,8 @@ export const DirectionDerivation = z
       .strict(),
     /** Project-level anti-references, carried into the playbook. */
     antiReferences: z.array(z.string().min(4)).min(1),
+    /** T0408: asset strategy, licensing, focal points and weight budgets. */
+    imagery: ImageryPlan,
   })
   .strict();
 
@@ -152,6 +214,95 @@ export function checkDerivation(input: unknown): {
       detail:
         'every project anti-reference is copied from a candidate — nothing is refused at project level',
     });
+  }
+
+  const plan = record.imagery;
+
+  // 1. Type-only surfaces may not smuggle assets in, and every other strategy
+  //    that claims imagery needs at least one asset to be credible.
+  if (plan.strategy === 'type-only' && plan.assets.length > 0) {
+    violations.push({
+      code: 'type-only-with-assets',
+      detail: 'the plan claims a type-only strategy but ships assets — one of the two is untrue',
+    });
+  }
+  if (plan.strategy !== 'type-only' && plan.assets.length === 0) {
+    violations.push({
+      code: 'strategy-without-assets',
+      detail: `strategy "${plan.strategy}" names no assets, so it is a wish, not a plan`,
+    });
+  }
+
+  const seen = new Set<string>();
+  let allocated = 0;
+  for (const asset of plan.assets) {
+    if (seen.has(asset.id)) {
+      violations.push({
+        code: 'duplicate-asset-id',
+        detail: `asset id "${asset.id}" appears twice — budgets would double-count`,
+      });
+    }
+    seen.add(asset.id);
+    allocated += asset.budgetBytes;
+
+    // 2. Provenance that a licence record cannot be checked against is theatre.
+    if ((asset.source === 'stock' || asset.source === 'generated') && !asset.provider) {
+      violations.push({
+        code: 'provider-unrecorded',
+        detail: `${asset.id} is ${asset.source} but names no provider — the licence cannot be verified`,
+      });
+    }
+
+    // 3. Attribution that is required but not written is a licence breach.
+    if (asset.licence.requiresAttribution && !asset.licence.attributionText) {
+      violations.push({
+        code: 'attribution-text-missing',
+        detail: `${asset.id} requires attribution but no attribution text is recorded`,
+      });
+    }
+
+    // 4. An expiring licence needs an owner, or it silently lapses.
+    if (asset.licence.expiresAt && !asset.licence.renewalOwner) {
+      violations.push({
+        code: 'expiry-without-owner',
+        detail: `${asset.id} expires on ${asset.licence.expiresAt} but nobody owns the renewal`,
+      });
+    }
+
+    // 5. Only CSS-drawn assets may weigh nothing.
+    if (asset.budgetBytes === 0 && asset.source !== 'css-only') {
+      violations.push({
+        code: 'zero-budget-without-css',
+        detail: `${asset.id} allows 0 bytes but is ${asset.source} — the budget was never set`,
+      });
+    }
+
+    // 6. Per-asset budget can never exceed the surface ceiling.
+    if (asset.budgetBytes > plan.totalBudgetBytes) {
+      violations.push({
+        code: 'asset-exceeds-total-budget',
+        detail: `${asset.id} alone allows ${asset.budgetBytes} bytes, more than the whole surface (${plan.totalBudgetBytes})`,
+      });
+    }
+  }
+
+  // 7. The sum is what actually ships: over-allocating silently is how a page
+  //    ends up 4 MB "because every image was within its own budget".
+  if (allocated > plan.totalBudgetBytes) {
+    violations.push({
+      code: 'weight-budget-exceeded',
+      detail: `assets allow ${allocated} bytes against a ${plan.totalBudgetBytes}-byte ceiling`,
+    });
+  }
+
+  // 8. A focal point at the exact centre means nobody chose it.
+  for (const asset of plan.assets) {
+    if (asset.focalPoint.x === 0.5 && asset.focalPoint.y === 0.5 && asset.role === 'hero') {
+      violations.push({
+        code: 'focal-point-unchosen',
+        detail: `${asset.id} is a hero with a centre focal point — the crop was not decided`,
+      });
+    }
   }
 
   return { ok: violations.length === 0, violations, record };

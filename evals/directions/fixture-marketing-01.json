@@ -47,5 +47,48 @@
   "antiReferences": [
     "no stock illustrations of teams",
     "no claim without a visible mechanism on the same screen"
-  ]
+  ],
+  "imagery": {
+    "strategy": "photography-led",
+    "rationale": "The product sells a quieter week, so a single real photograph of a working desk at dusk carries the claim better than three flat illustrations shape a page.",
+    "assets": [
+      {
+        "id": "asset-hero-desk",
+        "role": "hero",
+        "source": "commissioned",
+        "provider": "Studio Barents (commission ref CB-114)",
+        "licence": {
+          "name": "Commission, full commercial rights",
+          "permitsCommercial": true,
+          "requiresAttribution": false,
+          "expiresAt": null,
+          "proofRef": "contracts/CB-114.pdf#page=2"
+        },
+        "focalPoint": {
+          "x": 0.42,
+          "y": 0.36
+        },
+        "budgetBytes": 180000
+      },
+      {
+        "id": "asset-texture-fade",
+        "role": "texture",
+        "source": "css-only",
+        "licence": {
+          "name": "Authored in CSS (no third-party rights)",
+          "permitsCommercial": true,
+          "requiresAttribution": false,
+          "expiresAt": null,
+          "proofRef": "skill/references/art-direction.md#textures"
+        },
+        "focalPoint": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "budgetBytes": 0
+      }
+    ],
+    "totalBudgetBytes": 400000,
+    "fallback": "Type-only fallback: the hero becomes the week-row component with no image, budget 0 bytes."
+  }
 }
