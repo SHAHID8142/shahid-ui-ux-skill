@@ -649,3 +649,11 @@
   63 for sd 1.0) so n=20 is described as a floor with a 1.0-point minimum claimable effect; claim
   gate returns allowed:false. The baseline arm itself fails a11y on commerce/admin and reflow on
   admin — unflattering and real. 12 tests, verify 668. Receipt: VERIFICATION/T1002.md. Next: T1004.
+
+- 2026-11-15T22:05:00+06:00 | Pi (FreePi) | T1004 | Docs, claim checker, maintenance policy.
+  `pnpm claims` blocks comparative claims while the benchmark gate is closed (read from the
+  benchmark artefact) and absolute claims always, exempting code quotes and negated limitation
+  statements. Shipped docs/LIMITATIONS.md (coverage-matrix statements verbatim plus what this build
+  found) and docs/MAINTENANCE.md (owner, calendar, upgrade window, security route, G13 unwaiable).
+  Rewrote the README's stale "no code written" block. 11 tests, verify 679.
+  Receipt: VERIFICATION/T1004.md. Next: T1006.

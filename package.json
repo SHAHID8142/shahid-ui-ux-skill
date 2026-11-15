@@ -21,7 +21,7 @@
     "skill": "node scripts/validate-skill.mjs",
     "playbooks": "node scripts/validate-playbooks.mjs",
     "knowledge": "node scripts/validate-knowledge.mjs",
-    "verify": "pnpm handoff && pnpm reach && pnpm gates:full && pnpm lint && pnpm format:check && pnpm stylelint && pnpm typecheck && pnpm build && (pnpm directions || test $? -eq 3) && (pnpm motion || test $? -eq 3) && (pnpm parts || test $? -eq 3) && pnpm support && pnpm test",
+    "verify": "pnpm handoff && pnpm reach && pnpm claims && pnpm gates:full && pnpm lint && pnpm format:check && pnpm stylelint && pnpm typecheck && pnpm build && (pnpm directions || test $? -eq 3) && (pnpm motion || test $? -eq 3) && (pnpm parts || test $? -eq 3) && pnpm support && pnpm test",
     "gates:full": "node scripts/check-gates.mjs && node scripts/validate-skill.mjs && node scripts/validate-knowledge.mjs && node scripts/validate-playbooks.mjs || test $? -eq 3",
     "hooks:install": "git config core.hooksPath .githooks && echo \"push gate installed (.githooks/pre-push)\"",
     "gate:push": "node scripts/gate-push.mjs",
@@ -36,7 +36,8 @@
     "dogfood": "pnpm --filter @sus/eval-core dogfood",
     "reach": "node scripts/check-reachability.mjs",
     "regression": "node scripts/regression.mjs",
-    "benchmark": "pnpm --filter @sus/eval-core benchmark"
+    "benchmark": "pnpm --filter @sus/eval-core benchmark",
+    "claims": "node scripts/check-claims.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

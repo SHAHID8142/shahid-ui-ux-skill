@@ -2609,9 +2609,25 @@
       ],
       "risk": "marketing creep",
       "rollback": "claim-checker in CI",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1004.md",
+        "docs/LIMITATIONS.md",
+        "docs/MAINTENANCE.md",
+        "scripts/check-claims.mjs",
+        "scripts/lib/claims.mjs",
+        "README.md"
+      ],
+      "results": [
+        "docs/LIMITATIONS.md ships the coverage matrix §5 limitation statements verbatim plus what this build discovered (no human benchmark arm, three provenance claim ids, dogfood coverage narrow, admin reference failing two checks, warm-machine timing, one stack end-to-end, no supported host row)",
+        "docs/MAINTENANCE.md defines owner (SHAHID8142) and maintainer role, review calendar (commit/checkpoint/monthly/quarterly/release), supported upgrade period (current+previous minor, 90-day security backport, schema bump for contract breaks) and the security reporting route with G13 never waivable",
+        "pnpm claims (docs lint claim-checker) runs inside pnpm verify: comparative claims blocked while the benchmark gate is closed (gate read from the benchmark artefact, not a flag), absolute claims blocked always, code blocks and negated limitation statements exempt",
+        "README rewritten from a stale \"specification only, no code written\" state to what exists, what was verified, what is deliberately not done, pointing at TASKS.json as the only status authority, with the six real commands",
+        "11 claim-checker tests, full verify exit 0 (679 tests)"
+      ]
     },
     {
       "id": "T1005",

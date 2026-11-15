@@ -1,20 +1,46 @@
 > Current builder entry: `AGENTS.md` and `docs/AGENT_CONTINUE_PROTOCOL.md`.
-> D24–D27 supersede older interim-review, batch-approval and continuous-push instructions below.
-> Build authorization remains closed; product end-user approvals remain required.
+> The build gate is open (owner decision D28, `APERIO`). Publication of the product is
+> **not** authorized; release, licensing and the independent audit remain owner decisions.
 
 # SUS — Shahid UI UX Skill
 
-Planning workspace for **SUS**: an agent-agnostic design-intelligence skill + mandatory
-**Live Studio** for building high-quality web UI one approved section at a time.
+**SUS** is an agent-agnostic design-intelligence skill plus a mandatory **Live Studio** for
+building web UI one approved section at a time. It ships rules a coding agent can follow,
+checks that make those rules falsifiable, and receipts that record what was actually run.
 
 **Scope (owner decision D14):** web UI/UX — marketing sites, e-commerce, CRM/dashboards,
 CMS admin panels, portfolios. No native mobile at v1.
 **Epistemic contract (D15–D17):** no templates; the agent must argue non-best-practice requests
 with evidence and stay a learner, not a believer in its training data.
-**Build gate (D19):** planning only until the owner sends `APERIO`.
 
-**Current state:** specification only. No code has been written yet.
-Milestone M0 (discovery + architecture decisions) has three tasks done and two in review.
+## Current state
+
+- **Built:** the portable skill (`skill/`), 36 component playbooks at a 12-part standard, the
+  schema contracts (`sus.playbook`, `sus.direction-derivation`, `sus.state-machine`), the
+  evaluation harness (gate evaluators, motion oracles, evidence bundles), the Live Studio
+  vertical slice (overlay, spatial intent, dry-run diff, approval-gated apply, undo,
+  verification loop), host adapters with a generated support matrix, and a three-site
+  dogfood audit.
+- **Verified:** `pnpm verify` (release suite), `pnpm regression` (adds the end-to-end demo and
+  the dogfood audit), `pnpm benchmark` (deterministic benchmark arm).
+- **Not done, deliberately:** no human benchmark run (so **no comparative claim is
+  permitted**, enforced by `pnpm claims`), no product publication, and no independent audit.
+- **Task status lives in one place:** `TASKS.json`. This file does not track progress.
+
+Read [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md) before trusting anything here, and
+[`docs/MAINTENANCE.md`](docs/MAINTENANCE.md) for the owner, review calendar, upgrade window
+and security-reporting route.
+
+## Commands
+
+| Command | What it does |
+| --- | --- |
+| `pnpm verify` | handoff + reachability + claim checker + gate suite + lint/format/typecheck/build + direction, motion and playbook gates + support-matrix drift + all unit tests |
+| `pnpm regression` | the above plus the end-to-end studio demo and the dogfood audit; writes a report naming the revision |
+| `pnpm benchmark` | deterministic benchmark arm; writes the status the claim gate reads |
+| `pnpm demo:loop` | the full annotate → intent → diff → approve → apply → verify → undo loop on a real Astro build |
+| `pnpm dogfood` | builds and audits the three reference implementations |
+| `pnpm support` / `pnpm support:status` | regenerated support matrix, drift check, CLI status text |
 
 **Latest review:** [Deep audit — 2026-11-13](docs/DEEP_AUDIT_2026-11-13.md) records 48 findings,
 standards checks, research/learning refinements and full Live Studio contracts. The owner confirmed
@@ -67,7 +93,7 @@ still resolve; only the folder location changed.
 | Project memory | `.sus/` per target project: PRODUCT, DESIGN_CONTRACT, DECISIONS, SECTION_STATUS, progress checkpoints |
 | Live Studio (mandatory for GA) | Browser overlay, select/draw/annotate, spatial intent ("move heading into this box"), source-mapped dry-run diff, explicit approve, undo/rollback, localhost-only secure bridge |
 | Safety | Workspace allowlist, no arbitrary command execution from annotations, sanitized untrusted page content, fail-closed on ambiguous mapping, never overwrite uncommitted user work |
-| Release | Honest per-host support matrix, real tests only, published benchmark before any "superior" claim |
+| Release | Honest per-host support matrix, real tests only, published benchmark before any `superior` claim |
 
 ## Deliverable milestones
 
