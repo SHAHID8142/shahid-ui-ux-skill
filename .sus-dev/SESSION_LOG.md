@@ -728,3 +728,14 @@
   declared document list (code `count-claim-stale`); the handoff document now names no live count
   because it describes a past revision. Commits 9a952b9 and e788e90; CI runs 43735394584 and
   43736564619 success. verify 739 tests, dogfood 15/15.
+
+- 2026-11-15T23:45:00+06:00 | Pi (FreePi) | T1010 | Rehearsed the documented first-run path on a real
+  fresh clone of the public remote — and it was broken: `pnpm verify` died with ERR_MODULE_NOT_FOUND
+  from scripts/check-gates.mjs (compiled dist never built), `pnpm support:status` printed a raw stack
+  trace, the first script run printed a false pnpm [ERROR] and the resume document promised "64 files,
+  679 tests". Fixed with scripts/ensure-built.mjs (no-op when built, one build when not) wired into
+  `pnpm check` and `pnpm verify`, an explicit artifact check in generate-support.mjs,
+  verifyDepsBeforeRun: false with the reason recorded, and a new `count-claim-unverifiable` rule that
+  refuses test/file counts nobody can keep true. 12 new tests. Re-rehearsed on a fresh clone at the
+  fix commit: install 0, setup 0 (clean output), verify 0 (70 files, 749 tests). Receipt:
+  VERIFICATION/T1010.md. Lesson: local green proves nothing about the documented path — clone it.

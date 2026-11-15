@@ -31,7 +31,9 @@ be misled: the roadmap said every milestone was "pending" with 100/102 done, the
 
 The documented first-run path was rehearsed on a real fresh clone (T1010) and repaired: gate scripts
 now build when their compiled imports are missing, and the resume document no longer quotes a test
-count it cannot keep true.
+count it cannot keep true. Rehearsed again after the fix — clone → install → setup → verify, exit 0
+(70 files + 3 skipped, 749 tests + 5 skipped), with `[INFO] 7 build artifact(s) missing — building
+once` the only new line.
 
 Next exact steps: nothing in the build is eligible; the remaining work is T1003 (independent
 audit) and T1005 (release approval), both owner-commissioned, plus the standing issue #9 rule.
