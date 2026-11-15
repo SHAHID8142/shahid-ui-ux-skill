@@ -2933,9 +2933,22 @@
       ],
       "risk": "scope creep",
       "rollback": "matrix governs",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0810.md",
+        "skill/references/playbooks/onboarding.json",
+        "skill/references/playbooks/article-layout.json",
+        "skill/references/playbooks/gallery-case-study.json"
+      ],
+      "results": [
+        "onboarding: step one does real work, optional steps skippable via a plain link naming what happens, per-step server progress with resume, failed step preserves input and stays put, ending lands in the workspace with the created thing visible",
+        "article-layout: 65-75 character measure at every width, contents list marks current section with aria-current=location and never scroll-jacks, code/tables scroll internally without widening the page, stable focusable heading anchors, print drops chrome",
+        "gallery-case-study: artifact-first first viewport, tiles reserve space so arriving images do not move the grid, image dialog traps focus and restores it to the tile, outcomes attributed or labelled illustrative",
+        "all three carry the 12-part standard and exact variant matrices; 22 playbooks valid, motion gate clean, 29 playbook tests, full verify 625 tests"
+      ]
     },
     {
       "id": "T0906",

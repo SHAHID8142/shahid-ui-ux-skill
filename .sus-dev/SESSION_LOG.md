@@ -602,3 +602,11 @@
   caught three real content errors, fixed in content not in the checker. 26 playbook tests,
   full verify 622 tests. Issue #10 stays open pending the T0811 reference implementation.
   Receipt: VERIFICATION/T0809.md. Next: T0810.
+
+- 2026-11-15T16:30:00+06:00 | Pi (FreePi) | T0810 | Second-wave experience playbooks.
+  onboarding (skippable with a named consequence, per-step resume, failed step keeps input,
+  ending lands in the product), article-layout (65-75ch measure, current-section contents without
+  scroll-jacking, internally scrolling code/tables, stable heading anchors) and gallery-case-study
+  (artifact-first viewport, reserved tile space, focus-restoring dialog, outcomes attributed or
+  labelled illustrative). 29 playbook tests, verify 625 tests. Receipt: VERIFICATION/T0810.md.
+  Next: T0811.

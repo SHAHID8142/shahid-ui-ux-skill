@@ -1,0 +1,329 @@
+{
+  "id": "gallery-case-study",
+  "surface": "portfolio",
+  "component": "gallery-case-study",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "What the work must show before any text explains it",
+      "usingRules": ["gallery-artifact-first"]
+    },
+    {
+      "order": 2,
+      "decide": "The image grid rhythm and how it behaves at 320 px",
+      "usingRules": ["gallery-grid-rhythm"]
+    },
+    {
+      "order": 3,
+      "decide": "How an image opens and closes without trapping the reader",
+      "usingRules": ["gallery-lightbox-honest"]
+    },
+    {
+      "order": 4,
+      "decide": "How the case study states outcome without inventing proof",
+      "usingRules": ["gallery-claims-honest"]
+    },
+    {
+      "order": 5,
+      "decide": "What the page does for the reader on a slow connection",
+      "usingRules": ["gallery-weight-budget"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "gallery-artifact-first",
+      "kind": "convention",
+      "statement": "The first viewport is the work itself; no headline about craft appears before the thing being shown."
+    },
+    {
+      "id": "gallery-grid-rhythm",
+      "kind": "convention",
+      "statement": "The grid uses one aspect ratio per row and reserves space for every tile, so images arriving never move the layout; at 320 px it becomes a single column in reading order."
+    },
+    {
+      "id": "gallery-lightbox-honest",
+      "kind": "convention",
+      "statement": "Opening an image is a dialog with a visible close, Escape to dismiss, focus trapped and restored to the originating tile; the URL does not change unless the image is shareable."
+    },
+    {
+      "id": "gallery-claims-honest",
+      "kind": "convention",
+      "statement": "Outcomes are attributed to a named client and a period, or labelled as illustrative; a case study never implies measured impact it cannot show."
+    },
+    {
+      "id": "gallery-weight-budget",
+      "kind": "convention",
+      "statement": "Each tile ships a compressed still under its declared budget with width descriptors, and the largest image is not preloaded unless it is the LCP element."
+    },
+    {
+      "id": "gallery-alt-text-decides",
+      "kind": "convention",
+      "statement": "Alt text describes what the work shows, not the file name or 'image'; purely decorative crops are marked empty rather than described."
+    }
+  ],
+  "stateMachine": {
+    "component": "gallery-case-study",
+    "variants": ["grid", "case-study"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "an opened dialog owns its image request; a response that arrives after the dialog closed is discarded and never reopens the overlay",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "focus-visible",
+        "trigger": "the tile receives keyboard focus",
+        "motion": {
+          "motion": "focus ring appears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the area",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the role regains permission",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "a permission boundary is a fact, not a transition; the control becomes inert and says why"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "default",
+        "to": "disabled",
+        "trigger": "the role loses permission while the page is open",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "a permission boundary is a fact, not a transition; the control becomes inert and says why"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "default",
+        "to": "active",
+        "trigger": "a tile is opened",
+        "motion": {
+          "motion": "the dialog scales from the tile over 180ms",
+          "reducedMotion": "the dialog appears instantly at full size"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "the dialog is closed",
+        "motion": {
+          "motion": "the dialog fades out over 140ms",
+          "reducedMotion": "the dialog disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "loading",
+        "trigger": "tiles enter the viewport",
+        "motion": {
+          "motion": "tiles settle into their reserved frame over 120ms",
+          "reducedMotion": "the same reserved frame with no shimmer and no movement"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "a tile image arrives",
+        "motion": {
+          "motion": "the image fades in over 140ms",
+          "reducedMotion": "the image appears instantly in its reserved frame"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "a tile image fails",
+        "motion": {
+          "motion": "the frame shows the caption and a retry over 120ms",
+          "reducedMotion": "the caption and retry appear instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "the tile is retried",
+        "motion": {
+          "motion": "the frame returns to its placeholder over 120ms",
+          "reducedMotion": "the placeholder returns instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "active",
+        "trigger": "an arrived image is opened",
+        "motion": {
+          "motion": "the dialog scales from the tile over 180ms",
+          "reducedMotion": "the dialog appears instantly at full size"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "success",
+        "trigger": "the dialog closes back onto the grid",
+        "motion": {
+          "motion": "the grid's last opened tile keeps its focus ring with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      }
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "grid",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "a portfolio tile is always openable; an unopenable tile should not be rendered"
+        }
+      ]
+    },
+    {
+      "variant": "case-study",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "case-study sections are static content and have no inert state"
+        }
+      ]
+    }
+  ],
+  "sections": {
+    "intent": "Show the work at a glance, let someone open any piece to look closely, and state what it did without dressing up the evidence.",
+    "useCases": [
+      "scan a designer's portfolio in twenty seconds",
+      "open one project and read the constraint and the outcome",
+      "send a specific image link to a colleague"
+    ],
+    "nicheDifferences": [
+      "Experience surfaces are the artifact, so the interface must recede",
+      "Any chrome that competes with the work is a bug, and any claim that outruns the evidence is a lie with good typography"
+    ],
+    "inputs": [
+      "the images, their aspect ratios, and which is the LCP element",
+      "the client names that may be published and the periods involved",
+      "which outcomes are measured and which are illustrative",
+      "the declared weight budget per tile"
+    ],
+    "anatomy": [
+      "a first-viewport artifact",
+      "a tile grid with reserved space",
+      "an image dialog with close and next/previous",
+      "a case-study body with constraint, decision and outcome",
+      "a caption system that separates fact from illustration"
+    ],
+    "styling": [
+      "the grid rhythm comes from one aspect ratio per row, not from masonry surprise",
+      "captions are quiet; the work carries the contrast",
+      "the dialog background is near-opaque so the image is the only bright surface"
+    ],
+    "a11y": [
+      "every tile is a button with an accessible name describing the work",
+      "the dialog traps focus, closes on Escape, and returns focus to the tile",
+      "alt text describes the work; decorative crops are empty strings",
+      "the grid is keyboard-navigable in reading order"
+    ],
+    "responsive": [
+      "at 320 px the grid is one column in reading order, not a horizontally scrolled strip",
+      "the dialog fits the image within 90 vh and 90 vw with the caption still visible",
+      "captions never truncate; they wrap under the image"
+    ],
+    "copy": [
+      "captions name the client, the year and what the image shows",
+      "outcomes are stated with their source or labelled 'illustrative'",
+      "the dialog offers 'Close' as a visible button, not only an X icon"
+    ],
+    "alternatives": [
+      "a single long scroll when the work is a sequence",
+      "a film or motion piece where the work moves",
+      "a downloadable PDF for procurement contexts where print still wins"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 SC 1.1.1 Non-text Content",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WAI-ARIA APG \u2014 dialog (modal) pattern",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "SUS imagery plan contract, art-direction.md",
+        "date": "2026-11-15",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "the first viewport shows the work, with no headline above it",
+      "tiles reserve space so arriving images do not move the layout",
+      "the dialog traps focus, closes on Escape and restores focus to the tile",
+      "at 320 px the grid is a single column in reading order",
+      "outcomes are attributed or labelled illustrative"
+    ],
+    "failureCases": [
+      "a masonry grid reflows as images arrive and the reader clicks the wrong piece",
+      "the lightbox has no visible close and traps a keyboard user",
+      "an outcome is stated as a percentage with no source",
+      "decorative crops are described as 'image' in alt text"
+    ]
+  }
+}

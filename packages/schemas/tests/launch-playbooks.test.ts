@@ -21,7 +21,14 @@ const files = readdirSync(DIR).filter((file) => file.endsWith('.json'));
 const load = (file: string) => JSON.parse(readFileSync(join(DIR, file), 'utf8'));
 
 /** Second wave (T0809): Operate-focused components added after the launch set. */
-const SECOND_WAVE = ['search-filters', 'settings', 'dashboard-widgets'];
+const SECOND_WAVE = [
+  'search-filters',
+  'settings',
+  'dashboard-widgets',
+  'onboarding',
+  'article-layout',
+  'gallery-case-study',
+];
 
 /** Batch 1 (T0405). Commerce lives in T0405c; data table and record forms in T0407. */
 const BATCH_1 = [
@@ -348,5 +355,26 @@ describe('second-wave operate playbooks (T0809, issue #10)', () => {
     expect(text).toContain('disabled with the reason');
     expect(text.toLowerCase()).toContain('keeps every edited value');
     expect(text.toLowerCase()).toContain('idempotency key');
+  });
+});
+
+describe('second-wave experience playbooks (T0810)', () => {
+  it('onboarding is resumable, skippable and honest about failure', () => {
+    const text = allText('onboarding.json').toLowerCase();
+    for (const marker of ['resume', 'skip', 'keeps everything already entered']) {
+      expect(text).toContain(marker);
+    }
+  });
+
+  it('article layout keeps a reading measure and does not widen the page', () => {
+    const text = allText('article-layout.json').toLowerCase();
+    expect(text).toContain('65–75 character measure');
+    expect(text).toContain('never widening the page');
+  });
+
+  it('gallery states outcomes honestly and reserves tile space', () => {
+    const text = allText('gallery-case-study.json').toLowerCase();
+    expect(text).toContain('illustrative');
+    expect(text).toContain('reserves space');
   });
 });

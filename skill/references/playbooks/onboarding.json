@@ -1,0 +1,321 @@
+{
+  "id": "onboarding",
+  "surface": "operate",
+  "component": "onboarding",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "What the person must be able to do after this flow, and the smallest sequence that proves it",
+      "usingRules": ["onboarding-outcome-first"]
+    },
+    {
+      "order": 2,
+      "decide": "Which steps are required versus optional, and how skipping is offered without shame",
+      "usingRules": ["onboarding-skippable"]
+    },
+    {
+      "order": 3,
+      "decide": "How progress, save-and-resume and interruption are handled",
+      "usingRules": ["onboarding-resumable"]
+    },
+    {
+      "order": 4,
+      "decide": "What happens when a step fails, and how the partial state is preserved",
+      "usingRules": ["onboarding-failure-keeps-progress"]
+    },
+    {
+      "order": 5,
+      "decide": "How the flow ends: what is created, what is shown next, and how to change it later",
+      "usingRules": ["onboarding-ends-in-the-product"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "onboarding-outcome-first",
+      "kind": "convention",
+      "statement": "The flow exists to get one real thing done, so step one does work, not setup: the first screen asks only what the product cannot infer."
+    },
+    {
+      "id": "onboarding-skippable",
+      "kind": "convention",
+      "statement": "Anything that can be changed later is skippable, and skipping is a plain link, never a red 'No thanks' or a guilt trip."
+    },
+    {
+      "id": "onboarding-resumable",
+      "kind": "convention",
+      "statement": "Progress is stored server-side per step; returning to the flow offers to resume where it stopped, and abandoning it leaves the account usable."
+    },
+    {
+      "id": "onboarding-failure-keeps-progress",
+      "kind": "convention",
+      "statement": "A failed step keeps everything already entered, names the failing field and stays on the step; it never restarts the flow."
+    },
+    {
+      "id": "onboarding-ends-in-the-product",
+      "kind": "convention",
+      "statement": "The last screen lands in the real workspace with the created thing visible, and says how to change it; a confetti screen that returns to nothing is not an ending."
+    },
+    {
+      "id": "onboarding-progress-announced",
+      "kind": "convention",
+      "statement": "Progress states the step count and the current step in text, and each step change announces it politely; the indicator is never colour-only."
+    }
+  ],
+  "stateMachine": {
+    "component": "onboarding",
+    "variants": ["wizard", "single-page"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "a step submission applies only to the step revision it was sent for; a late response from an abandoned step never advances the flow",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "focus-visible",
+        "trigger": "the step receives keyboard focus",
+        "motion": {
+          "motion": "focus ring appears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the area",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the role regains permission",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "a permission boundary is a fact, not a transition; the control becomes inert and says why"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "default",
+        "to": "disabled",
+        "trigger": "the role loses permission while the page is open",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "a permission boundary is a fact, not a transition; the control becomes inert and says why"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "default",
+        "to": "active",
+        "trigger": "the first required answer is entered",
+        "motion": {
+          "motion": "the next button becomes available over 120ms",
+          "reducedMotion": "the button becomes available instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "active",
+        "to": "loading",
+        "trigger": "Continue is pressed",
+        "motion": {
+          "motion": "the button label swaps to a pending label over 120ms",
+          "reducedMotion": "the label swaps instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the step is accepted",
+        "motion": {
+          "motion": "the next step slides in over 180ms",
+          "reducedMotion": "the next step appears instantly and the step count is announced"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the step submission fails",
+        "motion": {
+          "motion": "an inline error expands over 140ms and the step stays",
+          "reducedMotion": "the error appears instantly on the same step"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "Retry is pressed on the same step",
+        "motion": {
+          "motion": "the button returns to pending over 120ms",
+          "reducedMotion": "the button swaps instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "the person edits the previous step",
+        "motion": {
+          "motion": "the step returns over 160ms",
+          "reducedMotion": "the step returns instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "the person clears the answer",
+        "motion": {
+          "motion": "the button returns to quiet over 100ms",
+          "reducedMotion": "the button returns instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "wizard",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "a step is never rendered disabled; it is either answerable or not shown"
+        }
+      ]
+    },
+    {
+      "variant": "single-page",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    }
+  ],
+  "sections": {
+    "intent": "Get a new person to one completed, real task in the product, and leave them with an account they can use even if they stop halfway.",
+    "useCases": [
+      "create the first workspace and invite one colleague",
+      "connect one data source and see real numbers",
+      "publish the first page"
+    ],
+    "nicheDifferences": [
+      "Onboarding is the only flow a person meets before they trust the product, so its job is to be short and honest: every extra field is evidence that the product will be tedious later."
+    ],
+    "inputs": [
+      "the one outcome the flow must produce",
+      "what the product can infer instead of asking",
+      "which steps are optional",
+      "where progress is stored and for how long"
+    ],
+    "anatomy": [
+      "a step count and title in text",
+      "one question per step with a visible label",
+      "a primary action and a quieter skip link",
+      "an inline error region per step",
+      "a final screen showing the created thing"
+    ],
+    "styling": [
+      "one column, one primary action per screen, no competing navigation",
+      "the progress indicator is text plus a thin bar, never colour-only",
+      "the skip link is visually quiet but keyboard-reachable"
+    ],
+    "a11y": [
+      "each step change moves focus to the step heading and announces the new step",
+      "the progress indicator has a text equivalent and is not an ARIA progressbar that lies about time",
+      "errors are associated with their field and announced",
+      "the flow is fully operable with keyboard and screen reader, including skip"
+    ],
+    "responsive": [
+      "the flow is one column at every width; below 480 px the primary action becomes full-width and sticky above the safe area",
+      "keyboard-triggered fields use the right keyboard types on mobile",
+      "long translated step titles wrap instead of truncating"
+    ],
+    "copy": [
+      "each step asks one question in the person's words, with an example",
+      "the skip link names what happens: 'Skip for now \u2014 you can connect this later in Settings'",
+      "the final screen says what exists now and what to do next"
+    ],
+    "alternatives": [
+      "inline setup inside the workspace for people who prefer to explore",
+      "a guided checklist that lives on the dashboard instead of blocking first use",
+      "import from an existing workspace when migrating a team"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 SC 3.3.2 Labels or Instructions",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WAI-ARIA APG \u2014 focus management in multi-step flows",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "SUS onboarding convention (this project)",
+        "date": "2026-11-15",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "the first screen asks only what cannot be inferred",
+      "every optional step is skippable through a plain link that says what happens",
+      "closing the flow halfway leaves a usable account and offers resume on return",
+      "a failed step preserves entered values and stays on the step",
+      "the final screen lands in the workspace with the created thing visible"
+    ],
+    "failureCases": [
+      "the flow restarts after a failure and the person re-enters everything",
+      "skipping is hidden, so people abandon the product at step two",
+      "the final screen is a celebration with no product behind it",
+      "progress is stored only in the tab, so a refresh loses the flow"
+    ]
+  }
+}

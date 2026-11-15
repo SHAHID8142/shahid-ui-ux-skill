@@ -1,0 +1,317 @@
+{
+  "id": "article-layout",
+  "surface": "any",
+  "component": "article-layout",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "The reading measure, type scale and rhythm that make a long page readable",
+      "usingRules": ["article-measure"]
+    },
+    {
+      "order": 2,
+      "decide": "How the table of contents tracks position without stealing attention",
+      "usingRules": ["article-toc-tracks"]
+    },
+    {
+      "order": 3,
+      "decide": "How code, tables, callouts and images survive narrow widths",
+      "usingRules": ["article-wide-content"]
+    },
+    {
+      "order": 4,
+      "decide": "How deep links, anchors and print behave",
+      "usingRules": ["article-links-stable"]
+    },
+    {
+      "order": 5,
+      "decide": "How reading progress is exposed without a scroll-jacking bar",
+      "usingRules": ["article-progress-quiet"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "article-measure",
+      "kind": "convention",
+      "statement": "Body text holds a 65\u201375 character measure at every width; the column narrows with the viewport instead of holding a fixed pixel width."
+    },
+    {
+      "id": "article-toc-tracks",
+      "kind": "convention",
+      "statement": "The contents list shows the current section, uses aria-current='location', and never scroll-jacks; below 1024 px it collapses into a disclosure above the text."
+    },
+    {
+      "id": "article-wide-content",
+      "kind": "convention",
+      "statement": "Code blocks and tables scroll inside their own container with a visible affordance, never widening the page; images keep their aspect ratio and never exceed the measure."
+    },
+    {
+      "id": "article-links-stable",
+      "kind": "convention",
+      "statement": "Heading anchors are stable, copyable and focusable, with a visible target on approach; changing a heading's text must not silently break a published link."
+    },
+    {
+      "id": "article-progress-quiet",
+      "kind": "convention",
+      "statement": "Reading progress exists only as a 2 px indicator and never moves content; it is not announced and adds no motion under reduced-motion."
+    },
+    {
+      "id": "article-print",
+      "kind": "convention",
+      "statement": "Printing removes chrome and expansion state, expands the contents list, and keeps URLs visible for citations."
+    }
+  ],
+  "stateMachine": {
+    "component": "article-layout",
+    "variants": ["long-form", "reference"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "no async content in the reading path; a lazily loaded diagram that arrives late must never move the paragraph being read",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "focus-visible",
+        "trigger": "the contents disclosure receives keyboard focus",
+        "motion": {
+          "motion": "focus ring appears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the area",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the role regains permission",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "a permission boundary is a fact, not a transition; the control becomes inert and says why"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "default",
+        "to": "disabled",
+        "trigger": "the role loses permission while the page is open",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "a permission boundary is a fact, not a transition; the control becomes inert and says why"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "default",
+        "to": "active",
+        "trigger": "the contents disclosure is opened",
+        "motion": {
+          "motion": "the panel expands over 160ms",
+          "reducedMotion": "the panel opens instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "the disclosure is closed or focus leaves it",
+        "motion": {
+          "motion": "the panel collapses over 120ms",
+          "reducedMotion": "the panel closes instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "default",
+        "to": "loading",
+        "trigger": "a figure or code sample is lazily hydrated",
+        "motion": {
+          "motion": "the reserved frame shimmers over 200ms",
+          "reducedMotion": "a static reserved frame replaces the shimmer"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the figure arrives",
+        "motion": {
+          "motion": "the figure fades in over 140ms",
+          "reducedMotion": "the figure appears instantly in its reserved frame"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the figure fails to load",
+        "motion": {
+          "motion": "the caption gains an error note over 120ms",
+          "reducedMotion": "the note appears instantly beside the reserved frame"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "the reader retries the figure",
+        "motion": {
+          "motion": "the frame returns to its reserved placeholder over 120ms",
+          "reducedMotion": "the placeholder returns instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "active",
+        "trigger": "a heading anchor is focused",
+        "motion": {
+          "motion": "the anchor target appears with no delay",
+          "reducedMotion": "identical \u2014 the target is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "long-form",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "reading surfaces have no disabled state; content is either present or absent"
+        }
+      ]
+    },
+    {
+      "variant": "reference",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "a reference page is never rendered inert"
+        }
+      ]
+    }
+  ],
+  "sections": {
+    "intent": "Let a person read a long technical page at their own pace, jump to the part they need, and still find the section a week later from a link.",
+    "useCases": [
+      "read a guide end to end on a phone",
+      "jump to the configuration section from a colleague's link",
+      "copy a code sample and confirm it belongs to this version"
+    ],
+    "nicheDifferences": [
+      "Read mode is judged by endurance rather than by first impression: a page that is beautiful for ten seconds and tiring for ten minutes has failed at the only job it had."
+    ],
+    "inputs": [
+      "the longest realistic page length and the deepest heading level",
+      "whether code samples need copy affordances",
+      "the languages and right-to-left locales",
+      "whether the page is printed or cited"
+    ],
+    "anatomy": [
+      "one h1 and a visible hierarchy beneath it",
+      "a contents list with current-section state",
+      "prose measure, code and figure containers",
+      "heading anchors and a copy-link affordance",
+      "prev/next navigation"
+    ],
+    "styling": [
+      "one type family with a clear weight scale; code in a real monospace at a slightly smaller size",
+      "vertical rhythm from margins, not from dividers",
+      "anchors appear on hover and focus, never on scroll"
+    ],
+    "a11y": [
+      "heading levels are sequential and never skipped for size",
+      "code blocks are reachable and scrollable by keyboard with a visible scrollbar",
+      "aria-current='location' marks the active section",
+      "the contents disclosure is a real button with expanded state"
+    ],
+    "responsive": [
+      "below 1024 px the contents list becomes a disclosure above the text, sticky to the top only while open",
+      "tables and code scroll inside their own container; the page never gains horizontal scroll",
+      "figures reflow to full measure with captions below"
+    ],
+    "copy": [
+      "section titles are verb phrases a reader would search for",
+      "code captions name the version the sample belongs to",
+      "anchor copy feedback says 'Link copied' and resets quietly"
+    ],
+    "alternatives": [
+      "a tutorial format with numbered steps when the reader must act in order",
+      "an interactive playground when the sample must be run",
+      "a changelog layout when the page is chronological by nature"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 SC 1.4.10 Reflow",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WCAG 2.2 SC 2.4.5 Multiple Ways",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "HTML Living Standard \u2014 heading structure guidance",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      }
+    ],
+    "acceptance": [
+      "body measure stays within 65\u201375 characters from 320 px to wide desktop",
+      "the contents list marks the current section and collapses below 1024 px",
+      "code and tables scroll internally without widening the page",
+      "every heading has a stable, copyable anchor that is focusable",
+      "printing removes chrome and expands the contents list"
+    ],
+    "failureCases": [
+      "a chapter of prose is set at 110 characters because the column is a percentage",
+      "the contents list hijacks scroll and the reader loses their place",
+      "a long code line widens the page and the mobile layout breaks",
+      "renaming a heading silently breaks published deep links"
+    ]
+  }
+}
