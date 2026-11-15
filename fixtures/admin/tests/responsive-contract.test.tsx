@@ -22,9 +22,10 @@ const rules = css.replace(/\/\*[\s\S]*?\*\//g, '');
 
 describe('fixture C responsive contract (issue #10)', () => {
   it('labels every body cell with its column name, in header order', () => {
-    const headers = Array.from(html.matchAll(/<th scope="col">([^<]+)<\/th>/g)).map((m) => m[1]);
+    const section = /<section id="content-queue"[\s\S]*?<\/section>/.exec(html)?.[0] ?? '';
+    const headers = Array.from(section.matchAll(/<th scope="col">([^<]+)<\/th>/g)).map((m) => m[1]);
     expect(headers).toEqual(['Entry', 'Status', 'Editor', 'Updated', 'Actions']);
-    const labels = Array.from(html.matchAll(/<td data-label="([^"]+)"/g)).map((m) => m[1]);
+    const labels = Array.from(section.matchAll(/<td data-label="([^"]+)"/g)).map((m) => m[1]);
     expect(labels.length).toBe(4 * headers.length);
     expect(labels.slice(0, headers.length)).toEqual(headers);
   });

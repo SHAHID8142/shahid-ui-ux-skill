@@ -77,8 +77,9 @@ body {
 
 #admin-topbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 1rem;
+  gap: 0.5rem 1rem;
   border-bottom: 1px solid var(--line);
   padding-bottom: 0.75rem;
 }
@@ -95,7 +96,11 @@ body {
 
 #kpi-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+
+  /* `min(11rem, 100%)`, not `11rem`: at 200% text size a fixed 11rem minimum is
+     352px, wider than a 320px viewport, and the page pans sideways. The track is
+     allowed to shrink; the cards then stack. */
+  grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
   gap: 1rem;
   margin-block: 1.25rem;
 }
@@ -121,7 +126,8 @@ body {
   font-size: 0.8125rem;
 }
 
-#content-queue table {
+#content-queue table,
+#invoice-list table {
   width: 100%;
   border-collapse: collapse;
   background: var(--panel);
@@ -133,7 +139,9 @@ body {
 }
 
 #content-queue th,
-#content-queue td {
+#content-queue td,
+#invoice-list th,
+#invoice-list td {
   padding: 0.55rem 0.75rem;
   border-bottom: 1px solid var(--line);
   text-align: left;
@@ -154,9 +162,142 @@ body {
   color: #14508c;
 }
 
-.status.blocked {
+/* Statuses carry meaning, so they are not all the same pale pill. Each pair is
+   AA on its own background (6.59, 6.63, 5.68, 8.38:1). */
+.status.blocked,
+.status.overdue {
   background: #fbeae3;
   color: #8c3a14;
+}
+
+.status.due {
+  background: #fdf0dc;
+  color: #7a4a10;
+}
+
+.status.paid {
+  background: #e3f3e8;
+  color: #1c6b3a;
+}
+
+.status.draft {
+  background: #eef1f6;
+  color: #3f4653;
+}
+
+#invoice-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(13rem, 100%), 1fr));
+  gap: 0.75rem;
+  margin-block: 0.75rem 0.5rem;
+}
+
+#invoice-controls .control {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+}
+
+#invoice-controls label {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+#invoice-controls input,
+#invoice-controls select {
+  font: inherit;
+  min-block-size: 2.75rem;
+  padding-inline: 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--panel);
+  min-inline-size: 0;
+}
+
+#invoice-fixture-controls {
+  border: 1px dashed var(--line);
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  margin: 0 0 0.75rem;
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.8125rem;
+}
+
+#invoice-fixture-controls legend {
+  padding-inline: 0.35rem;
+  color: var(--muted);
+}
+
+#invoice-fixture-controls label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#invoice-fixture-controls input {
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+}
+
+.status-line,
+.error-line {
+  font-size: 0.875rem;
+  margin: 0 0 0.5rem;
+}
+
+.status-line {
+  color: var(--muted);
+  min-block-size: 1.5rem;
+}
+
+.error-line {
+  color: #8c3a14;
+  border: 1px solid #e3b7a6;
+  background: #fbeae3;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.empty-state {
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--panel);
+  padding: 1rem;
+  display: grid;
+  gap: 0.75rem;
+  justify-items: start;
+}
+
+.empty-state p {
+  margin: 0;
+}
+
+#invoice-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block-start: 0.75rem;
+}
+
+#invoice-pagination p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+#invoice-pagination button {
+  min-block-size: 2.75rem;
+  padding-inline: 0.9rem;
+}
+
+#invoice-table-wrap[aria-busy='true'] table {
+  opacity: 0.6;
+}
+
+.amount {
+  font-variant-numeric: tabular-nums;
 }
 
 #settings-form form {
@@ -169,9 +310,41 @@ body {
   border-radius: 0.5rem;
 }
 
-.row-action {
+/* One button treatment for the whole fixture: same height, border and radius.
+   A single `.btn` class rather than a selector list — a list that mixes ids and
+   classes is where specificity linters start arguing with each other. */
+.btn {
   font: inherit;
-  padding: 0.25rem 0.6rem;
+  min-block-size: 2.75rem;
+  padding-inline: 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--panel);
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.btn:focus-visible,
+#invoice-controls input:focus-visible,
+#invoice-controls select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  color: var(--muted);
+  background: #f0f2f6;
+  cursor: not-allowed;
+}
+
+.btn:hover:not(:disabled) {
+  background: #eef1f6;
+}
+
+/* Record identity and amount lead the eye; the action is secondary. */
+#invoice-list td[data-label='Invoice'],
+#invoice-list .amount {
+  font-weight: 600;
 }
 
 #admin-footer {
@@ -213,16 +386,22 @@ body {
   #content-queue table,
   #content-queue tbody,
   #content-queue tr,
-  #content-queue td {
+  #content-queue td,
+  #invoice-list table,
+  #invoice-list tbody,
+  #invoice-list tr,
+  #invoice-list td {
     display: block;
   }
 
-  #content-queue table {
+  #content-queue table,
+  #invoice-list table {
     background: transparent;
     border: 0;
   }
 
-  #content-queue thead {
+  #content-queue thead,
+  #invoice-list thead {
     position: absolute;
     inline-size: 1px;
     block-size: 1px;
@@ -231,34 +410,54 @@ body {
     white-space: nowrap;
   }
 
-  #content-queue tr {
+  #content-queue tr,
+  #invoice-list tr {
     background: var(--panel);
     border: 1px solid var(--line);
     border-radius: 0.5rem;
     padding: 0.5rem 0.75rem;
   }
 
-  #content-queue tr + tr {
+  #content-queue tr + tr,
+  #invoice-list tr + tr {
     margin-block-start: 0.5rem;
   }
 
-  #content-queue td {
+  /* The header row's cells must leave the table layout too. A `th` left as a
+     table-cell keeps its intrinsic width inside an anonymous table wrapper,
+     which is not clipped by the 1px thead — at 200% text size that alone made
+     the document 76px wider than the screen. */
+  #content-queue thead tr,
+  #content-queue thead th,
+  #invoice-list thead tr,
+  #invoice-list thead th {
+    display: block;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+  }
+
+  #content-queue td,
+  #invoice-list td {
     display: grid;
-    grid-template-columns: 6.5rem minmax(0, 1fr);
+
+    /* `min(6.5rem, 45%)`: at 200% text size a flat 6.5rem label column is
+       208px of a 280px card, and the action button no longer fits beside it. */
+    grid-template-columns: minmax(0, min(6.5rem, 45%)) minmax(0, 1fr);
     gap: 0.5rem;
     align-items: baseline;
     border: 0;
     padding: 0.3rem 0;
   }
 
-  #content-queue td::before {
+  #content-queue td::before,
+  #invoice-list td::before {
     content: attr(data-label);
     color: var(--muted);
     font-size: 0.8125rem;
   }
 
   .row-action {
-    min-block-size: 2.75rem;
-    padding-inline: 0.9rem;
+    inline-size: 100%;
   }
 }

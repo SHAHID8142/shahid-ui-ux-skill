@@ -1,3 +1,5 @@
+import InvoiceList from './invoice-list';
+
 /**
  * Fixture C — Operate-mode admin (CMS = the site's control panel, D20).
  * Landmarks are load-bearing for the evaluation corpus and Operate-mode
@@ -45,6 +47,7 @@ const queue = [
 const sidebarNav = [
   { href: '#kpi-row', label: 'Overview' },
   { href: '#content-queue', label: 'Content queue' },
+  { href: '#invoice-list', label: 'Invoices' },
   { href: '#settings-form', label: 'Settings' },
 ];
 
@@ -114,7 +117,11 @@ export default function AdminPage() {
                   <td data-label="Editor">{row.editor}</td>
                   <td data-label="Updated">{row.updated}</td>
                   <td data-label="Actions">
-                    <button type="button" className="row-action">
+                    <button
+                      type="button"
+                      className="row-action btn"
+                      aria-label={`Open entry ${row.title}`}
+                    >
                       Open
                     </button>
                   </td>
@@ -122,6 +129,16 @@ export default function AdminPage() {
               ))}
             </tbody>
           </table>
+        </section>
+
+        <section id="invoice-list" aria-labelledby="invoice-title">
+          <h2 id="invoice-title">Invoices</h2>
+          <p className="env-note">
+            Twelve synthetic invoices behind a simulated 250 ms repository — no network, no real
+            customers. The fixture controls exist so the loading, error, empty and paging states can
+            be shown at all.
+          </p>
+          <InvoiceList />
         </section>
 
         <section id="settings-form" aria-labelledby="settings-title">

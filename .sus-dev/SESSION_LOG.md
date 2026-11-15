@@ -691,3 +691,15 @@
   assertions in the fixture. `pnpm dogfood` now 15/15 (admin 343→0, axe 1→0). Issue #10 stays
   open for its unverified items (states, translated labels, zoom, volume, AT session).
   Receipt: VERIFICATION/T1007.md. Next: issue #10 states/volume slice.
+
+- 2026-11-15T21:15:00+06:00 | Pi (FreePi) | T1008 (issue #10) | Invoice list states, volume, long values.
+  Added `invoice-repository.ts` (twelve synthetic invoices, pure `selectInvoices`, an async loader
+  that *rejects* so the error path is real) and `invoice-list.tsx` (URL-carried q/status/sort/page,
+  live-region counts, two distinct empty states, loading with rows kept, error keeping rows plus
+  retry, paging). 11 repository tests, 12 browser tests. The 200% text test found three genuine
+  layout defects — `th` cells escaping the visually-hidden `thead` (76px overflow), `minmax(11rem)`
+  / `minmax(13rem)` grids wider than a 320px screen, and a flat 6.5rem label column squeezing the
+  action — all fixed. Five identical "Open" accessible names and meaning-free status pills were
+  found by the screenshot review and fixed. `docs/MOBILE_RECORD_PATTERNS.md` documents table vs
+  card vs disclosure with the rule used. verify 714 tests, dogfood 15/15. Receipt: VERIFICATION/T1008.md.
+  Next: nothing eligible; T1003/T1005 are owner-commissioned.

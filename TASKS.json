@@ -2640,7 +2640,8 @@
         "T1003",
         "T1004",
         "T1006",
-        "T1007"
+        "T1007",
+        "T1008"
       ],
       "files": [],
       "acc": [
@@ -3551,6 +3552,62 @@
         "issue #10 remains OPEN for the unverified acceptance items: empty/loading/error/stale states, translated/RTL labels, 200% text scaling and browser zoom, many-record volume, and a real assistive-technology session"
       ],
       "commit": "same commit as .sus-dev/VERIFICATION/T1007.md"
+    },
+    {
+      "id": "T1008",
+      "m": "M10",
+      "title": "Admin invoice record list: states, filters, volume and long values (issue #10, slice 2)",
+      "obj": "Give the admin reference implementation a record list that can be in every state the playbooks describe — no-records vs no-matches, loading, error keeping the rows, URL-carried filters/sort/page, announced counts — and prove twelve records with a 47-character identifier fit 320px, at 200% text size, with distinct accessible names",
+      "deps": [
+        "T1007",
+        "T0407",
+        "T0809"
+      ],
+      "files": [
+        "fixtures/admin/app/invoice-repository.ts",
+        "fixtures/admin/app/invoice-list.tsx",
+        "fixtures/admin/app/page.tsx",
+        "fixtures/admin/app/globals.css",
+        "fixtures/admin/tests/invoice-repository.test.ts",
+        "packages/eval-core/tests/admin-invoice-states.test.ts",
+        "docs/MOBILE_RECORD_PATTERNS.md"
+      ],
+      "acc": [
+        "issue #10: empty-without-records and empty-with-filters are different messages with different actions",
+        "issue #10: a failed load keeps the previous rows with a role=alert error and a working retry",
+        "issue #10: filters, sort and page live in the URL and a reopened URL restores the view; counts are announced without moving focus",
+        "issue #10: twelve records, a 47-character invoice identifier and 200% text size produce no document overflow at 320/390/768/1440",
+        "issue #10: each row action has a unique accessible name and the accessibility tree exposes the record fields",
+        "issue #10: table vs card vs disclosure decision documented with the rule used"
+      ],
+      "tests": [
+        "fixtures/admin/tests/invoice-repository.test.ts (11 unit assertions)",
+        "packages/eval-core/tests/admin-invoice-states.test.ts (12 browser assertions incl. the two empty kinds, error, loading, URL, paging, 200% text, keyboard order, axe)",
+        "pnpm dogfood",
+        "pnpm verify"
+      ],
+      "risk": "a fixture with client-side state could drift from a real data layer and stop being a fair ruler",
+      "rollback": "revert this commit; the content-queue table and its T1007 tests are untouched",
+      "status": "done",
+      "approval": "D32 issue #10 triage (owner issue, actionable finding); implementation authorized by D28",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1008.md",
+        "docs/MOBILE_RECORD_PATTERNS.md",
+        "evals/evidence/dogfood/SUMMARY.md"
+      ],
+      "results": [
+        "states are real, not cosmetic: loadInvoices rejects on failure so the error branch is a real branch, and the simulated 250 ms latency makes the loading state observable rather than theoretical",
+        "the two empty kinds offer different actions (create vs clear filters) and both are tested; the error state keeps the rows and recovers through Retry",
+        "URL round trip: filters/sort/page survive a reload, and an invalid hand-edited URL degrades to the default view instead of an unrenderable state",
+        "three real layout defects found by the 200% text test and fixed: th cells escaping the visually-hidden thead (76px overflow), minmax(11rem/13rem) grids wider than a 320px screen, and a flat 6.5rem label column squeezing the action button",
+        "five identical 'Open' accessible names replaced by per-record names; statuses gained meaning-carrying AA colour pairs (paid 5.68, due 6.63, overdue 6.59, draft 8.38:1)",
+        "visual review of 390px and 1440px screenshots (model-assisted, labelled as such) drove the status/weight/button changes and is recorded in the receipt",
+        "table-vs-card-vs-disclosure rule documented in docs/MOBILE_RECORD_PATTERNS.md, including when a contained scrolled grid is the correct answer instead of a card",
+        "not run and not claimed: a real screen-reader session, browser zoom (text scaling stands in), real translated strings, volume beyond twelve rows"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T1008.md"
     },
     {
       "id": "T0103b",
