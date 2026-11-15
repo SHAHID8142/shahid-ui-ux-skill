@@ -63,7 +63,11 @@ jobs:
     name: fresh clone (documented first-run path)
     runs-on: ubuntu-latest
     steps:
+      # Full history, so `git clone --local` below is a real clone and not a
+      # shallow copy: the fresh tree must look like one a person would get.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -77,12 +81,17 @@ jobs:
           test -f package.json
           test ! -d node_modules
           test ! -d packages/eval-core/dist
-      - name: Browser libs (environment, not repository state)
+      - name: Documented path — pnpm install --frozen-lockfile
+        working-directory: ${{ runner.temp }}/fresh
+        run: pnpm install --frozen-lockfile
+      # Browser *system* libraries are environment, not repository state; the
+      # verify job installs them with --with-deps for the same reason.
+      - name: Browser system libraries (environment only)
+        working-directory: ${{ runner.temp }}/fresh
         run: pnpm --filter @sus/eval-core exec playwright install --with-deps chromium
-      - name: install -> setup -> verify, exactly as documented
+      - name: Documented path — pnpm setup, then pnpm verify (no manual build)
         working-directory: ${{ runner.temp }}/fresh
         run: |
-          pnpm install --frozen-lockfile
           pnpm setup
           pnpm verify
 

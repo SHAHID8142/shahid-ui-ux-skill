@@ -92,10 +92,25 @@ describe('the CI fresh-clone job (T1011)', () => {
     expect(fresh).not.toBe('');
     expect(fresh).toContain('git clone --quiet --local --no-hardlinks');
     expect(fresh).toContain('test "$(git rev-parse HEAD)" = "$GITHUB_SHA"');
+    expect(fresh).toContain('pnpm install --frozen-lockfile');
     expect(fresh).toContain('pnpm setup');
     expect(fresh).toContain('pnpm verify');
     // The whole point: the pristine tree is asserted to have no build output.
     expect(fresh).toContain('test ! -d packages/eval-core/dist');
+  });
+
+  it('clones with full history, so the fresh tree is a real clone rather than a shallow copy', () => {
+    expect(job('fresh-clone')).toContain('fetch-depth: 0');
+  });
+
+  it('runs every command in the fresh tree, never in the warmed checkout', () => {
+    const fresh = job('fresh-clone');
+    const commands = fresh.split('\n').filter((line) => line.trim().startsWith('run: pnpm'));
+    expect(commands.length).toBeGreaterThan(0);
+    // Each command that runs a pnpm script must be scoped to the fresh tree.
+    expect((fresh.match(/working-directory: \$\{\{ runner\.temp \}\}\/fresh/g) ?? []).length).toBe(
+      3,
+    );
   });
 
   it('does not pre-build, which is the step that hid the defect it guards', () => {
