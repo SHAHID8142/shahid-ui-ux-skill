@@ -1,0 +1,230 @@
+{
+  "id": "record-forms",
+  "surface": "operate",
+  "component": "Record create and edit forms",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Which fields exist because the record needs them and which are imported habit",
+      "usingRules": ["record-minimum-fields"]
+    },
+    {
+      "order": 2,
+      "decide": "Which fields save immediately and which save on submit, and how the difference is shown",
+      "usingRules": ["record-save-model"]
+    },
+    {
+      "order": 3,
+      "decide": "Conflict behaviour when the record changed while it was open",
+      "usingRules": ["record-conflict-stated"]
+    },
+    {
+      "order": 4,
+      "decide": "Destructive action confirmation and what is recoverable",
+      "usingRules": ["record-destructive-recoverable", "record-double-submit"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "record-minimum-fields",
+      "kind": "convention",
+      "statement": "A field exists because a decision or a legal obligation needs it; imported habit fields are removed rather than hidden."
+    },
+    {
+      "id": "record-save-model",
+      "kind": "convention",
+      "statement": "One save model per form, stated on the form: either it saves on submit or it autosaves per field, never both silently."
+    },
+    {
+      "id": "record-conflict-stated",
+      "kind": "convention",
+      "statement": "When the record changed elsewhere, the form says what changed and offers a choice; it never overwrites a colleague's edit silently."
+    },
+    {
+      "id": "record-destructive-recoverable",
+      "kind": "convention",
+      "statement": "Deletion is recoverable (soft delete or undo) or requires typed confirmation naming the record; a single unlabelled button is not enough."
+    },
+    {
+      "id": "record-double-submit",
+      "kind": "convention",
+      "statement": "Submit disables on press and the handler refuses a second in-flight save for the same record."
+    },
+    {
+      "id": "record-error-preserves-input",
+      "kind": "convention",
+      "statement": "A failed save keeps every entered value and attaches the error to the field or the form; losing typed work is never the failure treatment."
+    },
+    {
+      "id": "record-mobile-editing",
+      "kind": "convention",
+      "statement": "Below the reflow threshold the form is a single labelled column with the primary save reachable without covering a field (no fixed bar overlapping the last input)."
+    }
+  ],
+  "stateMachine": {
+    "component": "record-form",
+    "variants": ["create", "edit", "conflict"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "a save response for a superseded record version is discarded and surfaced as a conflict instead of applied",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "hover",
+        "trigger": "pointer over a control",
+        "motion": {
+          "motion": "background 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "pointer leaves",
+        "motion": {
+          "motion": "background 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "focus-visible",
+        "trigger": "keyboard focus",
+        "motion": {
+          "motion": "ring appears with no delay",
+          "reducedMotion": "instant ring"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "active",
+        "trigger": "save pressed",
+        "motion": {
+          "motion": "none",
+          "noneReason": "a save gets its result, not an animation",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "loading",
+        "trigger": "the save starts",
+        "motion": {
+          "motion": "none",
+          "noneReason": "blocking the form visually is what the guard is for; movement would hide the values being saved",
+          "reducedMotion": "labels state the work and the form stays editable but guarded"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "saved",
+        "motion": {
+          "motion": "none",
+          "noneReason": "a save that fades in reads as uncertain",
+          "reducedMotion": "confirmation appears instantly with the record's new state"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "save rejected",
+        "motion": {
+          "motion": "none",
+          "noneReason": "typed work must never be obscured by an animation",
+          "reducedMotion": "the error appears instantly and every entered value stays"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "retry",
+        "motion": {
+          "motion": "none",
+          "noneReason": "retry is deliberate",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "continuing to edit",
+        "motion": {
+          "motion": "none",
+          "noneReason": "staying on the record is not a transition worth animating",
+          "reducedMotion": "instant"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "create",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    },
+    {
+      "variant": "edit",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    },
+    {
+      "variant": "conflict",
+      "enabled": ["default", "hover", "focus-visible", "disabled", "loading", "error"],
+      "refused": [
+        {
+          "state": "active",
+          "reason": "a conflicted form cannot be submitted until the operator chooses a version"
+        },
+        {
+          "state": "success",
+          "reason": "nothing has been saved while the conflict is unresolved"
+        }
+      ]
+    }
+  ]
+}

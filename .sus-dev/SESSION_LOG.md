@@ -519,3 +519,16 @@
   quantities). The matrix exactness check caught missing `disabled` cells in all four new
   files — fixed by declaring them, not by weakening the check. 14 playbooks valid, 15 tests.
   Receipt: VERIFICATION/T0405c.md. Next: T0407.
+
+- 2026-11-15T00:20:00+06:00 | Pi (FreePi) | T0407 | Data table + record forms.
+  Table: sort/filter/pagination as URL state; the two empties kept separate (create vs clear
+  filters — collapsing them is the classic stale-filter dead end); loading and error keep the
+  previous rows visible instead of blanking the table, because an operator who loses their
+  position on every keystroke cannot compare anything. Issue #10 partially delivered: the
+  table-to-card reflow rule + no-horizontal-scroll prohibition, both asserted by test; the
+  reference implementation and its separation from the labeled no-skill baseline is
+  T0811/T0906, so issue #10 stays OPEN with that scope note rather than being claimed.
+  Record forms: one stated save model, conflicts offer a choice instead of overwriting,
+  recoverable deletion, failed save keeps typed work, handler-level double-submit guard.
+  Launch set complete (16 playbooks) with a completeness test. Receipt: VERIFICATION/T0407.md.
+  Next: T0602.

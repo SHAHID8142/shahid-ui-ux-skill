@@ -1142,9 +1142,21 @@
       ],
       "risk": "dashboard scope creep",
       "rollback": "second-wave list respected",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0407.md",
+        "skill/references/playbooks/data-table.json",
+        "skill/references/playbooks/record-forms.json"
+      ],
+      "results": [
+        "data-table playbook covers sort, filter, pagination as URL state, and keeps empty-with-filters distinct from empty-without-records (different actions), with loading and error keeping the previous rows visible rather than blanking the table",
+        "issue #10 partially delivered: table-to-card reflow rule (self-labelled blocks, same fields same order) and an explicit prohibition on horizontal scrolling for row data, both asserted by test; the reference implementation + labeled no-skill baseline separation remains T0811/T0906 and issue #10 stays open with that scope note",
+        "record-forms: one stated save model per form, conflicts state what changed and offer a choice instead of overwriting, deletion recoverable or typed confirmation, failed save keeps every entered value, handler-level double-submit guard, primary save never overlaps a field at narrow widths",
+        "all four launch sets now present (10 shared + 4 commerce + 2 operate = 16 playbooks) with a test asserting completeness in one place; 17 tests green, playbook lint 16/16"
+      ]
     },
     {
       "id": "T0408",

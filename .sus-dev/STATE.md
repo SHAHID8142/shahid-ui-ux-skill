@@ -10,17 +10,16 @@ BUILD_COMPLETE_PUSHED=false. Architecture: ADR-001/002/004/005/006 adopted,
 ADR-003 as amended (D29). Repository is PUBLIC (D34, issue #11 closed with
 evidence — CI on free standard runners).
 
-Canonical task statuses: TASKS.json (82 of 100 done). T0706 preview, T0806
+Canonical task statuses: TASKS.json (83 of 100 done). T0706 preview, T0806
 security/G13, T0707 apply + rollback, T0700w CLOSED — dual-stack feasibility is GO
 on both Next.js and Astro, including the Astro editor (T0700wc). zcode stale.
 Concurrency: 2 workers (D33) — claim via lease before editing.
 
 Current task: none. Dual-stack feasibility GO on both stacks; A/B/C variants done;
 stale-mapping/conflict detection done; verification loop done (five distinct outcomes,
-DA-36 revert-only-when-intact, redacted diagnostics). Next: T0407 data table and
-record forms.
+DA-36 revert-only-when-intact, redacted diagnostics). Next: T0602 motion plans.
 
-Next exact steps: T0407 data table/forms +
+Next exact steps: T0602/T0603 motion +
 T0405b/c playbooks -> T0407/T0602/T0603 -> T0708/T0905/T0906 -> T1001/T1002/T1004 ->
 T1006 final verified checkpoint.
 

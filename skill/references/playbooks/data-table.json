@@ -1,0 +1,256 @@
+{
+  "id": "data-table",
+  "surface": "operate",
+  "component": "Data table",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Which columns carry decisions for the operator's job, and which are merely available",
+      "usingRules": ["table-column-decisions"]
+    },
+    {
+      "order": 2,
+      "decide": "How sort, filter and pagination state are carried in the URL and announced",
+      "usingRules": ["table-state-in-url", "table-state-announced"]
+    },
+    {
+      "order": 3,
+      "decide": "What each non-happy state says: empty-with-filters, empty-without-filters, loading, error, stale page",
+      "usingRules": ["table-empty-two-kinds", "table-error-keeps-state"]
+    },
+    {
+      "order": 4,
+      "decide": "How the same records read at 390px without a horizontally scrolling row",
+      "usingRules": ["table-content-adaptive"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "table-column-decisions",
+      "kind": "convention",
+      "statement": "A column earns its place by changing a decision; available data that changes nothing is removed from the default view, not shrunk."
+    },
+    {
+      "id": "table-state-in-url",
+      "kind": "convention",
+      "statement": "Sort, filter and page live in the URL so a view can be shared and a refresh does not lose the operator's place."
+    },
+    {
+      "id": "table-state-announced",
+      "kind": "convention",
+      "statement": "Sorting and filtering announce the new result count and the active criteria through a live region, and keep focus in the toolbar."
+    },
+    {
+      "id": "table-empty-two-kinds",
+      "kind": "convention",
+      "statement": "No records yet and no records matching the filters are different states with different actions: create something, or clear the filters."
+    },
+    {
+      "id": "table-error-keeps-state",
+      "kind": "convention",
+      "statement": "A failed page load keeps the previous rows visible with an inline error and a retry; clearing the table is never the error treatment."
+    },
+    {
+      "id": "table-content-adaptive",
+      "kind": "convention",
+      "statement": "Below the reflow threshold each record becomes a self-labelled block (table-to-card) with the same fields in the same order; horizontal scrolling for row data is prohibited for the launch set."
+    },
+    {
+      "id": "table-row-target",
+      "kind": "convention",
+      "statement": "A row has one activation target; interactive cells stop the row from being clickable so a mis-click cannot both open a record and toggle a control."
+    }
+  ],
+  "stateMachine": {
+    "component": "data-table",
+    "variants": ["default", "filtered", "paginated", "compact-card"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "a page result for a superseded filter or sort is discarded; the table shows only the result for the current criteria",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "hover",
+        "trigger": "pointer over a row",
+        "motion": {
+          "motion": "background 90ms",
+          "reducedMotion": "instant background change, values unchanged"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "pointer leaves the row",
+        "motion": {
+          "motion": "background 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "focus-visible",
+        "trigger": "keyboard focus enters the row or toolbar",
+        "motion": {
+          "motion": "ring appears with no delay",
+          "reducedMotion": "instant ring"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "active",
+        "trigger": "a row or cell control is activated",
+        "motion": {
+          "motion": "none",
+          "noneReason": "navigation and toggles are immediate; an animation would delay the operator",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "the activation completes or is cancelled",
+        "motion": {
+          "motion": "none",
+          "noneReason": "the restored or next view is already at its default state",
+          "reducedMotion": "instant"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "default",
+        "to": "loading",
+        "trigger": "a filter, sort or page change is requested",
+        "motion": {
+          "motion": "none",
+          "noneReason": "replacing rows with a skeleton loses the operator's visual position",
+          "reducedMotion": "the previous rows stay visible and the toolbar states that results are loading"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the new page arrives",
+        "motion": {
+          "motion": "none",
+          "noneReason": "a fade-in makes a data change look like a loading artefact",
+          "reducedMotion": "rows swap instantly and the live region announces the count"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the request fails",
+        "motion": {
+          "motion": "none",
+          "noneReason": "the operator must see the failure without losing the data they were reading",
+          "reducedMotion": "an inline error appears above the unchanged rows"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "retry",
+        "motion": {
+          "motion": "none",
+          "noneReason": "retry is deliberate",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "the operator moves on",
+        "motion": {
+          "motion": "none",
+          "noneReason": "nothing changed visually, so nothing needs to move",
+          "reducedMotion": "instant"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "default",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    },
+    {
+      "variant": "filtered",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    },
+    {
+      "variant": "paginated",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    },
+    {
+      "variant": "compact-card",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    }
+  ]
+}

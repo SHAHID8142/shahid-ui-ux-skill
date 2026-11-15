@@ -37,8 +37,8 @@ const BATCH_1 = [
 /** Commerce set (T0405c): present, and required to satisfy the same contract. */
 const COMMERCE = ['product-grid', 'pdp', 'cart-summary', 'checkout-steps'];
 
-/** Authored by T0407; their absence here is correct, their presence a mistake. */
-const NOT_AUTHORED = ['data-table', 'record-forms'];
+/** Operate set (T0407): the last of the promised launch components. */
+const OPERATE = ['data-table', 'record-forms'];
 
 describe('batch-1 launch set is exactly what it claims', () => {
   it('every batch-1 component has a playbook', () => {
@@ -51,9 +51,39 @@ describe('batch-1 launch set is exactly what it claims', () => {
     for (const id of COMMERCE) expect(present, id).toContain(id);
   });
 
-  it('no component from a later task has been slipped in', () => {
+  it('the operate set exists and is complete (T0407)', () => {
     const present = files.map((file) => file.replace('.json', ''));
-    for (const id of NOT_AUTHORED) expect(present, id).not.toContain(id);
+    for (const id of OPERATE) expect(present, id).toContain(id);
+    // the promised launch set is now fully present, in one place
+    expect(present.length).toBe(BATCH_1.length + COMMERCE.length + OPERATE.length);
+  });
+
+  it('the data table covers sort, filter, empty, loading, error and pagination', () => {
+    const table = load('data-table.json');
+    const text = table.rules
+      .map((rule: { statement: string }) => rule.statement)
+      .concat(table.steps.map((step: { decide: string }) => step.decide))
+      .join(' ')
+      .toLowerCase();
+    for (const required of ['sort', 'filter', 'empty', 'loading', 'error', 'pagination']) {
+      expect(text, required).toContain(required);
+    }
+    // issue #10: content-adaptive at narrow widths, not a horizontally scrolling row
+    expect(text).toContain('table-to-card');
+    expect(text).toContain('horizontal scrolling');
+  });
+
+  it('record forms state their save model and keep typed work on failure', () => {
+    const forms = load('record-forms.json');
+    const ids = forms.rules.map((rule: { id: string }) => rule.id);
+    for (const id of [
+      'record-save-model',
+      'record-conflict-stated',
+      'record-error-preserves-input',
+      'record-double-submit',
+    ]) {
+      expect(ids, id).toContain(id);
+    }
   });
 
   it('checkout carries the payment-state and duplicate-submit checklist', () => {
