@@ -657,3 +657,10 @@
   found) and docs/MAINTENANCE.md (owner, calendar, upgrade window, security route, G13 unwaiable).
   Rewrote the README's stale "no code written" block. 11 tests, verify 679.
   Receipt: VERIFICATION/T1004.md. Next: T1006.
+
+- 2026-11-15T23:20:00+06:00 | Pi (FreePi) | T1006 | Complete build and verified final checkpoint.
+  Regression at 2f344df: verify 679 tests, demo loop, dogfood — 3 stages, 132.0s, all pass.
+  Install, secrets sweep and licence check clean; reachability 94/94; claim gate closed. Issues
+  triaged (#12 closed, #10 scoped and left open, #9 open by design). Handoff written honestly,
+  including the D34 public-repository supersession and the six gates still reported not-run.
+  BUILD_COMPLETE_PUSHED=true. Receipt: VERIFICATION/T1006.md. Next: stop — T1003/T1005 are owner-only.

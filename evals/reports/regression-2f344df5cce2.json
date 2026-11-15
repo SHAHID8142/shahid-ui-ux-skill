@@ -1,0 +1,33 @@
+{
+  "head": "2f344df5cce2764dcd20b4af2fcbff2dc2f9d52c",
+  "branch": "chore/continuation-reconciliation",
+  "dirty": false,
+  "startedAt": "2026-11-15T10:48:23.707Z",
+  "totalDurationMs": 131962,
+  "stages": [
+    {
+      "id": "verify",
+      "command": "pnpm verify",
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 105223
+    },
+    {
+      "id": "demo-loop",
+      "command": "pnpm demo:loop",
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 3884
+    },
+    {
+      "id": "dogfood",
+      "command": "pnpm dogfood",
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 22855
+    }
+  ],
+  "failed": [],
+  "notRun": [],
+  "status": "pass"
+}

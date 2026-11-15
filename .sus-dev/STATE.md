@@ -6,11 +6,11 @@ cooperates per D33: claim tasks via TASKS.json leases; read `.sus-dev/INBOX.md`.
 
 Branch: chore/continuation-reconciliation. Original main: 6ea7fb708f54e630e74e858eaa8aa2c469f04c33.
 Stage: BUILD in progress. BUILD_PERMISSION=true (APERIO recorded as D28).
-BUILD_COMPLETE_PUSHED=false. Architecture: ADR-001/002/004/005/006 adopted,
+BUILD_COMPLETE_PUSHED=true. Verified revision 2f344df (pnpm regression: 3 stages, 132.0s; 679 tests); final doc-only commit pushed after it. Architecture: ADR-001/002/004/005/006 adopted,
 ADR-003 as amended (D29). Repository is PUBLIC (D34, issue #11 closed with
 evidence — CI on free standard runners).
 
-Canonical task statuses: TASKS.json (97 of 100 done; T1003/T1005 are owner-only). T0706 preview, T0806
+Canonical task statuses: TASKS.json (98 of 100 done; T1003/T1005 are owner-only). T0706 preview, T0806
 security/G13, T0707 apply + rollback, T0700w CLOSED — dual-stack feasibility is GO
 on both Next.js and Astro, including the Astro editor (T0700wc). zcode stale.
 Concurrency: 2 workers (D33) — claim via lease before editing.
@@ -20,7 +20,8 @@ stale-mapping/conflict detection done; verification loop done (five distinct out
 DA-36 revert-only-when-intact, redacted diagnostics). Next: T0408 asset strategy and
 licensing record.
 
-Next exact steps: T1006 complete build and verified final checkpoint push.
+Next exact steps: stop here. T1003 independent audit and T1005 release approval are owner-commissioned;
+nothing further is authorized to run from this repository.
 
 Blockers: standing B003 (licence/publication, later phase) and B004
 (irreversible externals during build). Active files: none after checkpoint.

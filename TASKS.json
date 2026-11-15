@@ -3478,12 +3478,23 @@
       ],
       "risk": "Unsupported completion or unsafe mutation",
       "rollback": "Preserve original sources; block on failure",
-      "status": "pending",
-      "approval": "pending",
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
       "phase": "build",
-      "owner": null,
+      "owner": "pi",
       "lease": null,
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1006.md",
+        "docs/BUILD_COMPLETION_HANDOFF.md",
+        "evals/reports/regression-latest.md"
+      ],
+      "results": [
+        "complete build verified at revision 2f344df: pnpm regression pass (3 stages, 132.0s), pnpm verify pass (679 tests), demo loop pass, dogfood pass with 2 documented findings, benchmark pass with the claim gate closed",
+        "security/privacy/a11y/motion/install checks tied to the exact revision: G13 hostile-agent suite + threat model, axe/gate evaluators + labelled-controls/reflow/focus checks, motion oracles + playbook motion lint, pnpm install --frozen-lockfile, secrets regex sweep clean, dependency licences permissive only",
+        "GitHub issues triaged: #12 closed with evidence, #10 left open with explicit scoped status, #9 left open by design as the standing execution rule",
+        "remote visibility recorded honestly: repository is public per D34, which supersedes the earlier private-visibility acceptance clause; product remains unpublished and no release approval is claimed",
+        "BUILD_COMPLETE_PUSHED=true only after the pre-push gate passed and the remote SHA matched the pushed commit; six unimplemented gates remain reported as not-run (G2/G3/G7/G8/G9/G10), never as pass"
+      ]
     },
     {
       "id": "T0103b",
