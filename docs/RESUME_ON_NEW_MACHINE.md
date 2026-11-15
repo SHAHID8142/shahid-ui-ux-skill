@@ -23,12 +23,21 @@ git clone https://github.com/SHAHID8142/shahid-ui-ux-skill.git
 cd shahid-ui-ux-skill
 git switch chore/continuation-reconciliation      # the build branch
 pnpm install --frozen-lockfile
-pnpm hooks:install                                 # REQUIRED: installs .githooks/pre-push (the push gate)
-pnpm exec playwright install chromium              # REQUIRED for pnpm demo:loop, dogfood, regression
-pnpm verify                                        # expect: 64 files, 679 tests, exit 0
+pnpm setup      # push gate + Chromium + state consistency check (see §2.1)
+pnpm verify     # expect: 64 files, 679 tests, exit 0
+
+### 2.1 What `pnpm setup` does, and why it is one command
+
+It runs `git config core.hooksPath .githooks` (installs `.githooks/pre-push`, the push gate),
+`pnpm exec playwright install chromium` (needed by `demo:loop`, `dogfood` and `regression`),
+and `node scripts/check-handoff.mjs`, which refuses to call a machine ready when the recorded
+state is internally inconsistent (a dirty working tree is deliberately fine here, because this
+command runs mid-task as often as it runs on a fresh clone). Every step it performs is one a fresh clone is
+missing, and each failure mode is silent: without the hook an unverified push is possible,
+without Chromium a browser-driven check fails much later and looks like a code defect.
 ```
 
-`pnpm hooks:install` is not optional. A fresh clone has no `core.hooksPath`, so the push gate
+`pnpm setup` (or at minimum `pnpm hooks:install`) is not optional. A fresh clone has no `core.hooksPath`, so the push gate
 is silently absent and an unverified push becomes possible — which is exactly the thing the
 gate exists to prevent. `pnpm verify` does not detect the missing hook; check it explicitly:
 

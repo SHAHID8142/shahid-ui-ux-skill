@@ -24,6 +24,7 @@
     "verify": "pnpm handoff && pnpm reach && pnpm claims && pnpm gates:full && pnpm lint && pnpm format:check && pnpm stylelint && pnpm typecheck && pnpm build && (pnpm directions || test $? -eq 3) && (pnpm motion || test $? -eq 3) && (pnpm parts || test $? -eq 3) && pnpm support && pnpm test",
     "gates:full": "node scripts/check-gates.mjs && node scripts/validate-skill.mjs && node scripts/validate-knowledge.mjs && node scripts/validate-playbooks.mjs || test $? -eq 3",
     "hooks:install": "git config core.hooksPath .githooks && echo \"push gate installed (.githooks/pre-push)\"",
+    "setup": "git config core.hooksPath .githooks && pnpm exec playwright install chromium && node scripts/check-handoff.mjs >/dev/null && echo \"machine ready: push gate installed, chromium present, recorded state consistent\"",
     "gate:push": "node scripts/gate-push.mjs",
     "handoff": "node scripts/check-handoff.mjs",
     "directions": "node scripts/check-direction.mjs",

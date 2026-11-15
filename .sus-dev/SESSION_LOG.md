@@ -671,3 +671,8 @@
   must be regenerated rather than restored, current position 98/100 with T1003/T1005 owner-only, and
   an environment-difference table). Pointed HANDOFF.md, AGENTS.md, README.md and STATE.md at it and
   left a bus message for zcode. No open leases; nothing was held outside the repository.
+
+- 2026-11-15T18:10:00+06:00 | Pi (FreePi) | machine handoff follow-up | Owner will type only
+  "continue" on the new machine. Added `pnpm setup` (push gate + Chromium + recorded-state check,
+  deliberately tolerant of a dirty tree) and a three-line bootstrap block at the top of AGENTS.md so
+  a bare "continue" on a fresh clone performs the bootstrap before anything else. `pnpm verify` 679.
