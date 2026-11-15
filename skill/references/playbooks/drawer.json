@@ -1,0 +1,290 @@
+{
+  "id": "drawer",
+  "surface": "operate",
+  "component": "drawer",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Whether this is a modal drawer that interrupts or a non-modal panel that coexists",
+      "usingRules": ["drawer-modal-or-not"]
+    },
+    {
+      "order": 2,
+      "decide": "Where focus goes on open and on close, and what is inert meanwhile",
+      "usingRules": ["drawer-focus-contract"]
+    },
+    {
+      "order": 3,
+      "decide": "How unsaved edits inside the drawer are protected when it is dismissed",
+      "usingRules": ["drawer-guard-dismiss"]
+    },
+    {
+      "order": 4,
+      "decide": "How the drawer behaves at 320 px, in landscape, and with the on-screen keyboard open",
+      "usingRules": ["drawer-viewport"]
+    },
+    {
+      "order": 5,
+      "decide": "Which content belongs in a drawer and which belongs on its own page",
+      "usingRules": ["drawer-scope"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "drawer-modal-or-not",
+      "kind": "convention",
+      "statement": "A drawer that asks for a decision is modal (focus trapped, background inert); a drawer that only shows detail is non-modal and must not trap focus."
+    },
+    {
+      "id": "drawer-focus-contract",
+      "kind": "convention",
+      "statement": "On open focus moves to the drawer heading or first field; on close it returns to the element that opened it, and Escape closes unless the drawer holds unsaved edits."
+    },
+    {
+      "id": "drawer-guard-dismiss",
+      "kind": "convention",
+      "statement": "Dismissing a drawer with unsaved edits asks once, names what will be lost, and keeps the drawer open on cancel \u2014 the backdrop click is not enough to discard work."
+    },
+    {
+      "id": "drawer-viewport",
+      "kind": "convention",
+      "statement": "Below 640 px the drawer is full-width and scrolls internally, never taller than the visual viewport when a keyboard is open; in landscape it stays scrollable with the action bar pinned."
+    },
+    {
+      "id": "drawer-scope",
+      "kind": "convention",
+      "statement": "A drawer holds one task or one detail view; anything a reader may want to bookmark, share or compare belongs on a page with a URL."
+    }
+  ],
+  "stateMachine": {
+    "component": "drawer",
+    "variants": ["modal", "non-modal"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "the drawer owns its request; a response arriving after the drawer closed is dropped and never re-opens it",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "active",
+        "trigger": "the drawer is opened",
+        "motion": {
+          "motion": "the panel slides in over 200ms while the backdrop fades to 40%",
+          "reducedMotion": "the panel appears in place with no slide and no backdrop fade"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "loading",
+        "trigger": "the drawer's content is fetched",
+        "motion": {
+          "motion": "a static skeleton fills the panel over 120ms",
+          "reducedMotion": "the skeleton appears with no animation"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the content arrives",
+        "motion": {
+          "motion": "the body fades in over 140ms",
+          "reducedMotion": "the body appears instantly and is announced"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the content fails",
+        "motion": {
+          "motion": "an inline error with retry fills the body over 120ms",
+          "reducedMotion": "the error appears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "the drawer is closed",
+        "motion": {
+          "motion": "the panel slides out over 160ms and the backdrop clears",
+          "reducedMotion": "the panel disappears instantly and focus returns to the opener"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the control",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "the action is retried",
+        "motion": {
+          "motion": "the control returns to pending over 120ms",
+          "reducedMotion": "the control returns to pending instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "the confirmation clears",
+        "motion": {
+          "motion": "the confirmation fades over 140ms",
+          "reducedMotion": "the confirmation disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the control becomes available again",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "unavailability is a permission or load fact, not an animation; the control states why instead of moving"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "sections": {
+    "intent": "Let a reader inspect or edit one thing beside the work they were doing, then return to exactly where they were.",
+    "useCases": [
+      "edit a row's details without leaving the table",
+      "read a record's history beside the list",
+      "create one record from a filtered view"
+    ],
+    "nicheDifferences": [
+      "A drawer trades width for context: it must leave the original screen readable or it should be a page",
+      "The cost is focus management and dismissal, which is why most drawers are built modal by accident"
+    ],
+    "inputs": [
+      "whether the reader must act before continuing",
+      "the opener element for focus return",
+      "whether the drawer holds unsaved edits",
+      "the shortest realistic viewport and keyboard"
+    ],
+    "anatomy": [
+      "a panel with a heading and a close control",
+      "an inert background for the modal variant",
+      "a pinned action bar",
+      "an internal scroll region",
+      "an unsaved-edits confirmation"
+    ],
+    "styling": [
+      "the panel enters from the inline edge at 200ms, never from both sides at once",
+      "the backdrop is 40% black and carries no decoration",
+      "the action bar is separated by a hairline, not a shadow stack"
+    ],
+    "a11y": [
+      "role=dialog and aria-modal for the modal variant, with aria-labelledby on the heading",
+      "focus moves into the drawer on open and back to the opener on close",
+      "the background is inert while modal",
+      "Escape closes and the close control is reachable first"
+    ],
+    "responsive": [
+      "full-width below 640 px with an internal scroll and a pinned action bar",
+      "the panel never exceeds the visual viewport, so an open keyboard cannot hide the actions",
+      "landscape keeps the action bar visible above the safe area"
+    ],
+    "copy": [
+      "the heading says what this drawer is for, not 'Details'",
+      "the confirmation says what will be lost: 'Discard 3 unsaved changes?'",
+      "errors say what failed and keep the panel open"
+    ],
+    "alternatives": [
+      "a full page when the content is linkable or long",
+      "a modal dialog for a short confirmation only",
+      "an inline expansion when the detail is small and nearby"
+    ],
+    "references": [
+      {
+        "label": "WAI-ARIA Authoring Practices Guide",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WCAG 2.2 SC 2.4.3 Focus Order",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "SUS primitive convention (this project)",
+        "date": "2026-11-15",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "focus enters on open and returns to the opener on close",
+      "Escape closes, except when unsaved edits require confirmation",
+      "the background is inert in the modal variant and interactive in the non-modal one",
+      "the panel fits the visual viewport with a keyboard open",
+      "the action bar stays visible while the body scrolls"
+    ],
+    "failureCases": [
+      "focus leaks to the background behind a modal drawer",
+      "a backdrop click discards a half-filled form without asking",
+      "the drawer grows past the viewport and the save button is unreachable",
+      "closing returns focus to the top of the document"
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "modal",
+      "enabled": ["default", "focus-visible", "active", "disabled", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "hover",
+          "reason": "the modal surface itself is not hoverable; its controls carry hover states"
+        }
+      ]
+    },
+    {
+      "variant": "non-modal",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "a non-modal detail panel has no inert state; it closes instead"
+        }
+      ]
+    }
+  ]
+}

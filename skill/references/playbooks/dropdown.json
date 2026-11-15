@@ -1,0 +1,291 @@
+{
+  "id": "dropdown",
+  "surface": "operate",
+  "component": "dropdown",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Whether this is a menu of actions or a select of values, because they are different widgets",
+      "usingRules": ["dropdown-menu-vs-select"]
+    },
+    {
+      "order": 2,
+      "decide": "How the trigger, the list and the keyboard contract relate",
+      "usingRules": ["dropdown-keyboard-contract"]
+    },
+    {
+      "order": 3,
+      "decide": "Where the menu renders when the trigger sits near a viewport edge",
+      "usingRules": ["dropdown-placement"]
+    },
+    {
+      "order": 4,
+      "decide": "How destructive items are separated and confirmed",
+      "usingRules": ["dropdown-destructive"]
+    },
+    {
+      "order": 5,
+      "decide": "How async items load and what the trigger says meanwhile",
+      "usingRules": ["dropdown-async"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "dropdown-menu-vs-select",
+      "kind": "convention",
+      "statement": "A menu holds actions and closes on activation; a select holds values and keeps its chosen value visible in the trigger. Using one for the other breaks the keyboard contract either way."
+    },
+    {
+      "id": "dropdown-keyboard-contract",
+      "kind": "convention",
+      "statement": "Enter, Space and ArrowDown open the menu with focus on the first item; arrows cycle, Home and End jump, typeahead matches, Escape closes and returns focus to the trigger."
+    },
+    {
+      "id": "dropdown-placement",
+      "kind": "convention",
+      "statement": "The menu flips and shifts to stay inside the viewport, and never renders off-screen behind a scroll container; a menu taller than its space scrolls internally."
+    },
+    {
+      "id": "dropdown-destructive",
+      "kind": "convention",
+      "statement": "Destructive items sit below a separator, are labelled with the object they affect, and require confirmation; they are never the item under the pointer when the menu opens."
+    },
+    {
+      "id": "dropdown-async",
+      "kind": "convention",
+      "statement": "Async items show a pending row inside the open menu, the trigger keeps its label while loading, and a failed load offers retry inside the menu rather than closing it."
+    }
+  ],
+  "stateMachine": {
+    "component": "dropdown",
+    "variants": ["menu", "select"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "an open menu owns its request; a response for a menu that has closed is dropped, and a response for a superseded query is discarded by sequence",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "active",
+        "trigger": "the trigger is activated",
+        "motion": {
+          "motion": "the menu fades and offsets into place over 140ms",
+          "reducedMotion": "the menu appears instantly in place"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "an item is chosen or Escape is pressed",
+        "motion": {
+          "motion": "the menu fades out over 100ms",
+          "reducedMotion": "the menu disappears instantly and focus returns to the trigger"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "loading",
+        "trigger": "async items begin loading",
+        "motion": {
+          "motion": "a pending row appears inside the menu over 120ms",
+          "reducedMotion": "the pending row appears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the items arrive",
+        "motion": {
+          "motion": "the list fades in over 140ms without resizing the menu twice",
+          "reducedMotion": "the list appears instantly at its final height"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the items fail",
+        "motion": {
+          "motion": "a retry row replaces the pending row over 120ms",
+          "reducedMotion": "the retry row appears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the control",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "the action is retried",
+        "motion": {
+          "motion": "the control returns to pending over 120ms",
+          "reducedMotion": "the control returns to pending instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "the confirmation clears",
+        "motion": {
+          "motion": "the confirmation fades over 140ms",
+          "reducedMotion": "the confirmation disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the control becomes available again",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "unavailability is a permission or load fact, not an animation; the control states why instead of moving"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "sections": {
+    "intent": "Expose a small set of actions or values from one trigger without hiding them behind a second navigation level.",
+    "useCases": [
+      "open a row's action menu",
+      "choose a status from five values",
+      "pick a saved view"
+    ],
+    "nicheDifferences": [
+      "A dropdown is cheap to open and expensive to get wrong: focus, placement and closing behaviour are the whole widget",
+      "The difference between menu and select is not cosmetic, it is what Enter does"
+    ],
+    "inputs": [
+      "whether the items are actions or values",
+      "how many items realistically exist",
+      "whether items load asynchronously",
+      "whether any item is destructive",
+      "the trigger's context near viewport edges"
+    ],
+    "anatomy": [
+      "a trigger with aria-haspopup and aria-expanded",
+      "a listbox or menu with roving focus",
+      "a separator before destructive items",
+      "an internal scroll region",
+      "a pending and a retry row"
+    ],
+    "styling": [
+      "the menu sits 4 px below the trigger with one shadow level",
+      "items are 40 px tall with the keyboard shortcut right-aligned",
+      "destructive items use the danger colour only inside the menu"
+    ],
+    "a11y": [
+      "role=menu/menuitem or role=listbox/option, never a div soup",
+      "the trigger reflects expanded state and the menu is labelled by the trigger",
+      "Escape closes and restores focus, and focus never moves to the body",
+      "disabled items are skipped by arrow navigation and expose their reason"
+    ],
+    "responsive": [
+      "the menu narrows to the trigger width but never below 180 px",
+      "at 320 px the menu becomes a bottom sheet with the same keyboard contract",
+      "placement flips above the trigger when there is no room below"
+    ],
+    "copy": [
+      "items are verbs: 'Duplicate', 'Archive', 'Delete invoice INV-1042'",
+      "shortcuts are shown as text, not only as symbols",
+      "an empty menu says why there is nothing to do"
+    ],
+    "alternatives": [
+      "inline buttons when the actions are two and always visible",
+      "a select with a search field (combobox) when the value list is long",
+      "a context menu for canvas-style surfaces"
+    ],
+    "references": [
+      {
+        "label": "WAI-ARIA Authoring Practices Guide",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WCAG 2.2 SC 2.1.1 Keyboard",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "SUS primitive convention (this project)",
+        "date": "2026-11-15",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "Enter, Space and ArrowDown open the menu onto the first item",
+      "Escape closes and returns focus to the trigger",
+      "the menu stays inside the viewport near edges and scrolls internally when tall",
+      "destructive items are separated, object-named and confirmed",
+      "a failed async load offers retry without closing the menu"
+    ],
+    "failureCases": [
+      "focus escapes to the document body when the menu closes",
+      "the menu opens off-screen at the right edge of a scrolled table",
+      "Delete sits under the pointer and fires on a double click",
+      "the select's trigger loses the chosen value after selection"
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "menu",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "individual items disable; the trigger itself is either available or removed"
+        }
+      ]
+    },
+    {
+      "variant": "select",
+      "enabled": ["default", "hover", "focus-visible", "active", "disabled", "success", "error"],
+      "refused": [
+        {
+          "state": "loading",
+          "reason": "a select's own options are static; async loading belongs to a combobox, not a select"
+        }
+      ]
+    }
+  ]
+}

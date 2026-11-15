@@ -1,0 +1,291 @@
+{
+  "id": "badge",
+  "surface": "any",
+  "component": "badge",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "What the badge is telling the reader: status, count or category",
+      "usingRules": ["badge-three-jobs"]
+    },
+    {
+      "order": 2,
+      "decide": "Whether the text is read in place or hidden from the reading order",
+      "usingRules": ["badge-announce-once"]
+    },
+    {
+      "order": 3,
+      "decide": "How counts cap, pluralise and localise",
+      "usingRules": ["badge-count-caps"]
+    },
+    {
+      "order": 4,
+      "decide": "Whether colour carries meaning alone",
+      "usingRules": ["badge-not-colour-only"]
+    },
+    {
+      "order": 5,
+      "decide": "When a badge should have been plain text",
+      "usingRules": ["badge-restraint"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "badge-three-jobs",
+      "kind": "convention",
+      "statement": "A badge does exactly one of three jobs \u2014 status, count or category \u2014 and its shape differs per job so a count is never mistaken for a state."
+    },
+    {
+      "id": "badge-announce-once",
+      "kind": "convention",
+      "statement": "A status badge is in the reading order once, attached to its object; a decorative dot has no text, and a count badge on a navigation item is folded into the link's accessible name."
+    },
+    {
+      "id": "badge-count-caps",
+      "kind": "convention",
+      "statement": "Counts cap at 99+ with the exact number still available in the accessible name, are pluralised with the locale's rules, and are formatted with the locale's digits."
+    },
+    {
+      "id": "badge-not-colour-only",
+      "kind": "convention",
+      "statement": "Status colour is always paired with text or an icon whose shape differs, because a red dot and a green dot are the same dot to a colour-blind reader."
+    },
+    {
+      "id": "badge-restraint",
+      "kind": "convention",
+      "statement": "If the value is a sentence the reader needs, it is text; a page where every row carries a coloured badge has no status signal at all."
+    }
+  ],
+  "stateMachine": {
+    "component": "badge",
+    "variants": ["status", "count", "category"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "a count that updates from a live feed applies only if it is newer than the rendered value; a lower stale value never overwrites a higher fresh one",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "loading",
+        "trigger": "the status is being recomputed",
+        "motion": {
+          "motion": "a static muted badge holds the layout over 120ms",
+          "reducedMotion": "the muted badge appears with no animation"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the status resolves",
+        "motion": {
+          "motion": "the badge cross-fades to its value over 140ms",
+          "reducedMotion": "the value appears instantly and is announced once"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the status cannot be resolved",
+        "motion": {
+          "motion": "a neutral 'unknown' badge replaces the placeholder over 120ms",
+          "reducedMotion": "the 'unknown' badge appears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "the status is retried",
+        "motion": {
+          "motion": "the badge returns to its muted placeholder over 120ms",
+          "reducedMotion": "the placeholder returns instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "active",
+        "trigger": "a count increments",
+        "motion": {
+          "motion": "the count nudges 1 px up and settles over 160ms",
+          "reducedMotion": "the count changes instantly with no movement"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the control",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "the pressed/open state is released",
+        "motion": {
+          "motion": "the state settles back over 120ms",
+          "reducedMotion": "the state settles instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the control becomes available again",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "unavailability is a permission or load fact, not an animation; the control states why instead of moving"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "sections": {
+    "intent": "State one fact about an object in a way that is scannable and still says the same thing to someone who cannot see the colour.",
+    "useCases": [
+      "see that an invoice is overdue",
+      "see three unread items in a list",
+      "see that a record is archived"
+    ],
+    "nicheDifferences": [
+      "Badges are the most over-used element in admin products: they are cheap to add and quickly become noise",
+      "The discipline is that a badge must change a decision or it is decoration"
+    ],
+    "inputs": [
+      "whether the fact is a state, a count or a category",
+      "the vocabulary of states and whether each has a colour",
+      "how counts cap and pluralise",
+      "the locales and digits"
+    ],
+    "anatomy": [
+      "a pill with text",
+      "an optional icon whose shape differs per state",
+      "a count badge with a cap",
+      "an accessible name that includes the fact"
+    ],
+    "styling": [
+      "status pills use a tinted background at 12% with full-strength text",
+      "count badges are a filled circle at least 16 px with 1 px optical alignment",
+      "never two badge styles in one row"
+    ],
+    "a11y": [
+      "status is text first; colour is secondary and not the only signal",
+      "a count badge inside a link is part of that link's accessible name",
+      "'unknown' is a real state, not an empty badge"
+    ],
+    "responsive": [
+      "count badges keep their cap readable at 320 px",
+      "status pills wrap below the label rather than truncating it",
+      "long category names truncate in the middle with the full value available"
+    ],
+    "copy": [
+      "states are named from the object's vocabulary: 'Overdue', not 'Status 3'",
+      "counts read '99+' with 'more than 99' in the accessible name",
+      "'unknown' rather than an empty or zero badge"
+    ],
+    "alternatives": [
+      "plain text in a table cell when the value is read row by row",
+      "a chip when the value filters",
+      "an icon plus text when the state is binary"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 SC 1.4.1 Use of Color",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WAI-ARIA Authoring Practices Guide",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "SUS primitive convention (this project)",
+        "date": "2026-11-15",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "each badge does one job and its shape matches the job",
+      "status is paired with text and never carried by colour alone",
+      "counts cap at 99+ with the exact number in the accessible name",
+      "an unknown state exists rather than an empty badge",
+      "a count badge inside a link is part of that link's name"
+    ],
+    "failureCases": [
+      "red and green dots are the only difference between paid and overdue",
+      "a count badge is announced twice, once by the badge and once by the link",
+      "counts render as '1000' and break the layout",
+      "every row carries a badge so none of them means anything"
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "status",
+      "enabled": ["default", "hover", "focus-visible", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "active",
+          "reason": "a status label is not pressable; a pressable status is a filter chip"
+        },
+        {
+          "state": "disabled",
+          "reason": "a status describes an object and is never inert"
+        }
+      ]
+    },
+    {
+      "variant": "count",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "a count is informational; if it cannot be shown it is omitted"
+        }
+      ]
+    },
+    {
+      "variant": "category",
+      "enabled": ["default", "hover", "focus-visible", "disabled", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "active",
+          "reason": "a category label is not a button unless it filters, in which case it is a chip"
+        }
+      ]
+    }
+  ]
+}

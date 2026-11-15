@@ -1,0 +1,279 @@
+{
+  "id": "pagination",
+  "surface": "operate",
+  "component": "pagination",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Whether the record set is paginated, infinitely loaded or both, and why",
+      "usingRules": ["pagination-page-not-stream"]
+    },
+    {
+      "order": 2,
+      "decide": "How the current page, total and range are stated so the reader knows where they are",
+      "usingRules": ["pagination-states-the-range"]
+    },
+    {
+      "order": 3,
+      "decide": "How the control behaves when there are 3 pages, 30 or 30 000",
+      "usingRules": ["pagination-scales"]
+    },
+    {
+      "order": 4,
+      "decide": "How page changes interact with the URL, focus and scroll",
+      "usingRules": ["pagination-url-and-focus"]
+    },
+    {
+      "order": 5,
+      "decide": "What the reader sees when the page they asked for no longer exists",
+      "usingRules": ["pagination-emptied-page"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "pagination-page-not-stream",
+      "kind": "convention",
+      "statement": "Records are paginated when the reader needs to compare, cite or return to a row; infinite loading is reserved for feeds where position never matters."
+    },
+    {
+      "id": "pagination-states-the-range",
+      "kind": "convention",
+      "statement": "The control always states the visible range and the total in text, because '1 2 3 \u2026 40' alone never tells anyone how much data they are looking at."
+    },
+    {
+      "id": "pagination-scales",
+      "kind": "convention",
+      "statement": "Up to seven pages are shown as numbers; beyond that the control collapses to first/last plus a page field, and the page field accepts a typed number."
+    },
+    {
+      "id": "pagination-url-and-focus",
+      "kind": "convention",
+      "statement": "The page lives in the URL, focus moves to the results heading after a page change, and scroll returns to the top of the results rather than the top of the document."
+    },
+    {
+      "id": "pagination-emptied-page",
+      "kind": "convention",
+      "statement": "If filters shrink the set below the requested page, the reader lands on the last available page with a note, never on an empty table that implies no data."
+    }
+  ],
+  "stateMachine": {
+    "component": "pagination",
+    "variants": ["numbered", "cursor"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "the page number is the request id; a response for a page the reader has already left is discarded",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "active",
+        "trigger": "a page button is pressed",
+        "motion": {
+          "motion": "the pressed page darkens over 100ms",
+          "reducedMotion": "the page state swaps instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "active",
+        "to": "loading",
+        "trigger": "the next page is requested",
+        "motion": {
+          "motion": "the results dim over 120ms while the control keeps its size",
+          "reducedMotion": "the results freeze without dimming"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the page arrives",
+        "motion": {
+          "motion": "the new rows fade in over 140ms",
+          "reducedMotion": "the rows swap instantly and the range is announced"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the page request fails",
+        "motion": {
+          "motion": "the previous page stays and an inline note appears over 120ms",
+          "reducedMotion": "the note appears instantly above the unchanged page"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the control",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "the action is retried",
+        "motion": {
+          "motion": "the control returns to pending over 120ms",
+          "reducedMotion": "the control returns to pending instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "the confirmation clears",
+        "motion": {
+          "motion": "the confirmation fades over 140ms",
+          "reducedMotion": "the confirmation disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the control becomes available again",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "unavailability is a permission or load fact, not an animation; the control states why instead of moving"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "sections": {
+    "intent": "Move through a long result set without losing the reader's place, and always say how much data lies on either side.",
+    "useCases": [
+      "jump to page 12 of a filtered set",
+      "return to page 1 after reviewing the end",
+      "type a page number when the set has 400 pages"
+    ],
+    "nicheDifferences": [
+      "Operate tables are read comparatively, so position and total are information, not decoration",
+      "A pager that hides the total makes every estimate a guess"
+    ],
+    "inputs": [
+      "the total record count and how it is computed",
+      "how many pages exist and the page size",
+      "whether deep links must restore a page",
+      "whether the set changes while paging"
+    ],
+    "anatomy": [
+      "range text and total",
+      "previous and next buttons",
+      "page numbers or a page field",
+      "first and last shortcuts",
+      "an inline failure note that keeps the current page"
+    ],
+    "styling": [
+      "the control is one row aligned to the end of the table, 44 px targets",
+      "the current page is distinguished by weight and aria-current, not colour alone",
+      "the pager never wraps to two ragged rows"
+    ],
+    "a11y": [
+      "the current page carries aria-current='page'",
+      "buttons have names like 'Page 12' and 'Next page'",
+      "the range text is a live region so a page change is announced",
+      "the page field is a real number input with a label"
+    ],
+    "responsive": [
+      "the pager collapses to previous/next plus the range under 640 px",
+      "the number row scrolls inside its own container if it must, never the page",
+      "tap targets stay at least 44 px"
+    ],
+    "copy": [
+      "'Showing 21\u201340 of 312 records'",
+      "an emptied page says 'That page is now empty \u2014 showing the last page'",
+      "errors say what failed and that the current page is unchanged"
+    ],
+    "alternatives": [
+      "a load-more button when the set grows while the reader reads",
+      "infinite scroll only for chronological feeds",
+      "an export when the reader needs every row"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 SC 2.4.8 Location",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WAI-ARIA Authoring Practices Guide",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "SUS primitive convention (this project)",
+        "date": "2026-11-15",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "the control states range and total in text",
+      "the current page is marked with aria-current and announceable",
+      "the page lives in the URL and survives a reload",
+      "a page change moves focus to the results heading",
+      "a page past the end lands on the last page with a note"
+    ],
+    "failureCases": [
+      "the total is missing so the reader cannot estimate",
+      "a page change resets scroll to the document top and the reader loses their filter bar",
+      "the pager renders 300 numbered buttons",
+      "deep links to page 12 silently open page 1"
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "numbered",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "individual page buttons become unavailable rather than the whole control"
+        }
+      ]
+    },
+    {
+      "variant": "cursor",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "a cursor control is either present or absent; it is never rendered inert"
+        }
+      ]
+    }
+  ]
+}

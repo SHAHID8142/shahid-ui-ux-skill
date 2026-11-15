@@ -1,0 +1,278 @@
+{
+  "id": "tabs",
+  "surface": "operate",
+  "component": "tabs",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Whether these are sections of one thing (tabs) or separate destinations (navigation)",
+      "usingRules": ["tabs-not-navigation"]
+    },
+    {
+      "order": 2,
+      "decide": "How the selected tab, its panel and the keyboard arrow behaviour relate",
+      "usingRules": ["tabs-roving-focus"]
+    },
+    {
+      "order": 3,
+      "decide": "Whether the selection is in the URL and what that costs",
+      "usingRules": ["tabs-deep-link"]
+    },
+    {
+      "order": 4,
+      "decide": "What happens when a panel is loading, empty or failed",
+      "usingRules": ["tabs-panel-states"]
+    },
+    {
+      "order": 5,
+      "decide": "How many tabs are tolerable before the strip becomes a horizontal scroller",
+      "usingRules": ["tabs-count-limit"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "tabs-not-navigation",
+      "kind": "convention",
+      "statement": "Tabs switch views of one object; if each view has its own URL, history and permissions, it is navigation and belongs in the sidebar."
+    },
+    {
+      "id": "tabs-roving-focus",
+      "kind": "convention",
+      "statement": "The tab list is one tab stop with roving focus: arrows move, Home and End jump, and the panel is associated with its tab through aria-controls and aria-labelledby."
+    },
+    {
+      "id": "tabs-deep-link",
+      "kind": "convention",
+      "statement": "The active tab is reflected in the URL fragment or query so a reload and a shared link open the same view; changing tabs never pushes history per keystroke."
+    },
+    {
+      "id": "tabs-panel-states",
+      "kind": "convention",
+      "statement": "Each panel owns its loading, empty and error states; a failing panel never blanks the strip, and the tab label carries a small status dot with a text equivalent."
+    },
+    {
+      "id": "tabs-count-limit",
+      "kind": "convention",
+      "statement": "More than six tabs means the information architecture is wrong; if the strip must scroll it does so with visible affordances and keyboard access, never by clipping."
+    }
+  ],
+  "stateMachine": {
+    "component": "tabs",
+    "variants": ["underline", "segmented"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "each panel owns its request; a panel that finishes loading after the reader switched away is kept for its tab and never painted over the visible one",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "active",
+        "trigger": "a tab is selected",
+        "motion": {
+          "motion": "the indicator slides to the new tab over 160ms",
+          "reducedMotion": "the indicator appears on the new tab instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "loading",
+        "trigger": "the selected panel begins loading",
+        "motion": {
+          "motion": "the panel dims over 120ms and keeps its height",
+          "reducedMotion": "the panel freezes without dimming"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the panel's content arrives",
+        "motion": {
+          "motion": "the panel fades in over 140ms",
+          "reducedMotion": "the panel appears instantly and is announced"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the panel fails",
+        "motion": {
+          "motion": "an inline error fills the panel over 120ms",
+          "reducedMotion": "the error appears instantly inside the same height"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "the panel retry is pressed",
+        "motion": {
+          "motion": "the panel returns to its pending state over 120ms",
+          "reducedMotion": "the panel returns to pending instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the control",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "the confirmation clears",
+        "motion": {
+          "motion": "the confirmation fades over 140ms",
+          "reducedMotion": "the confirmation disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the control becomes available again",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "unavailability is a permission or load fact, not an animation; the control states why instead of moving"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "sections": {
+    "intent": "Let a reader switch between views of the same object without losing the tab they were on, and without the strip pretending to be navigation.",
+    "useCases": [
+      "switch between Overview, Activity and Settings of one record",
+      "compare two views of the same data",
+      "reload and land on the same tab"
+    ],
+    "nicheDifferences": [
+      "Tabs are the cheapest information architecture and the most expensive when misused",
+      "Every tab must earn its place, because a hidden view is a view nobody visits"
+    ],
+    "inputs": [
+      "the number of views of this object and their independent states",
+      "whether the selection must be linkable",
+      "which panels load data",
+      "the longest tab label including translation"
+    ],
+    "anatomy": [
+      "a tab list with a moving indicator",
+      "panels associated by aria-controls",
+      "per-panel loading, empty and error states",
+      "a status dot with a text equivalent"
+    ],
+    "styling": [
+      "the indicator animates position, not width, at 160ms",
+      "labels stay on one line with 16 px horizontal padding",
+      "the active label gains weight, not only a colour"
+    ],
+    "a11y": [
+      "role=tablist/tab/tabpanel with correct aria-selected and aria-controls",
+      "arrow keys move, Home and End jump, and focus follows selection",
+      "the panel is labelled by its tab",
+      "status dots are exposed as text, not colour"
+    ],
+    "responsive": [
+      "the strip scrolls inside its own container under 640 px with fading edges",
+      "labels do not truncate; they wrap to a second line before they clip",
+      "panels keep their height while loading to prevent jumps"
+    ],
+    "copy": [
+      "tab labels are nouns the reader would use, not internal module names",
+      "a failed panel says which panel failed and offers retry",
+      "an empty panel says what would appear here"
+    ],
+    "alternatives": [
+      "an anchored section list when the views are long and sequential",
+      "a sidebar when each view deserves its own URL",
+      "a split view when two panels are compared side by side"
+    ],
+    "references": [
+      {
+        "label": "WAI-ARIA Authoring Practices Guide",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WCAG 2.2 SC 2.4.3 Focus Order",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "SUS primitive convention (this project)",
+        "date": "2026-11-15",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "the tab list is a single tab stop with arrow-key movement",
+      "the selected tab is reflected in the URL and survives reload",
+      "a failing panel never blanks the strip and offers retry",
+      "status is conveyed as text as well as a dot",
+      "the strip never clips; it scrolls or wraps"
+    ],
+    "failureCases": [
+      "each tab is a separate link and the browser history fills with duplicates",
+      "arrow keys move focus without selecting, and the panel never updates",
+      "a loading panel collapses and the page jumps",
+      "the sixth tab is invisible with no affordance"
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "underline",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "an unavailable tab is hidden or explained, not rendered as a dead tab stop"
+        }
+      ]
+    },
+    {
+      "variant": "segmented",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "a segmented control with a dead segment is a lie about the choice set"
+        }
+      ]
+    }
+  ]
+}

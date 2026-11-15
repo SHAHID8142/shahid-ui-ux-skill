@@ -610,3 +610,11 @@
   (artifact-first viewport, reserved tile space, focus-restoring dialog, outcomes attributed or
   labelled illustrative). 29 playbook tests, verify 625 tests. Receipt: VERIFICATION/T0810.md.
   Next: T0811.
+
+- 2026-11-15T17:20:00+06:00 | Pi (FreePi) | T0811 | Second-wave primitives A (8).
+  pagination, tabs, accordion, drawer, dropdown, breadcrumb, avatar, badge — each a contract rather
+  than an implementation: focus return and roving focus, state in the URL, unsaved-work guards,
+  destructive separation, hierarchy over history, and meaning that survives colour blindness. A
+  shared builder keeps the gate-critical shape (outbound transition per state, exact variant matrix)
+  in one place, and the gates still rejected two real content errors. 33 playbook tests, verify 629.
+  Receipt: VERIFICATION/T0811.md. Next: T0812.

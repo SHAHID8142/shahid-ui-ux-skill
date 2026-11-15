@@ -3035,9 +3035,27 @@
       ],
       "risk": "breadth over depth",
       "rollback": "per-playbook acceptance",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0811.md",
+        "skill/references/playbooks/pagination.json",
+        "skill/references/playbooks/tabs.json",
+        "skill/references/playbooks/accordion.json",
+        "skill/references/playbooks/drawer.json",
+        "skill/references/playbooks/dropdown.json",
+        "skill/references/playbooks/breadcrumb.json",
+        "skill/references/playbooks/avatar.json",
+        "skill/references/playbooks/badge.json"
+      ],
+      "results": [
+        "eight primitives added at the 12-part standard: pagination (range+total in text, page in URL, emptied page lands on the last page), tabs (roving focus, aria-controls, per-panel states, deep-link), accordion (heading+button semantics, measured reveal in band, required content never collapsed)",
+        "drawer (modal vs non-modal decided, focus enters and returns to opener, unsaved-edit guard, fits visual viewport), dropdown (menu vs select separation, full keyboard contract, edge flipping, destructive separation), breadcrumb (hierarchy not history, aria-current text, middle expansion, two levels render nothing)",
+        "avatar (name always resolvable, deterministic initials, presence in text, +N names the rest), badge (three jobs three shapes, never colour-only, 99+ cap with exact name, unknown is a state)",
+        "30 playbooks valid, motion gate clean, 12 parts present, 33 playbook tests, full verify 629 tests"
+      ]
     },
     {
       "id": "T0812",

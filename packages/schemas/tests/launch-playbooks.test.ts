@@ -28,6 +28,15 @@ const SECOND_WAVE = [
   'onboarding',
   'article-layout',
   'gallery-case-study',
+  // second-wave primitives A (T0811)
+  'pagination',
+  'tabs',
+  'accordion',
+  'drawer',
+  'dropdown',
+  'breadcrumb',
+  'avatar',
+  'badge',
 ];
 
 /** Batch 1 (T0405). Commerce lives in T0405c; data table and record forms in T0407. */
@@ -376,5 +385,46 @@ describe('second-wave experience playbooks (T0810)', () => {
     const text = allText('gallery-case-study.json').toLowerCase();
     expect(text).toContain('illustrative');
     expect(text).toContain('reserves space');
+  });
+});
+
+describe('second-wave primitives A (T0811)', () => {
+  it('every primitive declares a full variant matrix with reasons for refusals', () => {
+    for (const id of [
+      'pagination',
+      'tabs',
+      'accordion',
+      'drawer',
+      'dropdown',
+      'breadcrumb',
+      'avatar',
+      'badge',
+    ]) {
+      const playbook = load(`${id}.json`);
+      expect(playbook.variantMatrix.length, id).toBeGreaterThanOrEqual(2);
+      for (const row of playbook.variantMatrix) {
+        for (const refusal of row.refused) {
+          expect(refusal.reason.length, `${id}/${row.variant}/${refusal.state}`).toBeGreaterThan(
+            20,
+          );
+        }
+      }
+    }
+  });
+
+  it('tab, accordion and dropdown keyboard contracts are stated, not implied', () => {
+    expect(allText('tabs.json').toLowerCase()).toContain('roving focus');
+    expect(allText('accordion.json').toLowerCase()).toContain('aria-expanded');
+    expect(allText('dropdown.json').toLowerCase()).toContain('escape');
+  });
+
+  it('drawer and dropdown guard unsaved work and viewport edges', () => {
+    expect(allText('drawer.json').toLowerCase()).toContain('unsaved edits');
+    expect(allText('dropdown.json').toLowerCase()).toContain('flips');
+  });
+
+  it('avatar and badge never carry meaning by colour alone', () => {
+    expect(allText('avatar.json').toLowerCase()).toContain('colour alone');
+    expect(allText('badge.json').toLowerCase()).toContain('not the only signal');
   });
 });

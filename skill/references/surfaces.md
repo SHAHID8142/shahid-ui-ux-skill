@@ -13,3 +13,12 @@ this file never names guidance that does not exist (G3).
 Deterministic tooling available now: rubric scoring, capture harness, axe +
 Lighthouse gates, evidence-bundle validation, anti-slop scanner (from M3),
 all via the SUS CLI (skill/scripts/).
+
+## Second-wave primitives (T0811)
+
+pagination, tabs, accordion, drawer, dropdown, breadcrumb, avatar and badge are built to the
+same 12-part standard as the launch set. Each one encodes the contract that actually breaks in
+production: focus return and roving focus (tabs, drawer, dropdown), state in the URL
+(pagination, tabs, accordion), unsaved-work guards (drawer), destructive separation
+(dropdown), hierarchy over history (breadcrumb) and meaning that survives colour blindness
+(avatar presence, badge status).

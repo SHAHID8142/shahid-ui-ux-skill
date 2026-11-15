@@ -1,0 +1,297 @@
+{
+  "id": "accordion",
+  "surface": "any",
+  "component": "accordion",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Whether one section opens at a time or several, and what the content demands",
+      "usingRules": ["accordion-single-vs-multi"]
+    },
+    {
+      "order": 2,
+      "decide": "Whether the header is a heading with a button inside, so screen-reader navigation still works",
+      "usingRules": ["accordion-heading-semantics"]
+    },
+    {
+      "order": 3,
+      "decide": "Whether open state is linkable and whether the first section opens by default",
+      "usingRules": ["accordion-open-state"]
+    },
+    {
+      "order": 4,
+      "decide": "How the reveal moves, and what happens to a reader who opened several",
+      "usingRules": ["accordion-reveal-height"]
+    },
+    {
+      "order": 5,
+      "decide": "When an accordion is the wrong control",
+      "usingRules": ["accordion-not-a-hider"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "accordion-single-vs-multi",
+      "kind": "convention",
+      "statement": "Single-open is for short answers to parallel questions; multi-open is for independent sections a reader may compare, and the choice is stated in the design record."
+    },
+    {
+      "id": "accordion-heading-semantics",
+      "kind": "convention",
+      "statement": "Each header is a real heading containing a button with aria-expanded and aria-controls, so heading navigation still finds the sections when they are collapsed."
+    },
+    {
+      "id": "accordion-open-state",
+      "kind": "convention",
+      "statement": "The open section is in the URL when the section matters enough to share; nothing opens by default above the first viewport, because a collapsed answer is what makes an accordion cheaper than prose."
+    },
+    {
+      "id": "accordion-reveal-height",
+      "kind": "convention",
+      "statement": "The reveal animates height with a measured value inside the 60\u2013240 ms band, and reduced-motion shows the content with no height animation and no loss of information."
+    },
+    {
+      "id": "accordion-not-a-hider",
+      "kind": "convention",
+      "statement": "An accordion never hides the answer to the question the page exists to answer, and never hides required form fields or legal text."
+    }
+  ],
+  "stateMachine": {
+    "component": "accordion",
+    "variants": ["single", "multi"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "a section that loads its body on open keeps that body for the life of the page; a late response for a closed section is stored and never re-opens it",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "active",
+        "trigger": "a section header is activated",
+        "motion": {
+          "motion": "the panel expands over 180ms to its measured height",
+          "reducedMotion": "the panel appears at full height instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "the open section is collapsed",
+        "motion": {
+          "motion": "the panel contracts over 140ms",
+          "reducedMotion": "the panel disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "loading",
+        "trigger": "an open section fetches its body",
+        "motion": {
+          "motion": "the panel holds its opening height over 120ms and shows a static placeholder",
+          "reducedMotion": "the placeholder appears with no animation and the height does not change"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the body arrives",
+        "motion": {
+          "motion": "the body fades in over 140ms inside the panel",
+          "reducedMotion": "the body appears instantly and the panel keeps its width"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the body fails to load",
+        "motion": {
+          "motion": "the panel shows a retry note over 120ms",
+          "reducedMotion": "the retry note appears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the control",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "the action is retried",
+        "motion": {
+          "motion": "the control returns to pending over 120ms",
+          "reducedMotion": "the control returns to pending instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "the confirmation clears",
+        "motion": {
+          "motion": "the confirmation fades over 140ms",
+          "reducedMotion": "the confirmation disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the control becomes available again",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "unavailability is a permission or load fact, not an animation; the control states why instead of moving"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "sections": {
+    "intent": "Answer a set of parallel short questions on one page without making the reader scroll past the ones they do not need.",
+    "useCases": [
+      "read FAQ answers",
+      "compare three configuration options",
+      "skim section titles before committing to read one"
+    ],
+    "nicheDifferences": [
+      "An accordion is a reading aid, not a hiding place",
+      "If the page's main answer is behind a closed section, the page is slower than plain prose"
+    ],
+    "inputs": [
+      "the number of sections and whether they are parallel",
+      "whether the open section must be linkable",
+      "whether bodies load lazily",
+      "whether required content lives inside"
+    ],
+    "anatomy": [
+      "headings containing buttons with aria-expanded",
+      "a panel per section with aria-labelledby",
+      "a chevron that rotates as a secondary cue",
+      "an optional loading and error region per panel"
+    ],
+    "styling": [
+      "headers are 44 px tall with the whole row clickable",
+      "the chevron rotates 180 degrees over 120ms",
+      "open panels get a subtle divider, not a colour flood"
+    ],
+    "a11y": [
+      "each header is a button inside a heading, never a div with onclick",
+      "aria-expanded and aria-controls are correct and update",
+      "the panel is not focus-trapped and is reachable by Tab in reading order",
+      "content is not hidden from assistive technology when open"
+    ],
+    "responsive": [
+      "at 320 px headers wrap to two lines without truncating the question",
+      "long answers keep the measure and never open into a horizontal scroller",
+      "the reveal never leaves a blank half-screen on small heights"
+    ],
+    "copy": [
+      "headers are the questions themselves, in the reader's words",
+      "the first sentence of an answer answers the question",
+      "no 'Click to expand' inside an already-labelled header"
+    ],
+    "alternatives": [
+      "plain headings and prose when every answer matters",
+      "tabs when only one section is ever read at a time",
+      "a disclosure for one optional block inside a form"
+    ],
+    "references": [
+      {
+        "label": "WAI-ARIA Authoring Practices Guide",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WCAG 2.2 SC 1.3.1 Info and Relationships",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "SUS primitive convention (this project)",
+        "date": "2026-11-15",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "headers are headings containing buttons with correct aria-expanded",
+      "the reveal stays inside the 60\u2013240 ms band and moves nothing else",
+      "reduced-motion reveals without height animation",
+      "required content and legal text are never collapsed",
+      "heading navigation reaches collapsed sections"
+    ],
+    "failureCases": [
+      "sections use divs with onclick and screen readers cannot tell they expand",
+      "the reveal animation leaves the panel at half height on a slow device",
+      "the answer to the page's main question is hidden by default",
+      "the open state is lost on reload"
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "single",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    },
+    {
+      "variant": "multi",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    }
+  ]
+}

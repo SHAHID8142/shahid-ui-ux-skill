@@ -1,0 +1,297 @@
+{
+  "id": "breadcrumb",
+  "surface": "any",
+  "component": "breadcrumb",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Whether the trail reflects hierarchy (where am I) or history (how did I get here)",
+      "usingRules": ["breadcrumb-hierarchy-not-history"]
+    },
+    {
+      "order": 2,
+      "decide": "How depth collapses when the trail is longer than the space",
+      "usingRules": ["breadcrumb-collapse-middle"]
+    },
+    {
+      "order": 3,
+      "decide": "What the current page element is, and whether it is a link",
+      "usingRules": ["breadcrumb-current-is-text"]
+    },
+    {
+      "order": 4,
+      "decide": "How the mobile version stays truthful without becoming a back button",
+      "usingRules": ["breadcrumb-mobile"]
+    },
+    {
+      "order": 5,
+      "decide": "When a breadcrumb is useless",
+      "usingRules": ["breadcrumb-or-nothing"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "breadcrumb-hierarchy-not-history",
+      "kind": "convention",
+      "statement": "The trail shows the object's place in the product hierarchy, never the reader's click history; a trail that changes when you arrive from search is a lie about structure."
+    },
+    {
+      "id": "breadcrumb-collapse-middle",
+      "kind": "convention",
+      "statement": "Long trails keep the first and last two levels and collapse the middle into one expansion, which opens as a menu rather than truncating with an ellipsis."
+    },
+    {
+      "id": "breadcrumb-current-is-text",
+      "kind": "convention",
+      "statement": "The current page is plain text with aria-current='page'; it is not a link to itself, and the separators are hidden from assistive technology."
+    },
+    {
+      "id": "breadcrumb-mobile",
+      "kind": "convention",
+      "statement": "On small screens the trail collapses to the parent plus the current page; it never turns into a bare back arrow that hides where the reader is."
+    },
+    {
+      "id": "breadcrumb-or-nothing",
+      "kind": "convention",
+      "statement": "Two levels or fewer is not a breadcrumb; the page title and the sidebar already say it."
+    }
+  ],
+  "stateMachine": {
+    "component": "breadcrumb",
+    "variants": ["inline", "collapsed"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "no async data in the trail; the collapsed expansion loads its ancestors once and caches them for the page's lifetime",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "active",
+        "trigger": "the collapsed middle is expanded",
+        "motion": {
+          "motion": "the ancestor menu opens over 140ms",
+          "reducedMotion": "the menu appears instantly in place"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "the expansion is dismissed",
+        "motion": {
+          "motion": "the menu closes over 100ms",
+          "reducedMotion": "the menu disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "loading",
+        "trigger": "ancestors are fetched for the expansion",
+        "motion": {
+          "motion": "a pending row appears in the menu over 120ms",
+          "reducedMotion": "the pending row appears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "ancestors arrive",
+        "motion": {
+          "motion": "the rows fade in over 140ms",
+          "reducedMotion": "the rows appear instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "ancestors fail",
+        "motion": {
+          "motion": "a retry row replaces the pending row over 120ms",
+          "reducedMotion": "the retry row appears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the control",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "the action is retried",
+        "motion": {
+          "motion": "the control returns to pending over 120ms",
+          "reducedMotion": "the control returns to pending instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "the confirmation clears",
+        "motion": {
+          "motion": "the confirmation fades over 140ms",
+          "reducedMotion": "the confirmation disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the control becomes available again",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "unavailability is a permission or load fact, not an animation; the control states why instead of moving"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "sections": {
+    "intent": "Tell a reader where the page sits in the product, and give them one click back up the hierarchy.",
+    "useCases": [
+      "see that a record belongs to a project inside a workspace",
+      "jump two levels up",
+      "return to a parent collection after a deep link"
+    ],
+    "nicheDifferences": [
+      "Operate products are deep, and deep links are how people arrive",
+      "A trail is the only orientation cue that survives a direct link"
+    ],
+    "inputs": [
+      "the hierarchy depth and its stable names",
+      "whether the trail must be linkable at every level",
+      "the longest label including translation",
+      "whether ancestors load lazily"
+    ],
+    "anatomy": [
+      "a nav landmark labelled 'Breadcrumb'",
+      "one link per ancestor level",
+      "a collapse control for the middle",
+      "the current page as text with aria-current"
+    ],
+    "styling": [
+      "single line, 14 px, muted ancestors and a stronger current page",
+      "separators are slashes drawn in CSS, hidden from screen readers",
+      "no hover underline on the current page because it is not a link"
+    ],
+    "a11y": [
+      "wrapped in nav with aria-label='Breadcrumb' and an ordered list",
+      "aria-current='page' on the last item",
+      "separators are aria-hidden",
+      "the collapse control is a button with an expanded state"
+    ],
+    "responsive": [
+      "collapses to parent plus current under 640 px",
+      "labels truncate only in the middle levels, never the current page",
+      "the trail never wraps to three lines; it collapses instead"
+    ],
+    "copy": [
+      "level names match the sidebar's names exactly",
+      "the collapse control says how many levels it hides",
+      "no 'Home > ... > Page' filler when the reader is already home"
+    ],
+    "alternatives": [
+      "a back link when the hierarchy is only one level deep",
+      "an in-page section list when the depth is within one document",
+      "the sidebar alone when the tree is always visible"
+    ],
+    "references": [
+      {
+        "label": "WAI-ARIA Authoring Practices Guide",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WCAG 2.2 SC 2.4.8 Location",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "SUS primitive convention (this project)",
+        "date": "2026-11-15",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "the trail reflects hierarchy, not click history",
+      "the current page is text with aria-current and is not self-linked",
+      "a long trail collapses the middle into an expansion menu",
+      "at 320 px the trail is parent plus current",
+      "two levels or fewer renders no breadcrumb at all"
+    ],
+    "failureCases": [
+      "the trail changes depending on how the reader arrived",
+      "the current page links to itself",
+      "the ellipsis is a dead end with no menu",
+      "the mobile version becomes a back arrow that hides the hierarchy"
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "inline",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    },
+    {
+      "variant": "collapsed",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    }
+  ]
+}

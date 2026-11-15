@@ -1,0 +1,289 @@
+{
+  "id": "avatar",
+  "surface": "any",
+  "component": "avatar",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "What the avatar stands for here: a person, an organisation or a decorative accent",
+      "usingRules": ["avatar-always-has-a-name"]
+    },
+    {
+      "order": 2,
+      "decide": "The fallback when the image is missing, slow or fails",
+      "usingRules": ["avatar-fallback-initials"]
+    },
+    {
+      "order": 3,
+      "decide": "Whether presence is shown and how it is described",
+      "usingRules": ["avatar-presence-text"]
+    },
+    {
+      "order": 4,
+      "decide": "The size ladder and where each size is legitimate",
+      "usingRules": ["avatar-size-ladder"]
+    },
+    {
+      "order": 5,
+      "decide": "How stacked avatars summarise a group without hiding who is in it",
+      "usingRules": ["avatar-stack-counts"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "avatar-always-has-a-name",
+      "kind": "convention",
+      "statement": "An avatar always resolves to a name in text nearby or in its accessible name; an image alone is never the only identification."
+    },
+    {
+      "id": "avatar-fallback-initials",
+      "kind": "convention",
+      "statement": "Initials are derived from the display name deterministically, capped at two graphemes, with a per-person colour chosen by hash rather than by mood; a missing image shows initials, never a broken icon."
+    },
+    {
+      "id": "avatar-presence-text",
+      "kind": "convention",
+      "statement": "Presence is a dot plus a text equivalent in the accessible name ('Amina Rahman, online'); colour alone never carries it."
+    },
+    {
+      "id": "avatar-size-ladder",
+      "kind": "convention",
+      "statement": "Avatars ship at 24, 32 and 40 px with a 2 px ring on overlap; anything larger is a profile header, not an avatar."
+    },
+    {
+      "id": "avatar-stack-counts",
+      "kind": "convention",
+      "statement": "A stack shows at most three faces plus a '+N' whose accessible name lists the remaining names, and the stack is not the only way to see membership."
+    }
+  ],
+  "stateMachine": {
+    "component": "avatar",
+    "variants": ["single", "stack"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "a late-loading image replaces the initials only if the person is still the same; a stale response for a previous person is discarded",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "loading",
+        "trigger": "the image begins loading",
+        "motion": {
+          "motion": "initials stay in place with no animation over 120ms",
+          "reducedMotion": "initials stay in place with no animation"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the image arrives",
+        "motion": {
+          "motion": "the image cross-fades over 160ms over the initials",
+          "reducedMotion": "the image replaces the initials instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the image fails",
+        "motion": {
+          "motion": "initials remain over 100ms while the failed image is dropped",
+          "reducedMotion": "initials remain unchanged; nothing moves"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "the image is retried",
+        "motion": {
+          "motion": "initials stay while the retry runs for 120ms",
+          "reducedMotion": "initials stay unchanged"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "active",
+        "trigger": "the avatar's profile action is opened",
+        "motion": {
+          "motion": "the popover appears over 140ms",
+          "reducedMotion": "the popover appears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "the profile action is dismissed",
+        "motion": {
+          "motion": "the popover fades over 100ms",
+          "reducedMotion": "the popover disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "default",
+        "trigger": "focus leaves the control",
+        "motion": {
+          "motion": "the focus ring disappears with no delay",
+          "reducedMotion": "identical \u2014 the ring is immediate in both cases"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "the pointer leaves",
+        "motion": {
+          "motion": "the hover tint recedes over 100ms",
+          "reducedMotion": "the tint disappears instantly"
+        },
+        "interruption": "cancel-restart",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "the confirmation clears",
+        "motion": {
+          "motion": "the confirmation fades over 140ms",
+          "reducedMotion": "the confirmation disappears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "disabled",
+        "to": "default",
+        "trigger": "the control becomes available again",
+        "motion": {
+          "motion": "none",
+          "reducedMotion": "same",
+          "noneReason": "unavailability is a permission or load fact, not an animation; the control states why instead of moving"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "sections": {
+    "intent": "Identify a person at a glance while always leaving a readable name behind the picture.",
+    "useCases": [
+      "see who wrote a comment",
+      "scan a stack of reviewers",
+      "open a person's profile popover"
+    ],
+    "nicheDifferences": [
+      "Avatars are decoration with a job: they accelerate recognition but never carry identity",
+      "Products that rely on the photo alone lock out anyone whose face is not their identifier"
+    ],
+    "inputs": [
+      "the display name's script and length",
+      "whether presence is available",
+      "the sizes used in each surface",
+      "the largest realistic stack"
+    ],
+    "anatomy": [
+      "an image with alt text equal to the name",
+      "initials with a hashed colour",
+      "a presence dot with a text equivalent",
+      "a +N badge for stacks"
+    ],
+    "styling": [
+      "24/32/40 px ladder with a 2 px page-coloured ring on overlap",
+      "initials in the same weight as body text, never bold display type",
+      "presence dot is 8 px, bottom-right, with a ring"
+    ],
+    "a11y": [
+      "alt text is the person's name, or empty when the name is adjacent in text",
+      "presence is included in the accessible name, not only as colour",
+      "the stack's +N names the remaining people",
+      "the profile popover is a button with an accessible name"
+    ],
+    "responsive": [
+      "stacks drop from three faces to two below 480 px",
+      "the +N keeps its own label rather than shrinking to an unreadable badge",
+      "initials never wrap or scale down below 10 px"
+    ],
+    "copy": [
+      "initials come from the name, not the email local part",
+      "the +N reads 'and 4 more'",
+      "an offline person reads 'Amina Rahman, offline'"
+    ],
+    "alternatives": [
+      "a plain name link when the list is small and textual",
+      "a initials-only list for dense audit tables",
+      "a facepile with a membership link on click"
+    ],
+    "references": [
+      {
+        "label": "WCAG 2.2 SC 1.4.1 Use of Color",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "WAI-ARIA Authoring Practices Guide",
+        "date": "2026-11-14",
+        "grade": "normative-standard"
+      },
+      {
+        "label": "SUS primitive convention (this project)",
+        "date": "2026-11-15",
+        "grade": "convention"
+      }
+    ],
+    "acceptance": [
+      "every avatar is identifiable by name in text or accessible name",
+      "a missing or failed image shows deterministic initials rather than a broken icon",
+      "presence is exposed as text as well as a dot",
+      "a stack of more than three shows a +N that names the rest",
+      "initials cap at two graphemes for any script"
+    ],
+    "failureCases": [
+      "the photo is the only identity and the name appears nowhere",
+      "initials are derived from an email address so they read as gibberish",
+      "presence is a green dot only",
+      "a 200 px avatar is used as an illustration"
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "single",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "an avatar is either shown or absent; it has no inert state"
+        }
+      ]
+    },
+    {
+      "variant": "stack",
+      "enabled": ["default", "hover", "focus-visible", "active", "loading", "success", "error"],
+      "refused": [
+        {
+          "state": "disabled",
+          "reason": "a group summary is never rendered disabled"
+        }
+      ]
+    }
+  ]
+}
