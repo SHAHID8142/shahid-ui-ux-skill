@@ -2,14 +2,14 @@
   "name": "sus",
   "version": "0.0.0",
   "private": true,
-  "description": "SUS \u2014 Shahid UI UX Skill monorepo (ADR-001 layout). Public repository (D34); the product is not published.",
+  "description": "SUS — Shahid UI UX Skill monorepo (ADR-001 layout). Public repository (D34); the product is not published.",
   "packageManager": "pnpm@11.22.0",
   "engines": {
     "node": ">=22"
   },
   "scripts": {
     "typecheck": "pnpm run --silent build && pnpm -r --if-present run typecheck",
-    "check": "node scripts/check-continuation.mjs && node scripts/check-handoff.mjs && node scripts/check-gates.mjs && node scripts/validate-skill.mjs && node scripts/validate-knowledge.mjs && node scripts/validate-playbooks.mjs || test $? -eq 3",
+    "check": "node scripts/check-continuation.mjs && node scripts/check-handoff.mjs && node scripts/check-roadmap.mjs && node scripts/check-gates.mjs && node scripts/validate-skill.mjs && node scripts/validate-knowledge.mjs && node scripts/validate-playbooks.mjs || test $? -eq 3",
     "test": "vitest run",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -21,7 +21,7 @@
     "skill": "node scripts/validate-skill.mjs",
     "playbooks": "node scripts/validate-playbooks.mjs",
     "knowledge": "node scripts/validate-knowledge.mjs",
-    "verify": "pnpm handoff && pnpm reach && pnpm claims && pnpm gates:full && pnpm lint && pnpm format:check && pnpm stylelint && pnpm typecheck && pnpm build && (pnpm directions || test $? -eq 3) && (pnpm motion || test $? -eq 3) && (pnpm parts || test $? -eq 3) && pnpm support && pnpm test",
+    "verify": "pnpm handoff && pnpm reach && pnpm claims && pnpm roadmap && pnpm gates:full && pnpm lint && pnpm format:check && pnpm stylelint && pnpm typecheck && pnpm build && (pnpm directions || test $? -eq 3) && (pnpm motion || test $? -eq 3) && (pnpm parts || test $? -eq 3) && pnpm support && pnpm test",
     "gates:full": "node scripts/check-gates.mjs && node scripts/validate-skill.mjs && node scripts/validate-knowledge.mjs && node scripts/validate-playbooks.mjs || test $? -eq 3",
     "hooks:install": "git config core.hooksPath .githooks && echo \"push gate installed (.githooks/pre-push)\"",
     "setup": "git config core.hooksPath .githooks && pnpm --filter @sus/eval-core exec playwright install chromium && node scripts/check-handoff.mjs >/dev/null && echo \"machine ready: push gate installed, chromium present, recorded state consistent\"",
@@ -38,7 +38,8 @@
     "reach": "node scripts/check-reachability.mjs",
     "regression": "node scripts/regression.mjs",
     "benchmark": "pnpm --filter @sus/eval-core benchmark",
-    "claims": "node scripts/check-claims.mjs"
+    "claims": "node scripts/check-claims.mjs",
+    "roadmap": "node scripts/check-roadmap.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

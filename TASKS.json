@@ -2641,7 +2641,8 @@
         "T1004",
         "T1006",
         "T1007",
-        "T1008"
+        "T1008",
+        "T1009"
       ],
       "files": [],
       "acc": [
@@ -3768,6 +3769,53 @@
         "studio-web 22/22; full verify 226/226 incl. substrate suites; 3 LOW findings routed to T0709 by peer agreement"
       ],
       "commit": "0543092"
+    },
+    {
+      "id": "T1009",
+      "m": "M10",
+      "title": "Make ROADMAP.md a generated view of TASKS.json and gate the drift",
+      "obj": "The public repository's roadmap still called every milestone pending with 100 of 102 tasks done, because its status table was hand-written. Generate the table from TASKS.json between markers, and fail the build when the page a reader sees disagrees with the canonical task document.",
+      "deps": [
+        "T1001",
+        "T0003"
+      ],
+      "files": [
+        "scripts/lib/roadmap.mjs",
+        "scripts/lib/roadmap.d.mts",
+        "scripts/check-roadmap.mjs",
+        "ROADMAP.md",
+        "packages/schemas/tests/roadmap.test.ts"
+      ],
+      "acc": [
+        "ROADMAP.md's milestone table is generated from TASKS.json between start/end markers and matches it exactly",
+        "the build fails when a milestone row's status or task span disagrees with TASKS.json, naming which milestone and why",
+        "the build fails when TASKS.json assigns tasks to a milestone the roadmap does not describe",
+        "a negative fixture proves the checker rejects a stale status cell rather than passing everything",
+        "the page a reader sees is correct: no milestone is described as pending when its tasks are done"
+      ],
+      "tests": [
+        "packages/schemas/tests/roadmap.test.ts (aggregation, rendering, parse, drift detection, negative controls, the real file)",
+        "node scripts/check-roadmap.mjs",
+        "pnpm verify"
+      ],
+      "risk": "a generator that overwrites hand-written narrative would delete context",
+      "rollback": "revert this commit; the roadmap page returns to its previous hand-written table",
+      "status": "done",
+      "approval": "D32 issue triage; housekeeping authorised by D28 (build phase) and required by the repo's own honesty rules (handoff capsule)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1009.md",
+        "ROADMAP.md"
+      ],
+      "results": [
+        "the hand-written table was wrong in the direction that matters: M1-M10 all said 'pending' while 100/102 tasks were done, and the M0 range omitted two ids",
+        "the first draft written by this task was itself wrong in three cells (M1 task span, M10 count, M10 span) and the new checker caught all three before it was wired into the build - the checker was validated against a real mistake on its first run",
+        "--write only replaces the marked block, so the narrative sections stay hand-written and the generator cannot eat context",
+        "two drift directions are covered: roadmap says something TASKS.json does not, and TASKS.json holds a milestone the roadmap never mentions",
+        "not claimed: the roadmap's prose sections are human-written and are not gated; only the table is generated"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T1009.md"
     }
   ]
 }

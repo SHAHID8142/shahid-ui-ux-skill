@@ -712,3 +712,12 @@
   measure the same page. Commits 03386d2 and a92328a; CI run 43729821619 success. Owner issue #10
   closed with the not-run items named (screen-reader session, browser zoom, real translations,
   volume beyond twelve rows). Issue #9 stays open by design.
+
+- 2026-11-15T22:30:00+06:00 | Pi (FreePi) | T1009 | ROADMAP.md became a view of TASKS.json.
+  The public roadmap still called M1–M10 "pending" with 100/102 done, so a reader or a resuming
+  agent would have concluded the build had not started. Added scripts/lib/roadmap.mjs (pure
+  aggregation/render/parse/check), scripts/check-roadmap.mjs (check or --write the marked block
+  only), 19 tests and `pnpm roadmap` in verify after `pnpm claims`. The first table this task
+  wrote was wrong in three cells and the new checker caught all three on its first run. Reverted-
+  by-hand negative control: M1 forced back to "pending" → exit 1 with both violations named.
+  Receipt: VERIFICATION/T1009.md.
