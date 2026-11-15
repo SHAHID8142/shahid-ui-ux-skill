@@ -32,6 +32,18 @@ export {
   type GateStatus,
 } from './harness/a11y-budgets.js';
 export { runHardeningMatrix, type HardeningResult, type MatrixCell } from './hardening.js';
+export {
+  DOGFOOD_CHECKS,
+  evaluateSite,
+  findingsFor,
+  summarise,
+  renderSummary,
+  type CheckStatus,
+  type DogfoodCheck,
+  type DogfoodSummary,
+  type DogfoodObservation,
+  type SiteReport,
+} from './dogfood.js';
 
 export {
   SETTLE_MS,

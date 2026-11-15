@@ -36,3 +36,6 @@ playwright-report/
 
 # TypeScript incremental build info (regenerated)
 *.tsbuildinfo
+
+# T0906 dogfood evidence — private until consent/licensing/PII checks (A10)
+evals/evidence/dogfood-private/

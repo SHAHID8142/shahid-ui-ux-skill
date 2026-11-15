@@ -1,0 +1,138 @@
+{
+  "generatedAt": "2026-11-15T10:11:09.552Z",
+  "sites": [
+    {
+      "site": "marketing",
+      "checks": [
+        {
+          "id": "a11y-wcag-aa",
+          "rule": "G4",
+          "status": "pass",
+          "measured": 0,
+          "failures": []
+        },
+        {
+          "id": "reflow-390",
+          "rule": "search-filters.filters-continuity-across-layout",
+          "status": "pass",
+          "measured": 0,
+          "failures": []
+        },
+        {
+          "id": "focus-visible",
+          "rule": "tabs.tabs-roving-focus",
+          "status": "pass",
+          "measured": "<a> paints a focus ring",
+          "failures": []
+        },
+        {
+          "id": "reduced-motion-quiet",
+          "rule": "accordion.accordion-reveal-height",
+          "status": "pass",
+          "measured": 0,
+          "failures": []
+        },
+        {
+          "id": "labelled-controls",
+          "rule": "form-input-validation",
+          "status": "pass",
+          "measured": 0,
+          "failures": []
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "site": "commerce",
+      "checks": [
+        {
+          "id": "a11y-wcag-aa",
+          "rule": "G4",
+          "status": "pass",
+          "measured": 0,
+          "failures": []
+        },
+        {
+          "id": "reflow-390",
+          "rule": "search-filters.filters-continuity-across-layout",
+          "status": "pass",
+          "measured": 0,
+          "failures": []
+        },
+        {
+          "id": "focus-visible",
+          "rule": "tabs.tabs-roving-focus",
+          "status": "pass",
+          "measured": "<a> paints a focus ring",
+          "failures": []
+        },
+        {
+          "id": "reduced-motion-quiet",
+          "rule": "accordion.accordion-reveal-height",
+          "status": "pass",
+          "measured": 0,
+          "failures": []
+        },
+        {
+          "id": "labelled-controls",
+          "rule": "form-input-validation",
+          "status": "pass",
+          "measured": 0,
+          "failures": []
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "site": "admin",
+      "checks": [
+        {
+          "id": "a11y-wcag-aa",
+          "rule": "G4",
+          "status": "fail",
+          "measured": 1,
+          "failures": [
+            "color-contrast (2 nodes)"
+          ]
+        },
+        {
+          "id": "reflow-390",
+          "rule": "search-filters.filters-continuity-across-layout",
+          "status": "fail",
+          "measured": 343,
+          "failures": [
+            "horizontal scroll of 343px at 390px"
+          ]
+        },
+        {
+          "id": "focus-visible",
+          "rule": "tabs.tabs-roving-focus",
+          "status": "pass",
+          "measured": "<a> paints a focus ring",
+          "failures": []
+        },
+        {
+          "id": "reduced-motion-quiet",
+          "rule": "accordion.accordion-reveal-height",
+          "status": "pass",
+          "measured": 0,
+          "failures": []
+        },
+        {
+          "id": "labelled-controls",
+          "rule": "form-input-validation",
+          "status": "pass",
+          "measured": 0,
+          "failures": []
+        }
+      ],
+      "status": "fail"
+    }
+  ],
+  "status": "fail",
+  "notRun": [],
+  "findings": [
+    "admin: 'a11y-wcag-aa' failed — color-contrast (2 nodes). Rule: G4.",
+    "admin: 'reflow-390' failed — horizontal scroll of 343px at 390px. Rule: search-filters.filters-continuity-across-layout."
+  ]
+}

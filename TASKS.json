@@ -2972,9 +2972,24 @@
       ],
       "risk": "dogfood time cost",
       "rollback": "sites are fixtures, not marketing",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0906.md",
+        "docs/DOGFOOD_FINDINGS.md",
+        "evals/evidence/dogfood/SUMMARY.md",
+        "evals/evidence/dogfood/summary.json",
+        "packages/eval-core/src/dogfood.ts"
+      ],
+      "results": [
+        "pnpm dogfood really builds (next build / astro build), serves and audits all three reference implementations in Chromium; five checks each bound to a stated rule (G4 axe, reflow at 390px, focus ring, reduced-motion quiet, labelled controls)",
+        "evaluator fails closed: a check with no observation is not-run never pass, an empty run is a failure, and the runner asserts notRun is empty so a silent skip cannot read as a clean audit",
+        "real findings recorded like user reports in docs/DOGFOOD_FINDINGS.md: admin overflows horizontally 343px at 390px (F1) and footer/env-note contrast is 4.46:1 (F2); both left unfixed because evals/baselines/admin is the evaluation ruler and a fix needs a deliberate baseline refresh (T1001)",
+        "evidence policy enforced: full bundle written to git-ignored evals/evidence/dogfood-private pending consent/licensing/PII checks, only a redacted summary (counts and rule ids, no paths or ports) committed",
+        "8 evaluator unit tests, full verify exit 0 (642 tests)"
+      ]
     },
     {
       "id": "T0159",

@@ -32,7 +32,8 @@
     "demo:loop": "pnpm --filter @sus/studio-bridge demo:loop",
     "support": "node scripts/generate-support.mjs --check",
     "support:write": "node scripts/generate-support.mjs",
-    "support:status": "node scripts/generate-support.mjs --status"
+    "support:status": "node scripts/generate-support.mjs --status",
+    "dogfood": "pnpm --filter @sus/eval-core dogfood"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

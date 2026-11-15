@@ -626,3 +626,11 @@
   instants modelled distinctly) carry the complex matrices the task named; tooltip, progress,
   skeleton and command-palette complete the set. 38 playbook tests, verify 634.
   Receipt: VERIFICATION/T0812.md. Next: T0906.
+
+- 2026-11-15T19:05:00+06:00 | Pi (FreePi) | T0906 | Dogfood reference implementations.
+  `pnpm dogfood` really builds, serves and audits marketing, commerce and admin with five checks
+  each bound to a stated rule. Found two real defects on admin: 343px horizontal overflow at 390px
+  and 4.46:1 contrast on the footer/env note. Both deliberately left unfixed because the admin
+  fixture is the evaluation ruler — patching it in place would silently rewrite the baselines.
+  Bundle stays in git-ignored evals/evidence/dogfood-private; only a redacted summary is committed.
+  8 evaluator tests, verify 642. Receipt: VERIFICATION/T0906.md. Next: T1001.
