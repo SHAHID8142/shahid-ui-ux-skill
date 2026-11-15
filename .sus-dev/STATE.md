@@ -1,6 +1,6 @@
 # Development state
 
-Updated: 2026-11-15T23:00:00+06:00
+Updated: 2026-11-15T23:45:00+06:00
 docs/RESUME_ON_NEW_MACHINE.md (install, branch, `pnpm setup`, `pnpm verify`). Host: Pi (FreePi),
 main-integration role; the ZCode peer heartbeat is stale. A second agent/host cooperates per
 D33: claim tasks via TASKS.json leases; read `.sus-dev/INBOX.md`.
@@ -11,7 +11,7 @@ BUILD_COMPLETE_PUSHED=true at release revision 2f344df — pnpm regression 3 sta
 679 tests). Architecture: ADR-001/002/004/005/006 adopted, ADR-003 as amended (D29).
 Repository is PUBLIC (D34); the product is unpublished.
 
-Canonical task statuses: TASKS.json (101 of 103 done; T1003/T1005 are owner-only).
+Canonical task statuses: TASKS.json (102 of 104 done; T1003/T1005 are owner-only).
 T0706 preview, T0806 security/G13, T0707 apply + rollback, T0700w CLOSED — dual-stack
 feasibility GO on both Next.js and Astro. zcode stale. Concurrency: 2 workers (D33) — claim
 via lease before editing.
@@ -28,6 +28,10 @@ states a stale progress figure now fails the build — which closed the places a
 be misled: the roadmap said every milestone was "pending" with 100/102 done, the build handoff said
 "97 of 100", and the README still denied that implementation was authorised. CI green on `e788e90`
 (run 43736564619).
+
+The documented first-run path was rehearsed on a real fresh clone (T1010) and repaired: gate scripts
+now build when their compiled imports are missing, and the resume document no longer quotes a test
+count it cannot keep true.
 
 Next exact steps: nothing in the build is eligible; the remaining work is T1003 (independent
 audit) and T1005 (release approval), both owner-commissioned, plus the standing issue #9 rule.

@@ -172,10 +172,25 @@ describe('count claims in public status documents', () => {
     expect(violations[0].detail).toContain('3 of 4');
   });
 
+  it('refuses a test/file count outright, because no build step can keep it true', () => {
+    const files = [
+      {
+        file: 'docs/RESUME_ON_NEW_MACHINE.md',
+        text: 'pnpm verify     # expect: 64 files, 679 tests',
+      },
+    ];
+    const violations = checkCountClaims({ tasksDoc, files });
+    expect(violations.map((violation) => violation.code)).toContain('count-claim-unverifiable');
+  });
+
   it('passes the repository documents as they stand', () => {
-    const files = ['README.md', 'ROADMAP.md', 'HANDOFF.md', 'docs/BUILD_COMPLETION_HANDOFF.md'].map(
-      (file) => ({ file, text: readFileSync(file, 'utf8') }),
-    );
+    const files = [
+      'README.md',
+      'ROADMAP.md',
+      'HANDOFF.md',
+      'docs/BUILD_COMPLETION_HANDOFF.md',
+      'docs/RESUME_ON_NEW_MACHINE.md',
+    ].map((file) => ({ file, text: readFileSync(file, 'utf8') }));
     const tasks = JSON.parse(readFileSync('TASKS.json', 'utf8'));
     expect(checkCountClaims({ tasksDoc: tasks, files })).toEqual([]);
   });

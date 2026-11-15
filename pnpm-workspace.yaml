@@ -7,3 +7,13 @@ packages:
 allowBuilds:
   esbuild: true
   sharp: true
+
+# pnpm 11.22.0's "verify deps before run" step passes its own
+# `--verify-deps-before-run-install` flag to `pnpm install`, which rejects it:
+# every fresh clone's FIRST `pnpm run <script>` printed
+#   [ERROR] Unknown option: 'verify-deps-before-run-install'
+#   [WARN] The install that runs before scripts failed…
+# before the script ran correctly. The build never relies on that auto-install —
+# CI and `pnpm setup` install explicitly — so the misfiring check is off rather
+# than left printing a false error on the first command a new user runs.
+verifyDepsBeforeRun: false

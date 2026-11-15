@@ -14,13 +14,27 @@
  */
 import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { existsSync as existsForHint } from 'node:fs';
 import { ARTIFACT_ID, artifactSha256 } from './lib/artifact-hash.mjs';
-import {
-  HOST_ADAPTERS,
-  buildCompatibility,
-  renderSupportMatrix,
-  statusText,
-} from '../packages/adapters/dist/index.js';
+import { buildHint, missingBuildArtifacts } from './lib/ensure-built.mjs';
+
+// Compiled packages are imported below; on a fresh clone they may not exist yet.
+// `pnpm check`/`pnpm verify` build first, but `pnpm support:status` is advertised
+// as a standalone smoke command, and a raw ERR_MODULE_NOT_FOUND stack trace does
+// not tell a person what to run.
+{
+  const root = join(import.meta.dirname, '..');
+  const missing = missingBuildArtifacts({
+    exists: (artifact) => existsForHint(join(root, artifact)),
+  });
+  if (missing.length > 0) {
+    console.error(buildHint(missing));
+    process.exit(1);
+  }
+}
+
+const { HOST_ADAPTERS, buildCompatibility, renderSupportMatrix, statusText } =
+  await import('../packages/adapters/dist/index.js');
 
 const ROOT = join(import.meta.dirname, '..');
 const SMOKE_DIR = join(ROOT, 'evals', 'host-smoke');

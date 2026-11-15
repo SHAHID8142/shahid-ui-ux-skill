@@ -2642,7 +2642,8 @@
         "T1006",
         "T1007",
         "T1008",
-        "T1009"
+        "T1009",
+        "T1010"
       ],
       "files": [],
       "acc": [
@@ -3820,6 +3821,58 @@
         "the same class was found once more while reconciling: docs/BUILD_COMPLETION_HANDOFF.md still said '97 of 100 done' and README still denied that implementation was authorised (D28); the checker now also reads a declared list of status-bearing documents and the handoff document names no live count because it describes a past revision"
       ],
       "commit": "same commit as .sus-dev/VERIFICATION/T1009.md"
+    },
+    {
+      "id": "T1010",
+      "m": "M10",
+      "title": "A pristine clone can run the documented first-run commands",
+      "obj": "Rehearse the resume path on a real fresh clone and fix what it exposed: `pnpm verify` died with ERR_MODULE_NOT_FOUND because gate scripts import compiled packages that nothing had built, `pnpm support:status` printed a raw stack trace, the first script run printed a false [ERROR] from pnpm, and the resume document quoted a test count from a month earlier.",
+      "deps": [
+        "T1006",
+        "T1009",
+        "T0103"
+      ],
+      "files": [
+        "scripts/lib/ensure-built.mjs",
+        "scripts/lib/ensure-built.d.mts",
+        "scripts/ensure-built.mjs",
+        "scripts/generate-support.mjs",
+        "package.json",
+        "pnpm-workspace.yaml",
+        "docs/RESUME_ON_NEW_MACHINE.md",
+        "scripts/lib/roadmap.mjs",
+        "packages/schemas/tests/ensure-built.test.ts",
+        "packages/schemas/tests/roadmap.test.ts"
+      ],
+      "acc": [
+        "a pristine clone completes clone -> pnpm install --frozen-lockfile -> pnpm setup -> pnpm verify with exit 0 and no manual build step",
+        "a missing build artifact produces an instruction naming the artifact and the command, not a raw ERR_MODULE_NOT_FOUND stack trace",
+        "the first script run on a fresh clone prints no false [ERROR] from the package manager",
+        "the resume document states no test/file count, and the checker refuses one"
+      ],
+      "tests": [
+        "packages/schemas/tests/ensure-built.test.ts (detection, hint, wiring, document)",
+        "packages/schemas/tests/roadmap.test.ts (count-claim-unverifiable)",
+        "fresh clone rehearsal in /tmp from the public remote",
+        "pnpm verify"
+      ],
+      "risk": "a conditional build could mask a genuinely broken build",
+      "rollback": "revert this commit; the fresh-clone path returns to needing a manual pnpm build",
+      "status": "done",
+      "approval": "D32 issue triage / build-phase housekeeping (D28); found by measurement, not by inspection",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1010.md"
+      ],
+      "results": [
+        "the rehearsal was the point: every local run was green while the documented path was broken, because the working machine's dist/ predated the clone - the defect existed only for the person the document addresses",
+        "ensure:built is a no-op when artifacts exist (66ms) and a single build when they do not, and verify still runs a full pnpm build afterwards, so a broken build cannot be masked",
+        "pnpm 11.22.0's pre-run dependency check passes its own flag to pnpm install and rejects it; the false [ERROR] it printed on the first script of a fresh clone is now off (verifyDepsBeforeRun: false) with the reason in the file",
+        "the resume document's '64 files, 679 tests' could never stay true; the checker now refuses such a figure (count-claim-unverifiable) instead of comparing it",
+        "not claimed: Windows and Linux fresh-clone rehearsals were not run - only macOS arm64"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T1010.md"
     }
   ]
 }

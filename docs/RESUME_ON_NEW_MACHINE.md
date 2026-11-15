@@ -24,7 +24,10 @@ cd shahid-ui-ux-skill
 git switch chore/continuation-reconciliation      # the build branch
 pnpm install --frozen-lockfile
 pnpm setup      # push gate + Chromium + state consistency check (see §2.1)
-pnpm verify     # expect: 64 files, 679 tests, exit 0
+pnpm verify     # expect exit 0; the test count is in its own summary line (never hard-code it here)
+
+If any step fails, read the first `[FAIL]`/`Error` line it printed — each checker names the file
+it disagreed with, and `scripts/ensure-built.mjs` says which build artifact was missing.
 
 ### 2.1 What `pnpm setup` does, and why it is one command
 

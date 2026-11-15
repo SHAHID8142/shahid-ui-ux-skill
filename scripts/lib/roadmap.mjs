@@ -219,9 +219,20 @@ export const COUNT_CLAIM_FILES = [
   'ROADMAP.md',
   'HANDOFF.md',
   'docs/BUILD_COMPLETION_HANDOFF.md',
+  'docs/RESUME_ON_NEW_MACHINE.md',
 ];
 
 const COUNT_CLAIM = /(\d+)\s+of\s+(\d+)\s+done/g;
+
+/**
+ * Figures that cannot be checked from the repository at build time — a test or
+ * file *count* changes with every commit, so a document stating one is stale the
+ * moment it is written. `docs/RESUME_ON_NEW_MACHINE.md` shipped "expect: 64
+ * files, 679 tests" while the suite had grown to 69 files and 739 tests: the
+ * instruction was wrong in the direction that makes a new machine think it broke
+ * something. Such a figure is refused outright instead of compared.
+ */
+const UNVERIFIABLE_CLAIM = /\bexpect:\s*\d+\s+files?,\s*\d+\s+tests?/i;
 
 /** Every `N of M done` claim in `text`, as `{ done, total }`. */
 export function parseCountClaims(text) {
@@ -238,6 +249,13 @@ export function checkCountClaims({ tasksDoc, files }) {
   const done = tasks.filter(isDone).length;
   const total = tasks.length;
   for (const { file, text } of files ?? []) {
+    const unverifiable = UNVERIFIABLE_CLAIM.exec(String(text ?? ''));
+    if (unverifiable) {
+      violations.push({
+        code: 'count-claim-unverifiable',
+        detail: `${file} states a test/file count ("${unverifiable[0]}"), which no build step can keep true — point at the command's own summary instead`,
+      });
+    }
     for (const claim of parseCountClaims(text)) {
       if (claim.done === done && claim.total === total) continue;
       violations.push({

@@ -24,7 +24,7 @@ build when the two disagree, so this page cannot drift again. It was hand-writte
 | M7 | Studio: dual-stack spike → slice → event contract → verification loop | T0700–T0790 (16 tasks) | **done** — 16/16 |
 | M8 | Studio hardening + second-wave playbooks | T0801–T0812 (11 tasks) | **done** — 11/11 |
 | M9 | Adapters + installer + support matrix + dogfood sites | T0901–T0906 (6 tasks) | **done** — 6/6 |
-| M10 | Regression, benchmark, independent review, docs, release | T1001–T1009 (9 tasks) | **7/9 done** — pending: T1003, T1005 |
+| M10 | Regression, benchmark, independent review, docs, release | T1001–T1010 (10 tasks) | **8/10 done** — pending: T1003, T1005 |
 <!-- roadmap:table end -->
 
 ## What is left
