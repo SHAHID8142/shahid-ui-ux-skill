@@ -2643,7 +2643,8 @@
         "T1007",
         "T1008",
         "T1009",
-        "T1010"
+        "T1010",
+        "T1011"
       ],
       "files": [],
       "acc": [
@@ -3873,6 +3874,48 @@
         "not claimed: Windows and Linux fresh-clone rehearsals were not run - only macOS arm64"
       ],
       "commit": "same commit as .sus-dev/VERIFICATION/T1010.md"
+    },
+    {
+      "id": "T1011",
+      "m": "M10",
+      "title": "CI runs the documented first-run path on a never-built tree (Linux)",
+      "obj": "The verify CI job builds before it checks, which is correct for a warmed checkout and is exactly what hid T1010: CI never exercised the path docs/RESUME_ON_NEW_MACHINE.md tells a person to follow. Add a job that clones the same commit into a tree with no dist and no node_modules and runs install -> setup -> verify, nothing else, so the documented path is verified on Linux on every push.",
+      "deps": [
+        "T1010",
+        "T0103"
+      ],
+      "files": [
+        ".github/workflows/ci.yml",
+        "packages/schemas/tests/ensure-built.test.ts",
+        "docs/RESUME_ON_NEW_MACHINE.md"
+      ],
+      "acc": [
+        "CI has a fresh-clone job that asserts the tree has no build output and runs only the three documented commands",
+        "a mutation that regresses T1010 turns this job red without any other test changing",
+        "the job cannot be quieted by adding a build step: a test fails when it does",
+        "the documented path is verified on Linux, closing the macOS-only platform gap"
+      ],
+      "tests": [
+        "packages/schemas/tests/ensure-built.test.ts (job shape, no pre-build, warmed job still builds)",
+        "local simulation of the same steps in /tmp/clonetest",
+        "GitHub CI fresh-clone job"
+      ],
+      "risk": "a second full suite per push costs CI minutes",
+      "rollback": "revert this commit; CI returns to the warmed verify job only",
+      "status": "done",
+      "approval": "D32 / build-phase housekeeping (D28); closes a gap the T1010 rehearsal exposed",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1011.md"
+      ],
+      "results": [
+        "the verify job's pre-build step was the reason CI stayed green while pristine clones failed - the new job states the documented commands and nothing else",
+        "git archive was rejected as the mechanism because an archive has no .git: pnpm setup configures a hook path and check-continuation reads a revision, so a local clone of the same commit is the honest equivalent of a fresh clone",
+        "three static assertions keep it honest: the job exists and runs the documented commands, it contains no pnpm build, and the warmed verify job still does build",
+        "not claimed: Node 24 and Windows are not rehearsed by this job; one fresh-clone lane on Node 22 is enough to catch a missing build step"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T1011.md"
     }
   ]
 }

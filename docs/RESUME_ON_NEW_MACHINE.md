@@ -26,6 +26,10 @@ pnpm install --frozen-lockfile
 pnpm setup      # push gate + Chromium + state consistency check (see §2.1)
 pnpm verify     # expect exit 0; the test count is in its own summary line (never hard-code it here)
 
+These three commands are also run by CI on a tree that has never been built (the `fresh-clone` job),
+so if they work for CI they are meant to work for you: a red `fresh-clone` job is a bug in the
+documented path, not in your machine.
+
 If any step fails, read the first `[FAIL]`/`Error` line it printed — each checker names the file
 it disagreed with, and `scripts/ensure-built.mjs` says which build artifact was missing.
 

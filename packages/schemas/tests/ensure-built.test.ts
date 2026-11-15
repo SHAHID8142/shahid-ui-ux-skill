@@ -77,6 +77,37 @@ describe('wiring', () => {
   });
 });
 
+describe('the CI fresh-clone job (T1011)', () => {
+  const ci = readFileSync('.github/workflows/ci.yml', 'utf8');
+  const job = (name: string) => {
+    const start = ci.indexOf(`  ${name}:`);
+    if (start === -1) return '';
+    const rest = ci.slice(start + name.length + 3);
+    const next = rest.search(/^ {2}[a-z-]+:$/m);
+    return next === -1 ? rest : rest.slice(0, next);
+  };
+
+  it('runs the documented path on a tree that has never been built', () => {
+    const fresh = job('fresh-clone');
+    expect(fresh).not.toBe('');
+    expect(fresh).toContain('git clone --quiet --local --no-hardlinks');
+    expect(fresh).toContain('test "$(git rev-parse HEAD)" = "$GITHUB_SHA"');
+    expect(fresh).toContain('pnpm setup');
+    expect(fresh).toContain('pnpm verify');
+    // The whole point: the pristine tree is asserted to have no build output.
+    expect(fresh).toContain('test ! -d packages/eval-core/dist');
+  });
+
+  it('does not pre-build, which is the step that hid the defect it guards', () => {
+    const fresh = job('fresh-clone');
+    expect(/run: *pnpm build\b/.test(fresh)).toBe(false);
+  });
+
+  it('keeps the warmed verify job building first, which is correct for that job', () => {
+    expect(job('verify')).toContain('pnpm build');
+  });
+});
+
 describe('the resume document', () => {
   it('does not hard-code a test or file count that no build step can keep true', () => {
     const doc = readFileSync('docs/RESUME_ON_NEW_MACHINE.md', 'utf8');

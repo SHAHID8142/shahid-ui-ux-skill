@@ -739,3 +739,10 @@
   refuses test/file counts nobody can keep true. 12 new tests. Re-rehearsed on a fresh clone at the
   fix commit: install 0, setup 0 (clean output), verify 0 (70 files, 749 tests). Receipt:
   VERIFICATION/T1010.md. Lesson: local green proves nothing about the documented path — clone it.
+
+- 2026-11-16T00:20:00+06:00 | Pi (FreePi) | T1011 | CI gained a `fresh-clone` job: it clones the same
+  commit into a tree with no dist and no node_modules and runs only install -> setup -> verify the way
+  docs/RESUME_ON_NEW_MACHINE.md states. The warmed verify job's pre-build step was why CI stayed green
+  while pristine clones failed (T1010); three static assertions keep the new job from being quieted
+  with a pnpm build. Simulated locally in /tmp/clonetest (install 0, setup 0, verify 0, 70 files / 749
+  tests); the Linux run is the CI job itself. Receipt: VERIFICATION/T1011.md.

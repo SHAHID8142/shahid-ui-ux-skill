@@ -50,6 +50,42 @@ jobs:
           pnpm --filter @sus/fixture-portfolio build
           pnpm --filter @sus/fixture-marketing build
 
+  # The documented first-run path, on a tree that has never been built (T1011).
+  #
+  # Why this job exists: the `verify` job above runs `pnpm build` before
+  # `pnpm check`, which is correct for a warmed checkout and is exactly what hid a
+  # real defect — a pristine clone failed at `pnpm verify` with
+  # ERR_MODULE_NOT_FOUND because nothing had built the packages the gate scripts
+  # import (T1010). A fresh clone has no dist/ and no node_modules, so this job
+  # states only what docs/RESUME_ON_NEW_MACHINE.md tells a person to run. Do not
+  # add a build step here: if this job is red, the documented path is broken.
+  fresh-clone:
+    name: fresh clone (documented first-run path)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - name: Clone the same commit into a tree that has never been built
+        run: |
+          git clone --quiet --local --no-hardlinks . "$RUNNER_TEMP/fresh"
+          cd "$RUNNER_TEMP/fresh"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -f package.json
+          test ! -d node_modules
+          test ! -d packages/eval-core/dist
+      - name: Browser libs (environment, not repository state)
+        run: pnpm --filter @sus/eval-core exec playwright install --with-deps chromium
+      - name: install -> setup -> verify, exactly as documented
+        working-directory: ${{ runner.temp }}/fresh
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm setup
+          pnpm verify
+
   # G13 is the non-waivable critical security/privacy gate (T0806). It runs as
   # its own job so a failure cannot be read as "one red step among many": a
   # hostile-page denial or a privacy leak fails the build on its own.

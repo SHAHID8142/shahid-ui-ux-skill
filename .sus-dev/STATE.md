@@ -1,6 +1,6 @@
 # Development state
 
-Updated: 2026-11-15T23:45:00+06:00
+Updated: 2026-11-16T00:20:00+06:00
 docs/RESUME_ON_NEW_MACHINE.md (install, branch, `pnpm setup`, `pnpm verify`). Host: Pi (FreePi),
 main-integration role; the ZCode peer heartbeat is stale. A second agent/host cooperates per
 D33: claim tasks via TASKS.json leases; read `.sus-dev/INBOX.md`.
@@ -11,7 +11,7 @@ BUILD_COMPLETE_PUSHED=true at release revision 2f344df — pnpm regression 3 sta
 679 tests). Architecture: ADR-001/002/004/005/006 adopted, ADR-003 as amended (D29).
 Repository is PUBLIC (D34); the product is unpublished.
 
-Canonical task statuses: TASKS.json (102 of 104 done; T1003/T1005 are owner-only).
+Canonical task statuses: TASKS.json (103 of 105 done; T1003/T1005 are owner-only).
 T0706 preview, T0806 security/G13, T0707 apply + rollback, T0700w CLOSED — dual-stack
 feasibility GO on both Next.js and Astro. zcode stale. Concurrency: 2 workers (D33) — claim
 via lease before editing.
@@ -38,6 +38,9 @@ install → setup → verify, exit 0 (70 files + 3 skipped, 749 tests + 5 skippe
 `pnpm regression` — the headline "everything" command the README advertises — was run at the
 checkpoint `4aac091` with a clean tree: **pass**, all three stages (verify 115.5s, demo-loop 4.0s,
 dogfood 24.2s), report in `evals/reports/regression-latest.md`.
+
+CI now also runs the documented first-run path on a never-built tree (T1011, `fresh-clone` job), so a
+regression of that path turns CI red instead of hiding behind the warmed verify job's pre-build.
 
 Next exact steps: nothing in the build is eligible; the remaining work is T1003 (independent
 audit) and T1005 (release approval), both owner-commissioned, plus the standing issue #9 rule.
