@@ -19,9 +19,10 @@ Current task: none. Dual-stack feasibility GO on both stacks; A/B/C variants don
 stale-mapping/conflict detection done; verification loop done (five distinct outcomes,
 DA-36 revert-only-when-intact, redacted diagnostics). Next: T0602 motion plans.
 
-Next exact steps: T0602/T0603 motion +
-T0405b/c playbooks -> T0407/T0602/T0603 -> T0708/T0905/T0906 -> T1001/T1002/T1004 ->
-T1006 final verified checkpoint.
+Next exact steps: T0602 motion plans (button/input/nav/modal interruption behaviour) ->
+T0603 edge cases (repeated clicks, stale async, unmount mid-animation, reduced motion) ->
+T0405b playbook gap closure -> T0708/T0905/T0906 -> T1001/T1002/T1004 -> T1006 final
+verified checkpoint.
 
 Blockers: standing B003 (licence/publication, later phase) and B004
 (irreversible externals during build). Active files: none after checkpoint.
