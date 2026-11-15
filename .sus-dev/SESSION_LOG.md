@@ -507,3 +507,15 @@
   13 tests mutation-checked; playbook lint 10/10; receipt VERIFICATION/T0405.md.
   Flagged: provenance catalog has only 3 claim ids, so most rules are `convention` — a
   T0301 research gap, not something authoring can fix. Next: T0405c.
+
+- 2026-11-14T23:55:00+06:00 | Pi (FreePi) | T0405c | Commerce playbooks: grid, PDP, cart, checkout.
+  Payment states are a closed vocabulary with `unknown` as a STATE rather than an error (a
+  timeout is not a decline; conflating them makes shoppers pay twice). Duplicate-submit is a
+  five-item checklist enforced by rule and asserted by test: disable on press, guard in the
+  handler *as well as* the UI, idempotency key, retry reuses the key, resumed session
+  re-checks order state. Product grid/PDP/cart carry commerce-honesty rules (comparable
+  attributes fixed order, one ratio, reserved space, no placeholder prices, observed-fact
+  availability refusing dark-urgency, labelled final vs estimated totals, no optimistic
+  quantities). The matrix exactness check caught missing `disabled` cells in all four new
+  files — fixed by declaring them, not by weakening the check. 14 playbooks valid, 15 tests.
+  Receipt: VERIFICATION/T0405c.md. Next: T0407.

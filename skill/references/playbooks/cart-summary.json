@@ -1,0 +1,159 @@
+{
+  "id": "cart-summary",
+  "surface": "commerce",
+  "component": "Cart summary",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Which totals are estimated and which are final, and how that difference is stated",
+      "usingRules": ["cart-final-vs-estimate"]
+    },
+    {
+      "order": 2,
+      "decide": "Quantity and removal behaviour, including failure and undo",
+      "usingRules": ["cart-quantity-truth", "cart-removal-undo"]
+    },
+    {
+      "order": 3,
+      "decide": "What happens to the checkout route while the cart is updating",
+      "usingRules": ["cart-checkout-consistent"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "cart-final-vs-estimate",
+      "kind": "convention",
+      "statement": "Final and estimated totals are labelled as such at the point of display; a total that changes later without a label is a trust defect."
+    },
+    {
+      "id": "cart-quantity-truth",
+      "kind": "convention",
+      "statement": "Quantity edits re-read the server value; the UI never keeps an optimistic quantity that the server rejected."
+    },
+    {
+      "id": "cart-removal-undo",
+      "kind": "convention",
+      "statement": "Removal is reversible for the session without a re-add flow, and the undo states what will be restored."
+    },
+    {
+      "id": "cart-checkout-consistent",
+      "kind": "convention",
+      "statement": "Checkout is disabled while the cart is inconsistent or updating, with the reason stated rather than a silent grey button."
+    }
+  ],
+  "stateMachine": {
+    "component": "cart-line",
+    "variants": ["standard", "price-changed", "unavailable"],
+    "states": ["default", "hover", "focus-visible", "disabled", "loading", "error"],
+    "staleResponseRule": "quantity updates are coalesced per line; a late response for an older quantity is discarded and never overwrites the current one",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "hover",
+        "trigger": "pointer over the line controls",
+        "motion": {
+          "motion": "background 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "pointer leaves",
+        "motion": {
+          "motion": "background 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "focus-visible",
+        "trigger": "keyboard focus",
+        "motion": {
+          "motion": "ring appears with no delay",
+          "reducedMotion": "instant ring"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "loading",
+        "trigger": "a quantity change is sent",
+        "motion": {
+          "motion": "none",
+          "noneReason": "the shopper is still reading the line; a spinner would pre-empt the result",
+          "reducedMotion": "the line keeps its current values and states that it is updating"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "default",
+        "trigger": "the change confirms",
+        "motion": {
+          "motion": "none",
+          "noneReason": "totals must be readable the moment they are true",
+          "reducedMotion": "totals update instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the change fails",
+        "motion": {
+          "motion": "none",
+          "noneReason": "a restored value must be visible immediately, not faded in",
+          "reducedMotion": "the error appears inline and the previous value is restored"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "focus-visible",
+        "trigger": "the shopper retries or edits",
+        "motion": {
+          "motion": "none",
+          "noneReason": "retry is deliberate",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      }
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "standard",
+      "enabled": ["default", "hover", "focus-visible", "disabled", "loading", "error"],
+      "refused": []
+    },
+    {
+      "variant": "price-changed",
+      "enabled": ["default", "hover", "focus-visible", "disabled", "loading", "error"],
+      "refused": []
+    },
+    {
+      "variant": "unavailable",
+      "enabled": ["default", "hover", "focus-visible", "disabled"],
+      "refused": [
+        {
+          "state": "loading",
+          "reason": "no update can be sent for an unavailable line"
+        },
+        {
+          "state": "error",
+          "reason": "unavailability is stated on the line, not as a request failure"
+        }
+      ]
+    }
+  ]
+}

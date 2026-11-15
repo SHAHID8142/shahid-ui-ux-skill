@@ -1,0 +1,220 @@
+{
+  "id": "checkout-steps",
+  "surface": "commerce",
+  "component": "Checkout steps",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "The step order and what each step must know before the next one can be shown",
+      "usingRules": ["checkout-step-prerequisites"]
+    },
+    {
+      "order": 2,
+      "decide": "Payment state vocabulary and what the shopper is told at each transition",
+      "usingRules": ["checkout-payment-states"]
+    },
+    {
+      "order": 3,
+      "decide": "The duplicate-submit checklist and where each guard lives",
+      "usingRules": ["checkout-duplicate-submit"]
+    },
+    {
+      "order": 4,
+      "decide": "The failure and recovery path, including what is preserved",
+      "usingRules": ["checkout-failure-preserves"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "checkout-step-prerequisites",
+      "kind": "convention",
+      "statement": "A step is shown only when its prerequisites are known; the progress indicator names completed steps as text, not colour alone."
+    },
+    {
+      "id": "checkout-payment-states",
+      "kind": "convention",
+      "statement": "Payment states are a closed vocabulary (idle, authorising, authorised, captured, declined, requires-action, unknown) and each has its own copy; unknown is a state, not an error."
+    },
+    {
+      "id": "checkout-duplicate-submit",
+      "kind": "convention",
+      "statement": "Duplicate-submit checklist, all required: the submit control disables on press; the guard is in the handler as well as the UI; the request carries an idempotency key; a retry reuses the same key; a resumed session re-checks the order state before re-submitting."
+    },
+    {
+      "id": "checkout-failure-preserves",
+      "kind": "convention",
+      "statement": "A declined or failed payment preserves the cart, the address and the chosen method, and never returns the shopper to an empty step."
+    },
+    {
+      "id": "checkout-no-timer-pressure",
+      "kind": "convention",
+      "statement": "Countdowns or reservation timers appear only when a real reservation exists, and the reserved time is stated as a fact from the server."
+    }
+  ],
+  "stateMachine": {
+    "component": "payment-step",
+    "variants": ["card", "redirect-method", "stored-method"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "a payment status for a superseded attempt is ignored; unknown status polls are bounded and then surfaced as unknown rather than as failure",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "hover",
+        "trigger": "pointer over the submit control",
+        "motion": {
+          "motion": "background 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "pointer leaves",
+        "motion": {
+          "motion": "background 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "focus-visible",
+        "trigger": "keyboard focus",
+        "motion": {
+          "motion": "ring appears with no delay",
+          "reducedMotion": "instant ring"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "active",
+        "trigger": "pay pressed",
+        "motion": {
+          "motion": "none",
+          "noneReason": "a commercial action gets its result, not an animation",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "loading",
+        "trigger": "authorisation starts",
+        "motion": {
+          "motion": "none",
+          "noneReason": "the shopper must still be able to read the amount while waiting",
+          "reducedMotion": "the step states authorising and blocks re-entry; the amount stays visible"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "captured",
+        "motion": {
+          "motion": "none",
+          "noneReason": "a success that fades in reads as optional",
+          "reducedMotion": "confirmation replaces the form instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "declined or failed",
+        "motion": {
+          "motion": "none",
+          "noneReason": "the shopper must see the reason the moment it exists",
+          "reducedMotion": "the decline reason and the preserved details appear instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "retry with the same idempotency key",
+        "motion": {
+          "motion": "none",
+          "noneReason": "retry is deliberate",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "receipt viewed",
+        "motion": {
+          "motion": "none",
+          "noneReason": "the receipt is a document, not a transition",
+          "reducedMotion": "instant"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      }
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "card",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    },
+    {
+      "variant": "redirect-method",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    },
+    {
+      "variant": "stored-method",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    }
+  ]
+}

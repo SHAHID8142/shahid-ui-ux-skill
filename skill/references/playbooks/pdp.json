@@ -1,0 +1,226 @@
+{
+  "id": "pdp",
+  "surface": "commerce",
+  "component": "Product detail page",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "The one decision this page exists to support, and where the buy controls sit relative to it",
+      "usingRules": ["pdp-single-decision"]
+    },
+    {
+      "order": 2,
+      "decide": "Variant selection behaviour: what changes on screen, what changes the URL, what changes the price",
+      "usingRules": ["pdp-variant-truth"]
+    },
+    {
+      "order": 3,
+      "decide": "Availability and delivery statements, and how uncertainty is worded",
+      "usingRules": ["pdp-availability-wording"]
+    },
+    {
+      "order": 4,
+      "decide": "Add-to-cart feedback and the duplicate-submit guard",
+      "usingRules": ["pdp-double-submit", "pdp-feedback-inline"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "pdp-single-decision",
+      "kind": "convention",
+      "statement": "The page supports one decision (buy this configuration); secondary actions do not compete with it at the same weight."
+    },
+    {
+      "id": "pdp-variant-truth",
+      "kind": "convention",
+      "statement": "Changing a variant updates price, availability and image together or says which of them is unchanged; a silently stale price is a defect, not a polish item."
+    },
+    {
+      "id": "pdp-availability-wording",
+      "kind": "convention",
+      "statement": "Availability is stated as observed (In stock, 3 left, Usually ships in 2 days); a countdown or scarcity claim that is not real data is prohibited."
+    },
+    {
+      "id": "pdp-double-submit",
+      "kind": "convention",
+      "statement": "Add-to-cart cannot issue a second request until the first settles, and the control states the result inline."
+    },
+    {
+      "id": "pdp-feedback-inline",
+      "kind": "convention",
+      "statement": "Confirmation appears next to the control that caused it, with a route to the cart; a toast alone loses the context on scroll."
+    }
+  ],
+  "stateMachine": {
+    "component": "buy-control",
+    "variants": ["purchasable", "sold-out", "preorder"],
+    "states": [
+      "default",
+      "hover",
+      "focus-visible",
+      "active",
+      "disabled",
+      "loading",
+      "success",
+      "error"
+    ],
+    "staleResponseRule": "a response for a superseded variant selection is discarded; the page reflects the currently selected variant only",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "hover",
+        "trigger": "pointer over the control",
+        "motion": {
+          "motion": "background 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "pointer leaves",
+        "motion": {
+          "motion": "background 90ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "focus-visible",
+        "trigger": "keyboard focus",
+        "motion": {
+          "motion": "ring appears with no delay",
+          "reducedMotion": "instant ring"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "active",
+        "trigger": "add to cart pressed",
+        "motion": {
+          "motion": "none",
+          "noneReason": "the press is over; the next thing the shopper needs is the result",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "active",
+        "to": "loading",
+        "trigger": "the request starts",
+        "motion": {
+          "motion": "none",
+          "noneReason": "the request is the feedback; animating the start delays it",
+          "reducedMotion": "label swaps instantly and repeats the variant name"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "success",
+        "trigger": "the item is added",
+        "motion": {
+          "motion": "opacity 120ms",
+          "reducedMotion": "confirmation appears instantly"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "loading",
+        "to": "error",
+        "trigger": "the request rejects",
+        "motion": {
+          "motion": "none",
+          "noneReason": "a commercial error must never wait for an animation",
+          "reducedMotion": "the error appears instantly with the reason"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "error",
+        "to": "loading",
+        "trigger": "retry",
+        "motion": {
+          "motion": "none",
+          "noneReason": "retry is deliberate",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "success",
+        "to": "default",
+        "trigger": "the shopper continues",
+        "motion": {
+          "motion": "opacity 120ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      }
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "purchasable",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    },
+    {
+      "variant": "sold-out",
+      "enabled": ["default", "hover", "focus-visible", "disabled"],
+      "refused": [
+        {
+          "state": "active",
+          "reason": "an unavailable variant cannot be added"
+        },
+        {
+          "state": "loading",
+          "reason": "no request exists to report"
+        },
+        {
+          "state": "success",
+          "reason": "nothing succeeded"
+        },
+        {
+          "state": "error",
+          "reason": "nothing failed"
+        }
+      ]
+    },
+    {
+      "variant": "preorder",
+      "enabled": [
+        "default",
+        "hover",
+        "focus-visible",
+        "active",
+        "disabled",
+        "loading",
+        "success",
+        "error"
+      ],
+      "refused": []
+    }
+  ]
+}

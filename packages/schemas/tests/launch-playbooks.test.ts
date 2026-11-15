@@ -34,15 +34,11 @@ const BATCH_1 = [
   'toast-notification',
 ];
 
-/** Authored by other tasks; their absence here is correct, their presence a mistake. */
-const NOT_BATCH_1 = [
-  'data-table',
-  'record-forms',
-  'product-grid',
-  'pdp',
-  'cart-summary',
-  'checkout-steps',
-];
+/** Commerce set (T0405c): present, and required to satisfy the same contract. */
+const COMMERCE = ['product-grid', 'pdp', 'cart-summary', 'checkout-steps'];
+
+/** Authored by T0407; their absence here is correct, their presence a mistake. */
+const NOT_AUTHORED = ['data-table', 'record-forms'];
 
 describe('batch-1 launch set is exactly what it claims', () => {
   it('every batch-1 component has a playbook', () => {
@@ -50,9 +46,32 @@ describe('batch-1 launch set is exactly what it claims', () => {
     for (const id of BATCH_1) expect(present, id).toContain(id);
   });
 
+  it('the commerce set exists and is complete (T0405c)', () => {
+    const present = files.map((file) => file.replace('.json', ''));
+    for (const id of COMMERCE) expect(present, id).toContain(id);
+  });
+
   it('no component from a later task has been slipped in', () => {
     const present = files.map((file) => file.replace('.json', ''));
-    for (const id of NOT_BATCH_1) expect(present, id).not.toContain(id);
+    for (const id of NOT_AUTHORED) expect(present, id).not.toContain(id);
+  });
+
+  it('checkout carries the payment-state and duplicate-submit checklist', () => {
+    const checkout = load('checkout-steps.json');
+    const rules = checkout.rules.map((rule: { id: string; statement: string }) => rule);
+    const payment = rules.find((rule: { id: string }) => rule.id === 'checkout-payment-states');
+    const duplicate = rules.find((rule: { id: string }) => rule.id === 'checkout-duplicate-submit');
+    expect(payment?.statement).toContain('requires-action');
+    expect(payment?.statement).toContain('unknown');
+    for (const guard of [
+      'disables on press',
+      'handler',
+      'idempotency key',
+      'reuses the same key',
+      're-checks',
+    ]) {
+      expect(duplicate?.statement, guard).toContain(guard);
+    }
   });
 
   it('every file validates against the playbook contract', () => {

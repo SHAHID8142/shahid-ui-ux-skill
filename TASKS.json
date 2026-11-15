@@ -2667,9 +2667,21 @@
       ],
       "risk": "commerce complexity",
       "rollback": "per-playbook acceptance",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0405c.md",
+        "skill/references/playbooks/"
+      ],
+      "results": [
+        "commerce playbooks authored to the same 12-part standard with full variant-vs-state matrices: product-grid (in-stock/out-of-stock/loading), pdp (purchasable/sold-out/preorder), cart-summary (standard/price-changed/unavailable), checkout-steps (card/redirect-method/stored-method)",
+        "checkout payment states are a closed vocabulary (idle/authorising/authorised/captured/declined/requires-action/unknown) with unknown as a state rather than an error, so a timeout is never reported as a decline",
+        "duplicate-submit checklist enforced as a rule and asserted by test: disable on press, guard in the handler as well as the UI, idempotency key, retry reuses the key, resumed session re-checks order state",
+        "commerce-specific honesty rules: comparable attributes in a fixed order, one aspect ratio, reserved space, no placeholder prices, observed-fact availability only (refuses dark-urgency), final vs estimated totals labelled, optimistic quantities never kept after rejection",
+        "14 playbooks valid; matrix exactness check caught missing disabled cells in all four new files during authoring (fixed by declaring them); 15 tests green"
+      ]
     },
     {
       "id": "T0506",

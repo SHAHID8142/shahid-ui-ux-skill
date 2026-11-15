@@ -1,0 +1,173 @@
+{
+  "id": "product-grid",
+  "surface": "commerce",
+  "component": "Product grid",
+  "steps": [
+    {
+      "order": 1,
+      "decide": "Which attributes a shopper compares at a glance in this catalogue, and expose only those",
+      "usingRules": ["grid-comparable-attributes"]
+    },
+    {
+      "order": 2,
+      "decide": "The image ratio and the weight budget for a grid of twelve",
+      "usingRules": ["grid-fixed-ratio", "grid-weight-budget"]
+    },
+    {
+      "order": 3,
+      "decide": "What the card shows when stock, price or variant data is unknown",
+      "usingRules": ["grid-partial-data"]
+    },
+    {
+      "order": 4,
+      "decide": "How filtering and sorting announce their effect without moving the shopper's place",
+      "usingRules": ["grid-filter-announcement"]
+    }
+  ],
+  "rules": [
+    {
+      "id": "grid-comparable-attributes",
+      "kind": "convention",
+      "statement": "Every card in a grid exposes the same comparable attributes in the same order; a grid where price sits in different positions cannot be compared."
+    },
+    {
+      "id": "grid-fixed-ratio",
+      "kind": "convention",
+      "statement": "One aspect ratio per grid; mixed ratios reflow the page as images decode and break row scanning."
+    },
+    {
+      "id": "grid-weight-budget",
+      "kind": "convention",
+      "statement": "Above-the-fold images load eagerly and the rest lazily with reserved space; no layout shift is accepted for a grid."
+    },
+    {
+      "id": "grid-partial-data",
+      "kind": "convention",
+      "statement": "A card missing price or stock says so in text; it never shows a placeholder figure that a shopper could mistake for a price."
+    },
+    {
+      "id": "grid-filter-announcement",
+      "kind": "convention",
+      "statement": "Filtering announces the new result count through a live region and keeps keyboard focus where it was."
+    }
+  ],
+  "stateMachine": {
+    "component": "product-card",
+    "variants": ["in-stock", "out-of-stock", "loading"],
+    "states": ["default", "hover", "focus-visible", "active", "disabled", "loading"],
+    "staleResponseRule": "a filtered result for an older query never replaces the current grid",
+    "transitions": [
+      {
+        "from": "default",
+        "to": "hover",
+        "trigger": "pointer over the card",
+        "motion": {
+          "motion": "elevation 120ms",
+          "reducedMotion": "instant elevation change, no information in the shadow"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "hover",
+        "to": "default",
+        "trigger": "pointer leaves",
+        "motion": {
+          "motion": "elevation 120ms",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "default",
+        "to": "focus-visible",
+        "trigger": "keyboard focus",
+        "motion": {
+          "motion": "ring appears with no delay",
+          "reducedMotion": "instant ring"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      },
+      {
+        "from": "focus-visible",
+        "to": "active",
+        "trigger": "the product is opened",
+        "motion": {
+          "motion": "none",
+          "noneReason": "navigation is immediate; an animation delays the destination",
+          "reducedMotion": "instant"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "active",
+        "to": "default",
+        "trigger": "returning to the grid",
+        "motion": {
+          "motion": "none",
+          "noneReason": "the restored grid is already at its default state",
+          "reducedMotion": "instant"
+        },
+        "interruption": "ignore",
+        "rapidToggle": "allow"
+      },
+      {
+        "from": "loading",
+        "to": "default",
+        "trigger": "the image or price resolves",
+        "motion": {
+          "motion": "opacity 120ms",
+          "reducedMotion": "content appears instantly in the reserved space"
+        },
+        "interruption": "complete-then-apply",
+        "rapidToggle": "coalesce"
+      }
+    ]
+  },
+  "variantMatrix": [
+    {
+      "variant": "in-stock",
+      "enabled": ["default", "hover", "focus-visible", "active", "disabled", "loading"],
+      "refused": []
+    },
+    {
+      "variant": "out-of-stock",
+      "enabled": ["default", "hover", "focus-visible", "disabled"],
+      "refused": [
+        {
+          "state": "active",
+          "reason": "an unavailable product cannot be opened for purchase"
+        },
+        {
+          "state": "loading",
+          "reason": "nothing is being fetched for an unavailable item"
+        }
+      ]
+    },
+    {
+      "variant": "loading",
+      "enabled": ["default", "loading"],
+      "refused": [
+        {
+          "state": "hover",
+          "reason": "a skeleton has no interactive surface yet"
+        },
+        {
+          "state": "focus-visible",
+          "reason": "focus skips unloaded cards"
+        },
+        {
+          "state": "active",
+          "reason": "nothing to activate"
+        },
+        {
+          "state": "disabled",
+          "reason": "loading is not a disabled state"
+        }
+      ]
+    }
+  ]
+}
