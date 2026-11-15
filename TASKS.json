@@ -2371,9 +2371,23 @@
       ],
       "risk": "stale claims",
       "rollback": "CI fails if docs differ from data",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D33 live bus claim (pi)",
+      "phase": "build",
+      "owner": "pi",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T0905.md",
+        "docs/SUPPORT_MATRIX.md",
+        "docs/compatibility.json",
+        "scripts/generate-support.mjs"
+      ],
+      "results": [
+        "support rows bind artifact sha256 (manifest + built entry points), environment facts (host version, browser, framework, OS), derived and effective tier, and evidence reference",
+        "changed artifacts invalidate evidence by hash comparison, never by date; a supported row with stale evidence is downgraded to experimental and both tiers are recorded",
+        "docs/SUPPORT_MATRIX.md and docs/compatibility.json are generated; pnpm support regenerates and fails on drift, running after pnpm build inside verify",
+        "sus status prints the same generated record per host and flags stale evidence",
+        "5 hosts: freepi verified against the current artifact (smoke re-run 7/7), zcode stale (receipt predates binding), codex/claude-code/cursor have no evidence; no row reaches supported because Live Studio is unexercised everywhere"
+      ]
     },
     {
       "id": "T1001",

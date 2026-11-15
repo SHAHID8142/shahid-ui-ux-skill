@@ -14,11 +14,12 @@
  */
 import { spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { release as osRelease, tmpdir } from 'node:os';
 import { isAbsolute, join } from 'node:path';
 
 // repo root from THIS script's location (no cwd dependence)
 const ROOT = join(import.meta.dirname, '..', '..');
+import { ARTIFACT_ID, artifactSha256 } from '../lib/artifact-hash.mjs';
 const results = [];
 let failed = false;
 function check(name, ok, detail = '') {
@@ -99,6 +100,15 @@ console.log(
       verdict,
       node: process.versions.node,
       at: new Date().toISOString(),
+      // T0905: evidence binds to the artifact bytes it ran against, so a later
+      // adapter change invalidates this run instead of silently inheriting it.
+      artifact: { id: ARTIFACT_ID, sha256: artifactSha256(ROOT) },
+      environment: {
+        hostVersion: process.env.SUS_HOST_VERSION ?? 'unrecorded',
+        browser: process.env.SUS_BROWSER ?? 'n/a (no Live Studio run)',
+        framework: process.env.SUS_FRAMEWORK ?? 'n/a (no fixture build)',
+        os: `${process.platform} ${osRelease()}`,
+      },
       results,
     },
     null,

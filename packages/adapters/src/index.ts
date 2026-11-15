@@ -28,3 +28,15 @@ export {
   generateSupportMatrix,
 } from './adapter-interface.js';
 export { HOST_ADAPTERS, generateHostEntry } from './hosts.js';
+export {
+  buildCompatibility,
+  effectiveTier,
+  evidenceState,
+  renderSupportMatrix,
+  statusText,
+  type CompatibilityDocument,
+  type CompatibilityRow,
+  type EnvironmentFacts,
+  type EvidenceState,
+  type SmokeEvidence,
+} from './compatibility.js';

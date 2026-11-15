@@ -5,10 +5,12 @@
  * and what is not built yet. No capability claims beyond that.
  */
 import { readFileSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
 import { join } from 'node:path';
 import { routeIntent } from './router.js';
 import { loadModules } from './jit-loader.js';
 import { resolvePrecedence, type Instruction } from './precedence.js';
+import { statusText, type CompatibilityDocument } from './compatibility.js';
 
 const REPO_ROOT = join(import.meta.dirname ?? process.cwd(), '..', '..', '..');
 
@@ -116,6 +118,13 @@ export function main(args: string[]): void {
     );
     return;
   }
+  if (command === 'status') {
+    // T0905: the same generated record the docs page renders, one line per host.
+    const docPath = join(REPO_ROOT, 'docs', 'compatibility.json');
+    const doc = JSON.parse(readFileSync(docPath, 'utf8')) as CompatibilityDocument;
+    console.log(statusText(doc));
+    return;
+  }
   if (command === 'precedence') {
     const file = args[1];
     let instructions: Instruction[] = [];
@@ -126,8 +135,13 @@ export function main(args: string[]): void {
     console.log(JSON.stringify(resolvePrecedence(instructions), null, 2));
     return;
   }
-  console.error('usage: sus route|load|precedence|capabilities');
+  console.error('usage: sus route|load|precedence|capabilities|status');
   process.exitCode = 2;
 }
 
-main(process.argv.slice(2));
+// Only execute when this file IS the entry point: importing the package (the
+// T0905 generator reads HOST_ADAPTERS from dist/index.js) must not run the CLI
+// and must certainly not print usage over a generator's output.
+const invokedDirectly =
+  process.argv[1] !== undefined && import.meta.url === pathToFileURL(process.argv[1]).href;
+if (invokedDirectly) main(process.argv.slice(2));

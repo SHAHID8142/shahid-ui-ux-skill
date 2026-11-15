@@ -1,0 +1,125 @@
+{
+  "schema": "sus.compatibility",
+  "version": 1,
+  "generatedFrom": {
+    "adapterCount": 5,
+    "artifactIds": [
+      "sus-adapters"
+    ]
+  },
+  "rows": [
+    {
+      "host": "codex",
+      "derivedTier": "experimental",
+      "tier": "experimental",
+      "capabilities": {
+        "skillTriggering": "expected",
+        "cliExecution": "expected",
+        "jitReferenceLoading": "expected",
+        "liveStudio": "expected"
+      },
+      "environment": {
+        "hostVersion": "unrecorded",
+        "browser": "n/a",
+        "framework": "n/a",
+        "os": "unrecorded"
+      },
+      "artifactId": "sus-adapters",
+      "artifactSha256": "7609a7368174c8b1783765f9c08ff89711418b0cb1bda18148931863655d90e9",
+      "evidence": null,
+      "evidenceState": "missing"
+    },
+    {
+      "host": "claude-code",
+      "derivedTier": "experimental",
+      "tier": "experimental",
+      "capabilities": {
+        "skillTriggering": "expected",
+        "cliExecution": "expected",
+        "jitReferenceLoading": "expected",
+        "liveStudio": "expected"
+      },
+      "environment": {
+        "hostVersion": "unrecorded",
+        "browser": "n/a",
+        "framework": "n/a",
+        "os": "unrecorded"
+      },
+      "artifactId": "sus-adapters",
+      "artifactSha256": "7609a7368174c8b1783765f9c08ff89711418b0cb1bda18148931863655d90e9",
+      "evidence": null,
+      "evidenceState": "missing"
+    },
+    {
+      "host": "cursor",
+      "derivedTier": "experimental",
+      "tier": "experimental",
+      "capabilities": {
+        "skillTriggering": "expected",
+        "cliExecution": "expected",
+        "jitReferenceLoading": "expected",
+        "liveStudio": "expected"
+      },
+      "environment": {
+        "hostVersion": "unrecorded",
+        "browser": "n/a",
+        "framework": "n/a",
+        "os": "unrecorded"
+      },
+      "artifactId": "sus-adapters",
+      "artifactSha256": "7609a7368174c8b1783765f9c08ff89711418b0cb1bda18148931863655d90e9",
+      "evidence": null,
+      "evidenceState": "missing"
+    },
+    {
+      "host": "freepi",
+      "derivedTier": "experimental",
+      "tier": "experimental",
+      "capabilities": {
+        "skillTriggering": "verified",
+        "cliExecution": "verified",
+        "jitReferenceLoading": "verified",
+        "liveStudio": "expected"
+      },
+      "environment": {
+        "hostVersion": "unrecorded",
+        "browser": "n/a (no Live Studio run)",
+        "framework": "n/a (no fixture build)",
+        "os": "darwin 27.2.0"
+      },
+      "artifactId": "sus-adapters",
+      "artifactSha256": "7609a7368174c8b1783765f9c08ff89711418b0cb1bda18148931863655d90e9",
+      "evidence": {
+        "ref": "evals/host-smoke/freepi-7609a7368174.json (PASS)",
+        "artifactSha256": "7609a7368174c8b1783765f9c08ff89711418b0cb1bda18148931863655d90e9",
+        "recordedAt": "2026-11-15"
+      },
+      "evidenceState": "verified"
+    },
+    {
+      "host": "zcode",
+      "derivedTier": "experimental",
+      "tier": "experimental",
+      "capabilities": {
+        "skillTriggering": "verified",
+        "cliExecution": "verified",
+        "jitReferenceLoading": "verified",
+        "liveStudio": "expected"
+      },
+      "environment": {
+        "hostVersion": "unrecorded",
+        "browser": "n/a",
+        "framework": "n/a",
+        "os": "unrecorded"
+      },
+      "artifactId": "sus-adapters",
+      "artifactSha256": "7609a7368174c8b1783765f9c08ff89711418b0cb1bda18148931863655d90e9",
+      "evidence": {
+        "ref": "evals/host-smoke/zcode-b061cc4.json (PASS)",
+        "artifactSha256": "",
+        "recordedAt": "2026-11-14"
+      },
+      "evidenceState": "stale"
+    }
+  ]
+}
