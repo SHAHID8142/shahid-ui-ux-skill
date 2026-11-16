@@ -45,6 +45,7 @@ export const MILESTONES = [
   { id: 'M9', scope: 'Adapters + installer + support matrix + dogfood sites' },
   { id: 'M10', scope: 'Regression, benchmark, independent review, docs, release' },
   { id: 'M11', scope: 'Scoped best-practice workflow (/sus-bestpractice, issue #15)' },
+  { id: 'M12', scope: 'Post-M11 hardening from issue triage (#16-#20, D32)' },
 ];
 
 /** Milestone ids in the order the roadmap lists them. */

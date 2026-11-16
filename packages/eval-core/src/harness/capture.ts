@@ -7,7 +7,8 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Browser, BrowserContext } from 'playwright';
-import { chromium } from 'playwright';
+
+import { guardNavigations, launchGuardedBrowser } from './net-guard.js';
 import { collectPageMetrics, type PageMetrics } from './metrics.js';
 
 export const VIEWPORTS = {
@@ -47,16 +48,27 @@ async function newContext(
   });
 }
 
-export async function captureMatrix(url: string, outDir: string): Promise<CaptureResult> {
+export async function captureMatrix(
+  url: string,
+  outDir: string,
+  authorizedHosts: readonly string[] = [],
+): Promise<CaptureResult> {
   mkdirSync(outDir, { recursive: true });
-  const browser = await chromium.launch();
+  const guarded = await launchGuardedBrowser(authorizedHosts);
+  const browser = guarded.browser;
   const combos: CaptureCombo[] = [];
   try {
     for (const viewportName of Object.keys(VIEWPORTS) as ViewportName[]) {
       for (const theme of THEMES) {
         const context = await newContext(browser, viewportName, theme);
         const page = await context.newPage();
-        await page.goto(url, { waitUntil: 'networkidle' });
+        const guard = await guardNavigations(page, authorizedHosts);
+        try {
+          await page.goto(url, { waitUntil: 'networkidle' });
+          guard.assertOnAuthorizedPage(page);
+        } finally {
+          await guard.dispose();
+        }
         await page.waitForTimeout(150); // settle fonts/layout
         const metrics = await collectPageMetrics(page);
         const file = join(outDir, `${viewportName}-${theme}.png`);
@@ -66,7 +78,7 @@ export async function captureMatrix(url: string, outDir: string): Promise<Captur
       }
     }
   } finally {
-    await browser.close();
+    await guarded.close();
   }
   const result: CaptureResult = { url, outDir, combos };
   writeFileSync(join(outDir, 'capture.json'), `${JSON.stringify(result, null, 2)}\n`);

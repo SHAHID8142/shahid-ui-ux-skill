@@ -39,6 +39,8 @@
       "url": "http://127.0.0.1:4345/commerce",
       "title": "Harbor & Leaf — Tea Ware",
       "horizontalOverflow": false,
+      "documentScrollWidth": 390,
+      "documentClientWidth": 390,
       "overflowingElements": [],
       "cls": 0,
       "lcpMs": 0,
@@ -109,6 +111,8 @@
       "url": "http://127.0.0.1:4345/commerce",
       "title": "Harbor & Leaf — Tea Ware",
       "horizontalOverflow": false,
+      "documentScrollWidth": 390,
+      "documentClientWidth": 390,
       "overflowingElements": [],
       "cls": 0,
       "lcpMs": 0,
@@ -179,106 +183,8 @@
       "url": "http://127.0.0.1:4345/commerce",
       "title": "Harbor & Leaf — Tea Ware",
       "horizontalOverflow": false,
-      "overflowingElements": [],
-      "cls": 0,
-      "lcpMs": 0,
-      "smallTapTargets": [
-        {
-          "selector": "a:Products",
-          "width": 69,
-          "height": 19
-        },
-        {
-          "selector": "a:Cart",
-          "width": 34,
-          "height": 19
-        },
-        {
-          "selector": "a:Checkout",
-          "width": 75,
-          "height": 19
-        },
-        {
-          "selector": "button:Add to Cart",
-          "width": 91,
-          "height": 31
-        },
-        {
-          "selector": "button:Add to Cart",
-          "width": 91,
-          "height": 31
-        },
-        {
-          "selector": "button:Add to Cart",
-          "width": 91,
-          "height": 31
-        },
-        {
-          "selector": "button:Add to Cart",
-          "width": 91,
-          "height": 31
-        },
-        {
-          "selector": "button:Add to Cart",
-          "width": 91,
-          "height": 31
-        },
-        {
-          "selector": "button:Add to Cart",
-          "width": 91,
-          "height": 31
-        }
-      ],
-      "landmarks": [
-        "nav",
-        "main",
-        "section#products",
-        "section#cart",
-        "section#checkout"
-      ],
-      "headings": [
-        {
-          "level": 1,
-          "text": "Our Products"
-        },
-        {
-          "level": 3,
-          "text": "Ember Teapot"
-        },
-        {
-          "level": 3,
-          "text": "Dune Mug Set"
-        },
-        {
-          "level": 3,
-          "text": "Ridge Kettle"
-        },
-        {
-          "level": 3,
-          "text": "Moss Serving Tray"
-        },
-        {
-          "level": 3,
-          "text": "Slate Canister"
-        },
-        {
-          "level": 3,
-          "text": "Orbit Scale"
-        },
-        {
-          "level": 2,
-          "text": "Cart Summary"
-        },
-        {
-          "level": 2,
-          "text": "Checkout"
-        }
-      ]
-    },
-    {
-      "url": "http://127.0.0.1:4345/commerce",
-      "title": "Harbor & Leaf — Tea Ware",
-      "horizontalOverflow": false,
+      "documentScrollWidth": 768,
+      "documentClientWidth": 768,
       "overflowingElements": [],
       "cls": 0,
       "lcpMs": 0,
@@ -379,6 +285,8 @@
       "url": "http://127.0.0.1:4345/commerce",
       "title": "Harbor & Leaf — Tea Ware",
       "horizontalOverflow": false,
+      "documentScrollWidth": 768,
+      "documentClientWidth": 768,
       "overflowingElements": [],
       "cls": 0,
       "lcpMs": 0,
@@ -479,6 +387,110 @@
       "url": "http://127.0.0.1:4345/commerce",
       "title": "Harbor & Leaf — Tea Ware",
       "horizontalOverflow": false,
+      "documentScrollWidth": 1440,
+      "documentClientWidth": 1440,
+      "overflowingElements": [],
+      "cls": 0,
+      "lcpMs": 0,
+      "smallTapTargets": [
+        {
+          "selector": "a:Products",
+          "width": 69,
+          "height": 19
+        },
+        {
+          "selector": "a:Cart",
+          "width": 34,
+          "height": 19
+        },
+        {
+          "selector": "a:Checkout",
+          "width": 75,
+          "height": 19
+        },
+        {
+          "selector": "button:Add to Cart",
+          "width": 91,
+          "height": 31
+        },
+        {
+          "selector": "button:Add to Cart",
+          "width": 91,
+          "height": 31
+        },
+        {
+          "selector": "button:Add to Cart",
+          "width": 91,
+          "height": 31
+        },
+        {
+          "selector": "button:Add to Cart",
+          "width": 91,
+          "height": 31
+        },
+        {
+          "selector": "button:Add to Cart",
+          "width": 91,
+          "height": 31
+        },
+        {
+          "selector": "button:Add to Cart",
+          "width": 91,
+          "height": 31
+        }
+      ],
+      "landmarks": [
+        "nav",
+        "main",
+        "section#products",
+        "section#cart",
+        "section#checkout"
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Our Products"
+        },
+        {
+          "level": 3,
+          "text": "Ember Teapot"
+        },
+        {
+          "level": 3,
+          "text": "Dune Mug Set"
+        },
+        {
+          "level": 3,
+          "text": "Ridge Kettle"
+        },
+        {
+          "level": 3,
+          "text": "Moss Serving Tray"
+        },
+        {
+          "level": 3,
+          "text": "Slate Canister"
+        },
+        {
+          "level": 3,
+          "text": "Orbit Scale"
+        },
+        {
+          "level": 2,
+          "text": "Cart Summary"
+        },
+        {
+          "level": 2,
+          "text": "Checkout"
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:4345/commerce",
+      "title": "Harbor & Leaf — Tea Ware",
+      "horizontalOverflow": false,
+      "documentScrollWidth": 1440,
+      "documentClientWidth": 1440,
       "overflowingElements": [],
       "cls": 0,
       "lcpMs": 0,
@@ -588,9 +600,9 @@
       "gate": "G5",
       "status": "fail",
       "detail": [
-        "http://127.0.0.1:4345/commerce LCP ms: 602 / limit 2500 — ok",
+        "http://127.0.0.1:4345/commerce LCP ms: 604 / limit 2500 — ok",
         "http://127.0.0.1:4345/commerce CLS: 0 / limit 0.1 — ok",
-        "http://127.0.0.1:4345/commerce TBT ms: 456 / limit 200 — EXCEEDED",
+        "http://127.0.0.1:4345/commerce TBT ms: 1743 / limit 200 — EXCEEDED",
         "http://127.0.0.1:4345/commerce totalBytes: 3740 / limit 500000 — ok"
       ]
     }

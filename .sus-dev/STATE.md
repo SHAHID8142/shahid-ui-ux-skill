@@ -11,14 +11,18 @@ BUILD_COMPLETE_PUSHED=true at release revision 2f344df — pnpm regression 3 sta
 679 tests). Architecture: ADR-001/002/004/005/006 adopted, ADR-003 as amended (D29).
 Repository is PUBLIC (D34); the product is unpublished.
 
-Canonical task statuses: TASKS.json (116 of 118 done; owner-only T1003 independent audit and
-T1005 release approval/publish remain, both owner-only). Every D32 owner-issue item from
+Canonical task statuses: TASKS.json (117 of 123 done; owner-only T1003 independent audit and
+T1005 release approval/publish remain, both owner-only, and the M12 hardening queue T1026–T1029
+from issue triage is open). Every D32 owner-issue item from
 triaging issues #13/#14 is done and receipted. Issue #15 (`/sus-bestpractice`) is triaged into
 T1021–T1024 (scope resolver -> proposal contract -> invocation -> measured examples).
 M11 is **done**: T1021 (scope resolution + focus selection), T1022 (proposal record, digest-bound
 approval), T1023 (`sus-eval bestpractice` end to end) and T1024 (five measured example classes,
-`docs/BESTPRACTICE_EXAMPLES.md`, `pnpm examples:check` in `pnpm verify`). Only owner-only T1003
-(independent audit) and T1005 (release approval) remain pending.
+`docs/BESTPRACTICE_EXAMPLES.md`, `pnpm examples:check` in `pnpm verify`). M12 is the owner's
+post-M11 issue triage (#16–#20) under standing rule D32: T1025 (per-hop redirect authorization,
+issue #18) is **done**; T1026 (spec/status drift gate, #17), T1027 (playbook coverage manifest,
+#20), T1028 (host matrix untested rows + quickstart, #16) and T1029 (governance inventory, #19)
+are queued and being executed in that order.
 T0706 preview, T0806 security/G13, T0707 apply + rollback, T0700w CLOSED — dual-stack
 feasibility GO on both Next.js and Astro. zcode stale. Concurrency: 2 workers (D33) — claim
 via lease before editing.

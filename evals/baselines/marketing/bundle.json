@@ -39,6 +39,8 @@
       "url": "http://127.0.0.1:4345/marketing",
       "title": "Meridian — Notes for Researchers",
       "horizontalOverflow": false,
+      "documentScrollWidth": 390,
+      "documentClientWidth": 390,
       "overflowingElements": [],
       "cls": 0,
       "lcpMs": 0,
@@ -87,6 +89,8 @@
       "url": "http://127.0.0.1:4345/marketing",
       "title": "Meridian — Notes for Researchers",
       "horizontalOverflow": false,
+      "documentScrollWidth": 390,
+      "documentClientWidth": 390,
       "overflowingElements": [],
       "cls": 0,
       "lcpMs": 0,
@@ -135,6 +139,8 @@
       "url": "http://127.0.0.1:4345/marketing",
       "title": "Meridian — Notes for Researchers",
       "horizontalOverflow": false,
+      "documentScrollWidth": 768,
+      "documentClientWidth": 768,
       "overflowingElements": [],
       "cls": 0,
       "lcpMs": 0,
@@ -183,6 +189,8 @@
       "url": "http://127.0.0.1:4345/marketing",
       "title": "Meridian — Notes for Researchers",
       "horizontalOverflow": false,
+      "documentScrollWidth": 768,
+      "documentClientWidth": 768,
       "overflowingElements": [],
       "cls": 0,
       "lcpMs": 0,
@@ -231,6 +239,8 @@
       "url": "http://127.0.0.1:4345/marketing",
       "title": "Meridian — Notes for Researchers",
       "horizontalOverflow": false,
+      "documentScrollWidth": 1440,
+      "documentClientWidth": 1440,
       "overflowingElements": [],
       "cls": 0,
       "lcpMs": 0,
@@ -279,6 +289,8 @@
       "url": "http://127.0.0.1:4345/marketing",
       "title": "Meridian — Notes for Researchers",
       "horizontalOverflow": false,
+      "documentScrollWidth": 1440,
+      "documentClientWidth": 1440,
       "overflowingElements": [],
       "cls": 0,
       "lcpMs": 0,
@@ -334,11 +346,11 @@
     },
     {
       "gate": "G5",
-      "status": "pass",
+      "status": "fail",
       "detail": [
-        "http://127.0.0.1:4345/marketing LCP ms: 602 / limit 2500 — ok",
+        "http://127.0.0.1:4345/marketing LCP ms: 603 / limit 2500 — ok",
         "http://127.0.0.1:4345/marketing CLS: 0 / limit 0.1 — ok",
-        "http://127.0.0.1:4345/marketing TBT ms: 65 / limit 200 — ok",
+        "http://127.0.0.1:4345/marketing TBT ms: 2754 / limit 200 — EXCEEDED",
         "http://127.0.0.1:4345/marketing totalBytes: 2604 / limit 500000 — ok"
       ]
     }
@@ -434,7 +446,7 @@
     },
     {
       "axis": "performance",
-      "score": 4,
+      "score": 3,
       "basis": "measured",
       "evidence": [
         "evals/baselines/marketing/evidence/budget-table.json"
@@ -442,7 +454,7 @@
     }
   ],
   "notes": [
-    "acceptanceComposite excluding judged axis: 31/55",
+    "acceptanceComposite excluding judged axis: 30/55",
     "pre-calibration scoring (T0155 owns judge calibration)"
   ]
 }

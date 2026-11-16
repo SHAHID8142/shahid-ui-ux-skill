@@ -111,7 +111,13 @@ must not be treated as one by CI.
   indicators, detours and focus cycles, not Escape dismissal, composite-widget semantics or
   announcements
 - will not treat a missing measurement as a pass: an unrun check is reported as not-run
-- will not audit a host that was not authorized: loopback is allowed, anything else needs --authorize
+- will not audit a host that was not authorized: loopback is allowed, anything else needs --authorize.
+  The boundary holds **per redirect hop**, not just for the URL you typed: HTTP fetches follow
+  redirects one hop at a time and refuse any hop whose host is not authorized (the audit stops with
+  exit 2 and writes no report); browser phases run through an allowlisting proxy, so a redirect or
+  subresource aimed at another host is answered with 403 instead of being fetched. HTTPS tunnels are
+  checked at the `CONNECT` host, not inside the tunnel, and Lighthouse (a separate Chrome) is
+  constrained by the same pre-fetch refusal rather than by the proxy
 - will not publish, release or claim release-readiness
 
 Manual-judgment items (screen readers, real translations, the user-agent zoom setting, text-only

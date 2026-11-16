@@ -2654,7 +2654,12 @@
         "T1018",
         "T1019",
         "T1020",
-        "T1024"
+        "T1024",
+        "T1025",
+        "T1026",
+        "T1027",
+        "T1028",
+        "T1029"
       ],
       "files": [],
       "acc": [
@@ -4503,6 +4508,149 @@
         "docs/BESTPRACTICE_EXAMPLES.md",
         "evals/bestpractice/examples.json"
       ]
+    },
+    {
+      "id": "T1025",
+      "m": "M12",
+      "title": "Authorized-origin policy enforced per redirect hop (issue #18)",
+      "obj": "Issue #18: /sus audit authorised the initial URL and then followed redirects anywhere, so an authorised server could make the audit fetch another origin. Enforce the allowlist per hop for HTTP fetches and for browser navigations, fail closed, and prove it with two origins.",
+      "deps": [
+        "T1024"
+      ],
+      "files": [
+        "packages/eval-core/src/harness/",
+        "packages/eval-core/src/audit/pipeline.ts",
+        "packages/eval-core/tests/net-guard.test.ts",
+        "docs/AUDIT_COMMAND.md"
+      ],
+      "acc": [
+        "HTTP redirects are followed hop by hop and every hop must pass the same allowlist",
+        "a refused hop stops the audit (exit 2) and writes no report",
+        "browser phases run through an allowlisting proxy so redirect and subresource hosts are refused",
+        "two-origin tests prove an off-list redirect is never fetched and a loopback redirect still works",
+        "the limitation (HTTPS CONNECT is host-level, Lighthouse is constrained only by the pre-fetch refusal) is documented"
+      ],
+      "tests": [
+        "packages/eval-core/tests/net-guard.test.ts"
+      ],
+      "risk": "refusing legitimate redirects (false denial) or breaking loopback targets",
+      "rollback": "revert the guard and keep the pre-fetch allowlist check",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1025.md",
+        "packages/eval-core/tests/net-guard.test.ts",
+        "docs/AUDIT_COMMAND.md"
+      ]
+    },
+    {
+      "id": "T1026",
+      "m": "M12",
+      "title": "Reconcile live spec/status drift and make the continuation check reject stale claims (issue #17)",
+      "obj": "Issue #17: live documents still describe pre-M11 status (T1024 pending, build not pushed, host matrix claiming verification that was not run). Reconcile them from TASKS.json and extend the drift checker so a stale status claim fails the gate.",
+      "deps": [
+        "T1025"
+      ],
+      "files": [
+        "docs/",
+        "scripts/check-continuation.mjs",
+        "packages/eval-core/tests/"
+      ],
+      "acc": [
+        "every live status claim matches TASKS.json",
+        "the drift checker fails on a stale status claim (test pins it)",
+        "historical handoff documents are labelled historical instead of edited",
+        "pnpm verify stays green"
+      ],
+      "tests": [
+        "scripts/check-continuation.mjs",
+        "packages/eval-core/tests/cli.test.ts"
+      ],
+      "risk": "deleting history instead of labelling it, or a gate that only greps and passes on absence",
+      "rollback": "keep the documents and add the checker only",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build"
+    },
+    {
+      "id": "T1027",
+      "m": "M12",
+      "title": "Machine-readable playbook coverage manifest with drift test (issue #20)",
+      "obj": "Issue #20: 36 playbooks exist but coverage of behavioural/dogfood evidence beyond the CTA/nav/form cases was not measurable. Add a generated manifest mapping each playbook to the check and evidence that exercises it, with gaps named rather than implied.",
+      "deps": [
+        "T1026"
+      ],
+      "files": [
+        "scripts/",
+        "evals/",
+        "docs/"
+      ],
+      "acc": [
+        "every playbook appears in the manifest with the checks that exercise it",
+        "a playbook with no evidence is listed as a named gap, not silently omitted",
+        "a drift test fails when a playbook is added without manifest coverage",
+        "the manifest is generated from source, not hand-maintained"
+      ],
+      "tests": [
+        "scripts/bestpractice/coverage.mjs"
+      ],
+      "risk": "a manifest that claims coverage the evidence does not show",
+      "rollback": "delete the manifest and keep the named gaps in docs",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build"
+    },
+    {
+      "id": "T1028",
+      "m": "M12",
+      "title": "Host compatibility matrix: untested rows for owner-named hosts plus install quickstart (issue #16)",
+      "obj": "Issue #16: the host matrix implied coverage it did not have. Add owner-named hosts as explicit untested rows, and a first-run quickstart for using SUS in a foreign project.",
+      "deps": [
+        "T1027"
+      ],
+      "files": [
+        "docs/",
+        "evals/host-smoke/"
+      ],
+      "acc": [
+        "owner-named hosts appear as untested with a reason, never as pass",
+        "the quickstart is executed end to end on a copy of a foreign project",
+        "no row claims verification that was not performed on this machine"
+      ],
+      "tests": [
+        "scripts/coord/smoke-host.mjs"
+      ],
+      "risk": "presenting an untested host as verified",
+      "rollback": "keep the existing matrix and drop the untested rows",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build"
+    },
+    {
+      "id": "T1029",
+      "m": "M12",
+      "title": "Pre-release governance inventory: review PRs, branch protection, licence packet (issue #19)",
+      "obj": "Issue #19: seven review PRs and branch-protection/licence questions were untracked. Produce a read-only inventory and a decision packet; perform no administrative GitHub change without the owner.",
+      "deps": [
+        "T1028"
+      ],
+      "files": [
+        "docs/"
+      ],
+      "acc": [
+        "each open PR is classified (merge, close, superseded) with evidence",
+        "branch-protection and licence decisions are listed as owner decisions with the exact action required",
+        "no GitHub administrative change is made by the agent"
+      ],
+      "tests": [
+        "scripts/check-gates.mjs"
+      ],
+      "risk": "making a GitHub administrative change without the owner",
+      "rollback": "keep the inventory read-only",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build"
     }
   ]
 }

@@ -13,7 +13,8 @@
  * input methods, currency/date/numerals, translated errors) — never a
  * universal locale claim.
  */
-import { chromium, type Browser, type Page } from 'playwright';
+import type { Browser, Page } from 'playwright';
+import { guardNavigations, launchGuardedBrowser } from './harness/net-guard.js';
 import { collectPageMetrics, type PageMetrics } from './harness/metrics.js';
 
 export interface MatrixCell {
@@ -149,8 +150,10 @@ const VIEWPORTS = [
 export async function runHardeningMatrix(
   url: string,
   localeSet: string[] = ['en'],
+  authorizedHosts: readonly string[] = [],
 ): Promise<HardeningResult> {
-  const browser = await chromium.launch();
+  const guarded = await launchGuardedBrowser(authorizedHosts);
+  const browser = guarded.browser;
   const cells: MatrixCell[] = [];
   const failures: string[] = [];
   let zoom400: Zoom400Record | null = null;
@@ -165,7 +168,13 @@ export async function runHardeningMatrix(
             reducedMotion,
           });
           const page = await context.newPage();
-          await page.goto(url, { waitUntil: 'networkidle' });
+          const guard = await guardNavigations(page, authorizedHosts);
+          try {
+            await page.goto(url, { waitUntil: 'networkidle' });
+            guard.assertOnAuthorizedPage(page);
+          } finally {
+            await guard.dispose();
+          }
           const metrics = await collectPageMetrics(page);
           // G7: overflow fails the cell except inside deliberate scroll
           // regions (data tables etc. — overflow collection already counts
@@ -194,7 +203,7 @@ export async function runHardeningMatrix(
       zoomFailure = error instanceof Error ? error.message : String(error);
     }
   } finally {
-    await browser.close();
+    await guarded.close();
   }
   return {
     url,

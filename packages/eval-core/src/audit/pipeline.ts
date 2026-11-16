@@ -16,7 +16,7 @@ import { createServer } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join, relative, resolve, sep } from 'node:path';
-import { chromium } from 'playwright';
+
 import type { ScanResult } from '@sus/scanners';
 import { scanText } from '@sus/scanners';
 import type { AxeScanResult, LighthouseSummary } from '../harness/a11y-budgets.js';
@@ -24,6 +24,12 @@ import { captureMatrix, type CaptureResult } from '../harness/capture.js';
 import { scanKeyboard, type KeyboardScanResult } from '../harness/keyboard.js';
 import type { HardeningResult } from '../hardening.js';
 import { runHardeningMatrix } from '../hardening.js';
+import {
+  followAuthorized,
+  guardNavigations,
+  isAuthorizationRefused,
+  launchGuardedBrowser,
+} from '../harness/net-guard.js';
 import { chromeForTestingPath, runLighthouse, scanA11y } from '../harness/scans.js';
 import type { AuditMode } from './contract.js';
 import { AUDIT_OUTPUT_FILES, assertAuthorizedUrl, parseRoutes } from './contract.js';
@@ -183,14 +189,21 @@ async function serveLocal(site: LocalSite): Promise<{ origin: string; close: () 
   };
 }
 
-async function fetchHtml(url: string): Promise<{ html: string | null; reason?: string }> {
+async function fetchHtml(
+  url: string,
+  authorizedHosts: readonly string[],
+): Promise<{ html: string | null; reason?: string }> {
   try {
-    const response = await fetch(url, { redirect: 'follow' });
+    // Redirects are followed here, not by fetch: every hop has to pass the same allowlist the
+    // initial target did (issue #18). A server authorised for one origin could otherwise send the
+    // audit to a private or unrelated host without the operator authorising it.
+    const { response, url: finalUrl } = await followAuthorized(url, authorizedHosts);
     if (!response.ok) return { html: null, reason: 'HTTP ' + response.status };
     const type = response.headers.get('content-type') ?? '';
     if (!type.includes('html'))
       return { html: null, reason: 'not an HTML response (' + type + ')' };
     const text = await response.text();
+    void finalUrl;
     if (text.length > MAX_FETCH_BYTES) {
       return {
         html: text.slice(0, MAX_FETCH_BYTES),
@@ -199,6 +212,9 @@ async function fetchHtml(url: string): Promise<{ html: string | null; reason?: s
     }
     return { html: text };
   } catch (error) {
+    // An authorization refusal is not a fetch hiccup: it must stop the audit rather than turn one
+    // check into `not-run` while the rest of the report describes a page nobody authorised.
+    if (isAuthorizationRefused(error)) throw error;
     return { html: null, reason: 'fetch failed: ' + describeError(error) };
   }
 }
@@ -216,6 +232,7 @@ async function collectCapture(
   origin: string,
   routes: readonly string[],
   shotsRoot: string,
+  authorizedHosts: readonly string[],
 ): Promise<LiveGroup<CaptureResult>> {
   const samples: { route: string; value: CaptureResult }[] = [];
   const failed: { route: string; reason: string }[] = [];
@@ -225,7 +242,10 @@ async function collectCapture(
         shotsRoot,
         route === '/' ? 'root' : route.replace(/^\//, '').replace(/\//g, '_'),
       );
-      samples.push({ route, value: await captureMatrix(routeUrl(origin, route), outDir) });
+      samples.push({
+        route,
+        value: await captureMatrix(routeUrl(origin, route), outDir, authorizedHosts),
+      });
     } catch (error) {
       failed.push({ route, reason: describeError(error) });
     }
@@ -236,12 +256,16 @@ async function collectCapture(
 async function collectReflow(
   origin: string,
   routes: readonly string[],
+  authorizedHosts: readonly string[],
 ): Promise<LiveGroup<HardeningResult>> {
   const samples: { route: string; value: HardeningResult }[] = [];
   const failed: { route: string; reason: string }[] = [];
   for (const route of routes) {
     try {
-      samples.push({ route, value: await runHardeningMatrix(routeUrl(origin, route)) });
+      samples.push({
+        route,
+        value: await runHardeningMatrix(routeUrl(origin, route), ['en'], authorizedHosts),
+      });
     } catch (error) {
       failed.push({ route, reason: describeError(error) });
     }
@@ -252,6 +276,7 @@ async function collectReflow(
 async function collectScans(
   origin: string,
   routes: readonly string[],
+  authorizedHosts: readonly string[],
 ): Promise<{
   axe: LiveGroup<AxeScanResult>;
   keyboard: LiveGroup<KeyboardScanResult>;
@@ -266,14 +291,17 @@ async function collectScans(
   const lhFailed: { route: string; reason: string }[] = [];
   let browser: string | null = null;
   try {
-    const instance = await chromium.launch();
+    const guarded = await launchGuardedBrowser(authorizedHosts);
+    const instance = guarded.browser;
     browser = instance.version();
     try {
       const context = await instance.newContext();
       const page = await context.newPage();
+      const axeGuard = await guardNavigations(page, authorizedHosts);
       for (const route of routes) {
         try {
           axe.push({ route, value: await scanA11y(page, routeUrl(origin, route)) });
+          axeGuard.assertOnAuthorizedPage(page);
         } catch (error) {
           axeFailed.push({ route, reason: describeError(error) });
         }
@@ -286,18 +314,22 @@ async function collectScans(
         colorScheme: 'light',
       });
       const kbPage = await kbContext.newPage();
+      const kbGuard = await guardNavigations(kbPage, authorizedHosts);
       for (const route of routes) {
         try {
           await kbPage.goto(routeUrl(origin, route), { waitUntil: 'networkidle' });
+          kbGuard.assertOnAuthorizedPage(kbPage);
           keyboard.push({ route, value: await scanKeyboard(kbPage) });
         } catch (error) {
           keyboardFailed.push({ route, reason: describeError(error) });
         }
       }
+      await kbGuard.dispose();
       await kbContext.close();
+      await axeGuard.dispose();
       await context.close();
     } finally {
-      await instance.close();
+      await guarded.close();
     }
   } catch (error) {
     const reason = 'no browser: ' + describeError(error);
@@ -435,16 +467,17 @@ interface MeasureRequest {
   readonly origin: string;
   readonly site: LocalSite | null;
   readonly outDir: string;
+  readonly authorizedHosts: readonly string[];
 }
 
 /** Collect every observation the composer needs; performs no writing of its own. */
 async function measure(request: MeasureRequest): Promise<AuditInputs> {
-  const { mode, origin, outDir } = request;
+  const { mode, origin, outDir, authorizedHosts } = request;
   const routes = request.target.routes;
 
   const html: RouteHtml[] = [];
   for (const route of routes) {
-    const fetched = await fetchHtml(routeUrl(origin, route));
+    const fetched = await fetchHtml(routeUrl(origin, route), authorizedHosts);
     html.push(
       fetched.html === null
         ? { route, html: null, ...(fetched.reason === undefined ? {} : { reason: fetched.reason }) }
@@ -467,9 +500,14 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
     keyboard = emptyGroup<KeyboardScanResult>(reason);
     lighthouse = emptyGroup<LighthouseSummary>(reason);
   } else {
-    capture = await collectCapture(origin, routes, join(outDir, AUDIT_OUTPUT_FILES.shotsDir));
-    reflow = await collectReflow(origin, routes);
-    const scans = await collectScans(origin, routes);
+    capture = await collectCapture(
+      origin,
+      routes,
+      join(outDir, AUDIT_OUTPUT_FILES.shotsDir),
+      authorizedHosts,
+    );
+    reflow = await collectReflow(origin, routes, authorizedHosts);
+    const scans = await collectScans(origin, routes, authorizedHosts);
     axe = scans.axe;
     keyboard = scans.keyboard;
     lighthouse = scans.lighthouse;
@@ -559,6 +597,7 @@ export async function runAudit(options: AuditOptions): Promise<AuditRun> {
       origin: resolved.origin,
       site: resolved.site,
       outDir,
+      authorizedHosts: options.authorizedHosts ?? [],
     });
     const artifacts = artifactsFor(measured, outDir);
     const inputs: AuditInputs = artifacts.size === 0 ? measured : { ...measured, artifacts };

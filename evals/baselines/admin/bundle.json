@@ -39,17 +39,14 @@
       "url": "http://127.0.0.1:4345/admin",
       "title": "Ledger CMS — Dashboard",
       "horizontalOverflow": true,
+      "documentScrollWidth": 654,
+      "documentClientWidth": 390,
       "overflowingElements": [
-        "h2",
-        "p",
-        "h2",
-        "p",
-        "h2",
-        "p",
-        "th",
-        "th",
-        "th",
-        "th"
+        "div",
+        "div",
+        "div",
+        "table#queue",
+        "input"
       ],
       "cls": 0,
       "lcpMs": 0,
@@ -132,17 +129,14 @@
       "url": "http://127.0.0.1:4345/admin",
       "title": "Ledger CMS — Dashboard",
       "horizontalOverflow": true,
+      "documentScrollWidth": 654,
+      "documentClientWidth": 390,
       "overflowingElements": [
-        "h2",
-        "p",
-        "h2",
-        "p",
-        "h2",
-        "p",
-        "th",
-        "th",
-        "th",
-        "th"
+        "div",
+        "div",
+        "div",
+        "table#queue",
+        "input"
       ],
       "cls": 0,
       "lcpMs": 0,
@@ -225,6 +219,8 @@
       "url": "http://127.0.0.1:4345/admin",
       "title": "Ledger CMS — Dashboard",
       "horizontalOverflow": false,
+      "documentScrollWidth": 768,
+      "documentClientWidth": 768,
       "overflowingElements": [],
       "cls": 0,
       "lcpMs": 0,
@@ -307,6 +303,8 @@
       "url": "http://127.0.0.1:4345/admin",
       "title": "Ledger CMS — Dashboard",
       "horizontalOverflow": false,
+      "documentScrollWidth": 768,
+      "documentClientWidth": 768,
       "overflowingElements": [],
       "cls": 0,
       "lcpMs": 0,
@@ -389,6 +387,8 @@
       "url": "http://127.0.0.1:4345/admin",
       "title": "Ledger CMS — Dashboard",
       "horizontalOverflow": false,
+      "documentScrollWidth": 1440,
+      "documentClientWidth": 1440,
       "overflowingElements": [],
       "cls": 0,
       "lcpMs": 0,
@@ -471,6 +471,8 @@
       "url": "http://127.0.0.1:4345/admin",
       "title": "Ledger CMS — Dashboard",
       "horizontalOverflow": false,
+      "documentScrollWidth": 1440,
+      "documentClientWidth": 1440,
       "overflowingElements": [],
       "cls": 0,
       "lcpMs": 0,
@@ -560,11 +562,11 @@
     },
     {
       "gate": "G5",
-      "status": "pass",
+      "status": "fail",
       "detail": [
         "http://127.0.0.1:4345/admin LCP ms: 606 / limit 2500 — ok",
         "http://127.0.0.1:4345/admin CLS: 0 / limit 0.1 — ok",
-        "http://127.0.0.1:4345/admin TBT ms: 178 / limit 200 — ok",
+        "http://127.0.0.1:4345/admin TBT ms: 373 / limit 200 — EXCEEDED",
         "http://127.0.0.1:4345/admin totalBytes: 3979 / limit 500000 — ok"
       ]
     }
@@ -660,7 +662,7 @@
     },
     {
       "axis": "performance",
-      "score": 4,
+      "score": 3,
       "basis": "measured",
       "evidence": [
         "evals/baselines/admin/evidence/budget-table.json"
@@ -668,7 +670,7 @@
     }
   ],
   "notes": [
-    "acceptanceComposite excluding judged axis: 26/55",
+    "acceptanceComposite excluding judged axis: 25/55",
     "pre-calibration scoring (T0155 owns judge calibration)"
   ]
 }

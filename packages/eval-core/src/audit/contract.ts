@@ -222,6 +222,32 @@ function isLoopback(hostname: string): boolean {
  * Authorized-URL gate. Loopback targets are allowed by default, any other host
  * must be named with --authorize <host> or granted as a suffix with .example.com.
  */
+/**
+ * The authorization predicate on its own, so redirect hops and browser navigations can be checked
+ * with the same rule the initial target was checked with (issue #18).
+ */
+export function isAuthorizedHost(
+  hostname: string,
+  authorizedHosts: readonly string[] = [],
+): boolean {
+  const host = hostname.toLowerCase();
+  return (
+    isLoopback(host) ||
+    authorizedHosts.some((rawHost) => {
+      const allowed = rawHost.trim().toLowerCase();
+      if (allowed.length === 0) return false;
+      if (allowed.startsWith('.')) return host === allowed.slice(1) || host.endsWith(allowed);
+      return host === allowed;
+    })
+  );
+}
+
+export function isAuthorizedUrl(url: URL, authorizedHosts: readonly string[] = []): boolean {
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') return false;
+  if (url.username || url.password) return false;
+  return isAuthorizedHost(url.hostname, authorizedHosts);
+}
+
 export function assertAuthorizedUrl(raw: string, authorizedHosts: readonly string[] = []): URL {
   let url: URL;
   try {
@@ -236,15 +262,7 @@ export function assertAuthorizedUrl(raw: string, authorizedHosts: readonly strin
     throw new Error('credentials in the target URL are not allowed');
   }
   const hostname = url.hostname.toLowerCase();
-  const allowed =
-    isLoopback(hostname) ||
-    authorizedHosts.some((rawHost) => {
-      const host = rawHost.trim().toLowerCase();
-      if (host.length === 0) return false;
-      if (host.startsWith('.')) return hostname === host.slice(1) || hostname.endsWith(host);
-      return hostname === host;
-    });
-  if (!allowed) {
+  if (!isAuthorizedHost(hostname, authorizedHosts)) {
     throw new Error(
       'host "' +
         hostname +
