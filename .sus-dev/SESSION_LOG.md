@@ -779,3 +779,25 @@
   implemented, registry still names G7 400 % zoom as unmeasured. Count is now **108 of 110 done**;
   only the owner-only T1003 and T1005 remain.
 
+
+- 2026-11-16T17:35:00+06:00 | Pi (FreePi) | issue-evidence (no task id, D32 step 4) | Posted the
+  missing evidence to the owner-facing channel; no code changed. Git inspected first: branch
+  `chore/continuation-reconciliation`, HEAD `5c0d8c5`, tree clean, `gh issue list --state open` =
+  #9 (standing rule by design), #13 (P1), #14 (P2). `pnpm verify` at `5c0d8c5`: **exit 0 —
+  76 files + 3 skipped, 867 tests passed / 9 skipped, 13/13 gates implemented**, with the registry
+  still naming "G7 400% zoom (harness does not drive browser zoom)" as unmeasured. Live audit
+  exercised for evidence: `./packages/eval-core/dist/cli.js audit --path ./fixtures/portfolio/dist
+  --out /tmp/sus-audit-portfolio --mode quick` → exit 0, `seo-structure:pass`, `anti-slop:pass`,
+  one real finding (missing meta description), and every browser phase `not-run` with a reason.
+  #13 comment (id 6916260177) states the shipped engine + routing + evidence contract, and names
+  the residue that keeps it open: 400% zoom asserted `not-run` by `scripts/check-gates.mjs:177-181`,
+  no real AT session, no field performance, no 320px screenshot column. #14 comment (id 6916263373)
+  states the measured pin (two independent transports, byte-identical, digest-refusal), the bounded
+  offline-degrading provider (53 tests), the responsive-table pilot (0/16 → 16/16 with a failing
+  negative and a 320px fallback, 22 guard tests), the CI action pins (10 tests), and the residue:
+  the provider arm of any paired run is `not-run` and D06 stays owner-open. Both issues were left
+  OPEN deliberately — closing them would claim the measurements above that were never taken.
+  Local `pnpm verify` rewrote `evals/baselines/*/bundle.json` (LCP 602→603, TBT 65→14 timing noise);
+  restored with `git checkout -- evals/baselines`, as the INBOX warned. No TASKS.json change: no
+  task became done or started. Remaining agent-doable work is exactly these two residues; both are
+  consequential enough to need an owner decision on whether to widen them.

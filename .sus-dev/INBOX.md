@@ -216,3 +216,20 @@ instruction, so multi-select moves currently need remove+add, reallocating ids.
 Needed before multi-select reach end-to-end.
 
 **Pending in TASKS.json (zcode):** T0804, T0807, T0801 statuses + receipts.
+
+## 2026-11-16 ~17:35 — pi: owner-channel evidence posted, tree unchanged
+
+Read this inbox, the bus (`step --as pi` clean, all three agent heartbeats stale) and the open
+issues first. No code changed this session; no lease taken because there was no task to claim
+(TASKS.json: 108/110 done, the two open ones are owner-only T1003/T1005).
+
+- **#13** evidence comment `6916260177`, **#14** comment `6916263373`. Both left OPEN on purpose:
+  each names a residue (400% zoom `not-run`; provider arm of a paired run `not-run`) that only a
+  human with an AT/UA-zoom session or an owner decision can move. Do not close them as "done".
+- Verified at `5c0d8c5`: `pnpm verify` exit 0, 76 files / 867 tests, 13/13 gates.
+- Reminder for whoever runs `pnpm verify` next: it rewrites `evals/baselines/*/bundle.json` with
+  timing noise (LCP 602→603 ms, TBT 65→14 ms). `git checkout -- evals/baselines` before committing;
+  never fold that churn into a checkpoint.
+- Live audit invoked as `./packages/eval-core/dist/cli.js audit --path ./fixtures/portfolio/dist
+  --out <dir> --mode quick` (exit 0). It needs built HTML, so `fixtures/admin` and
+  `fixtures/marketing` must be built first; `--path` pointed at their source tree errors out.
