@@ -10,11 +10,26 @@ the row drops to `experimental` rather than quietly staying on the old claim.
 
 | Host | Tier | Triggering | CLI | JIT | Studio | Artifact | Environment | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| codex | experimental | expected | expected | expected | expected | sus-adapters@ab82c994d5fd | unrecorded; n/a; n/a; unrecorded | no smoke evidence recorded |
-| claude-code | experimental | expected | expected | expected | expected | sus-adapters@ab82c994d5fd | unrecorded; n/a; n/a; unrecorded | no smoke evidence recorded |
-| cursor | experimental | expected | expected | expected | expected | sus-adapters@ab82c994d5fd | unrecorded; n/a; n/a; unrecorded | no smoke evidence recorded |
-| freepi | experimental | verified | verified | verified | expected | sus-adapters@ab82c994d5fd | unrecorded; n/a (no Live Studio run); n/a (no fixture build); darwin 27.2.0 | evals/host-smoke/freepi-ab82c994d5fd.json (PASS) (2026-11-16) — verified against this artifact |
-| zcode | experimental | verified | verified | verified | expected | sus-adapters@ab82c994d5fd | unrecorded; n/a; n/a; unrecorded | evals/host-smoke/zcode-b061cc4.json (PASS) (2026-11-14) — STALE — the artifact changed after the smoke run; tier downgraded |
+| codex | experimental | expected | expected | expected | expected | sus-adapters@293168993dee | unrecorded; n/a; n/a; unrecorded | no smoke evidence recorded |
+| claude-code | experimental | expected | expected | expected | expected | sus-adapters@293168993dee | unrecorded; n/a; n/a; unrecorded | no smoke evidence recorded |
+| cursor | experimental | expected | expected | expected | expected | sus-adapters@293168993dee | unrecorded; n/a; n/a; unrecorded | no smoke evidence recorded |
+| freepi | experimental | verified | verified | verified | expected | sus-adapters@293168993dee | unrecorded; n/a (no Live Studio run); n/a (no fixture build); darwin 27.2.0 | evals/host-smoke/freepi-293168993dee.json (PASS) (2026-11-16) — verified against this artifact |
+| zcode | experimental | verified | verified | verified | expected | sus-adapters@293168993dee | unrecorded; n/a; n/a; unrecorded | evals/host-smoke/zcode-b061cc4.json (PASS) (2026-11-14) — STALE — the artifact changed after the smoke run; tier downgraded |
+
+## Named by the owner, untested here
+
+These hosts have no adapter and no smoke run against this artifact. They are listed so their
+absence from the table above is read as "not measured", not as "measured and fine".
+
+| Host | Product | Why it is untested | What would make it a row |
+| --- | --- | --- | --- |
+| `antigravity` | Google Antigravity | no adapter, installer or smoke run; nothing about it has been measured here | an adapter with an install method, plus `node scripts/coord/smoke-host.mjs` run on that host against this artifact |
+| `goose` | Goose | no adapter, installer or smoke run; skill discovery mechanism not checked | an adapter with an install method, plus `node scripts/coord/smoke-host.mjs` run on that host against this artifact |
+| `copilot` | GitHub Copilot | no adapter, installer or smoke run; no claim about custom-instruction support | an adapter with an install method, plus `node scripts/coord/smoke-host.mjs` run on that host against this artifact |
+| `hermes` | Hermes | no adapter, installer or smoke run; the product name is recorded as the owner wrote it | an adapter with an install method, plus `node scripts/coord/smoke-host.mjs` run on that host against this artifact |
+| `work-buddy` | Work Buddy | no adapter, installer or smoke run; no slash-command binding checked | an adapter with an install method, plus `node scripts/coord/smoke-host.mjs` run on that host against this artifact |
+| `autopilot` | Autopilot | no adapter, installer or smoke run; no claim about autonomous invocation | an adapter with an install method, plus `node scripts/coord/smoke-host.mjs` run on that host against this artifact |
+| `pi` | Pi CLI (other variants than the FreePi receipt) | only the FreePi receipt exists; other Pi/ZCode variants have not been run against this artifact | an adapter with an install method, plus `node scripts/coord/smoke-host.mjs` run on that host against this artifact |
 
 ## What this table cannot tell you
 

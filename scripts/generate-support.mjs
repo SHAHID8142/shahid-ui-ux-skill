@@ -33,7 +33,7 @@ import { buildHint, missingBuildArtifacts } from './lib/ensure-built.mjs';
   }
 }
 
-const { HOST_ADAPTERS, buildCompatibility, renderSupportMatrix, statusText } =
+const { HOST_ADAPTERS, OWNER_NAMED_UNTESTED, buildCompatibility, renderSupportMatrix, statusText } =
   await import('../packages/adapters/dist/index.js');
 
 const ROOT = join(import.meta.dirname, '..');
@@ -86,6 +86,7 @@ function environmentFor(host) {
   };
 }
 
+const untestedHosts = OWNER_NAMED_UNTESTED;
 const artifacts = Object.fromEntries(
   HOST_ADAPTERS.map((adapter) => [adapter.id, { id: ARTIFACT_ID, sha256: artifactSha256(ROOT) }]),
 );
@@ -96,7 +97,13 @@ const evidence = Object.fromEntries(
   HOST_ADAPTERS.map((adapter) => [adapter.id, evidenceFor(adapter.id)]),
 );
 
-const doc = buildCompatibility({ adapters: HOST_ADAPTERS, artifacts, environments, evidence });
+const doc = buildCompatibility({
+  adapters: HOST_ADAPTERS,
+  artifacts,
+  environments,
+  evidence,
+  untestedHosts,
+});
 const markdown = renderSupportMatrix(doc);
 const json = `${JSON.stringify(doc, null, 2)}\n`;
 

@@ -64,11 +64,15 @@ reaches `supported`, because that tier also requires a Live Studio run on the ho
 
 | Host | Status now | Basis |
 |---|---|---|
-| FreePi CLI | experimental | smoke PASS 8/8, state `verified` on the current artefact (`evals/host-smoke/freepi-ab82c994d5fd.json`); Live Studio not exercised there |
+| FreePi CLI | experimental | smoke PASS 8/8 (`verified`) on the current artefact (`evals/host-smoke/freepi-293168993dee.json`); Live Studio not exercised there |
 | ZCode | experimental | state `stale`: its smoke predates the current artefact hash (`evals/host-smoke/zcode-b061cc4.json`); a re-run is required and is not claimed |
 | Codex, Claude Code, Cursor | experimental | adapter rows exist, no smoke evidence yet |
-| Copilot, Gemini CLI, other hosts | unsupported | no adapter row: the skill loads if the host loads skill files, but nothing is verified |
+| Copilot, Gemini CLI, other hosts | **untested** (not "unsupported") | no adapter row and no smoke run: the owner-named hosts (Antigravity, Goose, Copilot, Hermes, Work Buddy, Autopilot, other Pi variants) are listed as `untested` with the reason in `docs/SUPPORT_MATRIX.md` §"Named by the owner, untested here" |
 | Any host without skill-file loading | unsupported | CLI fallback documented, no skill loading |
+
+No host journey has been performed end to end by a person on any of these hosts: there is no
+verified install path and no verified slash-command binding anywhere. The verified entry points are
+the CLI commands in [`docs/QUICKSTART.md`](QUICKSTART.md).
 
 ## 5. Honest limitation statements (ship in README)
 

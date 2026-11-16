@@ -57,12 +57,20 @@ export interface CompatibilityRow {
   evidenceState: EvidenceState;
 }
 
+export interface UntestedHostRow {
+  id: string;
+  label: string;
+  why: string;
+}
+
 export interface CompatibilityDocument {
   schema: 'sus.compatibility';
   version: 1;
   /** Provenance of the generator's inputs, so a reader can diff two records. */
   generatedFrom: { adapterCount: number; artifactIds: string[] };
   rows: CompatibilityRow[];
+  /** Hosts the owner named that have no adapter; kept out of `rows` on purpose. */
+  untestedHosts?: UntestedHostRow[];
 }
 
 export interface ArtifactBinding {
@@ -97,6 +105,8 @@ export interface BuildInput {
   artifacts: Record<string, ArtifactBinding>;
   environments: Record<string, EnvironmentFacts>;
   evidence: Record<string, SmokeEvidence | null>;
+  /** Owner-named hosts without an adapter; rendered as untested, never as a tiered row. */
+  untestedHosts?: UntestedHostRow[];
 }
 
 export function buildCompatibility(input: BuildInput): CompatibilityDocument {
@@ -127,6 +137,13 @@ export function buildCompatibility(input: BuildInput): CompatibilityDocument {
       evidenceState: state,
     });
   }
+  const untestedHosts = input.untestedHosts ?? [];
+  const claimed = new Set(rows.map((row) => row.host));
+  const contradiction = untestedHosts.find((host) => claimed.has(host.id));
+  if (contradiction) {
+    // A host cannot be both measured and unmeasured; one of the two claims is false.
+    throw new Error(`host "${contradiction.id}" is listed as untested and has a compatibility row`);
+  }
   return {
     schema: 'sus.compatibility',
     version: 1,
@@ -135,6 +152,7 @@ export function buildCompatibility(input: BuildInput): CompatibilityDocument {
       artifactIds: [...new Set(rows.map((row) => row.artifactId))].sort(),
     },
     rows,
+    untestedHosts,
   };
 }
 
@@ -168,6 +186,23 @@ export function renderSupportMatrix(doc: CompatibilityDocument): string {
       `| ${row.host} | ${row.tier} | ${row.capabilities.skillTriggering} | ${row.capabilities.cliExecution} | ${row.capabilities.jitReferenceLoading} | ${row.capabilities.liveStudio} | ${row.artifactId}@${row.artifactSha256.slice(0, 12)} | ${env} | ${evidence} |`,
     );
   }
+  if (doc.untestedHosts && doc.untestedHosts.length > 0) {
+    lines.push(
+      '',
+      '## Named by the owner, untested here',
+      '',
+      'These hosts have no adapter and no smoke run against this artifact. They are listed so their',
+      'absence from the table above is read as "not measured", not as "measured and fine".',
+      '',
+      '| Host | Product | Why it is untested | What would make it a row |',
+      '| --- | --- | --- | --- |',
+    );
+    for (const host of doc.untestedHosts) {
+      lines.push(
+        `| \`${host.id}\` | ${host.label} | ${host.why} | an adapter with an install method, plus \`node scripts/coord/smoke-host.mjs\` run on that host against this artifact |`,
+      );
+    }
+  }
   lines.push(
     '',
     '## What this table cannot tell you',
@@ -191,6 +226,9 @@ export function statusText(doc: CompatibilityDocument): string {
       `env=${row.environment.hostVersion} / ${row.environment.browser}`,
     ].filter((value): value is string => Boolean(value));
     lines.push(`${row.host.padEnd(16)} ${flags.join('  ')}`);
+  }
+  for (const host of doc.untestedHosts ?? []) {
+    lines.push(`${host.id.padEnd(16)} tier=untested  evidence=missing  ${host.label}`);
   }
   if (doc.rows.some((row) => row.evidenceState === 'stale')) {
     lines.push(

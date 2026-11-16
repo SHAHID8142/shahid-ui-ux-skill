@@ -4634,9 +4634,15 @@
       ],
       "risk": "presenting an untested host as verified",
       "rollback": "keep the existing matrix and drop the untested rows",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1028.md",
+        "docs/QUICKSTART.md",
+        "docs/SUPPORT_MATRIX.md",
+        "packages/adapters/tests/compatibility.test.ts"
+      ]
     },
     {
       "id": "T1029",

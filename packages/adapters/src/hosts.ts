@@ -90,3 +90,58 @@ export function generateHostEntry(hostId: string): string {
       return `# SUS host entry (generated) — tier: ${tier}\nRead AGENTS.md and follow it on 'continue'.\n`;
   }
 }
+
+/**
+ * Owner-named hosts with no adapter (issue #16).
+ *
+ * These are listed so the matrix cannot read as "these hosts were considered and found fine" or,
+ * worse, as if an adapter existed. There is no installer, no invocation syntax and no smoke run, so
+ * they appear as `untested` with the reason — an absent row is a silence, and a silence is what the
+ * owner found misleading.
+ */
+export interface UntestedHost {
+  /** Lowercase-hyphen id, in the same shape as a real adapter id. */
+  id: string;
+  /** Product name as the owner wrote it. */
+  label: string;
+  /** Why it is not a row, stated as a fact about this repository. */
+  why: string;
+}
+
+export const OWNER_NAMED_UNTESTED: UntestedHost[] = [
+  {
+    id: 'antigravity',
+    label: 'Google Antigravity',
+    why: 'no adapter, installer or smoke run; nothing about it has been measured here',
+  },
+  {
+    id: 'goose',
+    label: 'Goose',
+    why: 'no adapter, installer or smoke run; skill discovery mechanism not checked',
+  },
+  {
+    id: 'copilot',
+    label: 'GitHub Copilot',
+    why: 'no adapter, installer or smoke run; no claim about custom-instruction support',
+  },
+  {
+    id: 'hermes',
+    label: 'Hermes',
+    why: 'no adapter, installer or smoke run; the product name is recorded as the owner wrote it',
+  },
+  {
+    id: 'work-buddy',
+    label: 'Work Buddy',
+    why: 'no adapter, installer or smoke run; no slash-command binding checked',
+  },
+  {
+    id: 'autopilot',
+    label: 'Autopilot',
+    why: 'no adapter, installer or smoke run; no claim about autonomous invocation',
+  },
+  {
+    id: 'pi',
+    label: 'Pi CLI (other variants than the FreePi receipt)',
+    why: 'only the FreePi receipt exists; other Pi/ZCode variants have not been run against this artifact',
+  },
+];

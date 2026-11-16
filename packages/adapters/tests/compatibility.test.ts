@@ -196,8 +196,10 @@ describe('the committed docs agree with the committed record (T0905)', () => {
     for (const row of doc.rows) {
       expect(markdown).toContain(`| ${row.host} | ${row.tier} |`);
     }
-    // every host mentioned in the table body is also in the record
-    const tableHosts = markdown
+    // every host in the *tiered* table is in the record; the untested section is checked below
+    // and must not be counted as a measured row.
+    const tiered = markdown.split('## Named by the owner, untested here')[0] ?? markdown;
+    const tableHosts = tiered
       .split('\n')
       .filter(
         (line) => line.startsWith('| ') && !line.startsWith('| Host') && !line.startsWith('| ---'),
@@ -205,5 +207,54 @@ describe('the committed docs agree with the committed record (T0905)', () => {
       .map((line) => line.split('|')[1]?.trim())
       .filter((value): value is string => Boolean(value));
     expect(tableHosts.sort()).toEqual(doc.rows.map((row) => row.host).sort());
+  });
+
+  it('names owner-named hosts as untested instead of leaving them silently absent', () => {
+    const doc = JSON.parse(readFileSync(jsonPath, 'utf8')) as CompatibilityDocument;
+    const markdown = readFileSync(mdPath, 'utf8');
+    const untested = doc.untestedHosts ?? [];
+    expect(untested.map((host) => host.id)).toEqual(
+      expect.arrayContaining([
+        'antigravity',
+        'goose',
+        'copilot',
+        'hermes',
+        'work-buddy',
+        'autopilot',
+        'pi',
+      ]),
+    );
+    const section = markdown.split('## Named by the owner, untested here')[1] ?? '';
+    for (const host of untested) {
+      expect(section).toContain(`\`${host.id}\``);
+      expect(section).toContain(host.why);
+      // and never as a tiered row
+      expect(doc.rows.some((row) => row.host === host.id)).toBe(false);
+    }
+    expect(section).toContain('not measured');
+  });
+
+  it('refuses a host that is claimed both tested and untested', () => {
+    expect(() =>
+      buildCompatibility({
+        adapters: [adapter()],
+        artifacts: { 'demo-host': ARTIFACT },
+        environments: { 'demo-host': ENV },
+        evidence: { 'demo-host': null },
+        untestedHosts: [{ id: 'demo-host', label: 'Demo', why: 'contradiction' }],
+      }),
+    ).toThrow(/listed as untested and has a compatibility row/);
+  });
+
+  it('prints untested hosts as tier=untested in the status text', () => {
+    const doc = buildCompatibility({
+      adapters: [adapter()],
+      artifacts: { 'demo-host': ARTIFACT },
+      environments: { 'demo-host': ENV },
+      evidence: { 'demo-host': null },
+      untestedHosts: [{ id: 'goose', label: 'Goose', why: 'no smoke run' }],
+    });
+    expect(statusText(doc)).toContain('goose');
+    expect(statusText(doc)).toContain('tier=untested');
   });
 });

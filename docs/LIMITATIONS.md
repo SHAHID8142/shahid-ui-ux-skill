@@ -75,7 +75,7 @@ written down is a bug with better manners.
 
 | Host | Tier | Basis |
 | --- | --- | --- |
-| FreePi CLI | experimental (`verified` smoke) | `evals/host-smoke/freepi-ab82c994d5fd.json` ran against the current artefact (`ab82c994d5fd`) and passed 8/8; the tier stays experimental only because Live Studio was not exercised there |
+| FreePi CLI | experimental (`verified` smoke) | `evals/host-smoke/freepi-293168993dee.json` ran against the current artefact (`293168993dee`) and passed 8/8; the tier stays experimental only because Live Studio was not exercised there |
 | ZCode | experimental (`stale` smoke) | its smoke evidence (`evals/host-smoke/zcode-b061cc4.json`) predates the current artefact hash; it is cited as stale and not as a pass |
 | Codex, Claude Code, Cursor | experimental (`missing`) | no smoke evidence; `evidenceState: missing` in `docs/compatibility.json` |
 

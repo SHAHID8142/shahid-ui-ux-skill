@@ -46,14 +46,16 @@ function rules(findings: { rule: string }[]): string[] {
 
 describe('live-document drift checks', () => {
   it('accepts the current repository documents', () => {
+    // The real task document and the real compatibility record: a fixture here would pass while the
+    // repository drifts, which is the failure mode this gate exists for.
     const files = Object.fromEntries(
       LIVE_DOCUMENTS.map((path) => [path, readFileSync(path, 'utf8')]),
     );
     for (const path of HISTORICAL_DOCUMENTS) files[path] = readFileSync(path, 'utf8');
     const findings = checkDocDrift({
-      tasks,
+      tasks: JSON.parse(readFileSync('TASKS.json', 'utf8')).tasks,
       files,
-      compatibility,
+      compatibility: JSON.parse(readFileSync('docs/compatibility.json', 'utf8')),
       expectedBuildCompletePushed: true,
     });
     expect(findings).toEqual([]);

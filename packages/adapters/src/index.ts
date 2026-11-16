@@ -27,7 +27,8 @@ export {
   supportTier,
   generateSupportMatrix,
 } from './adapter-interface.js';
-export { HOST_ADAPTERS, generateHostEntry } from './hosts.js';
+export { HOST_ADAPTERS, OWNER_NAMED_UNTESTED, generateHostEntry } from './hosts.js';
+export type { UntestedHost } from './hosts.js';
 export {
   buildCompatibility,
   effectiveTier,
