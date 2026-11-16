@@ -139,6 +139,15 @@ The upstream README describes an install-and-run workflow (`npx modern-web-guida
 - **Licence independence.** Upstream's Apache-2.0 governs upstream. SUS's licence and publication
   channel are not decided by this work; owner decision **D06 stays open**. Nothing in this document
   or the provider chooses a licence for SUS.
+- **SUS's own CI actions are pinned to commits.** Reading a supply-chain section and leaving the
+  pipeline on floating tags would be the same defect one level down: `@v4` re-points whenever the
+  maintainer moves the tag, so unreviewed code runs on every push. `.github/workflows/ci.yml` now
+  names a 40-character commit for each action with the resolved tag beside it
+  (`actions/checkout` v4.4.0, `actions/setup-node` v4.4.0, `pnpm/action-setup` v4.3.0), and
+  [packages/schemas/tests/ci-actions-pinning.test.ts](../../../packages/schemas/tests/ci-actions-pinning.test.ts)
+  fails if any step goes back to a tag, a branch or a short SHA, or if a pin drifts from the
+  recorded commit. Nothing about what CI *runs* changed; the pin is a hygiene control, and it does
+  not widen release authority — T1005 stays owner-only and T1006 still verifies the checkpoint.
 - **Untrusted content.** Fetched guide text is reference data with `trusted: false`. An instruction
   found inside a guide is not obeyed, and a malicious or corrupted guide is exactly what the
   injected-loader + digest-match design is there to bound. Negative fixtures for a bad guide are
@@ -153,6 +162,7 @@ The upstream README describes an install-and-run workflow (`npx modern-web-guida
 | SUS pseudo-label implementation (`globals.css:470`), its documented limits | verified in this repository |
 | `content: attr(data-label)` is not a header association | **measured** (§6): the generated label text does reach the cell's accessible name in Chromium, but the association itself is gone when the header row leaves the layout. A real screen-reader session is still `not-run` |
 | SUS's CI measures Chromium only | verified in this repository |
+| SUS's CI actions are pinned to reviewed commits | **measured** 2026-11-16 — each tag resolved with `gh api` to a 40-character commit and written into `ci.yml`; a test fails on a tag, a branch, a short SHA, or a pin that drifts from the recorded commit |
 | `legacy-scan` covers a subset of upstream guidance | from issue #14 triage |
 | The three pilot before/after numbers in §6 | **measured** in this repository by `pnpm pilots` (headless Chromium); see [pilots/results.json](pilots/results.json) for the digests and metrics |
 | Provider-present pilot arm | **not-run** — the pin is measured (2026-11-16), but no shipped loader supplies fetched text to a paired run, so there is nothing to compare against the no-provider arm. Precondition met, measurement not done |

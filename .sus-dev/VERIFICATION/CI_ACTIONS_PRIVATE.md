@@ -73,3 +73,36 @@ because earlier steps failed first.
   silently passes on missing data.
 - CI minutes for chromium download (~100 MB/node) are accepted as the cost of
   real browser evidence.
+
+## Amendment 2026-11-16 — the floating tags were replaced with reviewed commits
+
+Residual limitation 1 above ("action bumps are routine maintenance") was honest but
+incomplete: a floating `@v4` is not a maintenance convenience, it is an unreviewed
+execution channel. GitHub re-points a major tag whenever upstream publishes, so the code
+that runs on every push is not the code anyone read. While closing issue #14 (T1016
+supply-chain item) each tag was resolved to a commit with `gh api` on 2026-11-16 and
+written into `.github/workflows/ci.yml` with the tag preserved as a comment:
+
+| Action | Tag resolved | Commit written into `uses:` |
+| --- | --- | --- |
+| `actions/checkout` | `v4.4.0` (also carried by `v4`) | `11d5960a326750d5838078e36cf38b85af677262` |
+| `actions/setup-node` | `v4.4.0` (also carried by `v4`) | `49933ea5288caeca8642d1e84afbd3f7d6820020` |
+| `pnpm/action-setup` | `v4.3.0` (also carried by `v4`) | `b906affcce14559ad1aafd4ab0e942779e9f58b1` |
+
+`pnpm/action-setup` needs a note: `v4` is an annotated tag, so `/git/ref/tags/v4` returns
+the tag object `f40ffcd9…`, not the commit. Resolving the tag object gave
+`b906affc…`, which is what is pinned. Its message is "Revert 'feat!: run the action on
+Node.js 24'" — pinning it keeps the Node-20 runtime the runs above were verified on, and
+moving past it is a separate reviewed decision, not a drive-by bump.
+
+`packages/schemas/tests/ci-actions-pinning.test.ts` holds the pin (5 tests): every
+remote `uses:` must be a 40-character commit, must name its resolved tag in the comment,
+must equal the commit recorded above, and no `docker://…:latest` is allowed. Negative
+control run: reverting one line to `actions/checkout@v4` failed two of the five tests
+(`expected [ '23: actions/checkout@v4' ] to deeply equal []` and the drift assertion),
+then the file was restored and all five passed.
+
+What this does not establish: the pins fix *which* code runs, not that it is safe. No
+upstream action source was audited here. The commit is also not a claim of "exact-SHA CI
+verified" — that needs a green run on the commit that carries the pins, and this receipt
+predates it.

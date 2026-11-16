@@ -1,6 +1,6 @@
 # Development state
 
-Updated: 2026-11-16T16:20:00+06:00
+Updated: 2026-11-16T16:55:00+06:00
 docs/RESUME_ON_NEW_MACHINE.md (install, branch, `pnpm setup`, `pnpm verify`). Host: Pi (FreePi),
 main-integration role; the ZCode peer heartbeat is stale. A second agent/host cooperates per
 D33: claim tasks via TASKS.json leases; read `.sus-dev/INBOX.md`.
@@ -26,6 +26,12 @@ before/after evidence). A servable pin is a precondition, not the measurement: n
 supplies fetched text to a paired run, so the provider arm stays `not-run` and no guide text is
 quoted anywhere. What is left is owner-gated and is not started by an agent: T1003 (independent
 audit, which a builder must never self-certify) and T1005 (release approval and publication).
+Issue #14's supply-chain half is now enforced rather than described: all 12 `uses:` lines in
+`.github/workflows/ci.yml` name a 40-character commit with the resolved tag beside it, and
+`packages/schemas/tests/ci-actions-pinning.test.ts` fails on a tag, a branch, a short SHA or a
+drifted pin. Verified by negative control (one line reverted to `actions/checkout@v4` failed two of
+the five tests). A pin fixes *which* code runs, not that it is safe, and it is not a claim of
+"exact-SHA CI verified" — that needs a green run on the commit that carries it.
 Issue #13 is closed on the build side: the audit composes the existing evaluators rather than
 adding a second engine, and every gate in the registry is now executable except the 400% zoom
 component, which is reported `not-run` on every run rather than absorbed into the 320px result.
@@ -67,10 +73,10 @@ closed item.
 Blockers: standing B003 (licence/publication, later phase) and B004 (irreversible externals
 during build). Active files: none after checkpoint.
 
-Latest checks: 2026-11-16T16:18 +06:00 — `pnpm verify` green (**75 files + 3 skipped, 862 tests
-passed / 9 skipped**; the two new files are `packages/scanners/tests/verify-pin.test.ts` and the
-research-provider rewrite), 13/13 gates implemented with 55 `[PASS]` lines, claims/handoff/roadmap
-consistent all green; earlier `SUS_DOGFOOD=1 pnpm dogfood` 15/15 and **CI run 43831171205 success on
+Latest checks: 2026-11-16T16:50 +06:00 — `pnpm verify` green (**76 files + 3 skipped, 867 tests
+passed / 9 skipped**; the newest file is `packages/schemas/tests/ci-actions-pinning.test.ts`, after
+`verify-pin.test.ts` and the research-provider rewrite), 13/13 gates implemented with 55 `[PASS]`
+lines, claims/handoff/roadmap consistent all green; earlier `SUS_DOGFOOD=1 pnpm dogfood` 15/15 and **CI run 43831171205 success on
 `88e4431`** (the host-entry-point fix). The pin measurement is deliberately outside this run:
 `scripts/research/verify-pin.mjs` is the only script that touches the network and a build must never
 need it.

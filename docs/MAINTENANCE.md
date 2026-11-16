@@ -23,6 +23,7 @@ task records > historical reports.
 | Every commit | full release suite (`pnpm verify`) through the pre-push gate | push refused on failure, gate output in the terminal |
 | Every checkpoint | `pnpm regression` — verify + demo loop + dogfood, report names the revision | `evals/reports/regression-latest.md` |
 | Monthly | dependency audit and licence re-check (`pnpm audit`, `docs/TOOLING_CANDIDATES.md` licences) | recorded in `.sus-dev/SESSION_LOG.md` |
+| Monthly | CI action pins re-resolved against upstream tags; moving one is a reviewed commit with its tag comment, never a floating `@v4` | `packages/schemas/tests/ci-actions-pinning.test.ts` fails on a tag, a branch, a short SHA or a drifted pin |
 | Quarterly | support matrix regenerated from fresh smoke tests; stale rows downgrade to `experimental` by hash, never by date | `docs/SUPPORT_MATRIX.md`, `docs/compatibility.json` |
 | Quarterly | playbook review against the current specification versions (WCAG, WAI-ARIA APG, HTML Living Standard) | playbook `references` carry a date and a grade |
 | Per release | benchmark protocol re-run; claim gate is the release switch for comparative language | `evals/benchmarks/results/status.json` |

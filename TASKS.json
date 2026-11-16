@@ -4121,9 +4121,11 @@
         "T0906"
       ],
       "files": [
-        "evals/research/",
+        ".github/workflows/ci.yml",
         "docs/",
-        "packages/scanners/"
+        "evals/research/",
+        "packages/scanners/",
+        "packages/schemas/tests/"
       ],
       "acc": [
         "the source is pinned by revision with a retrieval note that states what was and was not used",
@@ -4150,7 +4152,8 @@
         "checkResponsiveTable() returns five named checks over a stylesheet and optional markup, and 22 tests hold it: the real fixtures/admin pair passes, seven mutated copies each fail a named check (thead display:none, header visibility:hidden, html overflow-x:hidden, table overflow:clip, a cell with no data-label, reordered labels, labels no rule paints), and both measured pilot pages agree with the browser",
         "writing those tests found two real guard defects that are fixed here: pseudo-label-pattern only matched content: attr(data-label) exactly, so the anti-pattern decoration attr(data-label) \": \" read as no-pattern and skipped the header check entirely, and a table using neither half of the pattern was reported fail instead of not-applicable",
         "three pilots measured in headless Chromium with before/after pairs, a negative control and a fallback: responsive-table columnheader 0 -> 4 (negative 0, 320px fallback 4), navigation-drawer six contract flags false -> true with 4 -> 0 tab steps behind the drawer, inp-handler 1 long task 360ms and 310ms blocking -> 0 and 0; pnpm pilots re-measures and pnpm test re-checks committed digests without a browser",
-        "not claimed: a measured digest says which bytes exist and nothing about whether their advice is right, so no guide text is quoted, no content review has happened, the provider arm is still not-run end to end because no shipped loader supplies fetched text to a paired run, the with-provider half is exercised only through an injected fake loader, three pilots cover a fraction of ~254 guides, and a source-text pass never means assistive technology works"
+        "not claimed: a measured digest says which bytes exist and nothing about whether their advice is right, so no guide text is quoted, no content review has happened, the provider arm is still not-run end to end because no shipped loader supplies fetched text to a paired run, the with-provider half is exercised only through an injected fake loader, three pilots cover a fraction of ~254 guides, and a source-text pass never means assistive technology works",
+        "the repository also stopped floating its own CI on mutable tags: all 12 uses: lines in .github/workflows/ci.yml now name a 40-character commit with the resolved tag beside it (actions/checkout 11d5960a v4.4.0, actions/setup-node 49933ea5 v4.4.0, pnpm/action-setup b906affc v4.3.0, dereferenced from an annotated tag), resolved with gh api on 2026-11-16 and held by 5 tests in packages/schemas/tests/ci-actions-pinning.test.ts that fail on a tag, a branch, a short SHA, a drifted pin or a docker :latest; the negative control (one line reverted to actions/checkout@v4) failed two of the five, and the pins change nothing CI runs and widen no release authority"
       ],
       "commit": "same commit as .sus-dev/VERIFICATION/T1016.md"
     }
