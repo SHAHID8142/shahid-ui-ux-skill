@@ -4665,9 +4665,15 @@
       ],
       "risk": "making a GitHub administrative change without the owner",
       "rollback": "keep the inventory read-only",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1029.md",
+        "docs/GOVERNANCE.md",
+        "docs/RELEASE_REVIEW_INDEX.md",
+        "docs/LICENSE_DECISION_PACKET.md"
+      ]
     }
   ]
 }

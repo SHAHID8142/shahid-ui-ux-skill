@@ -1,0 +1,95 @@
+{
+  "capturedAt": "2026-11-16",
+  "query": "gh pr list --state open --json number,title,headRefName,headRefOid,baseRefName,createdAt,files,isDraft",
+  "repository": "SHAHID8142/shahid-ui-ux-skill",
+  "pulls": [
+    {
+      "number": 1,
+      "title": "docs(review): independent architecture & product review",
+      "base": "main",
+      "head": "review/antigravity-opus-2026-11-13",
+      "headSha": "a503b2365b841eccdab01cb8dc4f020860509446",
+      "createdAt": "2026-11-13T15:12:40Z",
+      "files": ["reviews/independent/antigravity-opus-2026-11-13-cda9d9d.md"]
+    },
+    {
+      "number": 2,
+      "title": "docs(review): independent architecture & product review (commit 92f3e5c)",
+      "base": "main",
+      "head": "review/kilo-2026-11-13",
+      "headSha": "6c1e10435bf26e06bc6d84130bde27c30470829b",
+      "createdAt": "2026-11-13T15:18:42Z",
+      "files": [
+        "HANDOFF.md",
+        "README.md",
+        "RISKS.md",
+        "ROADMAP.md",
+        "TASKS.json",
+        "TEST_EVIDENCE.md",
+        "docs/DEEP_AUDIT_2026-11-13.md",
+        "docs/GATE_REGISTRY.md",
+        "docs/OWNER_DECISIONS_LOG.md",
+        "docs/PRD_AMENDMENTS_v1.1.md",
+        "reviews/independent/antigravity-opus-2026-11-13-cda9d9d.md",
+        "reviews/independent/kilo-2026-11-13-92f3e5c.md"
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Independent review: SUS architecture & product (commit cda9d9d) — ZCode/GLM",
+      "base": "main",
+      "head": "review/independent-zcode-glm-2026-11-13-cda9d9d",
+      "headSha": "5125e4af872f9857155d943e6b1977479c21604d",
+      "createdAt": "2026-11-13T15:20:04Z",
+      "files": ["reviews/independent/zcode-glm-2026-11-13-cda9d9d.md"]
+    },
+    {
+      "number": 4,
+      "title": "Independent architecture & product review of SUS (commit 92f3e5c)",
+      "base": "review/antigravity-opus-2026-11-13",
+      "head": "review/independent-cline-2026-11-13",
+      "headSha": "1b2af406eab651c4fbaa8d2f8b4769359d9105cb",
+      "createdAt": "2026-11-13T15:30:09Z",
+      "files": [
+        "HANDOFF.md",
+        "README.md",
+        "RISKS.md",
+        "ROADMAP.md",
+        "TASKS.json",
+        "TEST_EVIDENCE.md",
+        "docs/DEEP_AUDIT_2026-11-13.md",
+        "docs/GATE_REGISTRY.md",
+        "docs/OWNER_DECISIONS_LOG.md",
+        "docs/PRD_AMENDMENTS_v1.1.md",
+        "reviews/independent/cline-2026-11-13-92f3e5c.md"
+      ]
+    },
+    {
+      "number": 5,
+      "title": "docs: add independent SUS architecture review",
+      "base": "main",
+      "head": "review/sus-independent-copilot-sdk-2026-11-13-92f3e5c",
+      "headSha": "8ecd6d737801c55eb2799b86a81421d0875b8c1e",
+      "createdAt": "2026-11-13T15:32:21Z",
+      "files": ["reviews/independent/copilot-sdk-2026-11-13-92f3e5c.md"]
+    },
+    {
+      "number": 6,
+      "title": "Independent review: SUS architecture & product (commit cda9d9d) — hunyuan-hy",
+      "base": "main",
+      "head": "review/independent-hunyuan-hy-2026-11-13-cda9d9d",
+      "headSha": "dfd4decafbcccd8ae90e65e93b8639e8bb5a0faf",
+      "createdAt": "2026-11-13T15:49:51Z",
+      "files": ["reviews/independent/hunyuan-hy-2026-11-13-cda9d9d.md"]
+    },
+    {
+      "number": 7,
+      "title": "Review SUS architecture and product at a878b715",
+      "base": "main",
+      "head": "review/codex-2026-11-13-a878b715",
+      "headSha": "50caa523c11878ef2d35cdf8df55e4afd5b632ce",
+      "createdAt": "2026-11-13T15:52:48Z",
+      "files": ["reviews/independent/codex-2026-11-13-a878b715.md"]
+    }
+  ]
+}
