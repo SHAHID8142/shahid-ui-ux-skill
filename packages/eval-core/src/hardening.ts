@@ -42,6 +42,8 @@ export interface HardeningResult {
 export interface ClippingElement {
   selector: string;
   overflow: string;
+  /** How much content is clipped, in CSS px: the measured value, not just a verdict. */
+  overflowPx: number;
 }
 
 /**
@@ -74,7 +76,7 @@ export const ZOOM400_EQUIVALENCE = { width: 320, height: 256, deviceScaleFactor:
  */
 async function collectClippingElements(page: Page): Promise<ClippingElement[]> {
   return page.evaluate(() => {
-    const found: Array<{ selector: string; overflow: string }> = [];
+    const found: Array<{ selector: string; overflow: string; overflowPx: number }> = [];
     for (const el of Array.from(document.body.querySelectorAll<HTMLElement>('*')).slice(0, 400)) {
       const style = getComputedStyle(el);
       const hidden = (value: string) => value === 'hidden' || value === 'clip';
@@ -90,6 +92,7 @@ async function collectClippingElements(page: Page): Promise<ClippingElement[]> {
               ? `.${el.className.trim().split(/\s+/).slice(0, 2).join('.')}`
               : ''),
         overflow: hidden(style.overflowX) ? style.overflowX : style.overflowY,
+        overflowPx: Math.max(el.scrollWidth - el.clientWidth, el.scrollHeight - el.clientHeight, 0),
       });
       if (found.length >= 10) break;
     }

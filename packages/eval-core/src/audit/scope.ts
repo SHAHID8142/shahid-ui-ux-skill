@@ -128,8 +128,10 @@ export function classifyComponent(input: {
   const classes = input.classes.join(' ').toLowerCase();
   const has = (needle: string) => classes.includes(needle);
 
-  if (tag === 'nav' || role === 'navigation' || has('navbar') || has('nav-')) return 'navbar';
-  if (tag === 'table' || role === 'table' || role === 'grid') return 'record-table';
+  if (tag === 'nav' || role === 'navigation' || has('navbar') || has('nav-') || has('nav')) {
+    return 'navbar';
+  }
+  if (tag === 'table' || role === 'table' || role === 'grid' || has('table')) return 'record-table';
   if (role === 'dialog' || role === 'alertdialog' || has('dialog') || has('modal')) return 'dialog';
   if (
     tag === 'button' ||
@@ -141,7 +143,7 @@ export function classifyComponent(input: {
   ) {
     return 'button';
   }
-  if (tag === 'form' || role === 'form') return 'form';
+  if (tag === 'form' || role === 'form' || has('form')) return 'form';
   if (
     tag === 'input' ||
     tag === 'select' ||

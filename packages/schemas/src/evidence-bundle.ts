@@ -23,6 +23,8 @@ export const PageMetricsData = z
     url: z.string().min(1),
     title: z.string(),
     horizontalOverflow: z.boolean(),
+    documentScrollWidth: z.number().min(0).optional(),
+    documentClientWidth: z.number().min(0).optional(),
     overflowingElements: z.array(z.string()),
     cls: z.number(),
     lcpMs: z.number().min(0),

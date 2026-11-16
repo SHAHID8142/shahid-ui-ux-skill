@@ -275,8 +275,20 @@ export function stableFindingId(input: {
   readonly route: string | null;
   readonly viewport: string | null;
   readonly title: string;
+  /**
+   * The element the finding is about. Two tap targets with the same title are two
+   * findings, not one: without the location in the id the second collapses into the
+   * first and its evidence disappears (found while building a scoped proposal, T1023).
+   */
+  readonly location?: string | null;
 }): string {
-  const material = [input.check, input.route ?? '-', input.viewport ?? '-', input.title].join('|');
+  const material = [
+    input.check,
+    input.route ?? '-',
+    input.viewport ?? '-',
+    input.title,
+    input.location ?? '-',
+  ].join('|');
   return createHash('sha256').update(material).digest('hex').slice(0, 12);
 }
 
@@ -391,7 +403,13 @@ export function finding(input: {
   const viewport = input.viewport ?? null;
   const confidence = input.confidence ?? 'measured';
   return {
-    id: stableFindingId({ check: input.check, route, viewport, title: input.title }),
+    id: stableFindingId({
+      check: input.check,
+      route,
+      viewport,
+      title: input.title,
+      location: input.location ?? null,
+    }),
     severity: input.severity,
     effort: input.effort,
     check: input.check,

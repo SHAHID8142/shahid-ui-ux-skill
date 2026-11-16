@@ -928,3 +928,16 @@
   lists a temp directory before and after. Applying stays with Studio's T0707 path (content-bound
   grant, preimage recheck, byte-exact rollback). 20 tests, no browser; `pnpm verify` 0. T1023–T1024
   remain `pending`.
+
+## 2026-11-17 — T1023 `sus-eval bestpractice` (M11, issue #15)
+
+- Shipped the CLI equivalent: `runBestPractice` runs the audit, resolves the scope, converts findings
+  to proposal items and writes `proposal.json`/`proposal.md` under `--out`; exit codes 0/1/2/3.
+- Attribution is exact element-descriptor match, documented: axe findings (rule-id locations) are
+  counted as "attributed elsewhere", never proposed for an element scope.
+- Fixed two defects found here: `stableFindingId` now hashes the location (two tap targets no longer
+  collapse into one finding), and measured overflow/zoom/clipping findings now carry
+  observed/expected (`PageMetrics.documentScrollWidth/ClientWidth`, `ClippingElement.overflowPx`).
+- Added `fixtures/bestpractice` (48 px clipped at 400% zoom on `#skip`, 18 px tap target) and 12 tests
+  including a deep run that hashes the fixture before and after.
+- `pnpm verify` green; no host slash binding is claimed.

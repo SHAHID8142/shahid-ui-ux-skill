@@ -10,6 +10,10 @@ export interface PageMetrics {
   title: string;
   /** G7 proxy: page scrolls horizontally at this viewport. */
   horizontalOverflow: boolean;
+  /** Document scroll width in CSS px — the measured value behind `horizontalOverflow`. */
+  documentScrollWidth: number;
+  /** Document client width in CSS px, i.e. the viewport the page is laid out in. */
+  documentClientWidth: number;
   /** Elements wider than the viewport (their selectors, first 10). */
   overflowingElements: string[];
   /** Cumulative Layout Shift (0 = stable). */
@@ -124,6 +128,8 @@ export async function collectPageMetrics(page: Page): Promise<PageMetrics> {
       url: location.href,
       title: document.title,
       horizontalOverflow: doc.scrollWidth > doc.clientWidth,
+      documentScrollWidth: doc.scrollWidth,
+      documentClientWidth: doc.clientWidth,
       overflowingElements: overflowing,
       cls: Math.round(cls * 1000) / 1000,
       lcpMs,

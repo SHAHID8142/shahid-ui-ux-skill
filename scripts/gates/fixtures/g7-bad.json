@@ -10,7 +10,8 @@
       "clippingElements": [
         {
           "selector": ".evidence-scroll",
-          "overflow": "hidden"
+          "overflow": "hidden",
+          "overflowPx": 120
         }
       ]
     }
@@ -28,7 +29,8 @@
     "clippingElements": [
       {
         "selector": ".sticky-toolbar",
-        "overflow": "hidden"
+        "overflow": "hidden",
+        "overflowPx": 120
       }
     ],
     "overflow": true

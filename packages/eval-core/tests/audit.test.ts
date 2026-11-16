@@ -889,7 +889,7 @@ describe('reflow check covers both halves of G7', () => {
         ...cleanZoom,
         documentScrollWidth: 704,
         overflowingElements: ['table.records'],
-        clippingElements: [{ selector: '.sticky-toolbar', overflow: 'hidden' }],
+        clippingElements: [{ selector: '.sticky-toolbar', overflow: 'hidden', overflowPx: 120 }],
         overflow: true,
       }),
     );
@@ -902,5 +902,19 @@ describe('reflow check covers both halves of G7', () => {
       '.sticky-toolbar',
     ]);
     expect(zoomFindings.map((f) => f.severity)).toEqual(['P1', 'P1']);
+    // Measured findings now carry the numbers behind them, not just a verdict: a proposal
+    // built from them can state observed vs expected instead of asserting an opinion.
+    expect(zoomFindings[0]!.observation.observed).toEqual({
+      value: 704,
+      unit: 'CSS px document width',
+    });
+    expect(zoomFindings[0]!.observation.expected).toEqual({
+      value: 320,
+      unit: 'CSS px document width',
+    });
+    expect(zoomFindings[1]!.observation.observed).toEqual({
+      value: 120,
+      unit: 'CSS px clipped content',
+    });
   });
 });

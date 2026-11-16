@@ -220,8 +220,94 @@ export async function main(argv: string[]): Promise<void> {
     process.exit(run.exitCode);
   }
 
+  if (command === 'bestpractice') {
+    const { BESTPRACTICE_HELP, parseFocus, runBestPractice } =
+      await import('./bestpractice/command.js');
+    const { values } = parseArgs({
+      args: args.slice(1),
+      options: {
+        path: { type: 'string' },
+        url: { type: 'string' },
+        scope: { type: 'string' },
+        'scope-kind': { type: 'string' },
+        source: { type: 'string' },
+        focus: { type: 'string' },
+        mode: { type: 'string' },
+        out: { type: 'string' },
+        authorize: { type: 'string', multiple: true },
+        'dry-run': { type: 'boolean' },
+        json: { type: 'boolean' },
+        help: { type: 'boolean' },
+      },
+      allowPositionals: false,
+    });
+    if (values.help === true) {
+      console.log(BESTPRACTICE_HELP);
+      process.exit(0);
+    }
+    if (values.path !== undefined && values.url !== undefined) {
+      fail('bestpractice accepts exactly one target: --path <dir> or --url <url>, not both');
+    }
+    if (values.path === undefined && values.url === undefined) {
+      fail('bestpractice requires a target: --path <dir> or --url <url> (see --help)');
+    }
+    const out = values.out;
+    if (out === undefined)
+      fail('bestpractice requires --out <dir>: reports never go into the target');
+    const scopeValue = values.scope;
+    if (scopeValue === undefined)
+      fail('bestpractice requires --scope <selector|file> (see --help)');
+    const kind = values['scope-kind'] ?? 'selector';
+    if (!['selector', 'component-path', 'editor-selection', 'region'].includes(kind)) {
+      fail(`--scope-kind must be selector|component-path|editor-selection|region, got "${kind}"`);
+    }
+    const source = values.source ?? 'source';
+    if (source !== 'source' && source !== 'screenshot') {
+      fail(`--source must be source or screenshot, got "${source}"`);
+    }
+    const mode = values.mode ?? 'deep';
+    if (mode !== 'quick' && mode !== 'deep') fail(`--mode must be quick or deep, got "${mode}"`);
+    let focus;
+    try {
+      focus = parseFocus(values.focus);
+    } catch (e) {
+      fail(e instanceof Error ? e.message : String(e));
+    }
+    // `--dry-run` is accepted because the documented default is already read-only; it is not a
+    // mode switch, and pretending it changes behaviour would be a lie in the help text.
+    try {
+      const run = await runBestPractice({
+        target: (values.path ?? values.url) as string,
+        liveUrl: values.url !== undefined && values.path !== undefined ? values.url : null,
+        scope: {
+          kind: kind as 'selector' | 'component-path' | 'editor-selection' | 'region',
+          value: scopeValue,
+          source,
+        },
+        outDir: out,
+        mode,
+        ...(focus === undefined ? {} : { focus }),
+        authorizedHosts: values.authorize ?? [],
+      });
+      console.log(
+        values.json === true && run.proposal !== null
+          ? JSON.stringify(run.proposal, null, 2)
+          : run.markdown.trimEnd(),
+      );
+      console.log('');
+      if (run.proposalPath !== null)
+        console.log(`wrote ${run.proposalPath} (a proposal: nothing was applied)`);
+      if (run.markdownPath !== null) console.log(`wrote ${run.markdownPath}`);
+      console.log(`audit report: ${run.audit.reportPath}`);
+      console.log(run.message);
+      process.exit(run.exitCode);
+    } catch (e) {
+      fail(e instanceof Error ? e.message : String(e));
+    }
+  }
+
   fail(
-    `unknown command "${String(command)}" — usage: sus-eval score|capture|evidence|budget|audit`,
+    `unknown command "${String(command)}" — usage: sus-eval score|capture|evidence|budget|audit|bestpractice`,
   );
 }
 

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "product": "SUS — Shahid UI UX Skill",
+    "product": "SUS \u2014 Shahid UI UX Skill",
     "version": "planning-v1.4",
     "updated": "2026-11-16",
     "protocol": "docs/AGENT_CONTINUE_PROTOCOL.md; docs/TASK_RECORD_CONTRACT.md",
@@ -52,11 +52,11 @@
         "docs/PRD_GAP_ANALYSIS.md"
       ],
       "acc": [
-        "findings F1–DA-20 with severity",
+        "findings F1\u2013DA-20 with severity",
         "conflicts named, not silently resolved"
       ],
       "tests": [
-        "manual line-by-line review against §1–§22"
+        "manual line-by-line review against \u00a71\u2013\u00a722"
       ],
       "risk": "review is single-context (no subagent tool)",
       "rollback": "n/a (documented findings)",
@@ -80,8 +80,8 @@
         "docs/COVERAGE_MATRIX.md"
       ],
       "acc": [
-        "every PRD §19 risk has an owner-mechanism",
-        "coverage matrix lists ✅/🟡/❌ per surface"
+        "every PRD \u00a719 risk has an owner-mechanism",
+        "coverage matrix lists \u2705/\ud83d\udfe1/\u274c per surface"
       ],
       "tests": [
         "matrix reviewed against D14 scope"
@@ -138,7 +138,7 @@
         "ROADMAP.md"
       ],
       "acc": [
-        "every milestone decomposed to 15–60 min tasks",
+        "every milestone decomposed to 15\u201360 min tasks",
         "first batch identified"
       ],
       "tests": [
@@ -301,7 +301,7 @@
       "id": "T0151",
       "m": "M1.5",
       "title": "Rubric schema + scoring CLI",
-      "obj": "12 axes, 1–5 anchors, deterministic/hybrid/judged tiers (amendments Part 3)",
+      "obj": "12 axes, 1\u20135 anchors, deterministic/hybrid/judged tiers (amendments Part 3)",
       "deps": [
         "T0104"
       ],
@@ -334,7 +334,7 @@
       "id": "T0152",
       "m": "M1.5",
       "title": "Screenshot + DOM metric harness",
-      "obj": "Playwright: 3 viewports × 2 themes, overflow/CLS/LCP proxy, tap targets",
+      "obj": "Playwright: 3 viewports \u00d7 2 themes, overflow/CLS/LCP proxy, tap targets",
       "deps": [
         "T0102"
       ],
@@ -385,7 +385,7 @@
       "tests": [
         "inject known violation into fixture; gate fails"
       ],
-      "risk": "axe covers ~1/3 of WCAG — manual protocol needed",
+      "risk": "axe covers ~1/3 of WCAG \u2014 manual protocol needed",
       "rollback": "manual checklist generated per section",
       "status": "done",
       "approval": "D28/D29 build authorization (self-verified per protocol)",
@@ -478,7 +478,7 @@
       "id": "T0155",
       "m": "M1.5",
       "title": "Blind judge protocol + calibration run 1",
-      "obj": "Fresh-context critic vs human ratings; agreement ≥80% ±1 target",
+      "obj": "Fresh-context critic vs human ratings; agreement \u226580% \u00b11 target",
       "deps": [
         "T0151",
         "T0153"
@@ -493,7 +493,7 @@
       "tests": [
         "calibration report artifact"
       ],
-      "risk": "no human raters available → owner rates",
+      "risk": "no human raters available \u2192 owner rates",
       "rollback": "judged tier stays advisory",
       "status": "done",
       "approval": "pending",
@@ -538,7 +538,7 @@
       ],
       "commit": "same commit as .sus-dev/VERIFICATION/T0156.md",
       "results": [
-        "budget target 30000 PROPOSED to owner — decision required before adoption"
+        "budget target 30000 PROPOSED to owner \u2014 decision required before adoption"
       ]
     },
     {
@@ -559,8 +559,8 @@
       ],
       "acc": [
         "name/dir match",
-        "description ≤1024 chars",
-        "≤5k tokens"
+        "description \u22641024 chars",
+        "\u22645k tokens"
       ],
       "tests": [
         "validator CLI on valid+invalid fixtures"
@@ -583,7 +583,7 @@
       "id": "T0202",
       "m": "M2",
       "title": "Intent schema + router",
-      "obj": "audit/unslop/refine/redesign/create/system/live → module selection",
+      "obj": "audit/unslop/refine/redesign/create/system/live \u2192 module selection",
       "deps": [
         "T0201"
       ],
@@ -593,7 +593,7 @@
       ],
       "acc": [
         "every intent maps to explicit module set",
-        "unknown intent → honest fallback"
+        "unknown intent \u2192 honest fallback"
       ],
       "tests": [
         "router table fixtures"
@@ -616,7 +616,7 @@
       "id": "T0203",
       "m": "M2",
       "title": "Just-in-time loader + precedence resolver",
-      "obj": "Foundation/playbook loading with code-enforced precedence (§6)",
+      "obj": "Foundation/playbook loading with code-enforced precedence (\u00a76)",
       "deps": [
         "T0202"
       ],
@@ -708,7 +708,7 @@
       "id": "T0301",
       "m": "M3",
       "title": "Evidence schema + provenance catalog + offline mode",
-      "obj": "Citations with URL/date/classification; offline → unverified",
+      "obj": "Citations with URL/date/classification; offline \u2192 unverified",
       "deps": [
         "T0104",
         "T0155",
@@ -723,7 +723,7 @@
       "acc": [
         "no fabricated citation passes validation",
         "research plan contract: questions, budget, stop rule, revisit trigger (DA-09)",
-        "claim→source map with quoted supporting passage, primary/secondary distinction, conflict-of-interest note; no unsourced specific counts (DA-08)",
+        "claim\u2192source map with quoted supporting passage, primary/secondary distinction, conflict-of-interest note; no unsourced specific counts (DA-08)",
         "Research synthesis is planning hypotheses until claim-to-inspected-passage provenance supports each load-bearing assertion; unreachable sources remain unverified"
       ],
       "tests": [
@@ -746,7 +746,7 @@
       "id": "T0302",
       "m": "M3",
       "title": "Slop taxonomy schema + counterexamples",
-      "obj": "Versioned pattern records with legitimate-use cases (§8.2)",
+      "obj": "Versioned pattern records with legitimate-use cases (\u00a78.2)",
       "deps": [
         "T0301"
       ],
@@ -754,7 +754,7 @@
         "knowledge/anti-slop/"
       ],
       "acc": [
-        "every rule has ≥1 false-positive case"
+        "every rule has \u22651 false-positive case"
       ],
       "tests": [
         "taxonomy lint"
@@ -874,7 +874,7 @@
       "id": "T0400",
       "m": "M4",
       "title": "Direction Reasoning module (E1: no templates)",
-      "obj": "Derive direction from brief: 3 candidates → thesis → anti-references",
+      "obj": "Derive direction from brief: 3 candidates \u2192 thesis \u2192 anti-references",
       "deps": [
         "T0203",
         "T0301",
@@ -888,7 +888,7 @@
         "banned-defaults check runs"
       ],
       "tests": [
-        "one brief → 3 distinct reasoned directions"
+        "one brief \u2192 3 distinct reasoned directions"
       ],
       "risk": "library converges into new defaults",
       "rollback": "taxonomy stays small + audited",
@@ -970,7 +970,7 @@
         "foundation fixtures"
       ],
       "risk": "prose bloat",
-      "rollback": "≤2k tokens per file enforced",
+      "rollback": "\u22642k tokens per file enforced",
       "status": "done",
       "approval": "pending",
       "phase": "build",
@@ -1260,7 +1260,7 @@
       "id": "T0502",
       "m": "M5",
       "title": "Section state machine + section locks (5A)",
-      "obj": "planned→…→accepted states; lease file prevents concurrent section edits (DA-12)",
+      "obj": "planned\u2192\u2026\u2192accepted states; lease file prevents concurrent section edits (DA-12)",
       "deps": [
         "T0501"
       ],
@@ -1296,7 +1296,7 @@
       "id": "T0503",
       "m": "M5",
       "title": "Change-plan / review interface + diff contract",
-      "obj": "Bounded proposal: files, mock, criteria, risk — before any code",
+      "obj": "Bounded proposal: files, mock, criteria, risk \u2014 before any code",
       "deps": [
         "T0501"
       ],
@@ -1405,7 +1405,7 @@
       ],
       "acc": [
         "matrix result per section in evidence bundle",
-        "locale set prioritized per brief: shaping/fallback fonts, segmentation, input methods, currency/date/numerals, translated errors — not a universal locale claim (DA-46)",
+        "locale set prioritized per brief: shaping/fallback fonts, segmentation, input methods, currency/date/numerals, translated errors \u2014 not a universal locale claim (DA-46)",
         "issue #10: hardening matrix extended to the admin fixture at 320/390/768/1440 with negative overflow fixture"
       ],
       "tests": [
@@ -1461,7 +1461,7 @@
       "id": "T0601",
       "m": "M6",
       "title": "Motion taxonomy + tokens + reduced-motion semantics",
-      "obj": "8 motion categories (§9.1); duration/easing tokens; reduced-motion = alternative not faster",
+      "obj": "8 motion categories (\u00a79.1); duration/easing tokens; reduced-motion = alternative not faster",
       "deps": [
         "T0600",
         "T0401"
@@ -1471,7 +1471,7 @@
         "packages/tokens/"
       ],
       "acc": [
-        "every transition spec has all 12 fields (§9.2)"
+        "every transition spec has all 12 fields (\u00a79.2)"
       ],
       "tests": [
         "spec completeness lint"
@@ -1504,7 +1504,7 @@
       "acc": [
         "no click duplication",
         "focus preserved across animated change",
-        "every launch playbook carries a motion decision record — including \"none, with reason\" — and reduced-motion equivalence preserves information and operation, not just a CSS branch (kilo M2)"
+        "every launch playbook carries a motion decision record \u2014 including \"none, with reason\" \u2014 and reduced-motion equivalence preserves information and operation, not just a CSS branch (kilo M2)"
       ],
       "tests": [
         "fixture interaction tests"
@@ -1574,7 +1574,7 @@
     {
       "id": "T0700",
       "m": "M7",
-      "title": "Dual-stack mapping spike — GO/NO-GO",
+      "title": "Dual-stack mapping spike \u2014 GO/NO-GO",
       "obj": "Read-only dual-stack target/edit-owner mapping feasibility; writes deferred to safe-write experiment T0700w",
       "deps": [
         "T0102",
@@ -1589,7 +1589,7 @@
         "Both Next.js and Astro evaluated on labelled target and edit-owner ground truth; repeated/shared components, CSS/content ownership, responsive variants, HMR and mixed source languages",
         "Pre-register sampling, denominators and acceptance criteria before evaluation; report target correctness, owner correctness, coverage, abstention and uncertainty separately",
         "No evidence-tier score is treated as calibrated probability; unknown owners abstain; wrong-owner cases fail supported-write eligibility",
-        "Full draw → intent → preview → approve → apply → undo proof is T0700w; this read-only spike alone cannot authorize source writes"
+        "Full draw \u2192 intent \u2192 preview \u2192 approve \u2192 apply \u2192 undo proof is T0700w; this read-only spike alone cannot authorize source writes"
       ],
       "tests": [
         "spike report with numbers, committed"
@@ -1681,7 +1681,7 @@
       "id": "T0703",
       "m": "M7",
       "title": "Element selection + stable anchors",
-      "obj": "Pick element → semantic selector + sus-id + confidence tier (§7.1)",
+      "obj": "Pick element \u2192 semantic selector + sus-id + confidence tier (\u00a77.1)",
       "deps": [
         "T0702"
       ],
@@ -1689,7 +1689,7 @@
         "packages/studio-web/"
       ],
       "acc": [
-        "below 0.6 confidence → never edit; ask user from ranked candidates"
+        "below 0.6 confidence \u2192 never edit; ask user from ranked candidates"
       ],
       "tests": [
         "selection fixtures across both stacks"
@@ -1746,7 +1746,7 @@
       "id": "T0705",
       "m": "M7",
       "title": "Visual Intent Schema + constraint compiler",
-      "obj": "Strokes → relationships/order/alignment/reflow constraints; pixels never reach source (§7.3)",
+      "obj": "Strokes \u2192 relationships/order/alignment/reflow constraints; pixels never reach source (\u00a77.3)",
       "deps": [
         "T0704"
       ],
@@ -1755,7 +1755,7 @@
         "packages/studio-bridge/"
       ],
       "acc": [
-        "ambiguous target → focused clarification, not a guess"
+        "ambiguous target \u2192 focused clarification, not a guess"
       ],
       "tests": [
         "compiler property tests (fast-check)"
@@ -1791,7 +1791,7 @@
         "Isolated disposable preview workspace/server only; proposal generation and preview do not write consuming-project source; apply needs separate fresh approval"
       ],
       "tests": [
-        "E2E: propose→reject leaves tree clean"
+        "E2E: propose\u2192reject leaves tree clean"
       ],
       "risk": "diff readability",
       "rollback": "unified + split views",
@@ -1818,7 +1818,7 @@
       "id": "T0707",
       "m": "M7",
       "title": "Approval-gated apply + rollback (AST writes)",
-      "obj": "ts-morph/recast edits; git snapshot; typecheck+build verify; auto-revert on failure (§7.2)",
+      "obj": "ts-morph/recast edits; git snapshot; typecheck+build verify; auto-revert on failure (\u00a77.2)",
       "deps": [
         "T0706",
         "T0503",
@@ -1862,14 +1862,14 @@
         "refusal order proven by tests: receipt replay, unfinished transaction, approval grant, plan coverage, action boundary (DA-31+capability), preimage recheck, ambiguous owner, durable transaction, verification, receipt",
         "typecheck/build verification required at construction; failure reverts exactly (real TS diagnostics test); undo is transaction-specific and refuses undo-conflict; no git reset anywhere",
         "durable receipts survive restart; replayed operationId returns the stored receipt without a second write; crash recovery entry point rolls back prepared transactions",
-        "Transaction gained real file deletion with recoverable undo (preimage + mode); 45 new tests (158 package), mutation-checked; full pnpm verify exit 0 — 48 files / 426 tests"
+        "Transaction gained real file deletion with recoverable undo (preimage + mode); 45 new tests (158 package), mutation-checked; full pnpm verify exit 0 \u2014 48 files / 426 tests"
       ]
     },
     {
       "id": "T0708",
       "m": "M7",
       "title": "Studio E2E demo: desktop/mobile + reconnect",
-      "obj": "Full loop on fixture: annotate→intent→diff→approve→apply→verify→undo",
+      "obj": "Full loop on fixture: annotate\u2192intent\u2192diff\u2192approve\u2192apply\u2192verify\u2192undo",
       "deps": [
         "T0707",
         "T0790",
@@ -1908,7 +1908,7 @@
       "id": "T0790",
       "m": "M7",
       "title": "Verification loop (M7.9)",
-      "obj": "apply→build→axe→shots→motion→gate summary; hard-gate failure = auto-revert (§7.4)",
+      "obj": "apply\u2192build\u2192axe\u2192shots\u2192motion\u2192gate summary; hard-gate failure = auto-revert (\u00a77.4)",
       "deps": [
         "T0707",
         "T0152b",
@@ -1936,7 +1936,7 @@
         "packages/studio-bridge/tests/verification-loop.test.ts"
       ],
       "results": [
-        "five distinct outcomes: preview-failed, apply-failed, verification-failed, rollback-blocked, accepted — each with a different user action",
+        "five distinct outcomes: preview-failed, apply-failed, verification-failed, rollback-blocked, accepted \u2014 each with a different user action",
         "DA-36 enforced at the decision point: transactionIntact() is consulted immediately before reverting and only then (call order asserted); a diverged tree is NEVER reverted, the report explains that the user edits were left untouched on purpose",
         "failing gate yields explanation + affected operation + curated recovery steps + retry stance; soft gates are reported without reverting a completed change",
         "diagnostics redacted by default (home paths, bearer tokens, sk_/pk_/rk_ incl. sk_live_, ghp_, emails, long digests) while keeping file:line and TS codes; caller redactor honoured; a throwing stage becomes a redacted failure, not a crashed loop",
@@ -2042,7 +2042,7 @@
       ],
       "results": [
         "VariantSession: provenance is a precondition (intent, model, prompt sha256 shape, run id, timestamp; intent must match) or the comparison is refused",
-        "A/B/C side by side at mobile/tablet/desktop simultaneously from ONE document per variant (390/768/1280) — documented and tested",
+        "A/B/C side by side at mobile/tablet/desktop simultaneously from ONE document per variant (390/768/1280) \u2014 documented and tested",
         "discard is cheap by construction: payload released, provenance kept, bytes released reported and measurable; accept-one drops the rest and records the decision with applyStrategy full-page-reload (the recorded HMR rollback)",
         "variant markup is data: script/iframe/object/base/inline-handler/javascript: refused at open, and every frame is fully sandboxed (no tokens) so one mistake is not a compromise",
         "no event hook on the model (peer finding: isolated worlds isolate JS state, not DOM events); accepting is a trusted-host call",
@@ -2101,7 +2101,7 @@
         "packages/studio-bridge/"
       ],
       "acc": [
-        "kill -9 mid-session → recovery without data loss",
+        "kill -9 mid-session \u2192 recovery without data loss",
         "multi-file apply is one transaction with durable recovery manifest; atomic rename alone is insufficient (DA-35)",
         "Persist typed operation ID, preimages, file modes, hashes and multi-file manifest before first mutation; state machine has explicit crash points",
         "Use disposable transaction fixtures before production writer exists; kill at every step, recover exactly or stop on conflict; preserve index and untracked user bytes"
@@ -2129,7 +2129,7 @@
     {
       "id": "T0806",
       "m": "M8",
-      "title": "Security test suite (§7.5)",
+      "title": "Security test suite (\u00a77.5)",
       "obj": "CSP/origin/auth/prompt-injection/retention/redaction/audit-log coverage",
       "deps": [
         "T0701",
@@ -2139,7 +2139,7 @@
         "packages/studio-bridge/"
       ],
       "acc": [
-        "threat-model doc + passing suite; no critical open; indirect injection via drawings, OCR, screenshots, recalled lessons rejected at the action boundary — untrusted content never authorizes writes/commands/network (DA-31)",
+        "threat-model doc + passing suite; no critical open; indirect injection via drawings, OCR, screenshots, recalled lessons rejected at the action boundary \u2014 untrusted content never authorizes writes/commands/network (DA-31)",
         "G13 authoritative owner: non-waivable critical security/privacy check with negative fixtures",
         "Hostile page attempts token reads, synthetic approval, UI replacement, cross-frame confusion, navigation/reconnect replay, direct commands, DNS rebinding and path escape; all denied",
         "Unmarked sensitive CRM text, screenshots, logs and outbound payloads: minimize/redact before consented capture; retention/deletion tested"
@@ -2169,7 +2169,7 @@
         "DA-31 action boundary refuses untrusted provenance before the capability is examined; single-use capability bound to session/frame/kind/proposal hash/fence/TTL with replay+expiry denial",
         "capture minimisation redacts unmarked CRM records/names/emails/phones/cards/secrets (counts only, consent required); store accepts only RedactedResult; purge/delete/revoke consent tested; audit log residue-free",
         "G13 wired: registry implemented + badFixture, six in-process fail-closed negatives in check-gates, dedicated CI security job; not-applicable refused, waivable false",
-        "server.start() now resolves the actual ephemeral port (fixes the fixed-port collision class); full pnpm verify exit 0 — 46 files / 381 tests"
+        "server.start() now resolves the actual ephemeral port (fixes the fixed-port collision class); full pnpm verify exit 0 \u2014 46 files / 381 tests"
       ]
     },
     {
@@ -2218,7 +2218,7 @@
       "id": "T0901",
       "m": "M9",
       "title": "Capability matrix + adapter interface",
-      "obj": "Typed adapter contract; unsupported capability → explicit error (§12)",
+      "obj": "Typed adapter contract; unsupported capability \u2192 explicit error (\u00a712)",
       "deps": [
         "T0204"
       ],
@@ -2327,7 +2327,7 @@
       "acc": [
         "uninstall restores prior state; doctor reports drift",
         "installed dir name + generated host entries tested: long paths, update, uninstall preserves user files (DA-45)",
-        "`.sus/` migration fixture v1→v2 passes via doctor; supported-upgrade policy stated in release docs (kilo M5)",
+        "`.sus/` migration fixture v1\u2192v2 passes via doctor; supported-upgrade policy stated in release docs (kilo M5)",
         "Doctor/install cover absent browser cache, consented browser acquisition, download size/version/licence, offline and interrupted download, read-only directories; uninstall preserves unrelated caches/profiles"
       ],
       "tests": [
@@ -2352,7 +2352,7 @@
       "id": "T0905",
       "m": "M9",
       "title": "Generated support matrix (A9)",
-      "obj": "compatibility.json → docs page + CLI status output",
+      "obj": "compatibility.json \u2192 docs page + CLI status output",
       "deps": [
         "T0902",
         "T0903",
@@ -2393,7 +2393,7 @@
       "id": "T1001",
       "m": "M10",
       "title": "Cross-module regression suite",
-      "obj": "All gates G1–G12 + skill evals + studio E2E in one pipeline",
+      "obj": "All gates G1\u2013G12 + skill evals + studio E2E in one pipeline",
       "deps": [
         "T0001",
         "T0002",
@@ -2517,7 +2517,7 @@
       "results": [
         "single command `pnpm regression` runs verify + demo:loop + dogfood, measured 129.8s (under the 10 minute acceptance) and writes a report naming the exact revision, branch and dirty state",
         "fail-closed aggregation: an empty run fails, a stage that did not run is not-run and prevents pass, a missing Playwright downgrades the E2E stages to not-run rather than dropping them",
-        "reachability (audit H6) is now part of pnpm verify: every finished non-M10 task must be backed by an ancestry commit id, a tracked receipt, a delivered file or recorded evidence — 94/94 backed (79 commit, 10 receipt, 4 files, 1 evidence)",
+        "reachability (audit H6) is now part of pnpm verify: every finished non-M10 task must be backed by an ancestry commit id, a tracked receipt, a delivered file or recorded evidence \u2014 94/94 backed (79 commit, 10 receipt, 4 files, 1 evidence)",
         "T0001 was a done claim with nothing behind it until the check existed; it is now backed by its recorded evidence path rather than exempted",
         "14 new tests (7 reachability, 7 regression aggregation) pin the negative cases; full verify exit 0"
       ]
@@ -2526,7 +2526,7 @@
       "id": "T1002",
       "m": "M10",
       "title": "Benchmark protocol + run (Part 9)",
-      "obj": "briefs covering all four surface modes; blind human A/B n≥20; deterministic metrics; reproducible",
+      "obj": "briefs covering all four surface modes; blind human A/B n\u226520; deterministic metrics; reproducible",
       "deps": [
         "T0155",
         "T1001"
@@ -2622,7 +2622,7 @@
         "README.md"
       ],
       "results": [
-        "docs/LIMITATIONS.md ships the coverage matrix §5 limitation statements verbatim plus what this build discovered (no human benchmark arm, three provenance claim ids, dogfood coverage narrow, admin reference failing two checks, warm-machine timing, one stack end-to-end, no supported host row)",
+        "docs/LIMITATIONS.md ships the coverage matrix \u00a75 limitation statements verbatim plus what this build discovered (no human benchmark arm, three provenance claim ids, dogfood coverage narrow, admin reference failing two checks, warm-machine timing, one stack end-to-end, no supported host row)",
         "docs/MAINTENANCE.md defines owner (SHAHID8142) and maintainer role, review calendar (commit/checkpoint/monthly/quarterly/release), supported upgrade period (current+previous minor, 90-day security backport, schema bump for contract breaks) and the security reporting route with G13 never waivable",
         "pnpm claims (docs lint claim-checker) runs inside pnpm verify: comparative claims blocked while the benchmark gate is closed (gate read from the benchmark artefact, not a flag), absolute claims blocked always, code blocks and negated limitation statements exempt",
         "README rewritten from a stale \"specification only, no code written\" state to what exists, what was verified, what is deliberately not done, pointing at TASKS.json as the only status authority, with the six real commands",
@@ -2658,7 +2658,7 @@
       ],
       "files": [],
       "acc": [
-        "§22 Definition of Done met; human approval recorded"
+        "\u00a722 Definition of Done met; human approval recorded"
       ],
       "tests": [
         "release checklist"
@@ -2740,7 +2740,7 @@
       "id": "T0310",
       "m": "M3",
       "title": "Trend/research review loop",
-      "obj": "Versioned on-demand refresh: candidate → evaluated → adopted/rejected/watch/superseded; no background scheduler claim (DA-10)",
+      "obj": "Versioned on-demand refresh: candidate \u2192 evaluated \u2192 adopted/rejected/watch/superseded; no background scheduler claim (DA-10)",
       "deps": [
         "T0301"
       ],
@@ -2841,7 +2841,7 @@
       "id": "T0506",
       "m": "M5",
       "title": "Prediction + lesson lifecycle",
-      "obj": "Event ≠ explanation: candidate → tested locally → reviewed → promoted with scope → challenged/retired; cross-project sharing only via explicit sanitized publication boundary (DA-11/DA-12)",
+      "obj": "Event \u2260 explanation: candidate \u2192 tested locally \u2192 reviewed \u2192 promoted with scope \u2192 challenged/retired; cross-project sharing only via explicit sanitized publication boundary (DA-11/DA-12)",
       "deps": [
         "T0504"
       ],
@@ -3057,7 +3057,7 @@
       "id": "T0159",
       "m": "M1.5",
       "title": "Gate registry + executable gate checks",
-      "obj": "Every gate G1–G12 needs an owning task, a command with a four-value verdict (pass/fail/not-run/not-applicable) and a negative fixture; registry drift fails CI (audit: 9 of 12 gates had no owner)",
+      "obj": "Every gate G1\u2013G12 needs an owning task, a command with a four-value verdict (pass/fail/not-run/not-applicable) and a negative fixture; registry drift fails CI (audit: 9 of 12 gates had no owner)",
       "deps": [
         "T0151",
         "T0154"
@@ -3070,7 +3070,7 @@
         "validator fails if a gate lacks owner task or check",
         "unimplemented checks reported as not-run, never pass",
         "each landed gate ships a bad fixture proving failure",
-        "assertion shipped as a test: ancestry(T1001) ⊇ every non-M10 task; ancestry(T1005) ⊇ every task; measurement tasks (T0156, T0158) are not orphans (review H4/M2)",
+        "assertion shipped as a test: ancestry(T1001) \u2287 every non-M10 task; ancestry(T1005) \u2287 every task; measurement tasks (T0156, T0158) are not orphans (review H4/M2)",
         "Exact bidirectional gate ownership comparison; missing/extra/duplicate owners fail",
         "check_verdict is pass/fail/not-run/not-applicable; acceptance_disposition is separate; exceptions cannot turn failure into pass",
         "Semantic DAG negative fixtures remove fixture, evaluation and safe-write prerequisites; all must fail; include G13 and T1006 private-build closure"
@@ -3178,7 +3178,7 @@
       "id": "T0402b",
       "m": "M4",
       "title": "Foundations: heuristics, usability, onboarding, navigation + IA",
-      "obj": "PRD §6 names UX heuristics, usability, onboarding, navigation and information architecture as a foundation module; no task owned it (locate: DA-05, review H2). Includes user-flow research + validation deliverable so an attractive section is judged as part of a usable flow.",
+      "obj": "PRD \u00a76 names UX heuristics, usability, onboarding, navigation and information architecture as a foundation module; no task owned it (locate: DA-05, review H2). Includes user-flow research + validation deliverable so an attractive section is judged as part of a usable flow.",
       "deps": [
         "T0403"
       ],
@@ -3186,11 +3186,11 @@
         "skill/foundations/"
       ],
       "acc": [
-        "flow map per surface mode (entry → task → success)",
+        "flow map per surface mode (entry \u2192 task \u2192 success)",
         "heuristic evaluation checklist applied to each accepted section",
         "navigation/IA decisions recorded with rationale",
         "validation method named (unmoderated test, click-through, or explicit not-run)",
-        "i18n foundations included: logical CSS properties, mirrored icons, script-specific type stacks; hardening matrix covers ≥2 non-Latin scripts and mixed-direction content (kilo M3)",
+        "i18n foundations included: logical CSS properties, mirrored icons, script-specific type stacks; hardening matrix covers \u22652 non-Latin scripts and mixed-direction content (kilo M3)",
         "Representative user-task journeys for commerce/admin/onboarding and Read: success, error recovery and comprehension; simulated results never count as participant evidence"
       ],
       "tests": [
@@ -3229,7 +3229,7 @@
         "Traceable per-task receipt with positive and negative checks where applicable"
       ],
       "risk": "False continuity or unsafe resumption",
-      "rollback": "Revert only this task’s known changes; preserve unrelated work",
+      "rollback": "Revert only this task\u2019s known changes; preserve unrelated work",
       "status": "done",
       "approval": "D24 planning authorization",
       "phase": "planning",
@@ -3259,7 +3259,7 @@
         "Traceable per-task receipt with positive and negative checks where applicable"
       ],
       "risk": "False continuity or unsafe resumption",
-      "rollback": "Revert only this task’s known changes; preserve unrelated work",
+      "rollback": "Revert only this task\u2019s known changes; preserve unrelated work",
       "status": "done",
       "approval": "D24 planning authorization + B001/B002 closure (D28/D29, same commit as TASKS.json update)",
       "phase": "planning",
@@ -3291,7 +3291,7 @@
         "Traceable per-task receipt with positive and negative checks where applicable"
       ],
       "risk": "False continuity or unsafe resumption",
-      "rollback": "Revert only this task’s known changes; preserve unrelated work",
+      "rollback": "Revert only this task\u2019s known changes; preserve unrelated work",
       "status": "done",
       "approval": "D28/D29 build authorization (self-verified per protocol)",
       "phase": "build",
@@ -3317,7 +3317,7 @@
         "packages/"
       ],
       "acc": [
-        "Both stacks prove selection → correct owner → isolated preview → authentic approval → apply → verification → undo on disposable fixtures",
+        "Both stacks prove selection \u2192 correct owner \u2192 isolated preview \u2192 authentic approval \u2192 apply \u2192 verification \u2192 undo on disposable fixtures",
         "Zero observed harmful wrong-owner writes; unknown ownership refuses; security and recovery negatives pass before promotion",
         "Do not proceed with expensive production knowledge acceptance until this feasibility evidence exists"
       ],
@@ -3391,7 +3391,7 @@
       "id": "T0700wb",
       "m": "M7",
       "title": "Dual-stack end-to-end safe-write proof",
-      "obj": "Prove selection → correct owner → isolated preview → authentic approval → apply → verification → undo on disposable copies of the Next.js and Astro fixtures, with zero harmful wrong-owner writes",
+      "obj": "Prove selection \u2192 correct owner \u2192 isolated preview \u2192 authentic approval \u2192 apply \u2192 verification \u2192 undo on disposable copies of the Next.js and Astro fixtures, with zero harmful wrong-owner writes",
       "deps": [
         "T0700wa"
       ],
@@ -3570,7 +3570,7 @@
       "id": "T1008",
       "m": "M10",
       "title": "Admin invoice record list: states, filters, volume and long values (issue #10, slice 2)",
-      "obj": "Give the admin reference implementation a record list that can be in every state the playbooks describe — no-records vs no-matches, loading, error keeping the rows, URL-carried filters/sort/page, announced counts — and prove twelve records with a 47-character identifier fit 320px, at 200% text size, with distinct accessible names",
+      "obj": "Give the admin reference implementation a record list that can be in every state the playbooks describe \u2014 no-records vs no-matches, loading, error keeping the rows, URL-carried filters/sort/page, announced counts \u2014 and prove twelve records with a 47-character identifier fit 320px, at 200% text size, with distinct accessible names",
       "deps": [
         "T1007",
         "T0407",
@@ -3638,7 +3638,7 @@
       ],
       "acc": [
         "all visible CI runs enumerated with run ID/SHA/step and root-cause classification",
-        "G4/G5 fail closed on empty/absent scans, missing budgets, non-finite metrics — negative and positive tests",
+        "G4/G5 fail closed on empty/absent scans, missing budgets, non-finite metrics \u2014 negative and positive tests",
         "stylelint + Playwright chromium install verified in CI; exact HEAD SHA green on Node 22 and 24",
         "VERIFICATION/CI_ACTIONS_PRIVATE.md factual report; issue #8 updated and closed only when acceptance met"
       ],
@@ -3747,7 +3747,7 @@
     {
       "id": "T0704b",
       "m": "M7",
-      "title": "Annotation overlay UI (pi live claim — T0704 split delivery)",
+      "title": "Annotation overlay UI (pi live claim \u2014 T0704 split delivery)",
       "obj": "Overlay drawing (rect/pen/arrow) consuming the landed sus.annotation contract; serialization + undo wired to overlay",
       "deps": [
         "T0704"
@@ -4463,7 +4463,7 @@
       ],
       "risk": "claiming a slash command exists on a host that never ran it",
       "rollback": "drop the alias and keep the CLI entry point",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build"
     },

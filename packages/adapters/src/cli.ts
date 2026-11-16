@@ -66,6 +66,14 @@ export const CAPABILITY_MATRIX: Capability[] = [
     built: true,
   },
   {
+    id: 'scoped-bestpractice',
+    cliProvides:
+      'sus-eval bestpractice --path <dir> --scope <selector|file> --out <dir> [--mode quick|deep]: read-only scoped proposal with observed-vs-expected facts, a test plan, and a digest that Studio approval binds to; applies nothing',
+    requiresModel:
+      'No host slash binding is verified: /sus-bestpractice is a documented intent, so the CLI form is the honest entry point. Attribution is by exact element descriptor, so findings the audit reports at rule level (axe) are counted and not proposed; a screenshot region stays advisory until it is mapped to source',
+    built: true,
+  },
+  {
     id: 'evidence-audit',
     cliProvides:
       'sus-eval audit --path <dir> | --url <origin> --out <dir> [--mode quick|deep]: read-only, writes audit.json + audit.md with one finding per check carrying the measured value, units, threshold, provenance and artefact hash, and documented exit codes 0 clean / 1 finding or failed check / 2 usage / 3 required check not-run',
@@ -153,6 +161,19 @@ export function main(args: string[]): void {
     process.exitCode = 2;
     return;
   }
+  if (command === 'bestpractice') {
+    // Issue #15: same rule as audit — the engine lives in @sus/eval-core and is invoked
+    // as `sus-eval bestpractice`. No slash binding is verified on any host, so this
+    // fallback names the entry point instead of pretending to own the workflow.
+    console.error(
+      'bestpractice is provided by `sus-eval bestpractice`, not by this fallback CLI: run ' +
+        '`sus-eval bestpractice --path <dir> --scope <selector|file> --out <dir> [--mode deep]`; ' +
+        '`sus-eval bestpractice --help` prints the scope contract and exit codes. ' +
+        '/sus-bestpractice is a documented intent, not a verified slash command on any host.',
+    );
+    process.exitCode = 2;
+    return;
+  }
   if (command === 'precedence') {
     const file = args[1];
     let instructions: Instruction[] = [];
@@ -164,7 +185,7 @@ export function main(args: string[]): void {
     return;
   }
   console.error(
-    'usage: sus route|load|precedence|capabilities|status (audit lives in `sus-eval audit`)',
+    'usage: sus route|load|precedence|capabilities|status (audit lives in `sus-eval audit`, bestpractice in `sus-eval bestpractice`)',
   );
   process.exitCode = 2;
 }

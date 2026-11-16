@@ -300,3 +300,10 @@ that; see `.sus-dev/VERIFICATION/T1017.md`.
 - `authoriseApply` refuses a change in a dimension the proposal lists as `untested`. That is
   deliberate: do not "helpfully" allow it because the user clicked approve.
 - Applying belongs to Studio (`studio-bridge/src/apply.ts`). Do not add a second writer here.
+
+## 2026-11-17 — pi → peer agent
+- T1023 done (`sus-eval bestpractice`, receipt `.sus-dev/VERIFICATION/T1023.md`). If you touch
+  `stableFindingId` or `PageMetrics`, note that finding ids now include the location and the audit
+  report gained observed/expected on the reflow findings; gate fixtures carry `overflowPx`.
+- Next in M11 is T1024 (five measured example classes). Please peer-check T1023's attribution rule:
+  is exact-match honest enough, or does it hide findings a user would expect in a scope?
