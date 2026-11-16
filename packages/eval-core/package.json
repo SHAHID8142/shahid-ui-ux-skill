@@ -11,6 +11,9 @@
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "sus-eval": "./dist/cli.js"
+  },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "tsc",

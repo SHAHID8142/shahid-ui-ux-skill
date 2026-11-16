@@ -5,15 +5,16 @@
  * (packages/adapters/src/adapter-interface.ts). Exit 0 = host passes, 1 = fail.
  *
  * Checks: (1) node runtime, (2) canonical skill bundle validates, (3) sus CLI
- * capability matrix honest, (4) route emits a schema-valid intent, (5) install
- * → doctor → uninstall round trip on a temp copy. JSON receipt on stdout.
+ * capability matrix honest, (4) route emits a schema-valid intent, (5) the audit
+ * entry point produces a reproducible report, (6) install → doctor → uninstall
+ * round trip on a temp copy. JSON receipt on stdout.
  *
  * Implementation note: children run via spawnSync (not execFileSync) so spawn
  * errors surface in .error; run() takes args with a default — a missing
  * default parameter here once masked every check as "silent exit 1".
  */
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { release as osRelease, tmpdir } from 'node:os';
 import { isAbsolute, join } from 'node:path';
 
@@ -70,7 +71,46 @@ try {
 }
 check('cli-route-intent', routeOk, routeOk ? 'schema-valid intent emitted' : route.out.slice(-160));
 
-// 5. install → doctor → uninstall round trip on a temp copy
+// 5. the audit entry point actually audits: a reproducible, read-only report.
+// Issue #13 asks for evidence that /sus audit works end to end. No host slash
+// binding is verified anywhere yet, so this check exercises the entry point that
+// does exist (`sus-eval audit`) and records its honest verdict. Exit 1 means
+// "findings", not "broken" — the fixture baseline is expected to have findings;
+// exit 3 (a required check did not run) must never count as a pass.
+const auditOut = mkdtempSync(join(tmpdir(), 'sus-smoke-audit-'));
+const audit = run('packages/eval-core/dist/cli.js', [
+  'audit',
+  '--path',
+  'evals/baselines/commerce',
+  '--out',
+  auditOut,
+  '--mode',
+  'quick',
+]);
+let auditOk;
+let auditDetail;
+try {
+  const jsonPath = join(auditOut, 'audit.json');
+  const mdPath = join(auditOut, 'audit.md');
+  const report = existsSync(jsonPath) ? JSON.parse(readFileSync(jsonPath, 'utf8')) : null;
+  auditOk =
+    (audit.status === 0 || audit.status === 1) &&
+    report !== null &&
+    report.mode === 'quick' &&
+    existsSync(mdPath) &&
+    Array.isArray(report.checks) &&
+    report.checks.length > 0 &&
+    Array.isArray(report.needsReview);
+  auditDetail = auditOk
+    ? `exit ${audit.status}, ${report.checks.length} check(s), ${report.findings.length} finding(s), quick`
+    : `exit ${audit.status}: ${(audit.err || audit.out).slice(-200)}`;
+} catch (error) {
+  auditDetail = `unreadable report: ${String(error)}`;
+}
+rmSync(auditOut, { recursive: true, force: true });
+check('cli-audit-report', auditOk, auditDetail);
+
+// 6. install → doctor → uninstall round trip on a temp copy
 const tmp = mkdtempSync(join(tmpdir(), 'sus-smoke-'));
 const install = run('scripts/install/install.mjs', ['install', '--dest', tmp]);
 check(

@@ -65,6 +65,14 @@ export const CAPABILITY_MATRIX: Capability[] = [
     built: true,
   },
   {
+    id: 'evidence-audit',
+    cliProvides:
+      'sus-eval audit --path <dir> | --url <origin> --out <dir> [--mode quick|deep]: read-only, writes audit.json + audit.md with one finding per check carrying the measured value, units, threshold, provenance and artefact hash, and documented exit codes 0 clean / 1 finding or failed check / 2 usage / 3 required check not-run',
+    requiresModel:
+      'No host slash binding is verified: /sus audit is a documented intent, not a tested command, so the CLI form above is the honest entry point. Deep mode also needs Chromium from the host',
+    built: true,
+  },
+  {
     id: 'live-studio',
     cliProvides:
       'Studio bridge vertical slice: annotate -> intent -> diff -> approval-gated apply -> verify -> undo, exercised by pnpm demo:loop against one Astro fixture',
@@ -133,6 +141,17 @@ export function main(args: string[]): void {
     console.log(statusText(doc));
     return;
   }
+  if (command === 'audit') {
+    // Issue #13: the audit engine lives in @sus/eval-core and is invoked as
+    // `sus-eval audit`. This fallback CLI deliberately does not reimplement it —
+    // naming the real entry point beats an "unknown command" dead end.
+    console.error(
+      'audit is provided by `sus-eval audit`, not by this fallback CLI: run `sus-eval audit --path <dir> --out <dir> [--mode quick|deep]`' +
+        ' (or --url <origin> for an authorized live target); `sus-eval audit --help` prints the full contract and exit codes.',
+    );
+    process.exitCode = 2;
+    return;
+  }
   if (command === 'precedence') {
     const file = args[1];
     let instructions: Instruction[] = [];
@@ -143,7 +162,9 @@ export function main(args: string[]): void {
     console.log(JSON.stringify(resolvePrecedence(instructions), null, 2));
     return;
   }
-  console.error('usage: sus route|load|precedence|capabilities|status');
+  console.error(
+    'usage: sus route|load|precedence|capabilities|status (audit lives in `sus-eval audit`)',
+  );
   process.exitCode = 2;
 }
 

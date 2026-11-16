@@ -50,8 +50,11 @@ export const HOST_ADAPTERS: HostAdapter[] = [
     installMethod: 'generated skill entry (FreePi skills dir)',
     smokeTest: 'node scripts/coord/smoke-host.mjs (run on the host machine)',
     capabilities: caps('verified', 'verified', 'verified', 'expected'),
+    // The receipt filename is the artifact hash, so naming one here would go stale
+    // the instant this file is rebuilt — the generated matrix cites the newest
+    // `evals/host-smoke/freepi-*.json` instead, and this line says what it shows.
     evidence:
-      'evals/host-smoke/freepi-fe06295.json (T0902: identical smoke PASS 7/7; live Studio unexercised)',
+      'evals/host-smoke/ newest freepi-*.json: identical smoke PASS 8/8, latest run 2026-11-16; live Studio unexercised',
   },
   {
     id: 'zcode',
@@ -59,7 +62,7 @@ export const HOST_ADAPTERS: HostAdapter[] = [
     smokeTest: 'node scripts/coord/smoke-host.mjs',
     capabilities: caps('verified', 'verified', 'verified', 'expected'),
     evidence:
-      'evals/host-smoke/zcode-b061cc4.json (T0902: identical smoke PASS 7/7; live Studio unexercised)',
+      'evals/host-smoke/ newest zcode-*.json: 7-check smoke PASS on the T0902 harness, but it predates artefact binding, so the row is stale until the 8-check smoke is re-run on that host',
   },
 ];
 

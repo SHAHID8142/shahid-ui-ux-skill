@@ -33,6 +33,23 @@ describe('sus CLI fallback (T0204)', () => {
     expect(r.out).toContain('Deriving a thesis for a new brief is model work');
   });
 
+  it('capabilities names the real audit entry point and admits no slash binding', () => {
+    // Issue #13 deliverable 7: the matrix must not imply `/sus audit` is a tested
+    // host command. It names the entry point that exists and the gap that does not.
+    const r = run(['capabilities']);
+    expect(r.status).toBe(0);
+    expect(r.out).toMatch(/\[cli\] evidence-audit/);
+    expect(r.out).toContain('sus-eval audit');
+    expect(r.out).toContain('No host slash binding is verified');
+  });
+
+  it('audit is routed to the real CLI instead of dying as an unknown command', () => {
+    const r = run(['audit', '--path', 'somewhere']);
+    expect(r.status).toBe(2);
+    expect(r.err).toContain('sus-eval audit');
+    expect(r.err).not.toContain('unknown command');
+  });
+
   it('route emits a schema-valid intent JSON', () => {
     const r = run(['route', 'redesign', 'the', 'checkout', 'flow']);
     expect(r.status).toBe(0);
