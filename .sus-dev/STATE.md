@@ -18,8 +18,8 @@ T0706 preview, T0806 security/G13, T0707 apply + rollback, T0700w CLOSED — dua
 feasibility GO on both Next.js and Astro. zcode stale. Concurrency: 2 workers (D33) — claim
 via lease before editing.
 
-Current task: none in the build tree. T1017 closed issue #13's last agent-doable residue: G7's
-400% zoom half is now **measured** as the CSS px viewport zoom produces (320×256 at device scale
+Current task: none in the build tree. The last checkpoint closed issue #13's remaining
+agent-doable residue: G7's 400% zoom half is now **measured** as the CSS px viewport zoom produces (320×256 at device scale
 factor 4) by `runHardeningMatrix`'s `zoom400` record, scored fail-closed by `evaluateZoom400`, and
 a clean 320 px column without a zoom record is `not-run` in both the gate and the audit report.
 The old check that asserted the zoom half stay unmeasured was itself the defect. Not measured, and

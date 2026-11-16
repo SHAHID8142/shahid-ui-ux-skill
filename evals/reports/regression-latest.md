@@ -1,12 +1,12 @@
 # Cross-module regression report (T1001)
 
-Revision: `4aac091d131271f9c8cfe7257860e9b3899070d5` on `chore/continuation-reconciliation`
-Started: 2026-11-15T18:41:15.769Z
-Total: 143.7s
+Revision: `918020d59df08aedcc3136fd617cc2ae51929f7c` on `chore/continuation-reconciliation`
+Started: 2026-11-16T13:30:41.920Z
+Total: 150.6s
 Verdict: **pass**
 
 | Stage | Command | Status | Exit | Duration |
 | --- | --- | --- | --- | --- |
-| verify | `pnpm verify` | pass | 0 | 115.5s |
-| demo-loop | `pnpm demo:loop` | pass | 0 | 4.0s |
-| dogfood | `pnpm dogfood` | pass | 0 | 24.2s |
+| verify | `pnpm verify` | pass | 0 | 119.3s |
+| demo-loop | `pnpm demo:loop` | pass | 0 | 5.3s |
+| dogfood | `pnpm dogfood` | pass | 0 | 26.0s |
