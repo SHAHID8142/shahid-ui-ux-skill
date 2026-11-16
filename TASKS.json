@@ -2653,7 +2653,8 @@
         "T1017",
         "T1018",
         "T1019",
-        "T1020"
+        "T1020",
+        "T1024"
       ],
       "files": [],
       "acc": [
@@ -4349,6 +4350,120 @@
         "not claimed: that a scrolling grid is usable (arrow-key scrollability, affordance and frozen first column are separate checks), nor any special handling of overflow:overlay"
       ],
       "commit": "same commit as .sus-dev/VERIFICATION/T1020.md"
+    },
+    {
+      "id": "T1021",
+      "m": "M11",
+      "title": "Scoped best-practice inspection: a scope resolver and a curated focus selection over the audit engine",
+      "obj": "Issue #15 needs a scoped command that audits only a selected element/section and proposes improvements, without a second scanner. Resolve a scope reference (DOM selector, component path, region annotation, editor selection) to stable source/DOM identifiers, detect stale/ambiguous/absent targets and ask for clarification instead of editing something else, and derive a minimal focus set (responsive, a11y, motion, copy, performance, visual) from the component kind so irrelevant checks are reported not-applicable rather than run.",
+      "deps": [
+        "T1019"
+      ],
+      "files": [
+        "packages/eval-core/src/audit/",
+        "packages/scanners/src/",
+        "packages/eval-core/tests/"
+      ],
+      "acc": [
+        "a scope reference resolves to element(s) and file(s) with a stable id, or the command returns a clarification instead of an empty or wrong scope",
+        "screenshot-only or ambiguous selections are marked advisory and never silently mapped to a different element",
+        "the focus set is chosen per component kind and the report lists consulted sources with provenance and not-consulted limitations"
+      ],
+      "tests": [
+        "packages/eval-core/tests/bestpractice.scope.test.ts",
+        "pnpm verify"
+      ],
+      "risk": "a wrong scope silently edits a component the user did not select",
+      "rollback": "keep the audit command as the only entry point; delete the resolver",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build"
+    },
+    {
+      "id": "T1022",
+      "m": "M11",
+      "title": "Best Practice Proposal contract: observed facts vs heuristics, diff, risk, test plan, no mutation",
+      "obj": "Produce the proposal the issue specifies: current behaviour, evidence, why it is suboptimal, remedy and rationale, affected source/DOM locations, expected UX outcome, risk and regression surface, before/after diff and test plan, severity-ranked, with observed facts separated from heuristic recommendations and untested dimensions listed. Read-only by default: writing a proposal must mutate nothing, and applying it must require explicit per-hunk approval in the existing Live Studio approval flow.",
+      "deps": [
+        "T1021"
+      ],
+      "files": [
+        "packages/schemas/",
+        "packages/eval-core/src/audit/",
+        "packages/studio-bridge/",
+        "packages/eval-core/tests/"
+      ],
+      "acc": [
+        "a proposal is emitted as a validated record with facts separated from heuristics, and no file changes when only the proposal mode runs",
+        "approval is required per hunk before any write, and undoing an applied proposal restores the previous bytes exactly",
+        "a malicious page or MCP reference cannot widen approval scope; the policy is tested"
+      ],
+      "tests": [
+        "packages/eval-core/tests/bestpractice.proposal.test.ts",
+        "pnpm verify"
+      ],
+      "risk": "a proposal path that writes without approval turns a read-only command into an unattended editor",
+      "rollback": "proposal files stay on disk as evidence; revert the writer and keep the plan artifact",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build"
+    },
+    {
+      "id": "T1023",
+      "m": "M11",
+      "title": "`/sus-bestpractice` invocation: canonical intent, CLI equivalent, honest host matrix",
+      "obj": "Wire the canonical intent sus.bestpractice with the /sus-bestpractice alias where a host supports custom slash commands, a /sus bestpractice compatibility alias where legal, a natural-language form, and a real CLI equivalent with --scope, --focus, --depth, --report and --dry-run. Reject selector/path injection, keep page-wide scope opt-in, document per-host support truthfully and degrade honestly where no slash binding is verified.",
+      "deps": [
+        "T1022"
+      ],
+      "files": [
+        "packages/adapters/src/",
+        "packages/schemas/src/",
+        "skill/",
+        "docs/"
+      ],
+      "acc": [
+        "the intent parses and routes on the verified host artifact, and the CLI equivalent runs with recorded evidence",
+        "an unsupported host or syntax fails honestly and names the CLI equivalent",
+        "no selector or path reaches a shell; injection attempts are rejected by test"
+      ],
+      "tests": [
+        "packages/adapters/tests/bestpractice.cli.test.ts",
+        "scripts/coord/smoke-host.mjs"
+      ],
+      "risk": "claiming a slash command exists on a host that never ran it",
+      "rollback": "drop the alias and keep the CLI entry point",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build"
+    },
+    {
+      "id": "T1024",
+      "m": "M11",
+      "title": "Best-practice examples measured: CTA, navbar, form, mobile record row, motion",
+      "obj": "Issue #15 requires each example class to select focused skills without flooding context, and a mobile invoice row to propose a justified card/stacked layout with genuine grid exceptions, states (hover/focus/pressed/loading/disabled/success/error), reduced-motion and keyboard alternatives tested when applicable, plus before/after measurement and a report with no manufactured metrics.",
+      "deps": [
+        "T1023"
+      ],
+      "files": [
+        "fixtures/",
+        "evals/",
+        "packages/eval-core/tests/"
+      ],
+      "acc": [
+        "five example selections produce focused proposals with before/after measurements from the same instruments the audit uses",
+        "each example lists the consulted skills and the ones deliberately not consulted, with reasons",
+        "states, reduced motion and keyboard alternatives are measured where applicable and not-applicable where not, never passed by default"
+      ],
+      "tests": [
+        "packages/eval-core/tests/bestpractice.examples.test.ts",
+        "pnpm regression"
+      ],
+      "risk": "a polished report with no instrument behind it reads as evidence when it is opinion",
+      "rollback": "keep the fixtures; remove the example harness",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build"
     }
   ]
 }

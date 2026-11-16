@@ -887,3 +887,12 @@
   effectiveness stays `not-run` (mechanics measured in `paired-run.json`), and no guide text has
   been read or copied (D06 owner-open). Also corrected `pilots/README.md`, which still said no
   shipped loader existed — true when written, false since T1018.
+
+- 2026-11-16T22:15:00+06:00 | Pi (FreePi) | issue #15 | Triaged per D32 rather than started: the
+  request is a feature with eight acceptance boxes, and guessing its scope would be worse than
+  decomposing it. Registered T1021 (scope resolver + curated focus over the existing audit engine),
+  T1022 (proposal contract: facts vs heuristics, diff, risk, test plan, approval-gated apply, undo),
+  T1023 (canonical `sus.bestpractice` intent + CLI equivalent + honest host matrix), T1024 (five
+  measured example classes incl. a mobile record row) — all `pending`, none claimed, each bounded by
+  the same instruments `/sus audit` already uses so no second scanner appears. Added milestone M11
+  to `scripts/lib/roadmap.mjs` so the roadmap stays generated rather than hand-written.

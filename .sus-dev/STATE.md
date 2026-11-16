@@ -11,9 +11,11 @@ BUILD_COMPLETE_PUSHED=true at release revision 2f344df — pnpm regression 3 sta
 679 tests). Architecture: ADR-001/002/004/005/006 adopted, ADR-003 as amended (D29).
 Repository is PUBLIC (D34); the product is unpublished.
 
-Canonical task statuses: TASKS.json (112 of 114 done; only T1003 independent audit and
+Canonical task statuses: TASKS.json (112 of 118 done; owner-only T1003 independent audit and
 T1005 release approval/publish remain, both owner-only). Every D32 owner-issue item from
-triaging issues #13/#14 is done and receipted.
+triaging issues #13/#14 is done and receipted. Issue #15 (`/sus-bestpractice`) is triaged into
+T1021–T1024 (scope resolver -> proposal contract -> invocation -> measured examples), all
+`pending`, none claimed.
 T0706 preview, T0806 security/G13, T0707 apply + rollback, T0700w CLOSED — dual-stack
 feasibility GO on both Next.js and Astro. zcode stale. Concurrency: 2 workers (D33) — claim
 via lease before editing.
