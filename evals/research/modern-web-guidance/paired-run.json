@@ -1,0 +1,132 @@
+{
+  "generatedBy": "scripts/research/paired-run.mjs",
+  "generatedAt": "2026-11-16T14:42:13.195Z",
+  "source": {
+    "id": "modern-web-guidance",
+    "revision": "4dd968349e54ca45a05dd5c818fb035c9054b022",
+    "license": "Apache-2.0",
+    "sha256": "86872acde276e316c8e8533db89a64900155852efe25611bd9cf2e8f21e78f72"
+  },
+  "cacheDir": ".sus-cache/research/modern-web-guidance",
+  "arms": {
+    "provider": {
+      "status": "pass",
+      "boundsHeld": true,
+      "callsUsed": 3,
+      "queriesServed": 3,
+      "queriesAsked": 4,
+      "results": [
+        {
+          "query": "responsive table header",
+          "available": true,
+          "reason": null,
+          "callsUsed": 1,
+          "estimatedTokens": 81,
+          "hits": [
+            {
+              "guideId": "responsive-table",
+              "characters": 321,
+              "truncated": false,
+              "trusted": false,
+              "sha256": "b1b1c84034398b83cda29a04fbd152c94aced38b11151791b3eb1c9d05af7666",
+              "revision": "4dd968349e54ca45a05dd5c818fb035c9054b022",
+              "hasUrl": true,
+              "hasLicense": true
+            }
+          ]
+        },
+        {
+          "query": "responsive design breakpoints",
+          "available": true,
+          "reason": null,
+          "callsUsed": 2,
+          "estimatedTokens": 280,
+          "hits": [
+            {
+              "guideId": "responsive-design",
+              "characters": 799,
+              "truncated": false,
+              "trusted": false,
+              "sha256": "4bd7f40d677cbaeaebddac90aa2b23a81701ef6c2215b689148906f8d4d2da8f",
+              "revision": "4dd968349e54ca45a05dd5c818fb035c9054b022",
+              "hasUrl": true,
+              "hasLicense": true
+            },
+            {
+              "guideId": "responsive-table",
+              "characters": 321,
+              "truncated": false,
+              "trusted": false,
+              "sha256": "b1b1c84034398b83cda29a04fbd152c94aced38b11151791b3eb1c9d05af7666",
+              "revision": "4dd968349e54ca45a05dd5c818fb035c9054b022",
+              "hasUrl": true,
+              "hasLicense": true
+            }
+          ]
+        },
+        {
+          "query": "navigation drawer focus",
+          "available": true,
+          "reason": null,
+          "callsUsed": 3,
+          "estimatedTokens": 300,
+          "hits": [
+            {
+              "guideId": "navigation-drawer",
+              "characters": 1200,
+              "truncated": false,
+              "trusted": false,
+              "sha256": "94597ab44b89e25feb43be3696bca5e420334c25bc236b3f2eed7f39d614dc56",
+              "revision": "4dd968349e54ca45a05dd5c818fb035c9054b022",
+              "hasUrl": true,
+              "hasLicense": true
+            }
+          ]
+        },
+        {
+          "query": "input latency causes",
+          "available": false,
+          "reason": "disabled",
+          "callsUsed": 3,
+          "estimatedTokens": 0,
+          "hits": []
+        }
+      ],
+      "cache": [
+        {
+          "guideId": "responsive-table",
+          "state": "verified",
+          "bytes": 4556
+        },
+        {
+          "guideId": "responsive-design",
+          "state": "verified",
+          "bytes": 1885
+        },
+        {
+          "guideId": "identify-inp-causes",
+          "state": "verified",
+          "bytes": 8912
+        },
+        {
+          "guideId": "navigation-drawer",
+          "state": "verified",
+          "bytes": 20826
+        }
+      ]
+    },
+    "baseline": {
+      "status": "not-run",
+      "reason": "a no-provider arm needs a task and an output; neither ships in this repository"
+    },
+    "effectiveness": {
+      "status": "not-run",
+      "reason": "comparing arms needs a host model to produce output twice over the same tasks; no shipped harness runs one, so no comparison is claimed"
+    }
+  },
+  "notes": [
+    "Mechanics only. A served excerpt says the loader and the pin agree; it says nothing about whether the guidance is right or useful.",
+    "No guide text is recorded here, only digests, character counts and provenance presence.",
+    "Upstream legacy-scan and trial-harness results are not evidence about SUS and are not used."
+  ]
+}

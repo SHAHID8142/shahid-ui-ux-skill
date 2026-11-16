@@ -2650,7 +2650,8 @@
         "T1014",
         "T1015",
         "T1016",
-        "T1017"
+        "T1017",
+        "T1018"
       ],
       "files": [],
       "acc": [
@@ -4208,6 +4209,54 @@
         "not claimed: the user-agent zoom setting and text-only zoom are still not driven and are named that way in the gate verdict, every report's needs-review list and docs/LIMITATIONS.md; the zoom record covers one theme and one motion setting; the zoom cell is layout evidence, not a screenshot column"
       ],
       "commit": "same commit as .sus-dev/VERIFICATION/T1017.md"
+    },
+    {
+      "id": "T1018",
+      "m": "M10",
+      "title": "A shipped research loader, its opt-in cache, and an honest paired-run record (issue #14 residue)",
+      "obj": "Issue #14's bounded provider could only serve a hit when a loader supplied bytes matching the pin, and no shipped loader existed, so the provider arm of every paired run was not-run. Ship the loader (cache-only, digest-bound, bounded, deterministic), the opt-in cache filler that verifies before writing, and a paired-run recorder whose baseline and effectiveness arms stay not-run because no shipped harness runs a model. Copy no upstream text into the repository.",
+      "deps": [
+        "T1016"
+      ],
+      "files": [
+        "packages/scanners/src/",
+        "packages/scanners/tests/",
+        "scripts/research/",
+        "evals/research/modern-web-guidance/",
+        "docs/RESEARCH_SOURCES.md",
+        ".gitignore"
+      ],
+      "acc": [
+        "a shipped loader serves the pinned guides from a local cache and refuses bytes whose digest differs from the pin",
+        "the cache filler fetches over two transports, verifies against the pin before writing, and refuses a moved digest as a content review",
+        "no upstream text is copied into the repository: the cache is git-ignored and manifests record digests and counts only",
+        "a paired-run record measures the provider arm's mechanics (served guides, characters, tokens, provenance, caps) and writes baseline and effectiveness as not-run with reasons",
+        "with no cache the provider arm is not-run, and nothing in pnpm verify or pnpm regression touches the network or the cache"
+      ],
+      "tests": [
+        "packages/scanners/tests/research-cache-loader.test.ts",
+        "packages/scanners/tests/cache-guides.test.ts",
+        "node scripts/research/paired-run.mjs (not-run without a cache)",
+        "pnpm verify"
+      ],
+      "risk": "a loader that serves unverified bytes would turn a missing capability into a quietly wrong citation",
+      "rollback": "delete the loader, both scripts and their tests; the provider returns to not-installed",
+      "status": "done",
+      "approval": "D32 issue triage (issue #14, P2) within D28 build authorization",
+      "phase": "build",
+      "owner": "lead",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1018.md"
+      ],
+      "results": [
+        "research-cache-loader.ts reads <guideId>.md from a cache directory, hashes every file on read and serves only bytes matching the pin: digest mismatch, undigested guide, oversize file, read failure and non-slug ids are all refusals with named statuses, and it reports not-installed for an empty cache versus no-match for a query nothing pinned mentions. Ranking is identity-token overlap then cached-content overlap, shortlisted within a factor of two of the best match, with the matched section padded to at least 300 characters so an excerpt is not a heading with one line; no network client is imported",
+        "14 loader tests and 8 script tests, mostly negative: unsafe ids (../, absolute, a/b, Upper, NUL) resolve to null, an oversize file is refused before reading, a read failure becomes a skip rather than an exception at the caller, the offline flag defeats a perfect cache, the loader returns only guideId/excerpt/sha256 so it cannot relabel content, and the manifest carries digests and counts but no guide text",
+        "scripts/research/cache-guides.mjs is opt-in (SUS_RESEARCH_ONLINE=1), reuses verify-pin.mjs's two-transport fetch, refuses an unverified pin, an undigested guide, a guide the pin does not list and moved bytes before writing anything, and writes to a git-ignored .sus-cache/ so upstream text is never copied into the repository (D06 stays open)",
+        "measured end to end on 2026-11-16 against revision 4dd9683: the cache filler wrote 4/4 guides (4556 B, 1885 B, 8912 B, 20826 B) with digests equal to the pin, so the served file is the byte sequence verify-pin.mjs measured, not a fresh re-fetch; the paired run then served 3 of 4 topics within its 3-call budget (table header -> table guide 321c, design breakpoints -> responsive-design 799c, drawer focus -> drawer 1200c) and reported the fourth as disabled because the cap was spent",
+        "scripts/research/paired-run.mjs records mechanics only: served guides, character counts, estimated tokens, digest/provenance presence and cap compliance, with the baseline arm not-run (no task/output harness) and the effectiveness arm not-run (a comparison needs a host model to produce output twice; no shipped harness runs one). With no cache it exits 3 and prints not-run",
+        "not claimed: whether the guidance is correct or helps an agent (no digest answers that and no model was run), reachability of the ~250 unpinned guides (the loader can only serve the four in the pin), any licence position for copying (D06 open), and any CI or build dependence on the cache (pnpm verify and pnpm regression never read it)"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T1018.md"
     }
   ]
 }

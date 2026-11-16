@@ -165,7 +165,7 @@ The upstream README describes an install-and-run workflow (`npx modern-web-guida
 | SUS's CI actions are pinned to reviewed commits | **measured** 2026-11-16 — each tag resolved with `gh api` to a 40-character commit and written into `ci.yml`; a test fails on a tag, a branch, a short SHA, or a pin that drifts from the recorded commit |
 | `legacy-scan` covers a subset of upstream guidance | from issue #14 triage |
 | The three pilot before/after numbers in §6 | **measured** in this repository by `pnpm pilots` (headless Chromium); see [pilots/results.json](pilots/results.json) for the digests and metrics |
-| Provider-present pilot arm | **not-run** — the pin is measured (2026-11-16), but no shipped loader supplies fetched text to a paired run, so there is nothing to compare against the no-provider arm. Precondition met, measurement not done |
+| Provider-present pilot arm | **mechanics measured** 2026-11-16 (T1018) — `research-cache-loader.ts` serves the pinned bytes from a verified git-ignored cache and `scripts/research/paired-run.mjs` recorded 3 of 4 topics served within the 3-call cap, every hit digest-bound and `trusted: false`. The **effectiveness** comparison is still `not-run`: it needs a host model to produce output twice, and no shipped harness runs one |
 
 ## 6. Measured pilots (T1016)
 
@@ -193,11 +193,11 @@ What this settles, and what it does not:
 - The **browser-support risk** is tested, not asserted: the yielding handler is driven twice,
   once with `scheduler.yield` available and once with `window.scheduler` removed. Both runs
   record zero long tasks, and the fallback run records `mode: "timeout"`.
-- The **provider-present arm is not-run.** The pin is measured, so the provider *could* serve a
-  hit — but no shipped loader hands fetched text to a paired run, and no guide text is quoted or
-  vendored here. These pilots measure the technique the pinned guide list names, not the source,
-  and they claim nothing about provider benefit. A servable pin is a precondition for that arm,
-  never the arm itself.
+- **The provider arm's mechanics are measured, its effectiveness is not.** A cache loader now exists
+  (T1018) and the paired run records what it served, how much each hit cost and that every digest
+  matched the pin. Whether the guidance improves output needs a host model to produce output twice
+  over the same tasks; no shipped harness runs one, so that arm stays `not-run` and these pilots
+  claim nothing about provider benefit. No guide text is quoted or vendored here.
 
 ### The guard that makes the bad recipe checkable
 

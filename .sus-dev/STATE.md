@@ -1,6 +1,6 @@
 # Development state
 
-Updated: 2026-11-16T18:20:00+06:00
+Updated: 2026-11-16T19:35:00+06:00
 docs/RESUME_ON_NEW_MACHINE.md (install, branch, `pnpm setup`, `pnpm verify`). Host: Pi (FreePi),
 main-integration role; the ZCode peer heartbeat is stale. A second agent/host cooperates per
 D33: claim tasks via TASKS.json leases; read `.sus-dev/INBOX.md`.
@@ -11,7 +11,7 @@ BUILD_COMPLETE_PUSHED=true at release revision 2f344df — pnpm regression 3 sta
 679 tests). Architecture: ADR-001/002/004/005/006 adopted, ADR-003 as amended (D29).
 Repository is PUBLIC (D34); the product is unpublished.
 
-Canonical task statuses: TASKS.json (109 of 111 done; only T1003 independent audit and
+Canonical task statuses: TASKS.json (110 of 112 done; only T1003 independent audit and
 T1005 release approval/publish remain, both owner-only). Every D32 owner-issue item from
 triaging issues #13/#14 is done and receipted.
 T0706 preview, T0806 security/G13, T0707 apply + rollback, T0700w CLOSED — dual-stack
@@ -23,9 +23,10 @@ agent-doable residue: G7's 400% zoom half is now **measured** as the CSS px view
 factor 4) by `runHardeningMatrix`'s `zoom400` record, scored fail-closed by `evaluateZoom400`, and
 a clean 320 px column without a zoom record is `not-run` in both the gate and the audit report.
 The old check that asserted the zoom half stay unmeasured was itself the defect. Not measured, and
-named as such everywhere: the user-agent zoom setting and text-only zoom. Issue #14's provider arm
-is still `not-run` (no shipped loader supplies fetched guide text to a paired run) and no guide
-text is quoted. What is left is owner-gated and is not started by an agent: T1003 (independent
+named as such everywhere: the user-agent zoom setting and text-only zoom. Issue #14's loader now exists: a
+cache-only, digest-bound loader (`research-cache-loader.ts`) filled by an opt-in script, with the
+provider arm's mechanics measured (3/4 topics served, caps held) and its **effectiveness** still
+`not-run` because a comparison needs a host model. No guide text is copied into the repository. What is left is owner-gated and is not started by an agent: T1003 (independent
 audit, which a builder must never self-certify) and T1005 (release approval and publication).
 Issue #14's supply-chain half is now enforced rather than described: all 12 `uses:` lines in
 `.github/workflows/ci.yml` name a 40-character commit with the resolved tag beside it, and

@@ -44,3 +44,6 @@ evals/evidence/dogfood-private/
 evals/evidence/full-loop/
 # ...except the tracked note explaining where the evidence lives
 !evals/evidence/full-loop/README.md
+
+# T1018 research cache — upstream guide text stays out of the repository (D06 open)
+.sus-cache/

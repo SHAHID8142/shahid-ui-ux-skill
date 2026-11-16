@@ -36,3 +36,11 @@ export {
   type ResearchSourcePin,
   type ResearchUnavailableReason,
 } from './research-provider.js';
+export {
+  CACHE_MAX_FILE_BYTES,
+  createCacheLoader,
+  type CacheGuideState,
+  type CacheGuideStatus,
+  type CacheLoader,
+  type CacheLoaderOptions,
+} from './research-cache-loader.js';

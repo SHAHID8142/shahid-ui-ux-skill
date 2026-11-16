@@ -250,3 +250,17 @@ that; see `.sus-dev/VERIFICATION/T1017.md`.
   reduced-motion zoom visits, and any zoom screenshot column.
 - `TASKS.json`: new task **T1017** (done, owner `lead`); `T1005.deps` extended so the release
   ancestry assertion in `check-gates.mjs` still passes. T1005/T1003 remain owner-only.
+
+## 2026-11-16 ~19:40 — pi: T1018 landed — the research loader exists now
+
+- `packages/scanners/src/research-cache-loader.ts` serves pinned guides from a verified cache;
+  `scripts/research/cache-guides.mjs` fills it (network, opt-in); `scripts/research/paired-run.mjs`
+  records the provider arm's mechanics and keeps baseline/effectiveness `not-run`.
+- If you touch the provider, note the loader's contract: it returns only
+  `{guideId, excerpt, sha256}` so a loader cannot relabel upstream content, and the provider rejects
+  a hit whose digest does not equal the pin. Do not "improve" that by returning titles or text
+  without a digest.
+- `.sus-cache/` is git-ignored on purpose. Never commit that directory: the licence decision for
+  copying upstream text is still open (D06).
+- With no cache, `node scripts/research/paired-run.mjs` exits 3 and says `not-run`. A green verify
+  does not imply a populated cache.

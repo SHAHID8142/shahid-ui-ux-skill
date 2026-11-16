@@ -832,3 +832,25 @@
   Local runs rewrote `evals/baselines/*/bundle.json`, `evals/evidence/dogfood/*` and a
   `regression-<sha>.json` for the dirty tree; all restored, and the report is re-taken on the clean
   commit below rather than kept as "dirty tree" evidence.
+
+- 2026-11-16T19:40:00+06:00 | Pi (FreePi) | T1018 | Shipped the loader the research provider was
+  waiting for. The gap after T1016 was concrete: `research-provider.ts` takes an injected transport,
+  and no shipped loader existed, so the provider arm of every paired run was `not-run`.
+  `research-cache-loader.ts` now reads `<guideId>.md` from a cache directory, hashes on read and
+  serves only digest matches; it ranks on identity tokens then cached content, shortlists within a
+  factor of two of the best match, and pads a matched section to ≥300 characters (a heading with one
+  line is a label, not an excerpt). Refusals are named: digest mismatch, undigested guide, oversize
+  file (512 KiB cap), read failure, non-slug id (`../`, absolute, `a/b`, `Upper`, NUL → null), and
+  empty cache is `not-installed` while a query nothing pinned mentions is `no-match`.
+  `scripts/research/cache-guides.mjs` is the opt-in filler (SUS_RESEARCH_ONLINE=1): two transports
+  must agree and each digest must equal the pin before a byte is written; the cache is `.sus-cache/`,
+  git-ignored, so upstream text is not vendored (D06 open). `scripts/research/paired-run.mjs` records
+  the provider arm's mechanics and writes baseline/effectiveness as `not-run` with reasons.
+  Measured live at revision `4dd9683`: 4/4 guides cached (4556/1885/8912/20826 B) with digests equal
+  to the pin, and the paired run served 3 of 4 topics inside its 3-call budget (table header → 321c,
+  design breakpoints → 799c, drawer focus → 1200c), reporting the fourth `disabled` because the cap
+  was spent — the cap working, shown as such. With no cache the paired run exits 3, not 0.
+  Checks: scanners suite 110 tests (22 new), `pnpm verify` 0 → **78 files + 3 skipped, 895 tests
+  passed / 9 skipped**. Not claimed: correctness of any guidance, benefit to an agent (no model was
+  run), reachability of the ~250 unpinned guides, any licence position for copying.
+  `TASKS.json` T1018 + `T1005.deps`; ROADMAP regenerated; STATE count 110 of 112.

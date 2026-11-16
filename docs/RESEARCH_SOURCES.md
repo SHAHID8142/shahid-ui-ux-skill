@@ -142,14 +142,18 @@ questions apart.
 
 The honest consequence, in two halves:
 
-- **The pin is now servable.** With a loader that returns the pinned bytes, the provider produces a
-  hit, and every hit still carries `trusted: false` — verification buys provenance, not authority.
-  A loader that returns anything else is rejected exactly as before; verification applies to the
-  pin, never to whatever a transport offers.
+- **The pin is servable, and now actually served (T1018).** `research-cache-loader.ts` reads a
+  git-ignored cache of the pinned bytes, hashes every file on read and serves only what matches the
+  pin. `scripts/research/cache-guides.mjs` fills that cache — two transports must agree and the
+  digest must equal the pin's before a byte is written — and
+  `scripts/research/paired-run.mjs` records what the provider arm did with it. Every hit still
+  carries `trusted: false`: verification buys provenance, not authority.
 - **The pin still cannot answer the questions §6 and §10 ask.** A digest proves which bytes exist; it
   does not say whether the advice is right, whether it overlaps a SUS rule, or whether it helps an
-  agent. Everything in §6 remains a *hypothesis for review*, and the provider-present pilot arm
-  remains `not-run` until a real loader supplies fetched text to a paired run.
+  agent. Everything in §6 remains a *hypothesis for review*. The provider arm's **mechanics** are
+  now measured (§11); its **effectiveness** is still `not-run`, because comparing a with-provider
+  arm against a no-provider arm needs a host model to produce output twice, and no shipped harness
+  runs one.
 
 ## 6. Overlap and contradiction spike (hypotheses only)
 
@@ -214,9 +218,13 @@ When a hit informs a SUS change:
   digest. That is a review obligation, and this section states it rather than implying a check that
   does not exist. A verified pin does not close this gap: it makes a *citation* checkable once
   written, it does not force one to be written.
-- **Still not enforced, second gap:** the provider-present pilot arm. The pin is now verified, but no
-  shipped loader hands fetched text to a paired run, so the arm stays `not-run`. The two facts are
-  independent — a servable pin is a precondition, not a measurement.
+- **Enforced since T1018:** a cache entry may only exist for bytes that equal the recorded digest.
+  `planCacheWrites()` refuses an unverified pin, an undigested guide, a guide the pin does not list,
+  and moved bytes; `createCacheLoader()` refuses a file whose hash differs, a file above the size
+  cap, a read failure and a non-slug guide id. The cache lives in `.sus-cache/`, which is git-ignored,
+  so upstream text is never copied into the repository (D06 stays open).
+- **Still not enforced:** provider effectiveness. The mechanics are measured (§11); whether the
+  guidance makes an agent's output better is not, and no test asserts it.
 
 ## 10. Pilots
 
@@ -226,9 +234,34 @@ Three paired pilots, their negative controls and their fallback cases live in
 `pnpm test` re-checks the committed digests and the before/after verdict direction without a
 browser, so the evidence cannot silently go stale.
 
-They measure the technique, not the provider: the pin is verified (§5) but no shipped loader
-supplies fetched text to a paired run, so the provider-present arm is `not-run` and no result
-here claims provider benefit. What they do settle is §7's requirement that at least one
+They measure the technique, not the provider: the pin is verified (§5) and the provider arm's
+mechanics are measured (§11), but the effectiveness comparison is still `not-run` — it needs a host
+model to produce output twice. No result here claims provider benefit. What they do settle is §7's requirement that at least one
 accessibility/AT risk and one modern-feature browser-support risk be **tested rather than
 asserted** — the header-association and focus contract are measured, and the yielding handler is
 measured with and without `scheduler.yield`.
+
+## 11. The cache loader and the paired run (T1018)
+
+`research-provider.ts` was written to take an injected transport so it could never open a socket.
+That left one thing missing, and it was named rather than hidden: no shipped loader supplied bytes,
+so the provider arm of every paired run was `not-run`. T1018 supplies it.
+
+| Piece | What it does | What it refuses |
+| --- | --- | --- |
+| `packages/scanners/src/research-cache-loader.ts` | Reads `<guideId>.md` from a cache directory, hashes on read, serves only digest matches; ranks candidates by identity then content token overlap; returns the best-matching section, padded to at least 300 characters | a file whose digest differs from the pin, a file above 512 KiB, a non-slug guide id (`../`, absolute paths, NUL), a read failure, an undigested guide; reports `not-installed` for an empty cache and `no-match` for a query nothing pinned mentions |
+| `scripts/research/cache-guides.mjs` | Opt-in (`SUS_RESEARCH_ONLINE=1`) fetch of each pinned guide over two transports, digest check against the pin, then writes `.sus-cache/research/modern-web-guidance/<guideId>.md` plus a digest-only manifest | an unverified pin, an undigested guide, a guide absent from the pin, bytes that moved under the fixed revision |
+| `scripts/research/paired-run.mjs` | Runs a fixed four-topic set through the provider against the cache and records mechanics: served guides, character counts, estimated tokens, digest/provenance presence, cap compliance | claims about quality: the baseline and effectiveness arms are written as `not-run` with the reason, and the record says so |
+
+Measured on 2026-11-16 against the pinned revision `4dd9683`: the cache fetch wrote 4/4 guides
+(4556 B, 1885 B, 8912 B, 20826 B, each digest equal to the pin), and the paired run served 3 of 4
+topics within its 3-call budget — `responsive table header` → the table guide, `responsive design
+breakpoints` → the responsive-design guide, `navigation drawer focus` → the drawer guide, and
+`input latency causes` → `disabled`, because the run's own call cap had been spent. That is the cap
+working, not a failure, and the record shows it as such. The arms that would compare guidance
+quality remain `not-run`: no shipped harness runs a model, so no comparison is claimed.
+
+What this still does not establish, in one line each: whether the guidance is correct (no digest
+answers that), whether it improves an agent's output (the effectiveness arm is `not-run`), whether
+unpinned upstream guides are reachable (they are not, by construction), and whether any of it is
+licensed for copying (D06 is open; the cache is git-ignored and no text is vendored).
