@@ -41,8 +41,10 @@ written down is a bug with better manners.
 - The dogfood audit runs **five** checks over three reference sites. All three pass all five,
   which says the checks are not exhaustive, not that the sites are exemplary. The five checks
   exercise four playbooks — `search-filters`, `tabs`, `accordion`, `form-input-validation` —
-  plus gate G4; the other thirty-two playbooks are not dogfooded at all
-  (`packages/eval-core/src/dogfood.ts`).
+  plus gate G4. `evals/playbook-coverage.json` (rendered as `docs/PLAYBOOK_COVERAGE.md`, checked by
+  `pnpm coverage:check`) is the exact account: **3 of 187** playbook rules have a check that names
+  them, **184** are named gaps, and **33** playbooks have no check at all. Schema-valid is not
+  behaviour-tested.
 - The admin fixture **did** fail two of those checks (343 px horizontal overflow at 390 px,
   4.46:1 muted contrast). Both were fixed under T1007 (issue #10) and the re-run on
   2026-11-15 measured 0 overflow at 320/390/768/1440 and `--muted: #5f6775` at 5.28:1 on the

@@ -4602,9 +4602,15 @@
       ],
       "risk": "a manifest that claims coverage the evidence does not show",
       "rollback": "delete the manifest and keep the named gaps in docs",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1027.md",
+        "evals/playbook-coverage.json",
+        "docs/PLAYBOOK_COVERAGE.md",
+        "packages/eval-core/tests/playbook-coverage.test.ts"
+      ]
     },
     {
       "id": "T1028",

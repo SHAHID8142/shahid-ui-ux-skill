@@ -11,7 +11,7 @@ BUILD_COMPLETE_PUSHED=true at release revision 2f344df — pnpm regression 3 sta
 679 tests). Architecture: ADR-001/002/004/005/006 adopted, ADR-003 as amended (D29).
 Repository is PUBLIC (D34); the product is unpublished.
 
-Canonical task statuses: TASKS.json (118 of 123 done; owner-only T1003 independent audit and
+Canonical task statuses: TASKS.json (119 of 123 done; owner-only T1003 independent audit and
 T1005 release approval/publish remain, both owner-only, and the M12 hardening queue T1026–T1029
 from issue triage is open). Every D32 owner-issue item from
 triaging issues #13/#14 is done and receipted. Issue #15 (`/sus-bestpractice`) is triaged into
@@ -20,9 +20,10 @@ M11 is **done**: T1021 (scope resolution + focus selection), T1022 (proposal rec
 approval), T1023 (`sus-eval bestpractice` end to end) and T1024 (five measured example classes,
 `docs/BESTPRACTICE_EXAMPLES.md`, `pnpm examples:check` in `pnpm verify`). M12 is the owner's
 post-M11 issue triage (#16–#20) under standing rule D32: T1025 (per-hop redirect authorization,
-issue #18) and T1026 (live-document drift now fails the continuation gate, issue #17) are **done**;
-T1027 (playbook coverage manifest, #20), T1028 (host matrix untested rows + quickstart, #16) and
-T1029 (governance inventory, #19) are queued and being executed in that order.
+issue #18), T1026 (live-document drift now fails the continuation gate, issue #17) and T1027
+(playbook coverage record: 3/187 rules measured, 184 named gaps, issue #20) are **done**; T1028
+(host matrix untested rows + quickstart, #16) and T1029 (governance inventory, #19) are queued and
+being executed in that order.
 T0706 preview, T0806 security/G13, T0707 apply + rollback, T0700w CLOSED — dual-stack
 feasibility GO on both Next.js and Astro. zcode stale. Concurrency: 2 workers (D33) — claim
 via lease before editing.
