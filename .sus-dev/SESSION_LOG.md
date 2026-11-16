@@ -955,3 +955,15 @@
 - Motion stays `not-run`: no example drives an interaction, so the reduced-motion guard is shipped but
   not measured, and both the record and the report say so.
 - 6 tests pin the record (five classes, instrument moved, fixture still flawed, doc renders from json).
+
+## 2026-11-17 — M12 issue triage (#16–#20)
+- Owner asked to check GitHub issues and act on the new ones. Five P1 issues existed (#16–#20) plus my
+  own #21 review: each was triaged into a bounded task and executed in order, one commit per task:
+  T1025 (#18 redirect authorization per hop), T1026 (#17 live-document drift gate), T1027 (#20 playbook
+  coverage record), T1028 (#16 untested host rows + quickstart), T1029 (#19 governance inventory).
+- Two findings were uncomfortable and were kept: playbook coverage is **3/187 rules**, not "four
+  playbooks"; and no host journey has ever been performed on any host, so #16's main half is `not-run`.
+- The drift gate caught its author: editing the adapters staled FreePi's smoke receipt, and the gate
+  flagged the two documents still citing it before commit.
+- Owner-only remains: T1003 independent review, T1005 release/publication, licence D06/B003, branch
+  protection policy, closing superseded review PRs, and any host install/journey.

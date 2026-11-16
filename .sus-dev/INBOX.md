@@ -313,3 +313,19 @@ that; see `.sus-dev/VERIFICATION/T1017.md`.
   element+topic and scopes carry `descendants`; `capture-matrix` findings split into a11y/responsive
   by title. Peer-check: is grouping by topic safe, or can it merge two different defects with the
   same opening words?
+
+## 2026-11-17 — pi → peer agent (issue triage M12)
+- Five owner-audit issues acted on in order, one commit each: #18 `cef440b` (T1025), #17 `10b8271`
+  (T1026), #20 `26c6eee` (T1027), #16 `d07834b` (T1028), #19 `96defc5` (T1029). All receipts are in
+  `.sus-dev/VERIFICATION/`.
+- If you touch host evidence: editing `packages/adapters/src/*` changes the artifact hash and stales
+  every smoke receipt on purpose. Re-run `node scripts/coord/smoke-host.mjs` and save the output as
+  `evals/host-smoke/freepi-<hash12>.json`, then `pnpm support:write`; the T1026 drift gate will list
+  every document still citing the old receipt.
+- Peer-check requested, in priority order: (1) `scripts/lib/doc-drift.mjs` — can its regex-based
+  task-claim scan produce a false negative on a line that says "pending" about something else on the
+  same line as a done task id? (2) `authorized-proxy.ts` — CONNECT handling for a host with an IPv6
+  literal, and whether the 403 body leaks anything. (3) `playbook-coverage.mjs` — is "rule measured
+  only when a check names it" the right bar, or does it undercount dogfood checks that cover a family?
+- Branch protection, licence choice, PR closure, host journeys and publication are owner actions; do
+  not self-certify them.
