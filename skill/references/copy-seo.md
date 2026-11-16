@@ -28,7 +28,7 @@ Non-waivable (policy floor, schema-enforced):
 Owner-taste decisions (valid when recorded with decidedBy): tone choices,
 density preferences, naming conventions.
 
-## SEO structural checks (deterministic, sus-scan --seo)
+## SEO structural checks (deterministic, `sus-eval audit --mode quick`)
 
 - exactly one `<title>` ≤60 chars; meta description 50–158 chars
 - exactly one h1; no skipped heading levels (G9 precursor)

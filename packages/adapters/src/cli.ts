@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * SUS CLI invocation fallback (T0204) — deterministic entry points for hosts
  * that cannot run model-side skill loading. Every capability states its
@@ -5,7 +6,7 @@
  * capable model or a host browser, and what the CLI deliberately does not do.
  * No capability claims beyond that.
  */
-import { readFileSync } from 'node:fs';
+import { readFileSync, realpathSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { join } from 'node:path';
 import { routeIntent } from './router.js';
@@ -171,6 +172,11 @@ export function main(args: string[]): void {
 // Only execute when this file IS the entry point: importing the package (the
 // T0905 generator reads HOST_ADAPTERS from dist/index.js) must not run the CLI
 // and must certainly not print usage over a generator's output.
+// realpathSync, because a package manager bin shim invokes the built file
+// through a symlink: process.argv[1] is then the symlinked path while
+// import.meta.url is already resolved, and a plain comparison would silently
+// do nothing at all (which is exactly how `sus capabilities` printed zero lines).
 const invokedDirectly =
-  process.argv[1] !== undefined && import.meta.url === pathToFileURL(process.argv[1]).href;
+  process.argv[1] !== undefined &&
+  import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href;
 if (invokedDirectly) main(process.argv.slice(2));

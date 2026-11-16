@@ -24,9 +24,9 @@ function fail(message: string): never {
 
 /**
  * The whole command surface, as a function so that importing this module (a test, or
- * `dist/index.js` re-export) never runs it. T1017: the documented `sus-eval` binary
- * only works when the package declares `bin`, and a side-effecting import would make
- * the module unusable as a library.
+ * `dist/index.js` re-export) never runs it: the documented `sus-eval` binary only
+ * works when the package declares `bin` and the import stays side-effect free, and a
+ * side-effecting module could not be used as a library at all (issue #13).
  */
 export async function main(argv: string[]): Promise<void> {
   const args = argv;

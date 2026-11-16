@@ -61,10 +61,12 @@ with one canonical source of truth and honest per-host support.
 **Options.**
 1. **Official Agent Skills layout as canonical** (`SKILL.md` + `references/` + `scripts/` + `evals/`).
 2. Per-host native formats as canonical (Claude plugin, Cursor rules…), skill generated from them.
-3. CLI-first: the skill is a thin wrapper around `npx sus …`.
+3. CLI-first: the skill is a thin wrapper around a `sus` CLI invocation.
 
 **Decision (proposed).** Option 1 canonical; host-specific entry files are **generated artifacts**
-from templates (slash-command manifests, plugin wrappers). `sus doctor` validates frontmatter,
+from templates (slash-command manifests, plugin wrappers). The installer's doctor
+(`node scripts/install/doctor.mjs --dir <installed>`, with `scripts/validate-skill.mjs` for the
+canonical bundle) validates frontmatter,
 name/dir match, description length (spec limit 1,024 chars; kept concise as a maintainability
 practice, not a format law), and token budget. Triggering lives entirely in the ≤1024-char
 description; evals test triggering (should/should-not sets) in CI.

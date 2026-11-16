@@ -11,9 +11,15 @@ importers:
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@9.39.5(supports-color@7.2.0))
+      '@sus/adapters':
+        specifier: workspace:*
+        version: link:packages/adapters
       '@sus/eval-core':
         specifier: workspace:*
         version: link:packages/eval-core
+      '@sus/scanners':
+        specifier: workspace:*
+        version: link:packages/scanners
       eslint:
         specifier: ^9.39.5
         version: 9.39.5(supports-color@7.2.0)

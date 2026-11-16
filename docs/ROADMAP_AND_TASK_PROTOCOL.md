@@ -8,6 +8,11 @@
 
 ## A. Initial dependency tree
 
+Historical record, kept as written. `TASKS.json` is the only source of task status and the
+executed tree drifted from this draft: M6 has T0600–T0603 (T0604/T0605 below were folded into
+T0603 and the M6 fixture), and the tree grew past M10. Read this section for the intended shape
+of the work, never for current IDs.
+
 ```text
 M0 Discovery / architecture decisions
   T0001 Inspect repo, tools, permissions, existing files (read only)

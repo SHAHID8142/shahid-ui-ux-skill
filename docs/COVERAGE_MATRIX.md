@@ -64,9 +64,10 @@ reaches `supported`, because that tier also requires a Live Studio run on the ho
 
 | Host | Status now | Basis |
 |---|---|---|
-| FreePi CLI | experimental | smoke PASS 8/8 against the current artefact (`evals/host-smoke/freepi-91c897e7036f.json`); Live Studio not exercised there |
+| FreePi CLI | experimental | smoke PASS 8/8 against the current artefact (`evals/host-smoke/freepi-51ad458af6e0.json`); Live Studio not exercised there |
 | ZCode | experimental | passed the 7-check smoke against an earlier artefact hash; needs a re-run |
-| Codex, Claude Code, Cursor, Copilot, Gemini CLI, others | experimental | no smoke evidence yet |
+| Codex, Claude Code, Cursor | experimental | adapter rows exist, no smoke evidence yet |
+| Copilot, Gemini CLI, other hosts | unsupported | no adapter row: the skill loads if the host loads skill files, but nothing is verified |
 | Any host without skill-file loading | unsupported | CLI fallback documented, no skill loading |
 
 ## 5. Honest limitation statements (ship in README)

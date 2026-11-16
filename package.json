@@ -45,7 +45,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@sus/adapters": "workspace:*",
     "@sus/eval-core": "workspace:*",
+    "@sus/scanners": "workspace:*",
     "eslint": "^9.39.5",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.14.0",

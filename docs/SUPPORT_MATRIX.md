@@ -10,11 +10,11 @@ the row drops to `experimental` rather than quietly staying on the old claim.
 
 | Host | Tier | Triggering | CLI | JIT | Studio | Artifact | Environment | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| codex | experimental | expected | expected | expected | expected | sus-adapters@91c897e7036f | unrecorded; n/a; n/a; unrecorded | no smoke evidence recorded |
-| claude-code | experimental | expected | expected | expected | expected | sus-adapters@91c897e7036f | unrecorded; n/a; n/a; unrecorded | no smoke evidence recorded |
-| cursor | experimental | expected | expected | expected | expected | sus-adapters@91c897e7036f | unrecorded; n/a; n/a; unrecorded | no smoke evidence recorded |
-| freepi | experimental | verified | verified | verified | expected | sus-adapters@91c897e7036f | unrecorded; n/a (no Live Studio run); n/a (no fixture build); darwin 27.2.0 | evals/host-smoke/freepi-91c897e7036f.json (PASS) (2026-11-16) — verified against this artifact |
-| zcode | experimental | verified | verified | verified | expected | sus-adapters@91c897e7036f | unrecorded; n/a; n/a; unrecorded | evals/host-smoke/zcode-b061cc4.json (PASS) (2026-11-14) — STALE — the artifact changed after the smoke run; tier downgraded |
+| codex | experimental | expected | expected | expected | expected | sus-adapters@51ad458af6e0 | unrecorded; n/a; n/a; unrecorded | no smoke evidence recorded |
+| claude-code | experimental | expected | expected | expected | expected | sus-adapters@51ad458af6e0 | unrecorded; n/a; n/a; unrecorded | no smoke evidence recorded |
+| cursor | experimental | expected | expected | expected | expected | sus-adapters@51ad458af6e0 | unrecorded; n/a; n/a; unrecorded | no smoke evidence recorded |
+| freepi | experimental | verified | verified | verified | expected | sus-adapters@51ad458af6e0 | unrecorded; n/a (no Live Studio run); n/a (no fixture build); darwin 27.2.0 | evals/host-smoke/freepi-51ad458af6e0.json (PASS) (2026-11-16) — verified against this artifact |
+| zcode | experimental | verified | verified | verified | expected | sus-adapters@51ad458af6e0 | unrecorded; n/a; n/a; unrecorded | evals/host-smoke/zcode-b061cc4.json (PASS) (2026-11-14) — STALE — the artifact changed after the smoke run; tier downgraded |
 
 ## What this table cannot tell you
 

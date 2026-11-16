@@ -37,7 +37,7 @@ could prove them. Those are listed first.
 | ID | Missing | Why it matters | Proposed |
 |---|---|---|---|
 | F13 | **Accessibility of Studio itself** (keyboard drawing, screen-reader descriptions of annotations, focus management in the overlay) | A design tool that is inaccessible undermines the whole product claim | add to M8; axe + manual keyboard pass on the overlay; annotation list as a DOM panel |
-| F14 | **Contract migration / versioning across SUS releases** (`.sus/` schema v1 → v2) | Users will hit it at the first upgrade; silent breakage loses trust | `sus doctor` migration path + fixtures with v1 projects |
+| F14 | **Contract migration / versioning across SUS releases** (`.sus/` schema v1 → v2) | Users will hit it at the first upgrade; silent breakage loses trust | migration path on the installer's doctor (`scripts/install/doctor.mjs`) + fixtures with v1 projects |
 | F15 | **Non-React / no-dev-server fallback** (static HTML, WordPress, Rails, plain CSS) | Studio starts on one stack; the *skill* must still help everywhere, with honest degradation | capability matrix per mode: `full studio / audit-only / static-inspect` |
 | F16 | **Authoring standard for the knowledge library itself** (who reviews a playbook, what makes it accepted, staleness) | 60+ playbooks written by an agent will drift into contradictions without a lint | playbook schema + `knowledge-lint` (sources present, dates, no duplicate authoritative rule) + review checklist |
 | F17 | **Cost/token budget per task** | "Robust and heavy" can become 200k-token sections that users cannot afford | measure tokens per section in evals; budget target set in M1.5 |

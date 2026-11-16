@@ -3,6 +3,8 @@
  * with honest degradation output and correct exit codes.
  */
 import { execFileSync } from 'node:child_process';
+import { mkdtempSync, rmSync, symlinkSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
@@ -73,6 +75,21 @@ describe('sus CLI fallback (T0204)', () => {
       true,
     );
     expect(report.budgetExceeded).toBe(false);
+  });
+
+  it('runs when invoked through a bin symlink (a package manager shim)', () => {
+    // A pnpm/npm bin shim execs the built file through a symlink, so argv[1] is the
+    // symlinked path and import.meta.url is the resolved one. Comparing them without
+    // realpath made the CLI exit 0 having printed nothing at all.
+    const dir = mkdtempSync(join(tmpdir(), 'sus-sus-bin-'));
+    try {
+      const link = join(dir, 'sus');
+      symlinkSync(CLI, link);
+      const out = execFileSync(process.execPath, [link, 'capabilities'], { encoding: 'utf8' });
+      expect(out).toContain('honest degradation');
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 
   it('unknown command exits 2 with usage on stderr', () => {

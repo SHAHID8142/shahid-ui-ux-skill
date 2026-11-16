@@ -4,10 +4,9 @@
  * passing it is the evidence that upgrades adapter tiers to 'verified'
  * (packages/adapters/src/adapter-interface.ts). Exit 0 = host passes, 1 = fail.
  *
- * Checks: (1) node runtime, (2) canonical skill bundle validates, (3) sus CLI
- * capability matrix honest, (4) route emits a schema-valid intent, (5) the audit
- * entry point produces a reproducible report, (6) install → doctor → uninstall
- * round trip on a temp copy. JSON receipt on stdout.
+ * Checks, in order: (1) node-runtime, (2) skill-bundle-valid, (3) cli-capabilities,
+ * (4) cli-route-intent, (5) cli-audit-report, (6) install-roundtrip, (7) doctor-pass,
+ * (8) uninstall-clean. Eight results; JSON receipt on stdout.
  *
  * Implementation note: children run via spawnSync (not execFileSync) so spawn
  * errors surface in .error; run() takes args with a default — a missing

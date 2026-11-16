@@ -95,6 +95,35 @@ jobs:
           pnpm setup
           pnpm verify
 
+  # T0902/T1012: the identical host smoke, run here so the audit entry point is
+  # tested by the pipeline and not only by an agent's laptop (issue #13 deliverable
+  # 6). It is deliberately its own job: a red smoke means "the entry point does not
+  # work", which must not read as one red step among many.
+  #
+  # What this does and does not prove: it exercises the CLI invocation that exists
+  # (`sus-eval audit --mode quick`, no browser needed) and the install round trip on
+  # the runner's OS. It does NOT verify a host slash binding — no host is at
+  # `supported` (docs/SUPPORT_MATRIX.md), so `/sus audit` stays documented intent.
+  host-smoke:
+    name: host smoke (8 checks, identical script)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build (the smoke runs the built CLI, not the sources)
+        run: pnpm build
+      # The script is the assertion: exit 0 means verdict PASS over all 8 checks
+      # (`process.exitCode = failed ? 1 : 0`), and it prints the JSON receipt.
+      - name: Host smoke (fails the build if any check fails)
+        run: node scripts/coord/smoke-host.mjs | tee "$RUNNER_TEMP/smoke.json"
+      - name: Support matrix on this runner is the generated one
+        run: pnpm support
+
   # G13 is the non-waivable critical security/privacy gate (T0806). It runs as
   # its own job so a failure cannot be read as "one red step among many": a
   # hostile-page denial or a privacy leak fails the build on its own.

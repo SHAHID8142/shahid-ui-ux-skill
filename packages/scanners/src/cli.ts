@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * sus-scan CLI (T0304). JSON output contract: ScanResult[].
  * Exit codes (documented):

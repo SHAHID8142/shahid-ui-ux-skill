@@ -52,10 +52,34 @@ Load only what the task needs (keeps context small):
   `packages/scanners` and `scripts/`; they run from there, not from prompt
   instructions.
 
+## Auditing an existing interface
+
+An audit of a page that already exists is a repository capability, not a bundle
+file. In the SUS repository run:
+
+```text
+sus-eval audit --path <dir> --out <dir> [--mode quick|deep]   # source/built HTML
+sus-eval audit --url <origin> --out <dir> [--mode deep]       # authorized live target
+sus-eval audit --help                                        # full contract
+```
+
+`quick` checks structure and SEO on the HTML plus the anti-slop scan and needs no
+browser. `deep` adds capture, reflow, axe and Lighthouse and needs Chromium. The
+audit is read-only: it writes `audit.json`, `audit.md` and, on request, a fix plan
+that is never applied without explicit approval. Exit codes are `0` clean, `1`
+findings or a failed check, `2` usage/authorization error, `3` a required check did
+not run — and `3` must never be read as a pass.
+
+`/sus audit` as a host slash command is **not verified anywhere**: no host has a
+tested slash binding, so do not present the slash form as working. Run the CLI
+form above, or state that the audit could not run.
+
 ## Honesty rules
 
 - Measured checks (lint, axe, Lighthouse, scanner) come from the CLI; SUS
   never claims a check ran that the host did not execute.
+- An audit that did not run, or a check reported `not-run`, is reported as
+  unmeasured — never rounded up to a pass.
 - Accessibility work is prioritisation, not an AA conformance claim; automated
   severity is a triage aid (F18).
 - Unverified claims, missing evidence and known limitations are stated, never

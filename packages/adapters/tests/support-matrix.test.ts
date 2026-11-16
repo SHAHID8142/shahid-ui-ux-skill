@@ -2,6 +2,11 @@
  * T0901: adapter interface + support matrix — tiers derive from evidence,
  * never guesses; unbuilt hosts stay 'expected'/'unsupported' with explicit
  * evidence references.
+ *
+ * The smoke commands below name binaries that exist in this repository. Nothing
+ * is published, so there is no `npx sus` in the wild and no `sus doctor` command:
+ * the installed-skill check is scripts/install/doctor.mjs. Do not reintroduce
+ * either spelling as if it were shipped (issue #13).
  */
 import { describe, expect, it } from 'vitest';
 import { generateSupportMatrix, supportTier, type HostAdapter } from '../src/index.js';
@@ -10,7 +15,7 @@ const adapters: HostAdapter[] = [
   {
     id: 'claude-code',
     installMethod: 'generated plugin entry (T0904)',
-    smokeTest: 'sus doctor --host claude-code',
+    smokeTest: 'node scripts/install/doctor.mjs --dir <installed>',
     capabilities: {
       skillTriggering: 'expected',
       cliExecution: 'expected',
@@ -21,7 +26,7 @@ const adapters: HostAdapter[] = [
   },
   {
     id: 'cli-generic',
-    installMethod: 'npx sus',
+    installMethod: 'workspace bin (sus)',
     smokeTest: 'sus capabilities',
     capabilities: {
       skillTriggering: 'unsupported',

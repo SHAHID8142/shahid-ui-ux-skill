@@ -67,7 +67,7 @@ written down is a bug with better manners.
 
 | Host | Tier | Basis |
 | --- | --- | --- |
-| FreePi CLI | experimental (fresh smoke) | `evals/host-smoke/freepi-91c897e7036f.json` ran against the current artefact on 2026-11-16 and passed 8/8; the tier stays experimental only because Live Studio was not exercised there |
+| FreePi CLI | experimental (fresh smoke) | `evals/host-smoke/freepi-51ad458af6e0.json` ran against the current artefact on 2026-11-16 and passed 8/8; the tier stays experimental only because Live Studio was not exercised there |
 | ZCode | experimental (stale) | its smoke evidence predates the current artefact hash |
 | Codex, Claude Code, Cursor | experimental (untested) | no smoke evidence |
 

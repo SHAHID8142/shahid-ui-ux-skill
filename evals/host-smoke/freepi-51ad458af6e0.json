@@ -1,0 +1,58 @@
+{
+  "script": "scripts/coord/smoke-host.mjs (identical for every host)",
+  "verdict": "PASS",
+  "node": "26.13.1",
+  "at": "2026-11-16T07:49:14.946Z",
+  "artifact": {
+    "id": "sus-adapters",
+    "sha256": "51ad458af6e035d084ccf1f5501b51e09c4be55836a559616ae9a14422e2aefa"
+  },
+  "environment": {
+    "hostVersion": "unrecorded",
+    "browser": "n/a (no Live Studio run)",
+    "framework": "n/a (no fixture build)",
+    "os": "darwin 27.2.0"
+  },
+  "results": [
+    {
+      "check": "node-runtime",
+      "status": "pass",
+      "detail": "node 26.13.1"
+    },
+    {
+      "check": "skill-bundle-valid",
+      "status": "pass",
+      "detail": "canonical bundle valid"
+    },
+    {
+      "check": "cli-capabilities",
+      "status": "pass",
+      "detail": "SUS capability matrix (honest degradation per capability, T0204)"
+    },
+    {
+      "check": "cli-route-intent",
+      "status": "pass",
+      "detail": "schema-valid intent emitted"
+    },
+    {
+      "check": "cli-audit-report",
+      "status": "pass",
+      "detail": "exit 1, 2 check(s), 2 finding(s), quick"
+    },
+    {
+      "check": "install-roundtrip",
+      "status": "pass",
+      "detail": "installed"
+    },
+    {
+      "check": "doctor-pass",
+      "status": "pass",
+      "detail": "installed bundle valid"
+    },
+    {
+      "check": "uninstall-clean",
+      "status": "pass",
+      "detail": "removed"
+    }
+  ]
+}
