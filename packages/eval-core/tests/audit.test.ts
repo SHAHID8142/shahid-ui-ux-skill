@@ -702,3 +702,109 @@ describe('audit pipeline (quick mode, no browser)', () => {
     expect(b.report.summary).toEqual(a.report.summary);
   });
 });
+
+describe('reflow check covers both halves of G7', () => {
+  /** A clean 320 px cell plus the 400% zoom equivalence record, as the harness emits them. */
+  const reflowGroup = (
+    zoom400: Record<string, unknown> | null,
+  ): LiveGroup<import('../src/index.js').HardeningResult> =>
+    ({
+      samples: [
+        {
+          route: '/',
+          value: {
+            url: 'http://127.0.0.1:1/',
+            cells: [
+              {
+                viewport: 'mobile-320',
+                theme: 'light',
+                reducedMotion: 'no-preference',
+                metrics: {
+                  url: 'http://127.0.0.1:1/',
+                  title: 'Audit fixture',
+                  horizontalOverflow: false,
+                  overflowingElements: [],
+                  cls: 0,
+                  lcpMs: 700,
+                  smallTapTargets: [],
+                  landmarks: ['main'],
+                  headings: [{ level: 1, text: 'Audit fixture' }],
+                },
+                overflow: false,
+                pass: true,
+              },
+            ],
+            failures: [],
+            localeSet: ['en'],
+            zoom400,
+            zoomNote: zoom400 === null ? '400%-zoom equivalence not-run' : 'measured',
+          },
+        },
+      ],
+      failed: [],
+      skipped: null,
+    }) as unknown as LiveGroup<import('../src/index.js').HardeningResult>;
+
+  const inputs = (zoom400: Record<string, unknown> | null): AuditInputs => ({
+    mode: 'deep',
+    target: { kind: 'local-path', path: '/site', url: 'http://127.0.0.1:1', routes: ['/'] },
+    generatedAt: '2026-11-16T00:00:00Z',
+    provenance: { evaluator: 'sus-eval audit 1', node: 'v22', platform: 'linux/x64', browser: 'x' },
+    html: [],
+    slop: { results: [], reason: 'no source' },
+    capture: emptyGroup('not requested'),
+    reflow: reflowGroup(zoom400),
+    axe: emptyGroup('not requested'),
+    lighthouse: emptyGroup('not requested'),
+  });
+
+  const cleanZoom = {
+    url: 'http://127.0.0.1:1/',
+    width: 320,
+    height: 256,
+    deviceScaleFactor: 4,
+    theme: 'light',
+    reducedMotion: 'no-preference',
+    documentScrollWidth: 320,
+    documentClientWidth: 320,
+    overflowingElements: [],
+    clippingElements: [],
+    overflow: false,
+  };
+
+  it('passes only when both the 320 px column and the zoom record are clean', () => {
+    const report = composeReport(inputs(cleanZoom));
+    const check = report.checks.find((c) => c.id === 'reflow-matrix');
+    expect(check?.status).toBe('pass');
+    expect(check?.detail.join(' ')).toMatch(/400% zoom equivalence/);
+  });
+
+  it('is not-run when the zoom half was never measured, never pass', () => {
+    const report = composeReport(inputs(null));
+    const check = report.checks.find((c) => c.id === 'reflow-matrix');
+    expect(check?.status).toBe('not-run');
+    expect(check?.reason).toMatch(/400% zoom/);
+    expect(report.summary.incomplete).toBe(true);
+  });
+
+  it('reports zoom overflow and clipping as measured findings at the zoom viewport', () => {
+    const report = composeReport(
+      inputs({
+        ...cleanZoom,
+        documentScrollWidth: 704,
+        overflowingElements: ['table.records'],
+        clippingElements: [{ selector: '.sticky-toolbar', overflow: 'hidden' }],
+        overflow: true,
+      }),
+    );
+    expect(report.checks.find((c) => c.id === 'reflow-matrix')?.status).toBe('fail');
+    const zoomFindings = report.findings.filter((f) => f.viewport === 'zoom-400');
+    expect(zoomFindings.length).toBe(2);
+    expect(zoomFindings.map((f) => f.observation.confidence)).toEqual(['measured', 'measured']);
+    expect(zoomFindings.map((f) => f.observation.location)).toEqual([
+      'table.records',
+      '.sticky-toolbar',
+    ]);
+    expect(zoomFindings.map((f) => f.severity)).toEqual(['P1', 'P1']);
+  });
+});

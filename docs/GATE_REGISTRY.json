@@ -87,7 +87,7 @@
         "T0551",
         "T0152"
       ],
-      "check": "scripts/lib/gates/g7-reflow.mjs evaluateG7 — 320 CSS px overflow + overflow-hidden-instead-of-reflow measured from harness viewport records; the 400% zoom equivalence component reports not-run because the harness does not drive browser zoom (run by node scripts/check-gates.mjs)",
+      "check": "scripts/lib/gates/g7-reflow.mjs evaluateG7 — 320 CSS px overflow + overflow-hidden-instead-of-reflow from harness viewport records, plus the 400% zoom equivalence measured as the CSS px viewport zoom produces (320x256 at device scale factor 4, run by runHardeningMatrix and checked by evaluateZoom400, which fails closed on a missing record, a mislabelled 320x568 dsf-1 visit, or a missing probe); a clean 320 px column with no zoom record is not-run, never pass. The user-agent zoom setting and text-only zoom are still not driven (run by node scripts/check-gates.mjs)",
       "checkStatus": "implemented",
       "waivable": true,
       "badFixture": "scripts/gates/fixtures/g7-bad.json"

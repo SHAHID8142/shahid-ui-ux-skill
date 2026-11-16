@@ -51,9 +51,11 @@ written down is a bug with better manners.
   record list — twelve invoices, two kinds of empty state, loading that keeps the rows,
   an error that keeps the rows and recovers on retry, filters/sort/page carried in the URL.
   Issue #10 is closed on that evidence. What no run has done is named in the receipts
-  rather than implied: no assistive-technology session, and no browser zoom as distinct
-  from text scaling, because headless Chromium cannot emulate it
-  (`.sus-dev/VERIFICATION/T1007.md`, `T1008.md`).
+  rather than implied: no assistive-technology session (`.sus-dev/VERIFICATION/T1007.md`,
+  `T1008.md`). For zoom, the distinction is narrower and now measured: 400% zoom is
+  reproduced as the CSS px viewport it produces (320×256 at device scale factor 4) and
+  recorded as the G7 `zoom400` measurement — text-only zoom and the user-agent zoom setting
+  itself are still not driven, so they stay needs-review.
 - Every timing in this repository comes from one machine with Chromium pre-installed. The
   newest clean `pnpm regression` measured 143.7 s
   (`evals/reports/regression-4aac091d1312.json`, 2026-11-15: 115.5 s verify, 4.0 s demo loop,

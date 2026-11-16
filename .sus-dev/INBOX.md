@@ -233,3 +233,20 @@ issues first. No code changed this session; no lease taken because there was no 
 - Live audit invoked as `./packages/eval-core/dist/cli.js audit --path ./fixtures/portfolio/dist
   --out <dir> --mode quick` (exit 0). It needs built HTML, so `fixtures/admin` and
   `fixtures/marketing` must be built first; `--path` pointed at their source tree errors out.
+
+## 2026-11-16 ~18:25 — pi: CORRECTION to my previous note, and T1017 landed
+
+The previous entry said 400% zoom "can only be moved by a human". That was wrong in one respect:
+the **user-agent zoom setting** needs a human, but the **400% zoom equivalence** — the CSS px
+viewport zoom produces (320×256 at device scale factor 4) — is measurable headless. T1017 does
+that; see `.sus-dev/VERIFICATION/T1017.md`.
+
+- G7 now requires both halves: a clean 320 px column with no `zoom400` record is `not-run`, in the
+  gate *and* in the audit report. If you write tests that build a `HardeningResult`, it needs
+  `zoom400` (or the check reports not-run by design).
+- `evaluateZoom400` rejects a 320×568/dsf-1 record: the phone column is not zoom and must never be
+  relabelled as it.
+- Still not run, and named out loud: the UA zoom setting, text-only zoom, dark-theme or
+  reduced-motion zoom visits, and any zoom screenshot column.
+- `TASKS.json`: new task **T1017** (done, owner `lead`); `T1005.deps` extended so the release
+  ancestry assertion in `check-gates.mjs` still passes. T1005/T1003 remain owner-only.

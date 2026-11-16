@@ -61,8 +61,10 @@ Measured (`pnpm verify` runs both suites):
 Not measured, and therefore not claimed:
 
 - a real screen-reader session (structure and names are checked; a session is not);
-- browser zoom as such — headless Chromium cannot emulate it, so 200% *text* size stands in and is
-  labelled as such;
+- browser zoom as a user-agent setting — headless Chromium cannot drive it, so 200% *text* size
+  stands in and is labelled as such. The 400% zoom *equivalence* (320x256 CSS px at device scale
+  factor 4) is measured by the hardening matrix's `zoom400` record, a separate measurement from
+  the 320x568 phone column;
 - real translated strings: labels are pseudo-localised by lengthening them ~30%, which tests
   wrapping, not translation quality;
 - record volume beyond twelve rows.

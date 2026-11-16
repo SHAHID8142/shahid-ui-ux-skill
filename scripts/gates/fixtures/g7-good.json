@@ -1,5 +1,5 @@
 {
-  "source": "harness PageMetrics shape plus the clipping-container probe; measured at 320 CSS px",
+  "source": "harness PageMetrics shape plus the clipping-container probe; 320 CSS px reflow column plus the 400% zoom equivalence record (320x256 CSS px at dsf 4)",
   "viewports": [
     {
       "url": "http://localhost:3000/",
@@ -17,5 +17,18 @@
       "overflowingElements": [],
       "clippingElements": []
     }
-  ]
+  ],
+  "zoom400": {
+    "url": "http://localhost:3000/",
+    "width": 320,
+    "height": 256,
+    "deviceScaleFactor": 4,
+    "theme": "light",
+    "reducedMotion": "no-preference",
+    "documentScrollWidth": 320,
+    "documentClientWidth": 320,
+    "overflowingElements": [],
+    "clippingElements": [],
+    "overflow": false
+  }
 }

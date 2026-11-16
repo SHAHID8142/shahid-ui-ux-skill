@@ -1,5 +1,5 @@
 {
-  "source": "bad case: content overflows at 320 CSS px and the overflow is clipped instead of reflowed",
+  "source": "bad case: content overflows at 320 CSS px and the overflow is clipped instead of reflowed; the 400% zoom equivalence record overflows too, and a second container clips",
   "viewports": [
     {
       "url": "http://localhost:3000/prooflog",
@@ -14,5 +14,23 @@
         }
       ]
     }
-  ]
+  ],
+  "zoom400": {
+    "url": "http://localhost:3000/prooflog",
+    "width": 320,
+    "height": 256,
+    "deviceScaleFactor": 4,
+    "theme": "light",
+    "reducedMotion": "no-preference",
+    "documentScrollWidth": 704,
+    "documentClientWidth": 320,
+    "overflowingElements": ["table.evidence-grid"],
+    "clippingElements": [
+      {
+        "selector": ".sticky-toolbar",
+        "overflow": "hidden"
+      }
+    ],
+    "overflow": true
+  }
 }

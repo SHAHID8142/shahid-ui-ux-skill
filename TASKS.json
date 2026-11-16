@@ -2649,7 +2649,8 @@
         "T1013",
         "T1014",
         "T1015",
-        "T1016"
+        "T1016",
+        "T1017"
       ],
       "files": [],
       "acc": [
@@ -4156,6 +4157,57 @@
         "the repository also stopped floating its own CI on mutable tags: all 12 uses: lines in .github/workflows/ci.yml now name a 40-character commit with the resolved tag beside it (actions/checkout 11d5960a v4.4.0, actions/setup-node 49933ea5 v4.4.0, pnpm/action-setup b906affc v4.3.0, dereferenced from an annotated tag), resolved with gh api on 2026-11-16 and held by 5 tests in packages/schemas/tests/ci-actions-pinning.test.ts that fail on a tag, a branch, a short SHA, a drifted pin or a docker :latest; the negative control (one line reverted to actions/checkout@v4) failed two of the five, and the pins change nothing CI runs and widen no release authority"
       ],
       "commit": "same commit as .sus-dev/VERIFICATION/T1016.md"
+    },
+    {
+      "id": "T1017",
+      "m": "M10",
+      "title": "G7's 400% zoom equivalence measured as its own viewport (issue #13 residue)",
+      "obj": "Issue #13 deliverable 3 asks the audit to look at 400% zoom/reflow. G7 shipped with that half reported not-run on every run, and scripts/check-gates.mjs asserted it stay that way. Measure it instead: 400% zoom on a 1280x1024 window is a 320x256 CSS px viewport rasterised at device scale factor 4, which the 320x568 phone column does not stand in for. Keep the user-agent zoom setting and text-only zoom named as not measured.",
+      "deps": [
+        "T1014",
+        "T1013"
+      ],
+      "files": [
+        "packages/eval-core/src/hardening.ts",
+        "packages/eval-core/src/audit/",
+        "packages/eval-core/tests/",
+        "scripts/lib/gates/g7-reflow.mjs",
+        "scripts/gates/fixtures/",
+        "scripts/check-gates.mjs",
+        "docs/"
+      ],
+      "acc": [
+        "the 400% zoom equivalence is recorded from a real browser visit at 320x256 CSS px and device scale factor 4, with overflow and clipping probes",
+        "the G7 evaluator fails closed on a missing record, a mislabelled phone column, a missing probe, horizontal overflow and a clipping container",
+        "a clean 320 px column without a zoom record is not-run, never pass, in both the gate and the audit report",
+        "the producer (harness) and consumer (gate) are bound by a test, and a negative control page is recorded as failing",
+        "no document claims a user-agent zoom setting or text-only zoom was tested"
+      ],
+      "tests": [
+        "node scripts/check-gates.mjs",
+        "packages/eval-core/tests/hardening.test.ts (incl. the negative control page)",
+        "packages/eval-core/tests/audit.test.ts (zoom findings + not-run status)",
+        "pnpm verify"
+      ],
+      "risk": "reading a phone-width visit as zoom evidence would hand the product an accessibility claim it never measured",
+      "rollback": "revert the listed files; zoom400 is additive and an absent record evaluates to not-run",
+      "status": "done",
+      "approval": "D32 issue triage (issue #13, P1) within D28 build authorization",
+      "phase": "build",
+      "owner": "lead",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1017.md"
+      ],
+      "results": [
+        "runHardeningMatrix now takes a second, separate measurement after its 12-cell matrix: a desktop context at 320x256 CSS px with deviceScaleFactor 4, colour scheme light and reduced motion no-preference, recording documentScrollWidth/documentClientWidth, the overflowing-element probe and a clipping probe (overflow hidden/clip containers whose scrollWidth or scrollHeight still exceed their box). A visit that throws returns zoom400 null rather than borrowing the matrix result",
+        "evaluateZoom400 scores the record fail-closed: not-run when absent, fail when the record declares 320x568 at dsf 1 (a phone column mislabelled as zoom), fail when either probe is missing, fail on horizontal overflow, fail on a clipping container. evaluateG7 now composes both halves, so a clean 320 px column plus an unmeasured zoom half is not-run rather than pass",
+        "the audit report follows the same rule: reflow-matrix emits zoom overflow and clipping findings at viewport zoom-400 (P1, confidence measured, location = culprit, with remediation), and the check is not-run when the group produced cells but no zoom record, because the 320 px column does not stand in for zoom",
+        "the old check that ASSERTED the zoom half stay not-run was itself the defect that made the gap structural; it is replaced by seven assertions (clean passes, overflow fails, clipping fails, absent is not-run, a dsf-1 phone column is rejected, a probe-less record is rejected, a clean 320 px column without zoom is not-run). check-gates now reports 61 [PASS], 0 [FAIL]",
+        "measured on this machine: fixtures/marketing passes the equivalence at 320x256 dsf 4 with scrollWidth 320 = clientWidth 320 and no clipping container; a served negative-control page with a 900 px block is recorded as overflow and evaluated fail, so the record follows the page rather than the label",
+        "the producer/consumer pair is bound by a test that imports the G7 evaluator into the eval-core suite, so a shape drift cannot pass both sides separately",
+        "not claimed: the user-agent zoom setting and text-only zoom are still not driven and are named that way in the gate verdict, every report's needs-review list and docs/LIMITATIONS.md; the zoom record covers one theme and one motion setting; the zoom cell is layout evidence, not a screenshot column"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T1017.md"
     }
   ]
 }

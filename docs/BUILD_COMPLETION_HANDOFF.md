@@ -81,10 +81,11 @@ oracle plus playbook motion lint for motion, `frozen-lockfile` install for insta
 | Playbook acceptance sentences are stated, not executed | `docs/LIMITATIONS.md` §3 | open |
 
 There are **no unresolved P0/P1 blockers** in the sense of a gate that fails. All thirteen
-gates (G1–G13) are implemented and verified — `pnpm gates:full` reports 13/13 — and one
-measurement inside an implemented gate is still `not-run`: G7's 400 % zoom check, because the
-harness does not drive browser zoom (`docs/GATE_REGISTRY.md`). A gate that has not been
-measured says so rather than claiming to pass.
+gates (G1–G13) are implemented and verified — `pnpm gates:full` reports 13/13. G7 still holds
+one measurement that is `not-run` by construction: the user-agent zoom setting and text-only
+zoom, which headless Chromium does not drive (`docs/GATE_REGISTRY.md`). Its 400 % zoom
+equivalence is measured as the CSS px viewport zoom produces (320x256 at device scale
+factor 4). A gate that has not been measured says so rather than claiming to pass.
 
 ## 5. How to resume and re-verify
 

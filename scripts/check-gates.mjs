@@ -174,11 +174,65 @@ for (const gate of registry.gates) {
       evaluateG7({ viewports: [] }).status === 'not-run',
     'G7: no 320px measurement is not-run, never pass',
   );
-  // The zoom half is structurally unmeasurable here; it is reported, not claimed.
+  // The 400% zoom equivalence is measured as the CSS px viewport zoom produces
+  // (320x256 at dsf 4) — a different viewport from the 320x568 phone column.
   report(
-    g7Good.zoom.status === 'not-run' && g7Bad.zoom.status === 'not-run',
-    'G7: 400% zoom component is not-run (harness does not drive browser zoom)',
+    g7Good.zoom.status === 'pass',
+    'G7: 400% zoom equivalence passes when the zoom record is clean',
     g7Good.zoom.detail,
+  );
+  report(
+    g7Bad.zoom.status === 'fail' && g7Bad.zoom.detail.includes('zoom400-horizontal-overflow'),
+    'G7: horizontal overflow at the 400% zoom equivalence fails',
+    g7Bad.zoom.detail,
+  );
+  report(
+    g7Bad.zoom.detail.includes('zoom400-overflow-hidden'),
+    'G7: a clipping container at the 400% zoom equivalence fails',
+  );
+  report(
+    evaluateG7({ viewports: [{ url: 'u', width: 320 }] }).zoom.status === 'not-run' &&
+      evaluateG7({ zoom400: null }).zoom.status === 'not-run',
+    'G7: no zoom record is not-run, never pass',
+  );
+  // A record that declares different numbers is a mislabelled measurement, not
+  // this one: the phone column at dsf 1 must not be read as 400% zoom.
+  report(
+    evaluateG7({
+      zoom400: {
+        url: 'u',
+        width: 320,
+        height: 568,
+        deviceScaleFactor: 1,
+        documentScrollWidth: 320,
+        documentClientWidth: 320,
+        overflowingElements: [],
+        clippingElements: [],
+      },
+    }).zoom.status === 'fail',
+    'G7: a 320x568 dsf-1 visit labelled as zoom is rejected (fail-closed)',
+  );
+  report(
+    evaluateG7({
+      zoom400: { url: 'u', width: 320, height: 256, deviceScaleFactor: 4 },
+    }).zoom.status === 'fail',
+    'G7: a zoom record without overflow/clipping probes fails (fail-closed)',
+  );
+  // Two halves: a clean 320 px column plus an unmeasured zoom half is not a pass.
+  report(
+    evaluateG7({
+      viewports: [
+        {
+          url: 'u',
+          width: 320,
+          documentScrollWidth: 320,
+          documentClientWidth: 320,
+          overflowingElements: [],
+          clippingElements: [],
+        },
+      ],
+    }).status === 'not-run',
+    'G7: 320 px clean without a zoom record is not-run, not pass',
   );
 
   const g8Good = evaluateG8(fixture('g8-good.json'));
@@ -460,7 +514,9 @@ if (failed) {
 const unimplemented = registry.gates.filter((gate) => gate.checkStatus !== 'implemented');
 // Gate components the harness cannot measure are named here so a green run never
 // reads as "everything was measured".
-const unmeasured = ['G7 400% zoom (harness does not drive browser zoom)'];
+const unmeasured = [
+  'G7 text-only zoom and the user-agent zoom setting itself (emulated only as the CSS px viewport it produces)',
+];
 console.log(
   `VERDICT: registry consistent; ${registry.gates.length - unimplemented.length}/` +
     `${registry.gates.length} gates implemented and verified` +

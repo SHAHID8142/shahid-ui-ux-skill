@@ -39,6 +39,13 @@ sus-eval audit --url https://example.com --authorize example.com --out .sus-audi
 the union of both runners, so each width is measured by at least one of them and uncovered
 cells are reported as `not-run` rather than omitted.
 
+The **400% zoom equivalence** is a separate measurement, not one of these columns: 400% zoom
+on a 1280×1024 window is a 320×256 CSS px viewport rasterised at device scale factor 4, which
+the 320×568 phone column does not stand in for (a fixed header that fits 568 px can eat 256).
+`runHardeningMatrix` records it as `zoom400` and `evaluateZoom400` scores it fail-closed; a
+`reflow-matrix` run with cells but no zoom record is `not-run`, never `pass`. The user-agent
+zoom setting itself and text-only zoom are still never driven.
+
 Themes: light and dark. Reduced motion: reduce and no-preference (capture runs reduce only).
 
 ## Checks

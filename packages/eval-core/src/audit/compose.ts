@@ -206,6 +206,66 @@ function reflowFindings(samples: readonly LiveSample<HardeningResult>[]): AuditF
         }),
       );
     }
+
+    // The 400% zoom equivalence is its own measurement (G7's second half): a
+    // fixed header that fits a 568 px phone viewport can eat a 256 px one, so a
+    // clean mobile-320 cell does not cover it.
+    const zoom = sample.value.zoom400;
+    if (zoom?.overflow) {
+      const culprits = zoom.overflowingElements.slice(0, 5);
+      found.push(
+        finding({
+          check: 'reflow-matrix',
+          severity: 'P1',
+          effort: 'structural',
+          title:
+            'Horizontal overflow at 400% zoom equivalence (' +
+            zoom.width +
+            'x' +
+            zoom.height +
+            ' CSS px, dsf ' +
+            zoom.deviceScaleFactor +
+            ')',
+          detail:
+            'At the CSS px viewport a 400% zoom produces on a 1280x1024 window, the page needs ' +
+            'two-dimensional scrolling, which breaks the reflow requirement (G7). The 320 px ' +
+            'phone column does not cover this viewport: its height differs.',
+          route: sample.route,
+          viewport: 'zoom-400',
+          evidence: culprits.length > 0 ? culprits : ['document root'],
+          evaluator: 'runHardeningMatrix zoom400 + collectPageMetrics',
+          location: culprits[0] ?? null,
+          confidence: 'measured',
+          remediation:
+            'Let the wide element shrink or wrap (max-width: 100%, wrapping flex/grid tracks, ' +
+            'break-word) and keep fixed headers/footers from consuming the short viewport.',
+        }),
+      );
+    }
+    for (const clip of zoom?.clippingElements ?? []) {
+      found.push(
+        finding({
+          check: 'reflow-matrix',
+          severity: 'P1',
+          effort: 'structural',
+          title: 'Content clipped instead of reflowed at 400% zoom: ' + clip.selector,
+          detail:
+            'The container uses overflow:' +
+            clip.overflow +
+            ' and still has content overflowing it at the 400% zoom equivalence viewport. ' +
+            'Hiding the overflow is not reflowing: the content stays unreachable.',
+          route: sample.route,
+          viewport: 'zoom-400',
+          evidence: [clip.selector],
+          evaluator: 'runHardeningMatrix zoom400 clipping probe',
+          location: clip.selector,
+          confidence: 'measured',
+          remediation:
+            'Remove the clipping and let the container reflow, or make the region a deliberate ' +
+            'scroll container with a visible cue and keyboard access.',
+        }),
+      );
+    }
   }
   return found;
 }
@@ -577,23 +637,42 @@ export function composeReport(inputs: AuditInputs): AuditReport {
   const reflowProblems = reflowFindings(inputs.reflow.samples);
   findings.push(...reflowProblems);
   const cellCount = inputs.reflow.samples.reduce((n, s) => n + s.value.cells.length, 0);
+  // G7 has two halves. The 320 px column does not stand in for the 400% zoom
+  // equivalence, so a run that produced cells but no zoom record is `not-run`
+  // (report incomplete), never `pass`.
+  const zoomMeasured = inputs.reflow.samples.filter((s) => s.value.zoom400 !== null).length;
+  const zoomMissing =
+    reflowReason === null && inputs.reflow.samples.length > 0 && zoomMeasured === 0;
   checks.push(
-    reflowReason === null
+    reflowReason !== null
       ? checkResult(
-          'reflow-matrix',
-          'Reflow matrix at 320/390/1440 in both themes',
-          'G7',
-          reflowProblems.length > 0 ? 'fail' : 'pass',
-          [cellCount + ' cell(s) measured'],
-        )
-      : checkResult(
           'reflow-matrix',
           'Reflow matrix at 320/390/1440 in both themes',
           'G7',
           'not-run',
           [],
           reflowReason,
-        ),
+        )
+      : zoomMissing
+        ? checkResult(
+            'reflow-matrix',
+            'Reflow matrix at 320/390/1440 in both themes',
+            'G7',
+            'not-run',
+            [cellCount + ' cell(s) measured'],
+            'the 400% zoom equivalence was not measured on any route, and the 320 px column does not stand in for it',
+          )
+        : checkResult(
+            'reflow-matrix',
+            'Reflow matrix at 320/390/1440 in both themes',
+            'G7',
+            reflowProblems.length > 0 ? 'fail' : 'pass',
+            [
+              cellCount + ' cell(s) measured',
+              zoomMeasured +
+                ' route(s) measured at the 400% zoom equivalence (320x256 CSS px, device scale factor 4)',
+            ],
+          ),
   );
 
   const axeReason = reasonFor(inputs.axe);

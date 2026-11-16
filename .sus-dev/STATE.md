@@ -1,6 +1,6 @@
 # Development state
 
-Updated: 2026-11-16T16:55:00+06:00
+Updated: 2026-11-16T18:20:00+06:00
 docs/RESUME_ON_NEW_MACHINE.md (install, branch, `pnpm setup`, `pnpm verify`). Host: Pi (FreePi),
 main-integration role; the ZCode peer heartbeat is stale. A second agent/host cooperates per
 D33: claim tasks via TASKS.json leases; read `.sus-dev/INBOX.md`.
@@ -11,20 +11,21 @@ BUILD_COMPLETE_PUSHED=true at release revision 2f344df — pnpm regression 3 sta
 679 tests). Architecture: ADR-001/002/004/005/006 adopted, ADR-003 as amended (D29).
 Repository is PUBLIC (D34); the product is unpublished.
 
-Canonical task statuses: TASKS.json (108 of 110 done; only T1003 independent audit and
+Canonical task statuses: TASKS.json (109 of 111 done; only T1003 independent audit and
 T1005 release approval/publish remain, both owner-only). Every D32 owner-issue item from
 triaging issues #13/#14 is done and receipted.
 T0706 preview, T0806 security/G13, T0707 apply + rollback, T0700w CLOSED — dual-stack
 feasibility GO on both Next.js and Astro. zcode stale. Concurrency: 2 workers (D33) — claim
 via lease before editing.
 
-Current task: none in the build tree. The last owner-issue item closed (issue #14 research
-source: the pin's digests are now **measured**, not assumed — `scripts/research/verify-pin.mjs`
-fetched the licence and all four guides twice by independent transports and recorded them; the
-responsive-table guard is executable and tested by 22 tests; three pilots carry measured
-before/after evidence). A servable pin is a precondition, not the measurement: no shipped loader
-supplies fetched text to a paired run, so the provider arm stays `not-run` and no guide text is
-quoted anywhere. What is left is owner-gated and is not started by an agent: T1003 (independent
+Current task: none in the build tree. T1017 closed issue #13's last agent-doable residue: G7's
+400% zoom half is now **measured** as the CSS px viewport zoom produces (320×256 at device scale
+factor 4) by `runHardeningMatrix`'s `zoom400` record, scored fail-closed by `evaluateZoom400`, and
+a clean 320 px column without a zoom record is `not-run` in both the gate and the audit report.
+The old check that asserted the zoom half stay unmeasured was itself the defect. Not measured, and
+named as such everywhere: the user-agent zoom setting and text-only zoom. Issue #14's provider arm
+is still `not-run` (no shipped loader supplies fetched guide text to a paired run) and no guide
+text is quoted. What is left is owner-gated and is not started by an agent: T1003 (independent
 audit, which a builder must never self-certify) and T1005 (release approval and publication).
 Issue #14's supply-chain half is now enforced rather than described: all 12 `uses:` lines in
 `.github/workflows/ci.yml` name a 40-character commit with the resolved tag beside it, and
@@ -73,13 +74,12 @@ closed item.
 Blockers: standing B003 (licence/publication, later phase) and B004 (irreversible externals
 during build). Active files: none after checkpoint.
 
-Latest checks: 2026-11-16T16:50 +06:00 — `pnpm verify` green (**76 files + 3 skipped, 867 tests
-passed / 9 skipped**; the newest file is `packages/schemas/tests/ci-actions-pinning.test.ts`, after
-`verify-pin.test.ts` and the research-provider rewrite), 13/13 gates implemented with 55 `[PASS]`
-lines, claims/handoff/roadmap consistent all green; earlier `SUS_DOGFOOD=1 pnpm dogfood` 15/15 and **CI run 43831171205 success on
-`88e4431`** (the host-entry-point fix). The pin measurement is deliberately outside this run:
-`scripts/research/verify-pin.mjs` is the only script that touches the network and a build must never
-need it.
+Latest checks: 2026-11-16T18:20 +06:00 — `pnpm verify` green (**76 files + 3 skipped, 873 tests
+passed / 9 skipped**), 13/13 gates implemented with **61 `[PASS]`** lines (the seven G7 zoom
+assertions are new), claims/handoff/roadmap consistent all green; `pnpm regression` and CI for the
+checkpoint are recorded in `SESSION_LOG` and the commit message. The pin measurement is deliberately
+outside this run: `scripts/research/verify-pin.mjs` is the only script that touches the network and
+a build must never need it.
 Owner issue #10 is CLOSED; issue #9 stays open by design (it is the standing continuous-execution
 rule, and closing it would end the rule while the product is unpublished).
 Bootstrap defect fixed: `pnpm setup`

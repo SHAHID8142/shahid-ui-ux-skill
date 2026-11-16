@@ -14,7 +14,7 @@ reconciliation requirement that the critical security gate is non-waivable
 | G4 | A11y floor | acceptance | T0152b | implemented (fail-closed evaluator + negatives) |
 | G5 | Perf budget | acceptance | T0152b | implemented (fail-closed evaluator + negatives) |
 | G6 | Motion parity | acceptance | T0603 | implemented (information-token parity over recorded traces, fail-closed + bad fixture) |
-| G7 | Reflow | acceptance | T0551, T0152 | implemented for the 320 CSS px half (overflow + overflow-hiding, bad fixture); the 400% zoom component is **not-run** — this harness does not drive browser zoom |
+| G7 | Reflow | acceptance | T0551, T0152 | implemented for both halves: 320 CSS px overflow + overflow-hiding (bad fixture), plus the 400% zoom equivalence measured as the CSS px viewport zoom produces (320x256 at device scale factor 4, bad fixture); text-only zoom and the user-agent zoom setting stay **not-run** |
 | G8 | Target size | acceptance | T0152, T0152b | implemented (24x24 floor, SC 2.5.8 exceptions only + bad fixture) |
 | G9 | Semantics | acceptance | T0807, T0403 | implemented (heading ladder, main landmark, click-only controls, focus indicator + bad fixture) |
 | G10 | Detector quality | release | T0305 | implemented (precision >= 0.95 and recall >= 0.95 on the labelled corpus, fail-closed + bad fixture) |
@@ -30,8 +30,10 @@ rather than in the checker, because a target that lives only in the checker can 
 lowered by editing the checker.
 
 A gate component the harness cannot measure is reported **not-run** and never counted
-as covered. G7's 400% zoom equivalence is the current example: the harness does not
-drive browser zoom, and the 320 px measurement does not stand in for it.
+as covered. G7 still carries one: the user-agent zoom setting and text-only zoom are not
+driven, so they stay not-run. Its 400% zoom equivalence *is* measured now — as the CSS px
+viewport zoom produces (320x256 at device scale factor 4), which the 320 px phone column
+does not stand in for — and a clean 320 px column with no zoom record is not-run, not pass.
 
 Rules (ER-SECURITY + amendments): unimplemented checks report **not-run**,
 never pass; each landed gate ships a bad fixture proving failure;

@@ -801,3 +801,34 @@
   restored with `git checkout -- evals/baselines`, as the INBOX warned. No TASKS.json change: no
   task became done or started. Remaining agent-doable work is exactly these two residues; both are
   consequential enough to need an owner decision on whether to widen them.
+
+- 2026-11-16T18:25:00+06:00 | Pi (FreePi) | T1017 | Closed issue #13's last agent-doable residue.
+  The previous position was not dishonest but it collapsed two measurements: G7 visited 320 CSS px
+  at 568 px tall and raster scale 1 (a phone column) and then declared the desktop 400% zoom
+  viewport unmeasurable — and `scripts/check-gates.mjs` **asserted** it stay unmeasurable, which is
+  what made the gap structural instead of a missing visit. 400% zoom on a 1280×1024 window is
+  320×256 CSS px at device scale factor 4. `runHardeningMatrix` now takes that visit as its own
+  record (`zoom400`) with an overflow probe **and** a clipping probe (`overflow: hidden|clip`
+  containers whose content still overflows them); `evaluateZoom400` fails closed on a missing
+  record, a mislabelled 320×568/dsf-1 phone column, a missing probe, horizontal overflow and a
+  clipping container. `evaluateG7` composes both halves, so a clean 320 px column plus an unmeasured
+  zoom half is `not-run`, not `pass`; `compose.ts` follows the same rule and emits zoom findings at
+  `viewport: 'zoom-400'` (P1, measured, location = culprit). The old assertion is replaced by seven,
+  including "320 px clean without a zoom record is not-run".
+  Measured, not asserted: `fixtures/marketing` passes at 320×256 dsf 4 (`scrollWidth 320 =
+  clientWidth 320`, no clipping container); a served negative-control page with a 900 px block is
+  recorded as overflow and evaluated `fail`, so the record follows the page rather than the label.
+  Producer/consumer bound by a test that imports the G7 evaluator into the eval-core suite.
+  Checks: `node scripts/check-gates.mjs` 0 → **61 `[PASS]`, 0 `[FAIL]`** (was 55); eval-core
+  hardening+audit suites **48 tests**; `pnpm verify` 0 → **76 files + 3 skipped, 873 tests passed /
+  9 skipped**; `pnpm regression` 0 → **3 stages in 148.4 s, verdict pass** (verify 120.5 s,
+  demo-loop 4.7 s, dogfood 23.1 s).
+  Not claimed: the user-agent zoom setting and text-only zoom are still not driven, and the gate
+  verdict, every report's needs-review list and docs/LIMITATIONS.md say so; the zoom record covers
+  one theme and one motion setting; the zoom cell is layout evidence, not a screenshot column.
+  Task record added (`T1005.deps` extended so the release ancestry assertion still holds), ROADMAP
+  regenerated from TASKS.json, STATE count moved to 109 of 111. Historical receipts (T1014, T1015,
+  T0551) still read "zoom not-run" because they describe the tree at their own commits.
+  Local runs rewrote `evals/baselines/*/bundle.json`, `evals/evidence/dogfood/*` and a
+  `regression-<sha>.json` for the dirty tree; all restored, and the report is re-taken on the clean
+  commit below rather than kept as "dirty tree" evidence.
