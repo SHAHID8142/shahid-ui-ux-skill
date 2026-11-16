@@ -36,9 +36,25 @@ const compatibility = {
   ],
 };
 
-function headOf(path: string, revision = 'HEAD'): string {
-  return execFileSync('git', ['show', `${revision}:${path}`], { encoding: 'utf8' });
+/**
+ * The pre-fix text of a document.
+ *
+ * CI checks out shallow (fetch-depth 1), so `git show <old revision>:<path>` is not available there.
+ * The fallback is the verbatim pre-fix line rather than a paraphrase; the git lookup is used when the
+ * history is present, which keeps the fixture honest on a full clone and runnable everywhere.
+ */
+function preFixTextFile(path: string, revision: string, fallback: string): string {
+  try {
+    return execFileSync('git', ['show', `${revision}:${path}`], { encoding: 'utf8' });
+  } catch {
+    return fallback;
+  }
 }
+
+const PRE_FIX_BESTPRACTICE = `position \`/sus audit\` holds. The five measured example classes (T1024) remain \`pending\` in
+\`TASKS.json\` as milestone **M11**.`;
+
+const PRE_FIX_COVERAGE = `| FreePi CLI | experimental | smoke PASS 8/8 against the current artefact (\`evals/host-smoke/freepi-51ad458af6e0.json\`); Live Studio not exercised there |`;
 
 function rules(findings: { rule: string }[]): string[] {
   return [...new Set(findings.map((finding) => finding.rule))].sort();
@@ -72,7 +88,7 @@ describe('live-document drift checks', () => {
 
   it('catches issue #17 item 2: a done task still called pending in active docs', () => {
     // The pre-fix line, taken from history rather than paraphrased.
-    const old = headOf('docs/BESTPRACTICE_COMMAND.md', 'cef440b~1');
+    const old = preFixTextFile('docs/BESTPRACTICE_COMMAND.md', 'cef440b~1', PRE_FIX_BESTPRACTICE);
     expect(old).toMatch(/T1024/);
     const findings = checkDocDrift({
       tasks,
@@ -82,7 +98,7 @@ describe('live-document drift checks', () => {
   });
 
   it('catches issue #17 item 3: a host row citing superseded smoke evidence', () => {
-    const old = headOf('docs/COVERAGE_MATRIX.md', 'cef440b~1');
+    const old = preFixTextFile('docs/COVERAGE_MATRIX.md', 'cef440b~1', PRE_FIX_COVERAGE);
     expect(old).toContain('freepi-51ad458af6e0');
     const findings = checkDocDrift({
       tasks,
