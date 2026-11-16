@@ -69,16 +69,16 @@ pnpm exec vitest run packages/eval-core/tests/pilots.research.test.ts
 ## The provider arm is not-run, and that is deliberate
 
 Issue #14 asks for each pilot to be paired with and without the research provider.
-The pin is now measured — `verified: "verified"` with a digest per guide, recorded
-2026-11-16 by `scripts/research/verify-pin.mjs` (see
-[docs/RESEARCH_SOURCES.md](../../../../docs/RESEARCH_SOURCES.md) §4 and §5) — so the
-provider *can* serve a hit from it. That changes the precondition, not the result here.
-No shipped loader hands fetched text to a paired run, and the pilot pages were authored
-from the repo's own fixtures and the pinned guide *list*, not from fetched guide content.
-The provider-present arm therefore stays **not-run**, and these results claim nothing
-about provider benefit — only about the technique the pin names. Running that arm needs
-a loader plus the content review in §4 step 4; a digest proves which bytes exist, it does
-not read them.
+The pin is measured — `verified: "verified"` with a digest per guide, recorded 2026-11-16
+by `scripts/research/verify-pin.mjs` (see
+[docs/RESEARCH_SOURCES.md](../../../../docs/RESEARCH_SOURCES.md) §4, §5 and §11) — and since
+T1018 a shipped loader (`packages/scanners/src/research-cache-loader.ts`) serves those bytes
+from a verified cache. The arm is still **not-run**, for a different reason than before: its
+*mechanics* are now measured (`../paired-run.json`: 3 of 4 topics served inside the 3-call
+budget, digests equal to the pin), but a paired comparison needs a host model to produce output
+twice over the same task, and no shipped harness runs one. These pilots also authored their
+pages from the repo's own fixtures and the pinned guide *list*, not from fetched guide content,
+so nothing here is evidence of provider benefit — only of the technique the pin names.
 
 ## What these pilots do not measure
 
