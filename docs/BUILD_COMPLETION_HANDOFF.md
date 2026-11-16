@@ -28,6 +28,7 @@ builder, not the auditor; the independent audit is a separate, owner-commissione
 | Evaluation harness | fail-closed gate evaluators (G4 a11y, G5 budgets, G11 evidence), behavioural motion oracles (G6), hardening matrix, judge/agreement tooling, capture matrix |
 | Live Studio | overlay + spatial intent, owner index with anchors, stale-mapping conflicts, dry-run diff, approval-gated apply with exact revert, verification loop, durable single-use receipts, capability grants, CDP transport |
 | Multi-host | adapters, installer, smoke harness with artefact hashes, generated support matrix + CLI `status` |
+| `/sus audit` checks | deep mode | **6 measured**: `capture-matrix`, `reflow-matrix` (incl. 400% zoom), `keyboard-flow`, `axe-a11y`, `lighthouse-budgets`, `seo-structure` (+ `anti-slop`, `transition-oracle`, `evidence-bundle` when enabled). `keyboard-flow` (T1019) presses Tab on a real page and records focus order, indicators, detours and cycles; Escape/arrow-key semantics and screen readers stay out of scope and are named as such |
 | Evidence tracks | full-loop demo (annotate → apply → verify → undo), three-site dogfood audit, deterministic benchmark arm, sealed held-out briefs, claim checker |
 
 ## 2. What was verified, and how

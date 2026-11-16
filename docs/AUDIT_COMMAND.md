@@ -46,6 +46,17 @@ the 320×568 phone column does not stand in for (a fixed header that fits 568 px
 `reflow-matrix` run with cells but no zoom record is `not-run`, never `pass`. The user-agent
 zoom setting itself and text-only zoom are still never driven.
 
+### Keyboard traversal
+
+`keyboard-flow` drives a real browser at 1440×900: it presses Tab up to 30 times and records the
+focus order, whether each focused element paints an `outline` or `box-shadow` while focused
+(WCAG 2.4.7), whether focus lands on the document body while controls are still unreached, and
+whether the same element repeats in a short cycle. Reaching the end of the document is not a
+defect — the browser moving to its own chrome is normal — so a body stop only counts as a detour
+when focusable elements remain unreached. A cycle is reported as P2 rather than a failure because
+a modal's intentional trap is legal and this check does not press Escape. Each route is loaded with
+`networkidle` so focus handlers bound late still exist before the first Tab.
+
 Themes: light and dark. Reduced motion: reduce and no-preference (capture runs reduce only).
 
 ## Checks
@@ -54,6 +65,7 @@ Themes: light and dark. Reduced motion: reduce and no-preference (capture runs r
 | --- | --- | --- | --- | --- |
 | `capture-matrix` | G8 | deep | structural | required |
 | `reflow-matrix` | G7 | deep | structural | required |
+| `keyboard-flow` | G9 | deep | structural | required |
 | `axe-a11y` | G4 | deep | structural | required |
 | `lighthouse-budgets` | G5 | deep | structural | required |
 | `seo-structure` | G3 | quick, deep | quick-win | required |
@@ -80,13 +92,18 @@ must not be treated as one by CI.
 - will not edit the target, its dependencies or its lockfile: the audit is read-only
 - will not apply a fix: a proposal is written to a plan file that needs explicit approval
 - will not score human judgment as a machine pass: manual items stay needs-review
-- will not invent transition-oracle cases, translations, screen-reader sessions or browser-zoom results
+- will not invent transition-oracle cases, translations, screen-reader sessions or a user-agent
+  zoom setting: 400% zoom is measured only as the CSS px viewport it produces (320×256 at device
+  scale factor 4)
+- will not press Escape, arrow keys or a screen reader: `keyboard-flow` records Tab order, focus
+  indicators, detours and focus cycles, not Escape dismissal, composite-widget semantics or
+  announcements
 - will not treat a missing measurement as a pass: an unrun check is reported as not-run
 - will not audit a host that was not authorized: loopback is allowed, anything else needs --authorize
 - will not publish, release or claim release-readiness
 
-Manual-judgment items (screen readers, real translations, browser zoom, blind A/B ratings)
-are listed as needs-review and never auto-pass.
+Manual-judgment items (screen readers, real translations, the user-agent zoom setting, text-only
+zoom, blind A/B ratings) are listed as needs-review and never auto-pass.
 
 ## Provenance
 

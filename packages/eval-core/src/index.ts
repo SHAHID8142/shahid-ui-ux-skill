@@ -5,6 +5,12 @@
 export { scoreSection } from './scoring.js';
 export { collectPageMetrics, type PageMetrics } from './harness/metrics.js';
 export {
+  KEYBOARD_MAX_STOPS,
+  scanKeyboard,
+  type KeyboardScanResult,
+  type KeyboardStop,
+} from './harness/keyboard.js';
+export {
   captureMatrix,
   VIEWPORTS,
   THEMES,

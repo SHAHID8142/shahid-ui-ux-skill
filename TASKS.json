@@ -2651,7 +2651,8 @@
         "T1015",
         "T1016",
         "T1017",
-        "T1018"
+        "T1018",
+        "T1019"
       ],
       "files": [],
       "acc": [
@@ -4257,6 +4258,55 @@
         "not claimed: whether the guidance is correct or helps an agent (no digest answers that and no model was run), reachability of the ~250 unpinned guides (the loader can only serve the four in the pin), any licence position for copying (D06 open), and any CI or build dependence on the cache (pnpm verify and pnpm regression never read it)"
       ],
       "commit": "same commit as .sus-dev/VERIFICATION/T1018.md"
+    },
+    {
+      "id": "T1019",
+      "m": "M10",
+      "title": "Keyboard traversal measured in /sus audit: Tab order, focus indicators, detours, cycles",
+      "obj": "Issue #13 asks the audit pipeline for responsive/zoom/keyboard/semantic/a11y checks. Keyboard was the one with no instrument. Add a bounded real-browser Tab traversal that records focus order, whether the focused element paints an outline or shadow (WCAG 2.4.7), whether focus vanishes while controls are unreached, and whether a short cycle repeats; compose it as a required deep-mode check that is not-run rather than pass when nothing was driven.",
+      "deps": [
+        "T1013",
+        "T1017"
+      ],
+      "files": [
+        "packages/eval-core/src/harness/keyboard.ts",
+        "packages/eval-core/src/audit/",
+        "packages/eval-core/tests/keyboard.test.ts",
+        "packages/eval-core/tests/audit.test.ts",
+        "docs/AUDIT_COMMAND.md",
+        "docs/LIMITATIONS.md",
+        "docs/BUILD_COMPLETION_HANDOFF.md"
+      ],
+      "acc": [
+        "a deep audit records Tab order, focus indicators, detours and cycles per route on a real page",
+        "a missing focus indicator is a P1 finding that names the element; a detour is P1; a cycle is P2 because Escape is not pressed",
+        "quick mode, a missing browser or an undriven page reports keyboard-flow as not-run, never pass",
+        "reaching the end of the document is not reported as a detour or a cycle, and the rule is pinned by a test in both directions",
+        "the check is declared in the audit contract with its gate, mode, effort and requirement, and the docs state what it does not press"
+      ],
+      "tests": [
+        "packages/eval-core/tests/keyboard.test.ts",
+        "packages/eval-core/tests/audit.test.ts",
+        "./packages/eval-core/dist/cli.js audit --path ./fixtures/portfolio/dist --mode deep",
+        "pnpm verify"
+      ],
+      "risk": "a traversal that counts wrap-around as a defect invents findings, which is worse than having no check",
+      "rollback": "delete the harness, its tests, the contract entry and the compose block; deep audits return to five required checks",
+      "status": "done",
+      "approval": "D32 issue triage (issue #13, P1) within D28 build authorization",
+      "phase": "build",
+      "owner": "lead",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1019.md"
+      ],
+      "results": [
+        "scanKeyboard presses Tab at most 30 times on a 1440x900 page, recording tag+id/classes (never page content), computed outline/box-shadow while focused, body landings and repeat patterns; it opens its own browser context so it cannot disturb the axe page and never throws to the caller",
+        "compose turns a missing indicator into a P1 (WCAG 2.4.7) naming the element, a detour into a P1 with expected 0 observed N, and a cycle into a P2 that says an observation was made and Escape was not pressed; with no samples the check is not-run, so quick mode and a missing browser cannot read as pass",
+        "the first live run reported a detour and a cycle on fixtures/portfolio and both were the scanner's fault: 30 presses over 9 controls wrap the document and Chromium parks focus on body at the wrap. The definition now separates an end-of-document body stop (every control already reached, truncated, not a finding) from a mid-page one (controls unreached, a real detour), and looks for cycles only in a repeated suffix of period 1-3 before truncation; one test pins the wrap case as clean and another pins the vanishing case as a detour",
+        "measured: deep audit of fixtures/portfolio/dist gives keyboard-flow pass with 30 Tab stops recorded, while the same report still fails axe-a11y (P0 scrollable-region-focusable), a 400% zoom overflow and 390 px tap targets, so the check discriminates instead of passing everything",
+        "not claimed: Escape dismissal, arrow-key and roving-tabindex semantics, indicator adequacy beyond presence, screen-reader announcements, or any detour beyond the 30-press bound; these are named in AUDIT_WILL_NOT, LIMITATIONS.md and the receipt"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T1019.md"
     }
   ]
 }

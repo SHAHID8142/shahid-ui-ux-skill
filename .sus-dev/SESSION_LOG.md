@@ -854,3 +854,20 @@
   passed / 9 skipped**. Not claimed: correctness of any guidance, benefit to an agent (no model was
   run), reachability of the ~250 unpinned guides, any licence position for copying.
   `TASKS.json` T1018 + `T1005.deps`; ROADMAP regenerated; STATE count 110 of 112.
+
+- 2026-11-16T21:20:00+06:00 | Pi (FreePi) | T1019 | Issue #13 lists the pipeline's checks as
+  "responsive/zoom/keyboard/semantic/a11y"; keyboard had no instrument at all (the dogfood runner
+  tests only the *first* focus ring). Added `harness/keyboard.ts`: Tab up to 30 times on a real
+  page at 1440×900, recording focus order, computed outline/box-shadow **while focused** (WCAG
+  2.4.7), body landings and repeat patterns, in its own browser context so it cannot disturb the
+  axe page. `keyboard-flow` is a required deep check: missing indicator → P1 named element, detour
+  → P1, cycle → P2 (Escape is not pressed), no samples → `not-run`.
+  The first live run "found" a detour and a cycle on our own fixture; both were my scanner's bug —
+  30 presses over 9 controls wrap the document and Chromium parks focus on `body` at the wrap.
+  Fixed the definition rather than the fixture: a body stop is a detour only while controls remain
+  unreached, otherwise it is the end of the traversal and is truncated, with cycles looked for only
+  in a repeated suffix of period 1–3 before that. Both directions are now pinned by tests.
+  Measured: deep audit of `fixtures/portfolio/dist` → `keyboard-flow: pass`, 30 stops driven, while
+  the same report still fails axe (`scrollable-region-focusable` P0), a 400% zoom overflow and
+  390 px tap targets — the check discriminates. `pnpm verify` 0 → **79 files + 3 skipped, 905 tests
+  / 9 skipped**, 13/13 gates. TASKS.json T1019 + `T1005.deps`; STATE 111 of 113.

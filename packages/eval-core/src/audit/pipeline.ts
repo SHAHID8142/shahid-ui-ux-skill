@@ -21,6 +21,7 @@ import type { ScanResult } from '@sus/scanners';
 import { scanText } from '@sus/scanners';
 import type { AxeScanResult, LighthouseSummary } from '../harness/a11y-budgets.js';
 import { captureMatrix, type CaptureResult } from '../harness/capture.js';
+import { scanKeyboard, type KeyboardScanResult } from '../harness/keyboard.js';
 import type { HardeningResult } from '../hardening.js';
 import { runHardeningMatrix } from '../hardening.js';
 import { chromeForTestingPath, runLighthouse, scanA11y } from '../harness/scans.js';
@@ -253,12 +254,15 @@ async function collectScans(
   routes: readonly string[],
 ): Promise<{
   axe: LiveGroup<AxeScanResult>;
+  keyboard: LiveGroup<KeyboardScanResult>;
   lighthouse: LiveGroup<LighthouseSummary>;
   browser: string | null;
 }> {
   const axe: { route: string; value: AxeScanResult }[] = [];
+  const keyboard: { route: string; value: KeyboardScanResult }[] = [];
   const lighthouse: { route: string; value: LighthouseSummary }[] = [];
   const axeFailed: { route: string; reason: string }[] = [];
+  const keyboardFailed: { route: string; reason: string }[] = [];
   const lhFailed: { route: string; reason: string }[] = [];
   let browser: string | null = null;
   try {
@@ -274,13 +278,33 @@ async function collectScans(
           axeFailed.push({ route, reason: describeError(error) });
         }
       }
+      // Keyboard traversal gets its own page at the desktop anchor: Tab order is a
+      // document property, so pressing it on the axe page would measure whatever
+      // the scan left focused.
+      const kbContext = await instance.newContext({
+        viewport: { width: 1440, height: 900 },
+        colorScheme: 'light',
+      });
+      const kbPage = await kbContext.newPage();
+      for (const route of routes) {
+        try {
+          await kbPage.goto(routeUrl(origin, route), { waitUntil: 'networkidle' });
+          keyboard.push({ route, value: await scanKeyboard(kbPage) });
+        } catch (error) {
+          keyboardFailed.push({ route, reason: describeError(error) });
+        }
+      }
+      await kbContext.close();
       await context.close();
     } finally {
       await instance.close();
     }
   } catch (error) {
     const reason = 'no browser: ' + describeError(error);
-    for (const route of routes) axeFailed.push({ route, reason });
+    for (const route of routes) {
+      axeFailed.push({ route, reason });
+      keyboardFailed.push({ route, reason });
+    }
   }
   const chromePath = chromeForTestingPath();
   for (const route of routes) {
@@ -292,6 +316,7 @@ async function collectScans(
   }
   return {
     axe: { samples: axe, failed: axeFailed, skipped: null },
+    keyboard: { samples: keyboard, failed: keyboardFailed, skipped: null },
     lighthouse: { samples: lighthouse, failed: lhFailed, skipped: null },
     browser,
   };
@@ -430,6 +455,7 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
   let capture: LiveGroup<CaptureResult>;
   let reflow: LiveGroup<HardeningResult>;
   let axe: LiveGroup<AxeScanResult>;
+  let keyboard: LiveGroup<KeyboardScanResult>;
   let lighthouse: LiveGroup<LighthouseSummary>;
   let browser: string | null = null;
   if (mode === 'quick') {
@@ -438,12 +464,14 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
     capture = emptyGroup<CaptureResult>(reason);
     reflow = emptyGroup<HardeningResult>(reason);
     axe = emptyGroup<AxeScanResult>(reason);
+    keyboard = emptyGroup<KeyboardScanResult>(reason);
     lighthouse = emptyGroup<LighthouseSummary>(reason);
   } else {
     capture = await collectCapture(origin, routes, join(outDir, AUDIT_OUTPUT_FILES.shotsDir));
     reflow = await collectReflow(origin, routes);
     const scans = await collectScans(origin, routes);
     axe = scans.axe;
+    keyboard = scans.keyboard;
     lighthouse = scans.lighthouse;
     browser = scans.browser;
   }
@@ -463,6 +491,7 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
     capture,
     reflow,
     axe,
+    keyboard,
     lighthouse,
   };
 }

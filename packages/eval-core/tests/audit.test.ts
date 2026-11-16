@@ -269,6 +269,7 @@ describe('composed report', () => {
     capture: emptyGroup('not requested'),
     reflow: emptyGroup('not requested'),
     axe: emptyGroup('not requested'),
+    keyboard: emptyGroup('not requested'),
     lighthouse: emptyGroup('not requested'),
     ...over,
   });
@@ -401,8 +402,101 @@ describe('audit evidence contract (T1013)', () => {
     capture: emptyGroup('not requested'),
     reflow: emptyGroup('not requested'),
     axe: emptyGroup('not requested'),
+    keyboard: emptyGroup('not requested'),
     lighthouse: emptyGroup('not requested'),
     ...over,
+  });
+
+  /** A keyboard traversal whose page is clean: the check must read pass, not skipped. */
+  const cleanKeyboard = (): LiveGroup<KeyboardScanResult> => ({
+    samples: [
+      {
+        route: '/',
+        value: {
+          url: 'http://127.0.0.1:1/',
+          stops: [
+            {
+              index: 0,
+              selector: 'a#skip',
+              tag: 'a',
+              role: null,
+              indicator: true,
+              outline: 'solid 2px rgb(0, 119, 255)',
+              boxShadow: 'none',
+            },
+          ],
+          focusable: 3,
+          indicatorMissing: [],
+          detours: 0,
+          cycle: null,
+        },
+      },
+    ],
+    failed: [],
+    skipped: null,
+  });
+
+  it('passes keyboard-flow when the traversal found no problem', () => {
+    const report = composeReport(base({ keyboard: cleanKeyboard() }));
+    const check = report.checks.find((c) => c.id === 'keyboard-flow');
+    expect(check?.status).toBe('pass');
+    expect(report.findings.filter((f) => f.check === 'keyboard-flow')).toEqual([]);
+  });
+
+  it('reports a missing focus indicator as a P1 with the element named', () => {
+    const group = cleanKeyboard();
+    const report = composeReport(
+      base({
+        keyboard: {
+          ...group,
+          samples: [
+            {
+              route: '/',
+              value: { ...group.samples[0]!.value, indicatorMissing: ['button#save'] },
+            },
+          ],
+        },
+      }),
+    );
+    const found = report.findings.filter((f) => f.check === 'keyboard-flow');
+    expect(found).toHaveLength(1);
+    expect(found[0]!.severity).toBe('P1');
+    expect(found[0]!.observation.location).toBe('button#save');
+    expect(found[0]!.observation.confidence).toBe('measured');
+    expect(report.checks.find((c) => c.id === 'keyboard-flow')?.status).toBe('fail');
+    expect(report.summary.P1).toBe(1);
+  });
+
+  it('reports focus leaving the document as a P1 and a cycle as P2', () => {
+    const group = cleanKeyboard();
+    const report = composeReport(
+      base({
+        keyboard: {
+          ...group,
+          samples: [
+            {
+              route: '/',
+              value: {
+                ...group.samples[0]!.value,
+                detours: 2,
+                cycle: { selector: 'button#open', repeats: 3 },
+              },
+            },
+          ],
+        },
+      }),
+    );
+    const found = report.findings.filter((f) => f.check === 'keyboard-flow');
+    expect(found.map((f) => f.severity).sort()).toEqual(['P1', 'P2']);
+    // Escape is never pressed, so the cycle stays an observation, not a verdict.
+    expect(found.find((f) => f.severity === 'P2')?.title).toContain('cycles');
+  });
+
+  it('never passes keyboard-flow when no traversal was recorded', () => {
+    const report = composeReport(base({ keyboard: emptyGroup('no browser') }));
+    const check = report.checks.find((c) => c.id === 'keyboard-flow');
+    expect(check?.status).toBe('not-run');
+    expect(check?.reason).toContain('no browser');
   });
 
   /** One captured route whose mobile layout overflows: a measured P0 with a shot. */
@@ -609,6 +703,7 @@ describe('audit evidence contract (T1013)', () => {
         capture: emptyGroup(reason),
         reflow: emptyGroup(reason),
         axe: emptyGroup(reason),
+        keyboard: emptyGroup(reason),
         lighthouse: emptyGroup(reason),
       }),
     );
@@ -755,6 +850,7 @@ describe('reflow check covers both halves of G7', () => {
     capture: emptyGroup('not requested'),
     reflow: reflowGroup(zoom400),
     axe: emptyGroup('not requested'),
+    keyboard: emptyGroup('not requested'),
     lighthouse: emptyGroup('not requested'),
   });
 

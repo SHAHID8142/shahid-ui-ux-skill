@@ -264,3 +264,12 @@ that; see `.sus-dev/VERIFICATION/T1017.md`.
   copying upstream text is still open (D06).
 - With no cache, `node scripts/research/paired-run.mjs` exits 3 and says `not-run`. A green verify
   does not imply a populated cache.
+
+## 2026-11-16 ~21:20 — pi: T1019 — keyboard traversal is measured, and wrap-around is not a defect
+
+- `scanKeyboard` + `keyboard-flow` (required, deep). If you extend it: **do not** count a `body`
+  stop as a detour unless focusable elements are still unreached. Chromium parks focus on `body`
+  when a 30-press sweep wraps; counting that invents findings (I shipped that bug for one run).
+- Cycles are P2 on purpose: a modal trap is legal and Escape is never pressed.
+- Indicator presence ≠ adequacy, and the accessibility tree is never read. Do not relabel either as
+  measured.

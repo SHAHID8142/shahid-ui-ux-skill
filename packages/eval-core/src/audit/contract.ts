@@ -123,6 +123,14 @@ export const AUDIT_CHECKS: readonly AuditCheckDescriptor[] = [
     required: true,
   },
   {
+    id: 'keyboard-flow',
+    title: 'Keyboard traversal: Tab order, focus indicator, detours and cycles',
+    gate: 'G9',
+    modes: ['deep'],
+    effort: 'structural',
+    required: true,
+  },
+  {
     id: 'axe-a11y',
     title: 'axe accessibility scan: serious or critical violations fail the gate',
     gate: 'G4',
@@ -192,6 +200,7 @@ export const AUDIT_WILL_NOT: readonly string[] = [
   'will not invent transition-oracle cases, translations, screen-reader sessions or a user-agent zoom setting: 400% zoom is measured only as the CSS px viewport it produces (320x256 at device scale factor 4)',
   'will not treat a missing measurement as a pass: an unrun check is reported as not-run',
   'will not audit a host that was not authorized: loopback is allowed, anything else needs --authorize',
+  'will not press Escape, arrow keys or a screen reader: the keyboard check records Tab order, focus indicators, detours and cycles, not Escape dismissal, composite-widget semantics or announcements',
   'will not publish, release or claim release-readiness',
 ];
 

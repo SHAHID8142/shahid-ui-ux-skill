@@ -55,7 +55,11 @@ written down is a bug with better manners.
   `T1008.md`). For zoom, the distinction is narrower and now measured: 400% zoom is
   reproduced as the CSS px viewport it produces (320×256 at device scale factor 4) and
   recorded as the G7 `zoom400` measurement — text-only zoom and the user-agent zoom setting
-  itself are still not driven, so they stay needs-review.
+  itself are still not driven, so they stay needs-review. Keyboard traversal is now measured
+  (`keyboard-flow`, T1019): Tab order, focus indicators, detours and focus cycles on a real
+  page at 1440×900. What it cannot see: Escape dismissal, arrow-key/roving-tabindex semantics
+  inside composite widgets, the *adequacy* of an indicator (a ring is a ring), and anything a
+  screen reader announces.
 - Every timing in this repository comes from one machine with Chromium pre-installed. The
   newest clean `pnpm regression` measured 143.7 s
   (`evals/reports/regression-4aac091d1312.json`, 2026-11-15: 115.5 s verify, 4.0 s demo loop,

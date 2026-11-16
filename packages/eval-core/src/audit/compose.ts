@@ -16,6 +16,7 @@ import { evaluateG11 } from '@sus/schemas';
 import type { ScanResult } from '@sus/scanners';
 import { checkSeo } from '@sus/scanners';
 import type { AxeScanResult, LighthouseSummary } from '../harness/a11y-budgets.js';
+import type { KeyboardScanResult } from '../harness/keyboard.js';
 import { evaluateG4, evaluateG5 } from '../harness/a11y-budgets.js';
 import type { CaptureResult } from '../harness/capture.js';
 import type { HardeningResult } from '../hardening.js';
@@ -91,6 +92,7 @@ export interface AuditInputs {
   readonly slop: SlopInput;
   readonly capture: LiveGroup<CaptureResult>;
   readonly reflow: LiveGroup<HardeningResult>;
+  readonly keyboard: LiveGroup<KeyboardScanResult>;
   readonly axe: LiveGroup<AxeScanResult>;
   readonly lighthouse: LiveGroup<LighthouseSummary>;
   /**
@@ -263,6 +265,93 @@ function reflowFindings(samples: readonly LiveSample<HardeningResult>[]): AuditF
           remediation:
             'Remove the clipping and let the container reflow, or make the region a deliberate ' +
             'scroll container with a visible cue and keyboard access.',
+        }),
+      );
+    }
+  }
+  return found;
+}
+
+/**
+ * Keyboard findings. Severity is deliberately conservative: a missing indicator is
+ * P1 (WCAG 2.4.7 — a sighted keyboard user cannot see where they are), a detour is
+ * P1 (focus left the page), and a cycle is P2 because a modal's intentional trap is
+ * legal and this check does not press Escape.
+ */
+function keyboardFindings(samples: readonly LiveSample<KeyboardScanResult>[]): AuditFinding[] {
+  const found: AuditFinding[] = [];
+  for (const sample of samples) {
+    const result = sample.value;
+    for (const selector of result.indicatorMissing) {
+      found.push(
+        finding({
+          check: 'keyboard-flow',
+          severity: 'P1',
+          effort: 'quick-win',
+          title: 'Focusable element paints no visible focus indicator: ' + selector,
+          detail:
+            'While focused by keyboard, this element reports no outline and no box-shadow. A ' +
+            'keyboard user cannot see where focus is, which is WCAG 2.4.7 (Focus Visible).',
+          route: sample.route,
+          viewport: null,
+          evidence: [selector],
+          evaluator: 'scanKeyboard (Tab traversal, computed style while focused)',
+          location: selector,
+          confidence: 'measured',
+          remediation:
+            'Style :focus-visible with an outline, or a ring drawn with box-shadow, that survives ' +
+            "the component's own background; never remove the UA outline without a replacement.",
+        }),
+      );
+    }
+    if (result.detours > 0 && result.focusable > 0) {
+      found.push(
+        finding({
+          check: 'keyboard-flow',
+          severity: 'P1',
+          effort: 'structural',
+          title: 'Tab order leaves the document ' + result.detours + ' time(s)',
+          detail:
+            'Focus moved to the document body while ' +
+            result.focusable +
+            ' focusable element(s) are present, so a keyboard user is dropped out of the page ' +
+            'instead of moving to the next control.',
+          route: sample.route,
+          viewport: null,
+          evidence: ['body'],
+          evaluator: 'scanKeyboard (Tab traversal)',
+          expected: { value: 0, unit: 'detours' },
+          observed: { value: result.detours, unit: 'detours' },
+          location: null,
+          confidence: 'measured',
+          remediation:
+            'Remove positive tabindex values and hidden-but-focusable elements (use display: none ' +
+            'or visibility: hidden rather than opacity/offscreen), so the sequence stays inside the page.',
+        }),
+      );
+    }
+    if (result.cycle !== null) {
+      found.push(
+        finding({
+          check: 'keyboard-flow',
+          severity: 'P2',
+          effort: 'quick-win',
+          title: 'Focus cycles through ' + result.cycle.selector,
+          detail:
+            'The same element received focus ' +
+            result.cycle.repeats +
+            ' times within the traversal. Inside a modal this is intended and needs a dismissal ' +
+            'path (Escape); outside one it traps keyboard focus. This check does not press Escape, ' +
+            'so it reports what was observed, not which case it is.',
+          route: sample.route,
+          viewport: null,
+          evidence: [result.cycle.selector],
+          evaluator: 'scanKeyboard (Tab traversal)',
+          location: result.cycle.selector,
+          confidence: 'measured',
+          remediation:
+            'If this is a dialog, keep the trap and verify Escape closes it; otherwise remove the ' +
+            'handler that returns focus to the same control.',
         }),
       );
     }
@@ -673,6 +762,34 @@ export function composeReport(inputs: AuditInputs): AuditReport {
                 ' route(s) measured at the 400% zoom equivalence (320x256 CSS px, device scale factor 4)',
             ],
           ),
+  );
+
+  const keyboardReason = reasonFor(inputs.keyboard);
+  const keyboardProblems = keyboardFindings(inputs.keyboard.samples);
+  findings.push(...keyboardProblems);
+  const keyboardStops = inputs.keyboard.samples.reduce((n, s) => n + s.value.stops.length, 0);
+  checks.push(
+    keyboardReason === null && inputs.keyboard.samples.length > 0
+      ? checkResult(
+          'keyboard-flow',
+          'Keyboard traversal, focus indicator, detours and cycles',
+          'G9',
+          keyboardProblems.length > 0 ? 'fail' : 'pass',
+          [
+            keyboardStops +
+              ' Tab stop(s) recorded across ' +
+              inputs.keyboard.samples.length +
+              ' route(s)',
+          ],
+        )
+      : checkResult(
+          'keyboard-flow',
+          'Keyboard traversal, focus indicator, detours and cycles',
+          'G9',
+          'not-run',
+          [],
+          keyboardReason ?? 'no keyboard traversal was recorded',
+        ),
   );
 
   const axeReason = reasonFor(inputs.axe);
