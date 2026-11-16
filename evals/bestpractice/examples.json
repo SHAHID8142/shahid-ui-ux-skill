@@ -1,0 +1,415 @@
+{
+  "schema": "sus.bestpractice.examples/1",
+  "fixture": "fixtures/bestpractice/examples",
+  "mode": "deep",
+  "generatedAt": "2026-11-17",
+  "fixes": [
+    {
+      "id": "E1",
+      "file": "index.html",
+      "why": "pad the control to 44x44 instead of a 28x20 target"
+    },
+    {
+      "id": "E2",
+      "file": "index.html",
+      "why": "let the navigation wrap instead of holding a 720 px row"
+    },
+    {
+      "id": "E3",
+      "file": "index.html",
+      "why": "give the input and the button 44 px targets and the input a real label"
+    },
+    {
+      "id": "E3b",
+      "file": "index.html",
+      "why": "the placeholder was the only label; name the field"
+    },
+    {
+      "id": "E4",
+      "file": "index.html",
+      "why": "stack each invoice row into a card below 960 px, keeping the money columns aligned"
+    },
+    {
+      "id": "E4b",
+      "file": "index.html",
+      "why": "a stacked card needs its column names next to the values"
+    },
+    {
+      "id": "E5",
+      "file": "index.html",
+      "why": "restore the focus indicator and honour prefers-reduced-motion"
+    }
+  ],
+  "examples": [
+    {
+      "id": "E1",
+      "klass": "cta",
+      "label": "Call to action",
+      "scope": "#cta",
+      "instrument": "tap-target",
+      "measurements": [
+        {
+          "label": "scope outcome",
+          "before": "resolved",
+          "after": "resolved"
+        },
+        {
+          "label": "smallest target measured in scope (px)",
+          "before": "20",
+          "after": "none measured"
+        },
+        {
+          "label": "`capture-matrix` status",
+          "before": "fail",
+          "after": "pass"
+        },
+        {
+          "label": "items proposed in scope",
+          "before": "1",
+          "after": "0"
+        }
+      ],
+      "consulted": ["a11y", "visual", "copy"],
+      "notConsulted": [],
+      "itemsBefore": [
+        {
+          "severity": "P2",
+          "kind": "fact",
+          "dimension": "a11y",
+          "title": "Tap target below 44x44 css px on a#cta (mobile-390)",
+          "location": "a#cta",
+          "observed": {
+            "value": 20,
+            "unit": "css px"
+          },
+          "expected": {
+            "value": 44,
+            "unit": "css px"
+          }
+        }
+      ],
+      "itemsAfter": [],
+      "verdict": "pass — the defects measured inside this scope are gone after the fix"
+    },
+    {
+      "id": "E2",
+      "klass": "navbar",
+      "label": "Navigation bar",
+      "scope": "#site-nav",
+      "instrument": "overflow-320",
+      "measurements": [
+        {
+          "label": "scope outcome",
+          "before": "resolved",
+          "after": "resolved"
+        },
+        {
+          "label": "widest document measured in scope (CSS px)",
+          "before": "916",
+          "after": "none measured"
+        },
+        {
+          "label": "`reflow-matrix` status",
+          "before": "fail",
+          "after": "pass"
+        },
+        {
+          "label": "items proposed in scope",
+          "before": "6",
+          "after": "0"
+        }
+      ],
+      "consulted": ["responsive", "a11y", "visual", "copy"],
+      "notConsulted": [],
+      "itemsBefore": [
+        {
+          "severity": "P0",
+          "kind": "fact",
+          "dimension": "responsive",
+          "title": "Horizontal overflow on nav#site-nav (mobile-390/dark, mobile-390/light, mobile-320/dark/no-preference, mobile-320/light/no-preference, mobile-320/light/reduce, mobile-320/dark/reduce, …)",
+          "location": "nav#site-nav",
+          "observed": {
+            "value": 916,
+            "unit": "CSS px document width"
+          },
+          "expected": {
+            "value": 320,
+            "unit": "CSS px document width"
+          }
+        },
+        {
+          "severity": "P1",
+          "kind": "fact",
+          "dimension": "responsive",
+          "title": "Horizontal overflow at 400% zoom equivalence on nav#site-nav (400% zoom)",
+          "location": "nav#site-nav",
+          "observed": {
+            "value": 916,
+            "unit": "CSS px document width"
+          },
+          "expected": {
+            "value": 320,
+            "unit": "CSS px document width"
+          }
+        },
+        {
+          "severity": "P2",
+          "kind": "fact",
+          "dimension": "a11y",
+          "title": "Tap target below 44x44 css px on a:Invoices (mobile-390)",
+          "location": "a:Invoices",
+          "observed": {
+            "value": 24,
+            "unit": "css px"
+          },
+          "expected": {
+            "value": 44,
+            "unit": "css px"
+          }
+        },
+        {
+          "severity": "P2",
+          "kind": "fact",
+          "dimension": "a11y",
+          "title": "Tap target below 44x44 css px on a:Home (mobile-390)",
+          "location": "a:Home",
+          "observed": {
+            "value": 24,
+            "unit": "css px"
+          },
+          "expected": {
+            "value": 44,
+            "unit": "css px"
+          }
+        },
+        {
+          "severity": "P2",
+          "kind": "fact",
+          "dimension": "a11y",
+          "title": "Tap target below 44x44 css px on a:Details (mobile-390)",
+          "location": "a:Details",
+          "observed": {
+            "value": 24,
+            "unit": "css px"
+          },
+          "expected": {
+            "value": 44,
+            "unit": "css px"
+          }
+        },
+        {
+          "severity": "P2",
+          "kind": "fact",
+          "dimension": "a11y",
+          "title": "Tap target below 44x44 css px on a:Sign up (mobile-390)",
+          "location": "a:Sign up",
+          "observed": {
+            "value": 24,
+            "unit": "css px"
+          },
+          "expected": {
+            "value": 44,
+            "unit": "css px"
+          }
+        }
+      ],
+      "itemsAfter": [],
+      "verdict": "pass — the defects measured inside this scope are gone after the fix"
+    },
+    {
+      "id": "E3",
+      "klass": "form",
+      "label": "Form field and submit",
+      "scope": "#signup",
+      "instrument": "tap-target",
+      "measurements": [
+        {
+          "label": "scope outcome",
+          "before": "resolved",
+          "after": "resolved"
+        },
+        {
+          "label": "smallest target measured in scope (px)",
+          "before": "24",
+          "after": "none measured"
+        },
+        {
+          "label": "`capture-matrix` status",
+          "before": "fail",
+          "after": "pass"
+        },
+        {
+          "label": "items proposed in scope",
+          "before": "2",
+          "after": "0"
+        }
+      ],
+      "consulted": ["a11y", "copy", "visual", "responsive"],
+      "notConsulted": [],
+      "itemsBefore": [
+        {
+          "severity": "P2",
+          "kind": "fact",
+          "dimension": "a11y",
+          "title": "Tap target below 44x44 css px on button#send (mobile-390)",
+          "location": "button#send",
+          "observed": {
+            "value": 24,
+            "unit": "css px"
+          },
+          "expected": {
+            "value": 44,
+            "unit": "css px"
+          }
+        },
+        {
+          "severity": "P2",
+          "kind": "fact",
+          "dimension": "a11y",
+          "title": "Tap target below 44x44 css px on input#email (mobile-390)",
+          "location": "input#email",
+          "observed": {
+            "value": 24,
+            "unit": "css px"
+          },
+          "expected": {
+            "value": 44,
+            "unit": "css px"
+          }
+        }
+      ],
+      "itemsAfter": [],
+      "verdict": "pass — the defects measured inside this scope are gone after the fix"
+    },
+    {
+      "id": "E4",
+      "klass": "record-row",
+      "label": "Mobile record row",
+      "scope": "#invoices",
+      "instrument": "overflow-320",
+      "measurements": [
+        {
+          "label": "scope outcome",
+          "before": "resolved",
+          "after": "resolved"
+        },
+        {
+          "label": "widest document measured in scope (CSS px)",
+          "before": "916",
+          "after": "none measured"
+        },
+        {
+          "label": "`reflow-matrix` status",
+          "before": "fail",
+          "after": "pass"
+        },
+        {
+          "label": "items proposed in scope",
+          "before": "2",
+          "after": "0"
+        }
+      ],
+      "consulted": ["responsive", "a11y", "visual"],
+      "notConsulted": [],
+      "itemsBefore": [
+        {
+          "severity": "P0",
+          "kind": "fact",
+          "dimension": "responsive",
+          "title": "Horizontal overflow on table#invoices (mobile-390/dark, mobile-390/light, mobile-320/dark/no-preference, mobile-320/light/no-preference, mobile-320/light/reduce, mobile-320/dark/reduce, …)",
+          "location": "table#invoices",
+          "observed": {
+            "value": 916,
+            "unit": "CSS px document width"
+          },
+          "expected": {
+            "value": 320,
+            "unit": "CSS px document width"
+          }
+        },
+        {
+          "severity": "P1",
+          "kind": "fact",
+          "dimension": "responsive",
+          "title": "Horizontal overflow at 400% zoom equivalence on table#invoices (400% zoom)",
+          "location": "table#invoices",
+          "observed": {
+            "value": 916,
+            "unit": "CSS px document width"
+          },
+          "expected": {
+            "value": 320,
+            "unit": "CSS px document width"
+          }
+        }
+      ],
+      "itemsAfter": [],
+      "verdict": "pass — the defects measured inside this scope are gone after the fix"
+    },
+    {
+      "id": "E5",
+      "klass": "motion-keyboard",
+      "label": "Motion and keyboard alternative",
+      "scope": "#panel-open",
+      "instrument": "keyboard",
+      "measurements": [
+        {
+          "label": "scope outcome",
+          "before": "resolved",
+          "after": "resolved"
+        },
+        {
+          "label": "a11y items measured in scope",
+          "before": "18",
+          "after": "none measured"
+        },
+        {
+          "label": "`keyboard-flow` status",
+          "before": "fail",
+          "after": "pass"
+        },
+        {
+          "label": "items proposed in scope",
+          "before": "2",
+          "after": "0"
+        }
+      ],
+      "consulted": ["responsive", "a11y", "visual"],
+      "notConsulted": [],
+      "itemsBefore": [
+        {
+          "severity": "P1",
+          "kind": "fact",
+          "dimension": "a11y",
+          "title": "Focusable element paints no visible focus indicator: a#panel-open",
+          "location": "a#panel-open",
+          "observed": null,
+          "expected": null
+        },
+        {
+          "severity": "P2",
+          "kind": "fact",
+          "dimension": "a11y",
+          "title": "Tap target below 44x44 css px on a#panel-open (mobile-390)",
+          "location": "a#panel-open",
+          "observed": {
+            "value": 18,
+            "unit": "css px"
+          },
+          "expected": {
+            "value": 44,
+            "unit": "css px"
+          }
+        }
+      ],
+      "itemsAfter": [],
+      "verdict": "pass — the defects measured inside this scope are gone after the fix"
+    }
+  ],
+  "notClaimed": [
+    "Nothing was applied to the fixture in the repository: the fixes are applied to a temporary copy and measured there.",
+    "No guideline text was read or copied; the proposals are the audit’s findings, not advice from an upstream guide.",
+    "The motion arm stays `not-run`: `transition-oracle` needs a scripted interaction, and no example drives one. The reduced-motion guard is in the fix, but nothing here measures it.",
+    "axe findings are located by rule id, so they are counted as attributed elsewhere rather than proposed for an element scope (documented in docs/BESTPRACTICE_COMMAND.md §6)."
+  ]
+}

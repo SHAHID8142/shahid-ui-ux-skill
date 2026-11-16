@@ -20,6 +20,17 @@ export {
   type ProposalRefusal,
   type ProposalSeverity,
 } from './bestpractice/proposal.js';
+export { dimensionForFinding, dimensionForCheck } from './bestpractice/from-audit.js';
+export {
+  BESTPRACTICE_HELP,
+  defaultFocus,
+  parseFocus,
+  runBestPractice,
+  selectScopedItems,
+  type BestPracticeRequest,
+  type BestPracticeRun,
+  type ScopedSelection,
+} from './bestpractice/command.js';
 export {
   COMPONENT_KINDS,
   FOCUS_DIMENSIONS,

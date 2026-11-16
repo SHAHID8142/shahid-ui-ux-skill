@@ -37,7 +37,6 @@ interface TapTarget {
 export async function collectPageMetrics(page: Page): Promise<PageMetrics> {
   return page.evaluate(() => {
     const doc = document.documentElement;
-    const vw = doc.clientWidth;
 
     // A wide leaf inside a scroll container is not a page-level defect: a two-
     // dimensional data grid legitimately scrolls, and issue #13 calls that out by
@@ -55,18 +54,26 @@ export async function collectPageMetrics(page: Page): Promise<PageMetrics> {
     };
 
     const overflowing: string[] = [];
-    for (const el of Array.from(document.body.querySelectorAll<HTMLElement>('*')).slice(0, 400)) {
+    const beyondViewport = (el: Element): boolean => {
       const rect = el.getBoundingClientRect();
+      return rect.width > 0 && rect.right > document.documentElement.clientWidth + 1;
+    };
+    for (const el of Array.from(document.body.querySelectorAll<HTMLElement>('*')).slice(0, 400)) {
+      // The outermost culprit in a branch is the useful one: a 720 px nav overflows the
+      // viewport even though none of its links do on their own, and naming the nav is what
+      // lets a scoped proposal attribute the defect (a leaf-only probe used to miss it and
+      // report the table caption instead).
+      const parent = el.parentElement;
       if (
-        rect.width > 0 &&
-        rect.right > vw + 1 &&
-        el.children.length === 0 &&
-        !containedByScroller(el)
+        !beyondViewport(el) ||
+        (parent !== null && parent !== document.body && beyondViewport(parent)) ||
+        containedByScroller(el)
       ) {
-        const describe = el.tagName.toLowerCase() + (el.id ? `#${el.id}` : '');
-        overflowing.push(describe);
-        if (overflowing.length >= 10) break;
+        continue;
       }
+      const describe = el.tagName.toLowerCase() + (el.id ? `#${el.id}` : '');
+      overflowing.push(describe);
+      if (overflowing.length >= 10) break;
     }
 
     let cls: number;

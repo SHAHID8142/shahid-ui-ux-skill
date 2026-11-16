@@ -89,6 +89,16 @@ and can lag — when in doubt the generated page wins.
 
 - Not published. The repository is public (D34); the **product** is not released, and
   post-build audit, licensing and publication remain owner decisions.
+- The scoped best-practice workflow (issue #15, T1021–T1024) attributes a finding to a selection
+  only when the audit's own location or evidence names that element, or one of its bounded
+  descendants. Findings the audit reports at rule level (axe) are therefore counted as attributed
+  elsewhere and never proposed for an element scope, and a `component-path` scope resolves but
+  proposes nothing until DOM descriptors can be mapped to source files. A screenshot region stays
+  `advisory`. These are stated limits, not fallbacks: guessing containment from selector strings
+  would attribute one element's defect to another.
+- The five measured best-practice examples apply their fixes to a temporary copy of the fixture and
+  measure there; nothing is applied to a repository fixture, and the motion dimension stays `not-run`
+  because no example drives an interaction.
 - Not audited independently yet. The final checkpoint (T1006) precedes that audit by
   design; `T1003`/`T1005` are owner actions.
 - Not a template library. It is a skill plus a verification apparatus; the playbooks are

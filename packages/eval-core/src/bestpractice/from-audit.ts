@@ -44,6 +44,20 @@ export function dimensionForCheck(check: string): FocusDimension | null {
   return known ?? null;
 }
 
+/**
+ * A check can produce findings about different dimensions: `capture-matrix` measures horizontal
+ * overflow (responsive) *and* target size (a11y, WCAG 2.5.8). Mapping by check alone would file a
+ * 28 px CTA under "responsive" and drop it from an a11y scope, which is how the first example run
+ * lost the very defect it was demonstrating.
+ */
+export function dimensionForFinding(finding: {
+  readonly check: string;
+  readonly title: string;
+}): FocusDimension | null {
+  if (finding.check === 'capture-matrix' && finding.title.startsWith('Tap target')) return 'a11y';
+  return dimensionForCheck(finding.check);
+}
+
 /** What a change in each dimension could break. Concrete, because "risk: low" is not a risk. */
 const RISK_BY_DIMENSION: Record<FocusDimension, string> = {
   responsive:
@@ -93,13 +107,38 @@ export interface ItemsFromReport {
 }
 
 /**
- * Attribution rule: exact descriptor match against the selected target(s). Descriptors are flat
- * strings (`div#c1`, `th`, `td.cell`), so containment cannot be inferred from them without a DOM —
- * pretending otherwise would attribute another element's defect to this selection.
+ * Attribution rule: the audit's own location descriptor equals the selected target, or the target
+ * appears in the evidence the measurement recorded. Both are the audit's words about this element;
+ * containment is not inferred from flat descriptor strings, because without a DOM that would
+ * attribute another element's defect to this selection.
  */
-export function isAttributedTo(location: string | null, targets: readonly string[]): boolean {
-  if (location === null) return false;
-  return targets.includes(location);
+/**
+ * The defect a finding is about, without the viewport/theme it was seen in. Nine combinations of
+ * viewport, theme and reduced-motion preference are one defect on one element; a proposal that
+ * lists them nine times is a log, not a proposal.
+ */
+export function findingTopic(title: string): string {
+  const zoom = title.indexOf(' at 400% zoom equivalence');
+  if (zoom !== -1) return title.slice(0, zoom) + ' at 400% zoom equivalence';
+  const at = title.lastIndexOf(' at ');
+  return at === -1 ? title : title.slice(0, at);
+}
+
+/** The viewport/theme suffix a grouped item summarises. */
+export function findingContext(title: string): string | null {
+  const zoom = title.indexOf(' at 400% zoom equivalence');
+  if (zoom !== -1) return '400% zoom';
+  const at = title.lastIndexOf(' at ');
+  return at === -1 ? null : title.slice(at + 4);
+}
+
+export function isAttributedTo(
+  location: string | null,
+  targets: readonly string[],
+  evidence: readonly string[] = [],
+): boolean {
+  if (location !== null && targets.includes(location)) return true;
+  return evidence.some((entry) => targets.includes(entry));
 }
 
 function severityOf(finding: AuditFinding, measured: boolean): ProposalSeverity {
@@ -169,6 +208,61 @@ export function itemFromFinding(
   };
 }
 
+function mergeGroup(group: {
+  label: string;
+  contexts: string[];
+  items: ProposalItem[];
+}): ProposalItem {
+  const ordered = [...group.items].sort(
+    (a, b) => SEVERITY_ORDER.indexOf(a.severity) - SEVERITY_ORDER.indexOf(b.severity),
+  );
+  const worst = ordered[0] as ProposalItem;
+  const numbers = group.items
+    .map((item) => item.observed)
+    .filter((observed): observed is NonNullable<ProposalItem['observed']> => observed !== null);
+  // The worst measurement, in the unit's own direction: a wider document is worse, a smaller
+  // target is worse.
+  const observed =
+    numbers.length === 0
+      ? null
+      : numbers.reduce((worstNumber, candidate) => {
+          const wider = candidate.unit.includes('document width')
+            ? candidate.value > worstNumber.value
+            : candidate.value < worstNumber.value;
+          return wider ? candidate : worstNumber;
+        });
+  // The expected value must stay the demand the worst combination failed: a 320 px viewport
+  // failing at 916 px is a stricter claim than the same defect at 390 px.
+  const expectancies = group.items
+    .map((item) => item.expected)
+    .filter((expected): expected is NonNullable<ProposalItem['expected']> => expected !== null);
+  const expected =
+    expectancies.length === 0
+      ? worst.expected
+      : expectancies.reduce((tightest, candidate) =>
+          candidate.value < tightest.value ? candidate : tightest,
+        );
+  const contexts = group.contexts.slice(0, 6);
+  const suffix =
+    contexts.length === 0
+      ? ''
+      : ' (' + contexts.join(', ') + (group.contexts.length > contexts.length ? ', …' : '') + ')';
+  // Two controls of the same kind are two items: without the element in the title a reader sees
+  // four identical lines and cannot tell which control each one is about.
+  const named = worst.location !== null && !group.label.includes(worst.location);
+  const title = group.label + (named ? ' on ' + worst.location : '') + suffix;
+  const merged = {
+    ...worst,
+    id: proposalItemId({ ...worst, title }),
+    title,
+    observed,
+    expected,
+    evidence: [...new Set(group.items.flatMap((item) => item.evidence))],
+    testPlan: [...new Set(group.items.flatMap((item) => item.testPlan))],
+  };
+  return merged;
+}
+
 /**
  * Select the findings that fall inside the scope's dimensions and convert them.
  * `null` dimensions (a check with no mapping) are reported, never filed under a guess.
@@ -180,11 +274,12 @@ export function itemsFromReport(
   const wanted = new Set(selection.dimensions);
   const targets = selection.targets;
   const items: ProposalItem[] = [];
+  const groups = new Map<string, { label: string; contexts: string[]; items: ProposalItem[] }>();
   let outOfScope = 0;
   let unattributed = 0;
   let unmapped = 0;
   for (const finding of report.findings) {
-    const dimension = dimensionForCheck(finding.check);
+    const dimension = dimensionForFinding(finding);
     if (dimension === null) {
       unmapped += 1;
       continue;
@@ -193,29 +288,41 @@ export function itemsFromReport(
       outOfScope += 1;
       continue;
     }
-    if (targets !== undefined && !isAttributedTo(finding.observation.location, targets)) {
+    if (
+      targets !== undefined &&
+      !isAttributedTo(finding.observation.location, targets, finding.evidence)
+    ) {
       unattributed += 1;
       continue;
     }
     const item = itemFromFinding(finding, dimension);
     if (item === null) continue;
-    // The audit reports the same defect once per viewport/theme; a proposal is about the
-    // element, so identical items merge and keep the worst severity plus all evidence.
-    const existing = items.findIndex((candidate) => candidate.id === item.id);
-    if (existing === -1) {
-      items.push(item);
-      continue;
+    // When the audit named the element in its evidence while the location points at a
+    // sibling, the item is about the selected element: say so.
+    const attributedTarget =
+      targets === undefined
+        ? null
+        : (targets.find((target) => finding.evidence.includes(target)) ?? null);
+    const placed = attributedTarget === null ? item : { ...item, location: attributedTarget };
+    // One defect, one item: the same defect seen at nine viewport/theme combinations is grouped
+    // under the element it belongs to and the combinations are listed once.
+    const topic = findingTopic(finding.title);
+    const context = findingContext(finding.title);
+    const key = dimension + '|' + placed.location + '|' + topic;
+    const group = groups.get(key);
+    if (group === undefined) {
+      groups.set(key, {
+        label: topic,
+        contexts: context === null ? [] : [context],
+        items: [placed],
+      });
+    } else {
+      group.items.push(placed);
+      if (context !== null && !group.contexts.includes(context)) group.contexts.push(context);
     }
-    const previous = items[existing] as ProposalItem;
-    items[existing] = {
-      ...previous,
-      severity:
-        SEVERITY_ORDER.indexOf(item.severity) < SEVERITY_ORDER.indexOf(previous.severity)
-          ? item.severity
-          : previous.severity,
-      evidence: [...new Set([...previous.evidence, ...item.evidence])],
-      testPlan: [...new Set([...previous.testPlan, ...item.testPlan])],
-    };
+  }
+  for (const group of groups.values()) {
+    items.push(mergeGroup(group));
   }
   return { items, outOfScope, unattributed, unmapped };
 }

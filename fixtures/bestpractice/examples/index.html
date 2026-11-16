@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Five deliberately flawed UI areas used to measure scoped proposals."
+    />
+    <title>Best-practice examples fixture</title>
+    <style>
+      :root {
+        --ink: #1b1b1f;
+        --accent: #2c5fa8;
+      }
+      body {
+        margin: 0;
+        font:
+          16px/1.5 system-ui,
+          sans-serif;
+        color: var(--ink);
+      }
+      /* E1 — call to action: 28x20 px on purpose (below the 44 px target minimum). */
+      .cta {
+        display: inline-block;
+        padding: 0;
+        font-size: 12px;
+        line-height: 20px;
+        width: 28px;
+        background: var(--accent);
+        color: #fff;
+        text-decoration: none;
+      }
+      /* E2 — navigation: a fixed 720 px row, so it cannot reflow at 320 px. */
+      #site-nav {
+        display: flex;
+        width: 720px;
+        gap: 16px;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+      }
+      #site-nav a {
+        color: var(--ink);
+      }
+      main {
+        padding: 16px;
+      }
+      /* E3 — form: an input and a button smaller than 44 px, and no visible label. */
+      #signup input {
+        width: 140px;
+        height: 20px;
+        padding: 0;
+        font-size: 12px;
+      }
+      #signup button {
+        width: 60px;
+        height: 24px;
+        padding: 0;
+        font-size: 12px;
+      }
+      /* E4 — mobile record row: a table that needs 900 px, i.e. sideways scrolling at 320 px. */
+      #invoices {
+        border-collapse: collapse;
+        min-width: 900px;
+        margin-top: 24px;
+      }
+      #invoices th,
+      #invoices td {
+        border: 1px solid #ddd;
+        padding: 6px;
+        text-align: left;
+        white-space: nowrap;
+      }
+      /* E5 — motion + keyboard: a transition with no reduced-motion guard, and a link
+         that suppresses the focus indicator. */
+      #panel {
+        transition: transform 300ms ease-in-out;
+        margin-top: 24px;
+      }
+      #panel-open {
+        outline: none;
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <nav id="site-nav" aria-label="Main">
+      <a href="#main">Home</a>
+      <a href="#invoices">Invoices</a>
+      <a href="#signup">Sign up</a>
+      <a href="#panel">Details</a>
+    </nav>
+    <main id="main">
+      <h1>Best-practice examples</h1>
+      <p>Five flawed areas, each selected separately by a scoped proposal.</p>
+
+      <p><a class="cta" id="cta" href="#get" aria-label="Get started">Go</a></p>
+
+      <form id="signup">
+        <input id="email" name="email" type="email" autocomplete="email" placeholder="Email" />
+        <button id="send" type="submit">Send</button>
+      </form>
+
+      <table id="invoices">
+        <caption>
+          Recent invoices
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Number</th>
+            <th scope="col">Client</th>
+            <th scope="col">Issued</th>
+            <th scope="col">Due</th>
+            <th scope="col">Status</th>
+            <th scope="col">Net</th>
+            <th scope="col">Tax</th>
+            <th scope="col">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr id="invoice-row">
+            <td>INV-1041</td>
+            <td>Northwind Traders</td>
+            <td>2026-10-01</td>
+            <td>2026-10-31</td>
+            <td>Unpaid</td>
+            <td>1,200.00</td>
+            <td>240.00</td>
+            <td>1,440.00</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div id="panel">
+        <a id="panel-open" href="#panel-details">Open details</a>
+      </div>
+    </main>
+  </body>
+</html>

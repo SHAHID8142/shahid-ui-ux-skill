@@ -132,6 +132,8 @@ function captureFindings(samples: readonly LiveSample<CaptureResult>[]): AuditFi
             route: sample.route,
             viewport: captureViewportName(combo.viewport),
             evidence: combo.metrics.overflowingElements.slice(0, 5),
+            expected: { value: combo.metrics.documentClientWidth, unit: 'CSS px document width' },
+            observed: { value: combo.metrics.documentScrollWidth, unit: 'CSS px document width' },
             evaluator: 'captureMatrix + collectPageMetrics',
             location: combo.metrics.overflowingElements[0] ?? null,
             confidence: 'measured',
@@ -141,39 +143,41 @@ function captureFindings(samples: readonly LiveSample<CaptureResult>[]): AuditFi
         );
       }
       if (combo.metrics.smallTapTargets.length > 0 && critical) {
-        const offenders = combo.metrics.smallTapTargets
-          .slice(0, 3)
-          .map((t) => t.selector + ' (' + t.width + 'x' + t.height + ')')
-          .join(', ');
-        found.push(
-          finding({
-            check: 'capture-matrix',
-            severity: 'P2',
-            effort: 'quick-win',
-            title: 'Tap targets below 44 px at ' + captureViewportName(combo.viewport),
-            detail:
-              combo.metrics.smallTapTargets.length +
-              ' interactive element(s) smaller than ' +
-              TAP_TARGET_MIN +
-              ' px: ' +
-              offenders,
-            route: sample.route,
-            viewport: captureViewportName(combo.viewport),
-            evidence: combo.metrics.smallTapTargets.slice(0, 5).map((t) => t.selector),
-            evaluator: 'captureMatrix + collectPageMetrics',
-            expected: { value: TAP_TARGET_MIN, unit: 'css px' },
-            observed: {
-              value: Math.min(
-                ...combo.metrics.smallTapTargets.map((t) => Math.min(t.width, t.height)),
-              ),
-              unit: 'css px',
-            },
-            location: combo.metrics.smallTapTargets[0]?.selector ?? null,
-            confidence: 'measured',
-            remediation:
-              'Give the control at least 44 by 44 css px of tappable area with padding or a pseudo-element, and keep at least 8 px between neighbouring targets.',
-          }),
-        );
+        // One finding per control, not one per viewport: a scoped proposal has to be able to
+        // attribute a defect to the element it is about (T1023), and a reader fixing the
+        // navigation should not be handed an unrelated form field. Capped so a page with
+        // hundreds of small controls still produces a readable report.
+        for (const target of combo.metrics.smallTapTargets.slice(0, 10)) {
+          found.push(
+            finding({
+              check: 'capture-matrix',
+              severity: 'P2',
+              effort: 'quick-win',
+              title: 'Tap target below 44x44 css px at ' + captureViewportName(combo.viewport),
+              detail:
+                target.selector +
+                ' measures ' +
+                target.width +
+                'x' +
+                target.height +
+                ' px at ' +
+                captureViewportName(combo.viewport) +
+                ', below the ' +
+                TAP_TARGET_MIN +
+                ' px minimum.',
+              route: sample.route,
+              viewport: captureViewportName(combo.viewport),
+              evidence: [target.selector],
+              evaluator: 'captureMatrix + collectPageMetrics',
+              expected: { value: TAP_TARGET_MIN, unit: 'css px' },
+              observed: { value: Math.min(target.width, target.height), unit: 'css px' },
+              location: target.selector,
+              confidence: 'measured',
+              remediation:
+                'Give the control at least 44 by 44 css px of tappable area with padding or a pseudo-element, and keep at least 8 px between neighbouring targets.',
+            }),
+          );
+        }
       }
     }
   }

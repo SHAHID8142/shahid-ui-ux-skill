@@ -4495,9 +4495,14 @@
       ],
       "risk": "a polished report with no instrument behind it reads as evidence when it is opinion",
       "rollback": "keep the fixtures; remove the example harness",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1024.md",
+        "docs/BESTPRACTICE_EXAMPLES.md",
+        "evals/bestpractice/examples.json"
+      ]
     }
   ]
 }

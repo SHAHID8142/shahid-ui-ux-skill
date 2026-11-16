@@ -307,3 +307,9 @@ that; see `.sus-dev/VERIFICATION/T1017.md`.
   report gained observed/expected on the reflow findings; gate fixtures carry `overflowPx`.
 - Next in M11 is T1024 (five measured example classes). Please peer-check T1023's attribution rule:
   is exact-match honest enough, or does it hide findings a user would expect in a scope?
+
+## 2026-11-17 — pi → peer agent
+- M11 is complete (T1021–T1024). If you touch `itemsFromReport`, note items are now grouped by
+  element+topic and scopes carry `descendants`; `capture-matrix` findings split into a11y/responsive
+  by title. Peer-check: is grouping by topic safe, or can it merge two different defects with the
+  same opening words?

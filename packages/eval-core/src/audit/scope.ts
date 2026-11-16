@@ -71,6 +71,12 @@ export interface ScopeTarget {
   readonly role: string | null;
   readonly kind: ComponentKind;
   readonly file: string | null;
+  /**
+   * Descriptors of the elements inside this target (bounded). A form's undersized input is a
+   * defect *of the form*, so a scoped proposal has to be able to attribute a measurement about a
+   * child to the selection the user made. Descriptors only: no text is read.
+   */
+  readonly descendants?: readonly string[];
 }
 
 /** The only thing read from the page: descriptors, never text content. */
@@ -100,6 +106,8 @@ export interface ScopeResolution {
 export const SCOPE_LIMITS = {
   /** Selectors beyond this are a paste error or an attempt to make the resolver do work. */
   maxSelectorLength: 200,
+  /** How many descendant descriptors a target may carry, so attribution stays bounded. */
+  maxDescendants: 120,
   /** More matches than this is never "the element the user selected". */
   maxTargets: 20,
 } as const;
@@ -312,7 +320,38 @@ export async function resolveScope(
           }),
       { selector: reference.value, limit: maxTargets },
     )) as RawElement[];
-    const targets = raw.map(toTarget);
+    const descendants = (await page.evaluate(
+      ({ selector, limit }) =>
+        Array.from(document.querySelectorAll(selector))
+          .slice(0, limit)
+          .map((node) => {
+            const out: string[] = [];
+            const root = node as Element;
+            for (const child of Array.from(root.querySelectorAll('*')).slice(0, limit)) {
+              const el = child as HTMLElement;
+              const tag = el.tagName.toLowerCase();
+              if (el.id) out.push(tag + '#' + el.id);
+              else {
+                const classes =
+                  typeof el.className === 'string'
+                    ? el.className.trim().split(/\s+/).filter(Boolean)
+                    : [];
+                if (classes.length > 0) out.push(tag + '.' + classes.slice(0, 2).join('.'));
+                const text = (el.textContent ?? '').trim();
+                if (text.length > 0 && el.children.length === 0) {
+                  out.push(tag + ':' + text.slice(0, 24));
+                }
+                if (!el.id && classes.length === 0 && text.length === 0) out.push(tag);
+              }
+            }
+            return out;
+          }),
+      { selector: reference.value, limit: maxTargets },
+    )) as string[][];
+    const targets = raw.map((element, index) => ({
+      ...toTarget(element),
+      descendants: [...new Set(descendants[index] ?? [])].slice(0, SCOPE_LIMITS.maxDescendants),
+    }));
     if (targets.length === 0) {
       return {
         ...base,

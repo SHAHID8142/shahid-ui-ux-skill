@@ -25,6 +25,7 @@ import {
 } from '../audit/scope.js';
 import { runAudit, type AuditRun } from '../audit/pipeline.js';
 import { itemsFromReport, untestedFromReport } from './from-audit.js';
+import type { ProposalItem } from './proposal.js';
 import {
   BestPracticeProposal,
   composeProposal,
@@ -122,6 +123,65 @@ async function openScopePage(
   return { page, close: () => browser.close() };
 }
 
+export interface ScopedSelection {
+  readonly dimensions: readonly FocusDimension[];
+  readonly notApplicable: readonly { dimension: FocusDimension; reason: string }[];
+  readonly items: ProposalItem[];
+  readonly untested: readonly { dimension: FocusDimension; reason: string }[];
+  readonly outOfScope: number;
+  readonly unattributed: number;
+  readonly unmapped: number;
+}
+
+/**
+ * The report → selection half of the command, separated from the run: one audit can answer
+ * several scopes (that is what the T1024 example harness does), and a caller that already has a
+ * report should not have to run the engine again to get a proposal.
+ */
+export function selectScopedItems(
+  report: AuditRun['report'],
+  scope: ScopeResolution,
+  focus?: readonly FocusDimension[],
+): ScopedSelection {
+  if (scope.focus === null) {
+    return {
+      dimensions: [],
+      notApplicable: [],
+      items: [],
+      untested: [],
+      outOfScope: 0,
+      unattributed: 0,
+      unmapped: 0,
+    };
+  }
+  const requested = focus ?? scope.focus.run;
+  const dimensions = scope.focus.run.filter((dimension) => requested.includes(dimension));
+  const notApplicable = scope.focus.notApplicable.filter((entry) =>
+    requested.includes(entry.dimension),
+  );
+  // A selection owns what is inside it: the form's input is measured as part of the form.
+  const targets = scope.targets.flatMap((target) => [
+    target.selector,
+    ...(target.descendants ?? []),
+  ]);
+  const { items, outOfScope, unattributed, unmapped } = itemsFromReport(report, {
+    dimensions,
+    targets,
+  });
+  return {
+    dimensions,
+    notApplicable,
+    items,
+    untested: [
+      ...untestedFromReport(report, { dimensions }),
+      ...notApplicable.map((entry) => ({ dimension: entry.dimension, reason: entry.reason })),
+    ],
+    outOfScope,
+    unattributed,
+    unmapped,
+  };
+}
+
 export async function runBestPractice(request: BestPracticeRequest): Promise<BestPracticeRun> {
   if (request.scope.kind === 'selector') {
     if (request.scope.value.length > SCOPE_LIMITS.maxSelectorLength) {
@@ -200,20 +260,15 @@ export async function runBestPractice(request: BestPracticeRequest): Promise<Bes
   }
 
   // 3. Selection: the scope's dimensions, optionally narrowed by --focus.
-  const requested = request.focus ?? scope.focus.run;
-  const dimensions = scope.focus.run.filter((dimension) => requested.includes(dimension));
-  const notApplicable = scope.focus.notApplicable.filter((entry) =>
-    requested.includes(entry.dimension),
-  );
-  const targets = scope.targets.map((target) => target.selector);
-  const { items, outOfScope, unattributed, unmapped } = itemsFromReport(audit.report, {
+  const selection = selectScopedItems(audit.report, scope, request.focus);
+  const {
     dimensions,
-    targets,
-  });
-  const extraUntested = [
-    ...untestedFromReport(audit.report, { dimensions }),
-    ...notApplicable.map((entry) => ({ dimension: entry.dimension, reason: entry.reason })),
-  ];
+    items,
+    untested: extraUntested,
+    outOfScope,
+    unattributed,
+    unmapped,
+  } = selection;
 
   if (items.length === 0) {
     const markdown = [

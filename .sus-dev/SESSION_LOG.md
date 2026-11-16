@@ -941,3 +941,17 @@
 - Added `fixtures/bestpractice` (48 px clipped at 400% zoom on `#skip`, 18 px tap target) and 12 tests
   including a deep run that hashes the fixture before and after.
 - `pnpm verify` green; no host slash binding is claimed.
+
+## 2026-11-17 — T1024 five measured example classes (M11, issue #15)
+
+- `fixtures/bestpractice/examples` ships five flawed areas; `scripts/bestpractice/examples.mjs` audits
+  it and a fixed copy (deep, temporary dir), then writes `evals/bestpractice/examples.json` and the
+  generated `docs/BESTPRACTICE_EXAMPLES.md`. `pnpm examples:check` is part of `pnpm verify`.
+- Measurement found four engine defects and fixed them: dimension mapping now splits `capture-matrix`
+  by finding (tap target is a11y, overflow is responsive); a scope owns bounded descendant
+  descriptors so `#signup` owns its input; one defect is grouped by element+topic instead of one item
+  per viewport/theme; overflow probing names the outermost overflowing element (the 720 px nav, not a
+  table caption).
+- Motion stays `not-run`: no example drives an interaction, so the reduced-motion guard is shipped but
+  not measured, and both the record and the report say so.
+- 6 tests pin the record (five classes, instrument moved, fixture still flawed, doc renders from json).
