@@ -4360,9 +4360,10 @@
         "T1019"
       ],
       "files": [
-        "packages/eval-core/src/audit/",
-        "packages/scanners/src/",
-        "packages/eval-core/tests/"
+        "packages/eval-core/src/audit/scope.ts",
+        "packages/eval-core/src/index.ts",
+        "packages/eval-core/tests/bestpractice.scope.test.ts",
+        "docs/BESTPRACTICE_COMMAND.md"
       ],
       "acc": [
         "a scope reference resolves to element(s) and file(s) with a stable id, or the command returns a clarification instead of an empty or wrong scope",
@@ -4375,9 +4376,22 @@
       ],
       "risk": "a wrong scope silently edits a component the user did not select",
       "rollback": "keep the audit command as the only entry point; delete the resolver",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D32 issue triage (issue #15) within D28 build authorization",
+      "phase": "build",
+      "owner": "lead",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1021.md"
+      ],
+      "results": [
+        "resolveScope returns one of five named outcomes (resolved, ambiguous, not-found, advisory, rejected) with separate clarification and reason fields, so a caller never parses prose to decide whether it may proceed; only resolved offers a focus set",
+        "an ambiguous selector returns every candidate and focus null instead of picking the first match, a stale selector or unreadable path returns not-found with a reselect instruction, a drawn region is advisory by construction because pixels are not source, and empty, '*', 'html *', over-long and control-character selectors are refused before reaching the browser",
+        "descriptors are tag#id.class with id preferred and never inner text, so targets cannot leak page content into a report; selectors only ever reach document.querySelectorAll inside the page, with no shell or eval path",
+        "selectFocus partitions all six dimensions for each of seven component classes, with a reason on every exclusion; performance is not-applicable for a single control or generic scope (no scripted interaction is driven) and copy is not-applicable for a record table (content needs a content kind), so neither is dressed up as measured",
+        "24 tests: classification incl. a table that also carries a button class, the focus partition for every class, and live resolution against a real page and a real file tree; tsc clean; pnpm verify 0",
+        "not claimed: no proposal, diff or plan file (T1022), no intent, CLI flag or slash alias routed (T1023), no research-provider call (T1024) and no Live Studio region-to-source mapping, so a region stays advisory"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T1021.md"
     },
     {
       "id": "T1022",

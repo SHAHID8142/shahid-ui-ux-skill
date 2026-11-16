@@ -25,7 +25,7 @@ build when the two disagree, so this page cannot drift again. It was hand-writte
 | M8 | Studio hardening + second-wave playbooks | T0801–T0812 (11 tasks) | **done** — 11/11 |
 | M9 | Adapters + installer + support matrix + dogfood sites | T0901–T0906 (6 tasks) | **done** — 6/6 |
 | M10 | Regression, benchmark, independent review, docs, release | T1001–T1020 (20 tasks) | **18/20 done** — pending: T1003, T1005 |
-| M11 | Scoped best-practice workflow (/sus-bestpractice, issue #15) | T1021–T1024 (4 tasks) | **0/4 done** — pending: T1021, T1022, T1023, T1024 |
+| M11 | Scoped best-practice workflow (/sus-bestpractice, issue #15) | T1021–T1024 (4 tasks) | **1/4 done** — pending: T1022, T1023, T1024 |
 <!-- roadmap:table end -->
 
 ## What is left

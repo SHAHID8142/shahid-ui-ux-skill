@@ -281,3 +281,13 @@ that; see `.sus-dev/VERIFICATION/T1017.md`.
   content, and the zoom record is the only thing left that names it.
 - Three tests in `hardening.test.ts` pin auto / none / hidden. If you add a case, make it a real
   browser fixture: a stubbed metric would pass regardless of the rule.
+
+## 2026-11-16 ~23:05 — pi: T1021 — scope resolution, and why it refuses rather than guesses
+
+- `packages/eval-core/src/audit/scope.ts`. If you extend it: **never** make `ambiguous` resolve to the
+  first match, and never give `advisory` a focus set. Both would let the workflow propose changes to
+  code the user did not select.
+- `selectFocus` must keep partitioning all six dimensions with reasons; a test for every component
+  class fails if a new dimension is added without deciding whether it runs or is not-applicable.
+- `region`/`editor-selection` with `source: 'screenshot'` is advisory until Studio supplies a
+  source mapping (T1023). Do not "improve" that by guessing a DOM element from a rectangle.

@@ -896,3 +896,19 @@
   measured example classes incl. a mobile record row) — all `pending`, none claimed, each bounded by
   the same instruments `/sus audit` already uses so no second scanner appears. Added milestone M11
   to `scripts/lib/roadmap.mjs` so the roadmap stays generated rather than hand-written.
+
+- 2026-11-16T23:05:00+06:00 | Pi (FreePi) | T1021 | Issue #15's first technical step, after triaging
+  it into M11. `audit/scope.ts` resolves a selection to a stable target and a focus set, with five
+  named outcomes — `resolved`, `ambiguous`, `not-found`, `advisory`, `rejected` — and separate
+  `clarification` / `reason` fields so no caller has to parse prose to decide whether it may write.
+  An ambiguous selector returns every candidate with `focus: null` instead of picking the first
+  match; a stale selector or unreadable path returns `not-found` with a reselect instruction; a drawn
+  region is `advisory` by construction because pixels are not source; empty, `*`, `html *`, over-long
+  and control-character selectors are refused before reaching the browser, and a selector only ever
+  reaches `document.querySelectorAll` inside the page.
+  `selectFocus` partitions all six dimensions for each of seven component classes with a reason on
+  every exclusion (`performance` is refused for a single control because no scripted interaction is
+  driven; `copy` is refused for a record table because wording is content). Descriptors are
+  `tag#id.class` and never inner text, so reports cannot leak page content.
+  24 tests over a real Chromium page and a real file tree; `pnpm verify` 0. No proposal, no intent,
+  no CLI flag, no provider call yet — T1022–T1024 remain `pending`.

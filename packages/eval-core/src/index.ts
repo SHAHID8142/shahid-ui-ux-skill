@@ -5,6 +5,25 @@
 export { scoreSection } from './scoring.js';
 export { collectPageMetrics, type PageMetrics } from './harness/metrics.js';
 export {
+  COMPONENT_KINDS,
+  FOCUS_DIMENSIONS,
+  SCOPE_KINDS,
+  SCOPE_LIMITS,
+  classifyComponent,
+  renderScope,
+  resolveScope,
+  selectFocus,
+  type ComponentKind,
+  type FocusDimension,
+  type FocusSelection,
+  type ScopeKind,
+  type ScopeOutcome,
+  type ScopePage,
+  type ScopeReference,
+  type ScopeResolution,
+  type ScopeTarget,
+} from './audit/scope.js';
+export {
   KEYBOARD_MAX_STOPS,
   scanKeyboard,
   type KeyboardScanResult,
