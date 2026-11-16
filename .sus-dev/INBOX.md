@@ -273,3 +273,11 @@ that; see `.sus-dev/VERIFICATION/T1017.md`.
 - Cycles are P2 on purpose: a modal trap is legal and Escape is never pressed.
 - Indicator presence ≠ adequacy, and the accessibility tree is never read. Do not relabel either as
   measured.
+
+## 2026-11-16 ~21:55 — pi: T1020 — `overflow-x: auto` is containment; `hidden` is not
+
+- `metrics.ts` now ignores a wide leaf whose ancestor is `overflow-x: auto|scroll`. Do **not**
+  extend that to `hidden|clip`: clipping silences a document-level check while destroying the
+  content, and the zoom record is the only thing left that names it.
+- Three tests in `hardening.test.ts` pin auto / none / hidden. If you add a case, make it a real
+  browser fixture: a stubbed metric would pass regardless of the rule.

@@ -124,3 +124,75 @@ describe('zoom400 record reflects the page (negative control)', () => {
     }
   }, 120000);
 });
+
+/**
+ * Issue #13's false-positive rule: a two-dimensional data grid may scroll inside
+ * its own container. That is containment, not overflow — and a page whose wide
+ * leaf has no scroller must still be reported, or the rule would be a mute button.
+ *
+ * The matrix cell reads document-level scroll only, so the contained-scroller
+ * question lands on the zoom record, which also names the offending leaves.
+ */
+describe('overflow distinguishes contained scrollers from real overflow (issue #13)', () => {
+  async function measure(html: string) {
+    const server = createServer((_req, res) => {
+      res.writeHead(200, { 'content-type': 'text/html' });
+      res.end(html);
+    });
+    await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+    const { port } = server.address() as AddressInfo;
+    try {
+      return await runHardeningMatrix(`http://127.0.0.1:${port}/`);
+    } finally {
+      server.close();
+    }
+  }
+
+  const page = (body: string) =>
+    '<!doctype html><html><head><title>t</title></head><body style="margin:0">' +
+    body +
+    '</body></html>';
+
+  it('does not flag a wide grid inside overflow-x:auto', async () => {
+    const result = await measure(
+      page(
+        '<div style="overflow-x:auto"><div style="width:900px;height:80px;background:#111"></div></div>',
+      ),
+    );
+    for (const cell of result.cells) {
+      expect(cell.metrics.horizontalOverflow).toBe(false);
+      expect(cell.metrics.overflowingElements).toEqual([]);
+      expect(cell.overflow).toBe(false);
+    }
+    const zoom = result.zoom400;
+    if (zoom === null) throw new Error('expected a zoom record');
+    expect(zoom.overflowingElements).toEqual([]);
+    expect(zoom.overflow).toBe(false);
+  }, 120000);
+
+  it('still flags a wide leaf with no scroller to contain it', async () => {
+    const result = await measure(
+      page('<div style="width:900px;height:80px;background:#111"></div>'),
+    );
+    expect(result.cells.some((cell) => cell.overflow)).toBe(true);
+    const zoom = result.zoom400;
+    if (zoom === null) throw new Error('expected a zoom record');
+    expect(zoom.overflow).toBe(true);
+    expect(zoom.overflowingElements.length).toBeGreaterThan(0);
+  }, 120000);
+
+  it('still flags overflow hidden by overflow-x:hidden, because hiding is not a fix', async () => {
+    const result = await measure(
+      page(
+        '<div style="overflow-x:hidden"><div style="width:900px;height:80px;background:#111"></div></div>',
+      ),
+    );
+    // The page does not scroll any more — the content is clipped, not fixed — so the
+    // matrix cell is quiet and the zoom record is what names it.
+    expect(result.cells.every((cell) => !cell.metrics.horizontalOverflow)).toBe(true);
+    const zoom = result.zoom400;
+    if (zoom === null) throw new Error('expected a zoom record');
+    expect(zoom.overflow).toBe(true);
+    expect(zoom.overflowingElements.length).toBeGreaterThan(0);
+  }, 120000);
+});

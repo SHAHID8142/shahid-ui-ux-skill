@@ -871,3 +871,19 @@
   the same report still fails axe (`scrollable-region-focusable` P0), a 400% zoom overflow and
   390 px tap targets — the check discriminates. `pnpm verify` 0 → **79 files + 3 skipped, 905 tests
   / 9 skipped**, 13/13 gates. TASKS.json T1019 + `T1005.deps`; STATE 111 of 113.
+
+- 2026-11-16T21:55:00+06:00 | Pi (FreePi) | T1020 | Closing issue #13 required one more thing its
+  acceptance names explicitly: negative fixtures must catch overflow "without … false positives for
+  legitimate scrollable grids". The 400% zoom record failed that clause — it ORed every wide leaf
+  into `overflow`, so a data grid inside `overflow-x: auto` (the pattern SUS's own
+  `MOBILE_RECORD_PATTERNS.md` recommends) would have been reported as a defect at 320×256.
+  `metrics.ts` now skips a wide leaf when an ancestor declares `overflow-x: auto | scroll`;
+  `hidden | clip` still counts, because the page stopping scrolling is not the content being
+  reachable, and clipping must not be a way to pass an overflow check. Three real-browser tests pin
+  auto / none / hidden, including the case a document-level check cannot see (clipped page looks
+  clean, only the leaf list catches it). `pnpm verify` 0. STATE 112 of 114.
+- 2026-11-16T21:56:00+06:00 | Pi (FreePi) | issue #14 | Closed with the acceptance table mapped
+  to files, and with the two things it does not assert stated in the comment: provider
+  effectiveness stays `not-run` (mechanics measured in `paired-run.json`), and no guide text has
+  been read or copied (D06 owner-open). Also corrected `pilots/README.md`, which still said no
+  shipped loader existed — true when written, false since T1018.

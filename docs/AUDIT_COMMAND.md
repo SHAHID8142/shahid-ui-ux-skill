@@ -46,6 +46,14 @@ the 320×568 phone column does not stand in for (a fixed header that fits 568 px
 `reflow-matrix` run with cells but no zoom record is `not-run`, never `pass`. The user-agent
 zoom setting itself and text-only zoom are still never driven.
 
+### What counts as overflow
+
+A leaf wider than the viewport is reported as overflow **unless** an ancestor declares
+`overflow-x: auto | scroll` — a two-dimensional data grid legitimately scrolls inside its own
+container, and issue #13 says so. `overflow-x: hidden | clip` is **not** containment: the content
+becomes unreachable and the page merely stops scrolling, so the leaf is still named. The matrix
+cell reads document-level scroll; the 400% zoom record additionally names the offending leaves.
+
 ### Keyboard traversal
 
 `keyboard-flow` drives a real browser at 1440×900: it presses Tab up to 30 times and records the

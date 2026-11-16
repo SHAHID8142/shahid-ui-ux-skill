@@ -35,10 +35,30 @@ export async function collectPageMetrics(page: Page): Promise<PageMetrics> {
     const doc = document.documentElement;
     const vw = doc.clientWidth;
 
+    // A wide leaf inside a scroll container is not a page-level defect: a two-
+    // dimensional data grid legitimately scrolls, and issue #13 calls that out by
+    // name. `overflow-x: auto|scroll` on an ancestor means the user can reach the
+    // content; `hidden|clip` does not, and hiding overflow is not a fix, so those
+    // still count.
+    const containedByScroller = (el: Element): boolean => {
+      let node = el.parentElement;
+      while (node !== null && node !== document.body && node !== document.documentElement) {
+        const overflowX = getComputedStyle(node).overflowX;
+        if (overflowX === 'auto' || overflowX === 'scroll') return true;
+        node = node.parentElement;
+      }
+      return false;
+    };
+
     const overflowing: string[] = [];
     for (const el of Array.from(document.body.querySelectorAll<HTMLElement>('*')).slice(0, 400)) {
       const rect = el.getBoundingClientRect();
-      if (rect.width > 0 && rect.right > vw + 1 && el.children.length === 0) {
+      if (
+        rect.width > 0 &&
+        rect.right > vw + 1 &&
+        el.children.length === 0 &&
+        !containedByScroller(el)
+      ) {
         const describe = el.tagName.toLowerCase() + (el.id ? `#${el.id}` : '');
         overflowing.push(describe);
         if (overflowing.length >= 10) break;

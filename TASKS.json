@@ -2652,7 +2652,8 @@
         "T1016",
         "T1017",
         "T1018",
-        "T1019"
+        "T1019",
+        "T1020"
       ],
       "files": [],
       "acc": [
@@ -4307,6 +4308,47 @@
         "not claimed: Escape dismissal, arrow-key and roving-tabindex semantics, indicator adequacy beyond presence, screen-reader announcements, or any detour beyond the 30-press bound; these are named in AUDIT_WILL_NOT, LIMITATIONS.md and the receipt"
       ],
       "commit": "same commit as .sus-dev/VERIFICATION/T1019.md"
+    },
+    {
+      "id": "T1020",
+      "m": "M10",
+      "title": "A reachable scroll container is not page overflow (issue #13 false-positive rule)",
+      "obj": "Issue #13 requires negative fixtures to catch overflow without creating false positives for legitimate scrollable grids. The 400% zoom record counted every leaf wider than the viewport as overflow, so a data grid inside overflow-x:auto would be reported as a defect. Treat auto|scroll ancestors as containment, keep hidden|clip as overflow because hiding is not a fix, and pin all three cases with real-browser tests.",
+      "deps": [
+        "T1017",
+        "T1019"
+      ],
+      "files": [
+        "packages/eval-core/src/harness/metrics.ts",
+        "packages/eval-core/tests/hardening.test.ts",
+        "docs/AUDIT_COMMAND.md"
+      ],
+      "acc": [
+        "a wide leaf inside an overflow-x auto or scroll ancestor is not reported as page overflow by the zoom record or the matrix",
+        "a wide leaf with no scroller is still reported, and overflow-x hidden or clip still counts as overflow",
+        "each of the three cases is pinned by a real-browser test, and the docs state the rule"
+      ],
+      "tests": [
+        "packages/eval-core/tests/hardening.test.ts",
+        "pnpm verify"
+      ],
+      "risk": "a containment rule that is too broad silences real overflow, and clipping is the cheapest way to game an overflow check",
+      "rollback": "revert the containedByScroller guard and delete the three tests",
+      "status": "done",
+      "approval": "D32 issue triage (issue #13, P1) within D28 build authorization",
+      "phase": "build",
+      "owner": "lead",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1020.md"
+      ],
+      "results": [
+        "metrics.ts now skips a wide leaf when some ancestor between it and body declares overflow-x auto or scroll: the content is reachable and the container is cued, which is containment rather than page overflow",
+        "hidden and clip are deliberately not containment: the page stops scrolling while the content stays unreachable, so the leaf is still named, which keeps clipping from being a way to pass the overflow check",
+        "measured in a real browser: 900px inside overflow-x:auto gives every matrix cell overflow false, overflowingElements [] and a clean zoom record; 900px with no scroller gives cell overflow true and a zoom record naming the leaf; 900px inside overflow-x:hidden gives quiet matrix cells (the page no longer scrolls) but a zoom record that names the leaf, which is the case a document-level check cannot see",
+        "the matrix cell was already correct (it reads documentElement.scrollWidth vs clientWidth); the defect was in the zoom record's OR over overflowingElements, which the audit's reflow-matrix finding cites",
+        "not claimed: that a scrolling grid is usable (arrow-key scrollability, affordance and frozen first column are separate checks), nor any special handling of overflow:overlay"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T1020.md"
     }
   ]
 }
