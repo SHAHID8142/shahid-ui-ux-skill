@@ -25,7 +25,7 @@
         "os": "unrecorded"
       },
       "artifactId": "sus-adapters",
-      "artifactSha256": "7609a7368174c8b1783765f9c08ff89711418b0cb1bda18148931863655d90e9",
+      "artifactSha256": "937a6dab4ba123b943d31c41be1f7eb0e4289ddb57b5bf62d32e2c18a826c436",
       "evidence": null,
       "evidenceState": "missing"
     },
@@ -46,7 +46,7 @@
         "os": "unrecorded"
       },
       "artifactId": "sus-adapters",
-      "artifactSha256": "7609a7368174c8b1783765f9c08ff89711418b0cb1bda18148931863655d90e9",
+      "artifactSha256": "937a6dab4ba123b943d31c41be1f7eb0e4289ddb57b5bf62d32e2c18a826c436",
       "evidence": null,
       "evidenceState": "missing"
     },
@@ -67,7 +67,7 @@
         "os": "unrecorded"
       },
       "artifactId": "sus-adapters",
-      "artifactSha256": "7609a7368174c8b1783765f9c08ff89711418b0cb1bda18148931863655d90e9",
+      "artifactSha256": "937a6dab4ba123b943d31c41be1f7eb0e4289ddb57b5bf62d32e2c18a826c436",
       "evidence": null,
       "evidenceState": "missing"
     },
@@ -88,11 +88,11 @@
         "os": "darwin 27.2.0"
       },
       "artifactId": "sus-adapters",
-      "artifactSha256": "7609a7368174c8b1783765f9c08ff89711418b0cb1bda18148931863655d90e9",
+      "artifactSha256": "937a6dab4ba123b943d31c41be1f7eb0e4289ddb57b5bf62d32e2c18a826c436",
       "evidence": {
-        "ref": "evals/host-smoke/freepi-7609a7368174.json (PASS)",
-        "artifactSha256": "7609a7368174c8b1783765f9c08ff89711418b0cb1bda18148931863655d90e9",
-        "recordedAt": "2026-11-15"
+        "ref": "evals/host-smoke/freepi-937a6dab4ba1.json (PASS)",
+        "artifactSha256": "937a6dab4ba123b943d31c41be1f7eb0e4289ddb57b5bf62d32e2c18a826c436",
+        "recordedAt": "2026-11-16"
       },
       "evidenceState": "verified"
     },
@@ -113,7 +113,7 @@
         "os": "unrecorded"
       },
       "artifactId": "sus-adapters",
-      "artifactSha256": "7609a7368174c8b1783765f9c08ff89711418b0cb1bda18148931863655d90e9",
+      "artifactSha256": "937a6dab4ba123b943d31c41be1f7eb0e4289ddb57b5bf62d32e2c18a826c436",
       "evidence": {
         "ref": "evals/host-smoke/zcode-b061cc4.json (PASS)",
         "artifactSha256": "",

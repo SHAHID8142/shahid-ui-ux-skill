@@ -24,22 +24,41 @@ build when the two disagree, so this page cannot drift again. It was hand-writte
 | M7 | Studio: dual-stack spike → slice → event contract → verification loop | T0700–T0790 (16 tasks) | **done** — 16/16 |
 | M8 | Studio hardening + second-wave playbooks | T0801–T0812 (11 tasks) | **done** — 11/11 |
 | M9 | Adapters + installer + support matrix + dogfood sites | T0901–T0906 (6 tasks) | **done** — 6/6 |
-| M10 | Regression, benchmark, independent review, docs, release | T1001–T1011 (11 tasks) | **9/11 done** — pending: T1003, T1005 |
+| M10 | Regression, benchmark, independent review, docs, release | T1001–T1016 (16 tasks) | **14/16 done** — pending: T1003, T1005 |
 <!-- roadmap:table end -->
 
 ## What is left
 
-Every milestone is complete except **M10**, which holds exactly two tasks and both are
-owner-commissioned:
+Nothing in the build tree. Every milestone is complete except **M10**, and M10's two open tasks
+are the ones a builder must not do for itself:
 
 - **T1003 — independent audit.** A separately commissioned reviewer, not this build loop
-  (D30/D32 forbid interim auditors).
+  (D30/D32 forbid interim auditors). A builder that certifies its own independence has certified
+  nothing.
 - **T1005 — release approval.** The owner's decision to publish the product. The repository is
   public (D34); the product is not published.
 
-Everything else is done, verified by the release suite, and evidenced in `.sus-dev/VERIFICATION/`.
+Everything else is done, verified by the release suite, and evidenced in
+`.sus-dev/VERIFICATION/`. The last five tasks were added by D32 triage of the owner's open
+issues and are now closed with receipts:
+
+- **T1012, T1013 — the `/sus audit` command** (issue #13): an honest invocation contract, a
+  read-only pipeline that composes the gate evaluators and scanners rather than duplicating them,
+  and an evidence/report contract that keeps `not-run` visible and never emits a machine `pass`
+  for a human judgment.
+- **T1014 — seven gates the registry reported as not-run** (G2, G3, G6, G7, G8, G9, G10) are now
+  executable, each with a passing and a failing fixture, so an "unchecked" gate no longer hides
+  behind an implemented one.
+- **T1015 — stale capability and status text**, reconciled against the tree: SKILL.md no longer
+  calls itself a skeleton, the capability matrix marks shipped capabilities built while keeping a
+  degradation sentence per row, and no document names a closed finding as open.
+- **T1016 — the Modern Web Guidance research source** (issue #14), pinned by revision, with a
+  bounded offline-first provider, a checkable guard for the responsive-table pattern that breaks
+  screen-reader header association, and three pilots with measured before/after.
+
 Owner issue #10 (mobile record-list quality) is closed; issue #9 — "never stop after an ordinary
 task" — stays open because it is a standing rule for any resuming agent, not an unfinished task.
+
 
 ## Order rationale (what changed vs the original roadmap)
 

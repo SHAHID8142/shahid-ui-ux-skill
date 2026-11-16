@@ -1,0 +1,21 @@
+{
+  "source": "harness PageMetrics shape plus the clipping-container probe; measured at 320 CSS px",
+  "viewports": [
+    {
+      "url": "http://localhost:3000/",
+      "width": 320,
+      "documentScrollWidth": 320,
+      "documentClientWidth": 320,
+      "overflowingElements": [],
+      "clippingElements": []
+    },
+    {
+      "url": "http://localhost:3000/prooflog",
+      "width": 320,
+      "documentScrollWidth": 320,
+      "documentClientWidth": 320,
+      "overflowingElements": [],
+      "clippingElements": []
+    }
+  ]
+}

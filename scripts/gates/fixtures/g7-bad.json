@@ -1,0 +1,18 @@
+{
+  "source": "bad case: content overflows at 320 CSS px and the overflow is clipped instead of reflowed",
+  "viewports": [
+    {
+      "url": "http://localhost:3000/prooflog",
+      "width": 320,
+      "documentScrollWidth": 812,
+      "documentClientWidth": 320,
+      "overflowingElements": ["table.evidence-grid", "pre.commit-diff"],
+      "clippingElements": [
+        {
+          "selector": ".evidence-scroll",
+          "overflow": "hidden"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "source": "bad case: the reduced-motion trace drops the undo affordance and carries one state only as a colour change",
+  "pairs": [
+    {
+      "id": "save-affordance",
+      "default": {
+        "trace": [
+          {
+            "at": 0,
+            "state": "idle",
+            "text": "Save changes",
+            "visualOnly": false
+          },
+          {
+            "at": 120,
+            "state": "saving",
+            "text": "Saving changes",
+            "visualOnly": false
+          },
+          {
+            "at": 400,
+            "state": "saved",
+            "text": "Changes saved. Undo available",
+            "visualOnly": false
+          }
+        ]
+      },
+      "reducedMotion": {
+        "trace": [
+          {
+            "at": 0,
+            "state": "idle",
+            "text": "Save changes",
+            "visualOnly": false
+          },
+          {
+            "at": 0,
+            "state": "saved",
+            "text": "Changes saved",
+            "visualOnly": true
+          }
+        ]
+      }
+    }
+  ]
+}

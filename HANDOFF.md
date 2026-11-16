@@ -13,8 +13,9 @@ Task status is exclusively TASKS.json; do not infer completion from older report
 
 > **Moving to another machine?** Nothing is held locally: clone, `git switch
 > chore/continuation-reconciliation`, then follow `docs/RESUME_ON_NEW_MACHINE.md`.
-> Build complete at 103/105 tasks; T1003 (independent audit) and T1005 (release approval)
-> are owner-only. Owner issue #10 is closed by evidence: the two measured admin findings are
+> Canonical status is TASKS.json, not this line: read it. The build tree is empty — every
+> task this loop could do is done and receipted — so what remains is owner-only: T1003
+> (independent audit, which a builder must never self-certify) and T1005 (release approval). Owner issue #10 is closed by evidence: the two measured admin findings are
 > fixed, and the record lists now demonstrate two empty kinds, loading, error-keeping-rows,
 > URL state, twelve records and 200% text (see docs/MOBILE_RECORD_PATTERNS.md). Not run and
 > named: a real screen-reader session, browser zoom, real translations.

@@ -1,0 +1,26 @@
+{
+  "source": ".sus/SECTION_STATUS.md (hand-authored bad case: section N+1 accepted while N is still approved)",
+  "order": ["home", "services", "prooflog", "pricing", "faq"],
+  "sections": [
+    {
+      "id": "home",
+      "status": "accepted"
+    },
+    {
+      "id": "services",
+      "status": "accepted"
+    },
+    {
+      "id": "prooflog",
+      "status": "approved"
+    },
+    {
+      "id": "pricing",
+      "status": "accepted"
+    },
+    {
+      "id": "faq",
+      "status": "draft"
+    }
+  ]
+}

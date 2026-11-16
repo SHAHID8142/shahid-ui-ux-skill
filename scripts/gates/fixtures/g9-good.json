@@ -1,0 +1,66 @@
+{
+  "source": "harness semantics probe: headings/landmarks/clickHandlers/focusStyles recorded per page",
+  "pages": [
+    {
+      "path": "http://localhost:3000/",
+      "headings": [
+        {
+          "level": 1,
+          "text": "Build the site your evidence can defend"
+        },
+        {
+          "level": 2,
+          "text": "What you get"
+        },
+        {
+          "level": 3,
+          "text": "Evidence bundles"
+        },
+        {
+          "level": 2,
+          "text": "How it works"
+        }
+      ],
+      "landmarks": [
+        {
+          "role": "banner",
+          "selector": "header"
+        },
+        {
+          "role": "navigation",
+          "selector": "nav.primary"
+        },
+        {
+          "role": "main",
+          "selector": "main"
+        },
+        {
+          "role": "contentinfo",
+          "selector": "footer"
+        }
+      ],
+      "clickHandlers": [
+        {
+          "tag": "button",
+          "selector": "button.primary",
+          "role": "button",
+          "tabIndex": 0,
+          "keyboard": true,
+          "handler": "click"
+        }
+      ],
+      "focusStyles": [
+        {
+          "selector": "a.inline-doc-link",
+          "outline": "none",
+          "replacement": "box-shadow 0 0 0 2px var(--focus)"
+        },
+        {
+          "selector": "button.primary",
+          "outlineStyle": "solid",
+          "replacement": ""
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "generatedBy": "packages/eval-core/tests/pilots.research.test.ts",
+  "command": "SUS_PILOTS=1 pnpm exec vitest run packages/eval-core/tests/pilots.research.test.ts",
+  "runAt": "2026-11-16T04:40:42.523Z",
+  "environment": {
+    "playwright": "^1.65.0",
+    "browser": "chromium (headless, Playwright-managed)",
+    "viewport": "390x844 for the instrument; 320/390/768/1440 for the reflow matrix",
+    "locale": "en"
+  },
+  "honestLimits": [
+    "Headless Chromium in the en locale; no real screen reader and no real user.",
+    "The pilot pages are synthetic pairs built for this comparison, not field pages.",
+    "Long-task timings come from the browser performance timeline, not field INP.",
+    "No claim here compares SUS output with any other method; the host pilots stay not-run."
+  ],
+  "pilots": [
+    {
+      "id": "responsive-table",
+      "guide": "Modern Web Guidance — responsive table / record layout (pinned modern-web-guidance v1.0.0)",
+      "claim": "Stacking table rows at narrow widths without dropping the header row keeps the header-to-cell association, at no reflow cost.",
+      "instrument": "Playwright ariaSnapshot() columnheader count at 390px; document scrollWidth vs clientWidth; axe wcag2a/aa serious+critical; runHardeningMatrix 3 viewports x 2 themes x 2 motion settings",
+      "pages": {
+        "before": {
+          "path": "responsive-table/before.html",
+          "sha256": "744ff7cfb95ad62c872f05daf8a2c6a7619cb99e5a14816f016b5ee87dfb100e"
+        },
+        "after": {
+          "path": "responsive-table/after.html",
+          "sha256": "a04e5b2850f97b1b06628d25d1faa3baa1d41c439b7b9997bff1c3f9afd228a5"
+        }
+      },
+      "before": {
+        "pass": false,
+        "metrics": {
+          "columnheaderCount": 0,
+          "cellCount": 0,
+          "cellsCarryingHeaderText": 0,
+          "axeSeriousCritical": 0,
+          "documentOverflow": false
+        }
+      },
+      "after": {
+        "pass": true,
+        "metrics": {
+          "columnheaderCount": 4,
+          "cellCount": 16,
+          "cellsCarryingHeaderText": 16,
+          "axeSeriousCritical": 0,
+          "documentOverflow": false
+        }
+      },
+      "negativeCase": {
+        "description": "After page with the header row forced to display:none — the instrument must lose the association.",
+        "pass": false,
+        "metrics": {
+          "columnheaderCount": 0,
+          "cellCount": 16,
+          "cellsCarryingHeaderText": 16,
+          "axeSeriousCritical": 0,
+          "documentOverflow": false
+        }
+      },
+      "fallbackCase": {
+        "description": "After page at 320px, the narrowest audited width — the association and the overflow-free layout must both survive.",
+        "pass": true,
+        "metrics": {
+          "columnheaderCount": 4,
+          "cellCount": 16,
+          "cellsCarryingHeaderText": 16,
+          "axeSeriousCritical": 0,
+          "documentOverflow": false
+        }
+      }
+    },
+    {
+      "id": "navigation-drawer",
+      "guide": "Modern Web Guidance — navigation drawer (pinned modern-web-guidance v1.0.0)",
+      "claim": "A drawer that exposes its expanded state, dismisses on Escape, moves focus in and back, and leaves the background inert is measurable; a class-toggle drawer is not.",
+      "instrument": "Playwright keyboard drive: aria-expanded before and after opening, document.activeElement containment over 6 Tab steps, Escape dismissal, focus return to the trigger, plus a javaScriptEnabled:false context for the no-JS fallback",
+      "pages": {
+        "before": {
+          "path": "navigation-drawer/before.html",
+          "sha256": "fa11a211dd6a43b6230e0649ae86c9d54f22724b8d8bf08b8f137668616514a6"
+        },
+        "after": {
+          "path": "navigation-drawer/after.html",
+          "sha256": "e37458e72d1e8d736088575a95ffacfb59b6a3c0a8e9fc3acde3e5c0026b043b"
+        }
+      },
+      "before": {
+        "pass": false,
+        "metrics": {
+          "ariaExpandedInitial": "absent",
+          "ariaExpandedAfterOpen": "absent",
+          "focusInsideAfterOpen": false,
+          "tabStepsInBackground": 4,
+          "drawerClosedAfterEscape": false,
+          "focusReturnedToToggle": false,
+          "noJsVisibleLinks": 0
+        }
+      },
+      "after": {
+        "pass": true,
+        "metrics": {
+          "ariaExpandedInitial": "false",
+          "ariaExpandedAfterOpen": "true",
+          "focusInsideAfterOpen": true,
+          "tabStepsInBackground": 0,
+          "drawerClosedAfterEscape": true,
+          "focusReturnedToToggle": true,
+          "noJsVisibleLinks": 4
+        }
+      },
+      "negativeCase": {
+        "description": "The class-toggle drawer — the same markup without the contract. The instrument must report the missing state.",
+        "pass": false,
+        "metrics": {
+          "ariaExpandedInitial": "absent",
+          "ariaExpandedAfterOpen": "absent",
+          "focusInsideAfterOpen": false,
+          "tabStepsInBackground": 4,
+          "drawerClosedAfterEscape": false,
+          "focusReturnedToToggle": false,
+          "noJsVisibleLinks": 0
+        }
+      },
+      "fallbackCase": {
+        "description": "After page with JavaScript disabled — the four section links must stay visible and reachable.",
+        "pass": true,
+        "metrics": {
+          "noJsVisibleLinksAfter": 4,
+          "noJsVisibleLinksBefore": 0
+        }
+      }
+    },
+    {
+      "id": "inp-handler",
+      "guide": "Modern Web Guidance — identify INP causes / yielding on long tasks (pinned modern-web-guidance v1.0.0)",
+      "claim": "The same 360 ms work budget split into 20 ms chunks with a yield between them produces no long task, so input is not blocked for the whole handler duration.",
+      "instrument": "PerformanceObserver longtask entries around one scripted click, three runs per page with the median reported; totalBlockingMs = sum(max(0, duration - 50)); lab long-task time, not field INP",
+      "pages": {
+        "before": {
+          "path": "inp-handler/before.html",
+          "sha256": "06bec5a4e4d9dfb423cb90c7bd923c013483ea2fb77375b8629507a9ffcb3d6e"
+        },
+        "after": {
+          "path": "inp-handler/after.html",
+          "sha256": "74485acfc4baadb4ab4bb9cf5bc6a4c003213bff3191750ffbd35a92e212ceec"
+        }
+      },
+      "before": {
+        "pass": false,
+        "metrics": {
+          "mode": "sync",
+          "longTaskCount": 1,
+          "maxLongTaskMs": 360,
+          "totalBlockingMs": 310,
+          "busyMs": 360,
+          "runs": 3
+        }
+      },
+      "after": {
+        "pass": true,
+        "metrics": {
+          "mode": "yield",
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "totalBlockingMs": 0,
+          "busyMs": 360,
+          "runs": 3
+        }
+      },
+      "negativeCase": {
+        "description": "One synchronous handler for the whole work budget — the instrument must see the long task.",
+        "pass": false,
+        "metrics": {
+          "mode": "sync",
+          "longTaskCount": 1,
+          "maxLongTaskMs": 360,
+          "totalBlockingMs": 310,
+          "busyMs": 360,
+          "runs": 3
+        }
+      },
+      "fallbackCase": {
+        "description": "After page with window.scheduler removed — the timeout fallback must still avoid the long task.",
+        "pass": true,
+        "metrics": {
+          "mode": "timeout",
+          "longTaskCount": 0,
+          "maxLongTaskMs": 0,
+          "totalBlockingMs": 0,
+          "busyMs": 360,
+          "runs": 3
+        }
+      }
+    }
+  ]
+}

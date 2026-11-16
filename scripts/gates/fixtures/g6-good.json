@@ -1,0 +1,87 @@
+{
+  "source": "recorded observation traces in packages/eval-core/src/harness/transition-oracle.ts shape ({at,state,text,visualOnly})",
+  "pairs": [
+    {
+      "id": "save-affordance",
+      "default": {
+        "trace": [
+          {
+            "at": 0,
+            "state": "idle",
+            "text": "Save changes",
+            "visualOnly": false
+          },
+          {
+            "at": 120,
+            "state": "saving",
+            "text": "Saving changes",
+            "visualOnly": false
+          },
+          {
+            "at": 400,
+            "state": "saved",
+            "text": "Changes saved. Undo available",
+            "visualOnly": false
+          }
+        ]
+      },
+      "reducedMotion": {
+        "trace": [
+          {
+            "at": 0,
+            "state": "idle",
+            "text": "Save changes",
+            "visualOnly": false
+          },
+          {
+            "at": 0,
+            "state": "saving",
+            "text": "Saving changes",
+            "visualOnly": false
+          },
+          {
+            "at": 0,
+            "state": "saved",
+            "text": "Changes saved. Undo available",
+            "visualOnly": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "nav-drawer",
+      "default": {
+        "trace": [
+          {
+            "at": 0,
+            "state": "closed",
+            "text": "Menu",
+            "visualOnly": false
+          },
+          {
+            "at": 240,
+            "state": "open",
+            "text": "Menu open. Close menu",
+            "visualOnly": false
+          }
+        ]
+      },
+      "reducedMotion": {
+        "trace": [
+          {
+            "at": 0,
+            "state": "closed",
+            "text": "Menu",
+            "visualOnly": false
+          },
+          {
+            "at": 0,
+            "state": "open",
+            "text": "Menu open. Close menu",
+            "visualOnly": false
+          }
+        ]
+      }
+    }
+  ]
+}

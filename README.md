@@ -19,8 +19,9 @@ with evidence and stay a learner, not a believer in its training data.
   schema contracts (`sus.playbook`, `sus.direction-derivation`, `sus.state-machine`), the
   evaluation harness (gate evaluators, motion oracles, evidence bundles), the Live Studio
   vertical slice (overlay, spatial intent, dry-run diff, approval-gated apply, undo,
-  verification loop), host adapters with a generated support matrix, and a three-site
-  dogfood audit.
+  verification loop), host adapters with a generated support matrix and a CLI capability
+  matrix (`sus capabilities`) that states, per capability, what the CLI actually does and what
+  still needs a capable model or a host browser, and a three-site dogfood audit.
 - **Verified:** `pnpm verify` (release suite), `pnpm regression` (adds the end-to-end demo and
   the dogfood audit), `pnpm benchmark` (deterministic benchmark arm).
 - **Not done, deliberately:** no human benchmark run (so **no comparative claim is
@@ -63,17 +64,21 @@ SUS/
 ├── docs/
 │   ├── SUS_MASTER_PRD_v1.0.md         # requirements of record (read first)
 │   ├── PRD_AMENDMENTS_v1.1.md         # proposed: scope, epistemic contract, gates, rubric, studio spec
-│   ├── RESEARCH_AND_EXPERTISE_MODEL.md# research: how expert designers work → mechanisms
+│   ├── RESEARCH_AND_EXPERTISE_MODEL.md # research: how expert designers work → mechanisms
 │   ├── PRD_GAP_ANALYSIS.md            # cross-check findings F1–F20 + open questions
 │   ├── COVERAGE_MATRIX.md             # what SUS covers / partially / never
-│   ├── ADR_DRAFTS.md                  # 6 architecture decisions, proposed
-│   ├── GATE_REGISTRY.md               # G1–G12 → owning task, check, verdict rules
+│   ├── LIMITATIONS.md                 # honest limits: measured vs unmeasured, host support
+│   ├── SUPPORT_MATRIX.md              # generated host tiers (`pnpm support:write`)
+│   ├── BUILD_COMPLETION_HANDOFF.md    # what was built and verified, at which revision (T1006)
+│   ├── GATE_REGISTRY.md               # G1–G13 → owning task, check, verdict rules, what is still not-run
 │   ├── TOOLING_CANDIDATES.md          # open-source tool candidates + licences
-│   ├── OWNER_DECISIONS_LOG.md         # every owner instruction, D01–D23, build gate
+│   ├── OWNER_DECISIONS_LOG.md         # every owner instruction, D01–D34, build gate
+│   ├── ADR_DRAFTS.md                  # 6 architecture decisions; adopted per D29 (ADR-003 as amended)
+│   ├── THREAT_MODEL.md                # T1–T10 threats and the retention constraints enforced in code
 │   ├── AGENT_START_PROMPT.md          # paste into a coding agent to start
 │   ├── ROADMAP_AND_TASK_PROTOCOL.md   # milestones, micro-task record, review gates
 │   ├── AUDIT_AND_OPEN_DECISIONS.md    # audit findings + deliberately open decisions
-│   ├── DEEP_AUDIT_2026-11-13.md      # current deep audit; proposed refinements, full scope retained
+│   ├── DEEP_AUDIT_2026-11-13.md       # current deep audit; proposed refinements, full scope retained
 │   └── README_START_HERE.md           # original handoff bundle readme
 └── archive/
     └── SUS_Final_PRD_Handoff_v1.0.zip # original bundle (byte-identical to docs/*.md)
@@ -105,13 +110,23 @@ M8 Studio hardening → M9 multi-agent adapters → M10 benchmarks & release.
 
 ## Known open decisions (block nothing at planning time)
 
-1. Publication channel + open-source license.
-2. Studio stack and first supported web framework (ADR after feasibility study).
-3. Real identities/versions of target hosts (FreePi, Codex, ZCode, WorkBuddy, Auto Pilot, …).
-4. Telemetry, screenshot/DOM retention, remote-work policy.
-5. First-release playbook catalog size and order.
-6. Per-host command syntax.
-7. Benchmark fixtures, hardware and published thresholds.
+1. Licence and publication channel (D06/B003) — still undecided. There is no `LICENSE`
+   file; the repository being public (D34) is not that decision. Nothing is published.
+2. Studio stack and first supported web framework — the slice runs on Astro and Next has one
+   editing path; no host reaches the `supported` tier yet.
+3. Real identities/versions of target hosts — FreePi holds a fresh receipt (`937a6dab4ba1`,
+   2026-11-16, 7/7) but stays `experimental` because Live Studio never ran there; ZCode's
+   receipt is stale and Codex, Claude Code and Cursor have none. No host reaches `supported`
+   (`docs/SUPPORT_MATRIX.md` is the generated record).
+4. Telemetry, screenshot/DOM retention, remote-work policy — retention is constrained in code
+   (redaction, per-record TTL, deletion by subject or revoked consent, see
+   `docs/THREAT_MODEL.md` T9–T10) and the code takes the retention duration as configuration;
+   the policy value itself and any evidence publication remain owner decisions. Image
+   redaction and screenshot-binary retention are **not** implemented.
+5. First-release playbook catalog size and order — settled at 36 built playbooks.
+6. Per-host command syntax — settled per adapter; the CLI fallback is documented.
+7. Benchmark fixtures, hardware and published thresholds — the deterministic arm runs; the
+   human arm has no participants, so the claim gate stays closed.
 
 ## How to resume in a fresh session
 
@@ -119,5 +134,7 @@ M8 Studio hardening → M9 multi-agent adapters → M10 benchmarks & release.
    then `docs/SUS_MASTER_PRD_v1.0.md` and `docs/PRD_AMENDMENTS_v1.1.md`.
 2. Read `docs/AGENT_START_PROMPT.md` for the required first-response output format and the
    canonical authority order (it must name the build gate — review H5).
-3. Inspect the workspace before proposing anything; do not start implementation
-   without explicit user approval of the architecture and first 3–5 micro-tasks.
+3. Inspect the workspace before proposing anything. Implementation is already authorized
+   (owner decision D28, 2026-11-13) against the adopted architecture (ADR-001/002/004/005/006,
+   ADR-003 as amended by D29), so the authorisation question is settled: read the current
+   state in `.sus-dev/STATE.md` and `TASKS.json` and continue the next eligible task.

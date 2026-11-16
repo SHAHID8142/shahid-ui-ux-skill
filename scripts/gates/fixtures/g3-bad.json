@@ -1,0 +1,20 @@
+{
+  "source": "scripts/gates/fixtures: filler text, an authoring marker, and an unregistered numeric claim in one page",
+  "pages": [
+    {
+      "path": "apps/web/content/home.mdx",
+      "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\nTODO: replace this paragraph before launch.\nTeams ship 47% faster with our workflow."
+    }
+  ],
+  "claimsRegister": {
+    "version": 1,
+    "entries": [
+      {
+        "id": "review-time-12min",
+        "claim": "review takes 12 minutes per section",
+        "provenanceId": "prooflog-review-timing",
+        "placement": "apps/web/content/home.mdx"
+      }
+    ]
+  }
+}

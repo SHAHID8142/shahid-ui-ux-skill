@@ -2,7 +2,7 @@
   "meta": {
     "product": "SUS — Shahid UI UX Skill",
     "version": "planning-v1.4",
-    "updated": "2026-11-14",
+    "updated": "2026-11-16",
     "protocol": "docs/AGENT_CONTINUE_PROTOCOL.md; docs/TASK_RECORD_CONTRACT.md",
     "build_gate": "APERIO received 2026-11-13 (D28): build authorized; TASKS.json statuses are canonical",
     "concurrency": {
@@ -2644,7 +2644,12 @@
         "T1008",
         "T1009",
         "T1010",
-        "T1011"
+        "T1011",
+        "T1012",
+        "T1013",
+        "T1014",
+        "T1015",
+        "T1016"
       ],
       "files": [],
       "acc": [
@@ -3916,6 +3921,238 @@
         "not claimed: Node 24 and Windows are not rehearsed by this job; one fresh-clone lane on Node 22 is enough to catch a missing build step"
       ],
       "commit": "same commit as .sus-dev/VERIFICATION/T1011.md"
+    },
+    {
+      "id": "T1012",
+      "m": "M10",
+      "title": "/sus audit invocation contract + composed read-only pipeline (issue #13)",
+      "obj": "Issue #13 asks for an audit command with an honest invocation contract and a pipeline that composes what already exists instead of inventing a second engine. Deliver the contract (target kinds, quick vs deep, routes, viewport set, baseline revision, output locations, --help) and a read-only pipeline: discover, static scan, browser capture, responsive/zoom/keyboard/semantic/a11y checks, perf lab metrics, content heuristics, and severity/cause/source findings in a reproducible report artifact.",
+      "deps": [
+        "T0152",
+        "T0154",
+        "T0159",
+        "T0304",
+        "T0906"
+      ],
+      "files": [
+        "packages/eval-core/src/audit/",
+        "packages/eval-core/src/cli.ts",
+        "packages/eval-core/tests/",
+        "docs/AUDIT_COMMAND.md"
+      ],
+      "acc": [
+        "a documented invocation contract covers local path and authorized URL targets, quick vs deep depth, routes, viewport set, output paths and --help, and states what the command will not do",
+        "the pipeline reuses evaluateG4/evaluateG5, captureMatrix, PageMetrics and @sus/scanners rather than reimplementing a check",
+        "every check reports pass/fail/not-run with the reason, and a browser or host that cannot run is not-run, never pass",
+        "the run is read-only by default and applies nothing to the audited target",
+        "the report artifact is reproducible: same target, revision and viewport set yields the same findings ordering and stable ids"
+      ],
+      "tests": [
+        "packages/eval-core/tests/audit.test.ts (contract parsing, severity mapping, not-run honesty, report stability, no-write guarantee)",
+        "node packages/eval-core/dist/cli.js audit --help",
+        "pnpm verify"
+      ],
+      "risk": "a new audit path that quietly duplicates the gate evaluators would let the two disagree",
+      "rollback": "remove the audit package and its root script; the gate evaluators stay unchanged",
+      "status": "done",
+      "approval": "D32 issue triage (issue #13, P1) within D28 build authorization",
+      "phase": "build",
+      "owner": "lead",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1012.md"
+      ],
+      "results": [
+        "the audit is a composition, not a second engine: compose.ts imports evaluateG4, evaluateG5, evaluateG11, checkSeo and scanText, and defines no threshold of its own",
+        "docs/AUDIT_COMMAND.md is generated from renderContractMarkdown(): the document and the --help output are one source, and a test fails if they drift (verified byte-for-byte, IN_SYNC= true)",
+        "quick mode never launches a browser, so the suite stays runnable inside a parallel pnpm verify",
+        "the viewport set is the union of what issue #13 and G7 require (320/390/768/1440); neither runner covers it alone, so an uncovered cell is not-run rather than silently unmeasured",
+        "not claimed: the audit does not replace the release gates, and browser zoom at 400% remains not-run"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T1012.md"
+    },
+    {
+      "id": "T1013",
+      "m": "M10",
+      "title": "Audit evidence contract, severity/report output and adversarial tests (issue #13)",
+      "obj": "Finish issue #13 sections 4-6: a machine-readable evidence record per finding (issue id, route, viewport, check, value with units and threshold, expected vs observed, impact, confidence, DOM location, artifact hash, provenance, environment, remediation, verdict), an executive summary with P0-P3 findings plus quick wins, screenshots/JSON/Markdown output, and tests for positive, negative, no-browser, unavailable-host and adversarial-content cases. Manual judgment stays separate from automatic verdicts.",
+      "deps": [
+        "T1012"
+      ],
+      "files": [
+        "packages/eval-core/src/audit/",
+        "packages/eval-core/tests/",
+        "docs/AUDIT_COMMAND.md",
+        "evals/evidence/"
+      ],
+      "acc": [
+        "every finding carries the full evidence field set, and a missing field fails validation instead of defaulting",
+        "manual-judgment items are marked as requiring review and can never be emitted as an automatic pass",
+        "tests cover a passing page, a failing page, no browser available, an unavailable host and adversarial page content",
+        "the executive summary orders findings P0-P3 and separates quick wins from structural work",
+        "the optional fix path is approval-gated and never auto-applies"
+      ],
+      "tests": [
+        "packages/eval-core/tests/audit.test.ts (evidence validation, severity ordering, adversarial content, unavailable host, evidence bundle, fix plan gating)",
+        "pnpm verify"
+      ],
+      "risk": "an evidence schema that permits blanks turns \"not checked\" into \"clean\"",
+      "rollback": "revert the evidence/report layer; the pipeline keeps its not-run reporting",
+      "status": "done",
+      "approval": "D32 issue triage (issue #13) within D28 build authorization",
+      "phase": "build",
+      "owner": "lead",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1013.md"
+      ],
+      "results": [
+        "every finding carries a strict nine-key observation; four dishonest shapes are unrepresentable by superRefine (artifact without hash, hash without artifact, measured-without-observed, unjudged-and-confirmed)",
+        "each cited artifact hash was re-derived from disk on a deep run: 8 verified, 4 correctly null (the 320px column is metric-only), 0 mismatches",
+        "a finding whose viewport was never photographed keeps artifact: null; substituting a nearby shot is the one thing worse than no evidence",
+        "eleven adversarial tests in the evidence-contract block, including hostile page content that must not fabricate a verdict and an unavailable host that must degrade to not-run",
+        "not claimed: the seven needs-review items (screen reader, blind A/B, 200%/400% zoom, translations/RTL, content volume, host support, unauthored transition oracles) are listed on every run and never auto-passed"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T1013.md"
+    },
+    {
+      "id": "T1014",
+      "m": "M10",
+      "title": "Make gates G2, G3, G6, G7, G8, G9 and G10 executable in the build",
+      "obj": "The gate registry reports seven gates as not-run: their harness fields and evaluators exist but scripts/check-gates.mjs never runs them, and the registry has no negative fixture for them. Wire each gate to a real evaluator over the existing harness output (section order, placeholder content, transition oracles, reflow/zoom, target size, semantics, detector precision/recall), add the missing bad fixtures, and reconcile the md/json status rows so the registry cannot claim a gate is implemented while nothing checks it.",
+      "deps": [
+        "T0159",
+        "T0152",
+        "T0603"
+      ],
+      "files": [
+        "scripts/check-gates.mjs",
+        "scripts/lib/gates/",
+        "scripts/gates/fixtures/",
+        "docs/GATE_REGISTRY.json",
+        "docs/GATE_REGISTRY.md",
+        "packages/eval-core/src/harness/",
+        "packages/eval-core/tests/"
+      ],
+      "acc": [
+        "each of G2, G3, G6, G7, G8, G9, G10 has an executable check that fails on its bad fixture and passes on its good fixture",
+        "a gate with no measurement still reports not-run and fails closed, so nothing is upgraded to pass by absence",
+        "the registry JSON and the human-readable table agree on checkStatus for every gate",
+        "no gate is silently removed or relaxed; any change of scope is recorded with the reason"
+      ],
+      "tests": [
+        "node scripts/check-gates.mjs (all gates, both directions)",
+        "packages/eval-core/tests/*.test.ts for each new evaluator",
+        "pnpm verify"
+      ],
+      "risk": "a gate that passes because its input was empty is worse than a gate that admits it did not run",
+      "rollback": "revert the wiring; the gates return to not-run and the registry says so",
+      "status": "done",
+      "approval": "D32 issue triage / build-phase completion (D28)",
+      "phase": "build",
+      "owner": "lead",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1014.md"
+      ],
+      "results": [
+        "seven gates moved from not-run to implemented in one direction only; no owner task list, threshold or waivability changed, and G13 stays never waivable",
+        "each gate has a good fixture, a bad fixture and, where input can be starved, a fail-closed probe: empty traces, no 320px record, no controls and no labelled cases all refuse to pass",
+        "mutation sweep caught 7 of 7 substitutions with exactly that gate failing, then restored the tree to exit 0 - a gate that cannot fail on its own bad fixture measures nothing",
+        "the G10 corpus is compared against the shipped detector, so a detector change the corpus did not follow is caught instead of passing quietly",
+        "not claimed: G7 400% zoom is still not-run because the harness does not drive browser zoom; the run says so on every execution"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T1014.md"
+    },
+    {
+      "id": "T1015",
+      "m": "M10",
+      "title": "Reconcile stale capability and status text across the public surface",
+      "obj": "Several documents still describe an earlier state: skill/SKILL.md calls itself a v0.1 skeleton and defers licensing, the adapter CLI capability matrix reports shipped capabilities as unbuilt, LIMITATIONS and the build handoff still name a closed dogfood finding, and README and the repository description lag the current build. Reconcile them against the tree and keep the claim checker green.",
+      "deps": [
+        "T1012",
+        "T0204",
+        "T0905"
+      ],
+      "files": [
+        "skill/SKILL.md",
+        "packages/adapters/src/cli.ts",
+        "packages/adapters/tests/cli.test.ts",
+        "docs/LIMITATIONS.md",
+        "docs/BUILD_COMPLETION_HANDOFF.md",
+        "docs/SUPPORT_MATRIX.md",
+        "README.md",
+        ".sus-dev/STATE.md"
+      ],
+      "acc": [
+        "SKILL.md describes the delivered bundle and no longer claims a v0.1 skeleton or an open licence decision it cannot substantiate",
+        "the capability matrix marks shipped capabilities as built and keeps an honest degradation statement for each",
+        "no document names a closed finding as open, and none states a progress figure that disagrees with TASKS.json",
+        "node scripts/check-claims.mjs and node scripts/check-handoff.mjs stay green"
+      ],
+      "tests": [
+        "node scripts/check-claims.mjs",
+        "node scripts/check-handoff.mjs",
+        "packages/adapters/tests/cli.test.ts",
+        "pnpm verify"
+      ],
+      "risk": "editing status prose can accidentally upgrade a limitation into a claim",
+      "rollback": "revert the documentation commit; the claim checker stays green either way",
+      "status": "done",
+      "approval": "D32 issue triage; housekeeping required by the repository honesty rules",
+      "phase": "build",
+      "owner": "lead",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1015.md"
+      ],
+      "results": [
+        "the capability matrix now marks all seven capabilities built and every row keeps a requiresModel sentence naming what a CLI cannot do, so built never reads as autonomy; the honest degradation header literal the host smoke script greps is unchanged",
+        "two closed findings (343 px overflow, 4.46:1 muted text) were corrected where they are described and left verbatim in the findings record; no limitation was upgraded, and check-claims stayed green over six claim-bearing files",
+        "two status pages quoted progress figures TASKS.json had left behind (103/105, 98 of 100); both now name no count at all, which is the only form of that sentence that cannot go false, and the count-claim rule still fails the build if one returns",
+        "the generated host records were regenerated from a fresh 7/7 smoke run against artifact 937a6dab4ba1 rather than hand-edited; FreePi still stays experimental because Live Studio has not run on any host",
+        "not claimed: no host reaches the supported tier, skill/ is unpublished, no live host-triggering eval was run, and G7 400% zoom is still not-run inside an implemented gate"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T1015.md"
+    },
+    {
+      "id": "T1016",
+      "m": "M10",
+      "title": "Bounded research-source integration for Modern Web Guidance (issue #14)",
+      "obj": "Issue #14 asks for GoogleChrome/modern-web-guidance to be usable as a versioned research source without adopting its runtime. Record a pinned source revision with retrieval notes, add the guard this repository needs (CSS-generated labels on responsive tables break screen-reader header association), keep telemetry and offline behaviour explicit, and run at least three pilot UI tasks with measured before/after. Do not vendor or execute third-party code.",
+      "deps": [
+        "T0304",
+        "T0906"
+      ],
+      "files": [
+        "evals/research/",
+        "docs/",
+        "packages/scanners/"
+      ],
+      "acc": [
+        "the source is pinned by revision with a retrieval note that states what was and was not used",
+        "the responsive-table guard is recorded and checkable, and telemetry/offline behaviour is stated rather than assumed",
+        "at least three pilot tasks record a measured before/after rather than an impression",
+        "no third-party code is vendored or executed, and no claim exceeds what was measured"
+      ],
+      "tests": [
+        "packages/scanners/tests/*.test.ts for the guard rule",
+        "node scripts/check-claims.mjs",
+        "pnpm verify"
+      ],
+      "risk": "importing guidance as if it were measured evidence would launder an opinion into a claim",
+      "rollback": "delete the research note and the guard rule; nothing runtime depends on them",
+      "status": "done",
+      "approval": "D32 issue triage (issue #14, P2)",
+      "phase": "build",
+      "owner": "lead",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1016.md"
+      ],
+      "results": [
+        "the pin records release v1.0.0 at revision 4dd9683 with four guide paths and sha256 null / verified unverified for every one, plus a verificationNote that says the pin came from owner triage in issue #14 rather than a fetch by this toolchain; a notPinned list names the ~250 other guides and the upstream tooling that are covered by nothing",
+        "checkResponsiveTable() returns five named checks over a stylesheet and optional markup, and 22 tests hold it: the real fixtures/admin pair passes, seven mutated copies each fail a named check (thead display:none, header visibility:hidden, html overflow-x:hidden, table overflow:clip, a cell with no data-label, reordered labels, labels no rule paints), and both measured pilot pages agree with the browser",
+        "writing those tests found two real guard defects that are fixed here: pseudo-label-pattern only matched content: attr(data-label) exactly, so the anti-pattern decoration attr(data-label) \": \" read as no-pattern and skipped the header check entirely, and a table using neither half of the pattern was reported fail instead of not-applicable",
+        "three pilots measured in headless Chromium with before/after pairs, a negative control and a fallback: responsive-table columnheader 0 -> 4 (negative 0, 320px fallback 4), navigation-drawer six contract flags false -> true with 4 -> 0 tab steps behind the drawer, inp-handler 1 long task 360ms and 310ms blocking -> 0 and 0; pnpm pilots re-measures and pnpm test re-checks committed digests without a browser",
+        "not claimed: the pin stays unverified so the provider arm is not-run end to end, the with-provider half is exercised only through an injected fake loader, three pilots cover a fraction of ~254 guides, and a source-text pass never means assistive technology works"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T1016.md"
     }
   ]
 }

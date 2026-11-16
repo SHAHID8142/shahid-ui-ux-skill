@@ -27,8 +27,10 @@ describe('sus CLI fallback (T0204)', () => {
     expect(r.status).toBe(0);
     expect(r.out).toContain('honest degradation');
     expect(r.out).toMatch(/\[cli\] intent-routing/);
-    expect(r.out).toMatch(/\[unbuilt\] live-studio/);
-    expect(r.out).toContain('direction reasoning is a model capability');
+    expect(r.out).toMatch(/\[cli\] live-studio/);
+    expect(r.out).toMatch(/\[cli\] anti-slop-scanning/);
+    expect(r.out).toContain('sus-scan');
+    expect(r.out).toContain('Deriving a thesis for a new brief is model work');
   });
 
   it('route emits a schema-valid intent JSON', () => {

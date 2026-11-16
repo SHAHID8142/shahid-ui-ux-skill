@@ -58,12 +58,16 @@ only"** rather than improvised expertise. Silence is not allowed.
 
 ## 4. Hosts (agents)
 
-| Host | Status at v1 |
-|---|---|
-| FreePi CLI | development host — formal install/load/invoke smoke test still required before any "supported" label (T0902) |
-| One additional host verified by smoke test | supported |
-| Codex, Claude Code, Cursor, Copilot, Gemini CLI, others | experimental until each passes install + invocation + skill-loading smoke test |
-| Any host without skill-file loading | unsupported — CLI fallback documented |
+Tiers are generated, never asserted: `docs/SUPPORT_MATRIX.md` is rendered from
+`evals/host-smoke/*.json` and `pnpm support` fails when it drifts. As of 2026-11-16 no host
+reaches `supported`, because that tier also requires a Live Studio run on the host.
+
+| Host | Status now | Basis |
+|---|---|---|
+| FreePi CLI | experimental | smoke PASS 7/7 against the current artefact (`evals/host-smoke/freepi-937a6dab4ba1.json`); Live Studio not exercised there |
+| ZCode | experimental | smoke PASS 7/7 but against an earlier artefact hash; needs a re-run |
+| Codex, Claude Code, Cursor, Copilot, Gemini CLI, others | experimental | no smoke evidence yet |
+| Any host without skill-file loading | unsupported | CLI fallback documented, no skill loading |
 
 ## 5. Honest limitation statements (ship in README)
 

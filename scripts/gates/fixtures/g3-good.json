@@ -1,0 +1,24 @@
+{
+  "source": "scripts/gates/fixtures: copy that is finished and backed by a claims register",
+  "pages": [
+    {
+      "path": "apps/web/content/home.mdx",
+      "text": "Build the site your evidence can defend.\nEvidence bundles record what was run, on which commit, and what it proved.\nNo page ships with a number that has no provenance behind it.\nReview takes 12 minutes per section in our own runs."
+    },
+    {
+      "path": "apps/web/content/services.mdx",
+      "text": "## What this is\nA static site with a build gate that fails closed."
+    }
+  ],
+  "claimsRegister": {
+    "version": 1,
+    "entries": [
+      {
+        "id": "review-time-12min",
+        "claim": "review takes 12 minutes per section",
+        "provenanceId": "prooflog-review-timing",
+        "placement": "apps/web/content/home.mdx"
+      }
+    ]
+  }
+}

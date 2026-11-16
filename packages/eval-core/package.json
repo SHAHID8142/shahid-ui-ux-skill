@@ -27,6 +27,7 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "@sus/scanners": "workspace:*",
     "@sus/schemas": "workspace:*",
     "zod": "^4.6.7"
   }

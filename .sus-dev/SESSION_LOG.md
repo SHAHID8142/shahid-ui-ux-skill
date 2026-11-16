@@ -755,3 +755,27 @@
   43751035048: all four jobs green, and the fresh-clone log shows setup, the ensure-built line and 70
   files / 752 tests passing on a tree that had never been built. The documented path is now verified
   on Linux on every push.
+
+- 2026-11-16T10:58:00+06:00 | Pi (FreePi) | T1012-T1016 | Five D32-triaged tasks closed in one sweep,
+  each with its own receipt. **T1012/T1013**: `/sus audit` is a composition, not a second engine —
+  `packages/eval-core/src/audit/{contract,compose,pipeline,report}.ts` reuse `evaluateG4`,
+  `evaluateG5`, `captureMatrix`, `runHardeningMatrix` and `@sus/scanners`; 39 tests, among them
+  eleven adversarial ones that fail if a document is returned satisfied by its own preparation, if an
+  artefact lacks a hash, or if a human judgment is stamped `pass`. **T1014**: seven gates that the
+  registry called `not-run` (G2, G3, G6, G7, G8, G9, G10) now execute, each with a good and a bad
+  fixture; `check-gates.mjs` emits 55 `[PASS]` lines, and a mutation sweep substituted each bad
+  fixture into the good slot: `caught=7 missed=0`. G7's 400 % zoom half stays `not-run` out loud.
+  **T1015**: stale prose reconciled — SKILL.md no longer calls itself a skeleton, the capability
+  matrix marks shipped capabilities built and keeps a degradation sentence per row. **T1016**: the
+  Modern Web Guidance source is pinned by revision and stays `unverified` (`sha256: null`), so the
+  provider arm is `not-run` rather than assumed; `checkResponsiveTable()` makes the one recipe that
+  breaks screen-reader header association checkable in 22 tests, and writing those tests found two
+  real guard defects (an anchored `attr(data-label)` regex that let the anti-pattern page skip the
+  header check entirely, and an out-of-scope table reported `fail` instead of `not-applicable`);
+  three pilots carry measured before/after (columnheader 0 → 4 with a negative at 0 and a 320 px
+  fallback at 4; drawer contract flags false → true with 4 → 0 tab steps behind it; INP 360 ms/310 ms
+  blocking → 0/0). Receipts: VERIFICATION/T1012.md, T1013.md, T1014.md, T1015.md, T1016.md.
+  `pnpm verify` exit 0 — 74 files + 3 skipped, 845 tests passed / 9 skipped, 89.5 s, 13/13 gates
+  implemented, registry still names G7 400 % zoom as unmeasured. Count is now **108 of 110 done**;
+  only the owner-only T1003 and T1005 remain.
+

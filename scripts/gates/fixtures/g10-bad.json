@@ -1,0 +1,78 @@
+{
+  "source": "bad case: identical corpus, but the detector is recorded as missing the fake-precision defect",
+  "targetSource": "targets read from docs/GATE_REGISTRY.json G10",
+  "cases": [
+    {
+      "id": "positive/dark-urgency.md:3",
+      "expected": "finding",
+      "predicted": "finding",
+      "category": "dark-urgency"
+    },
+    {
+      "id": "positive/fake-precision.md:3",
+      "expected": "finding",
+      "predicted": "clean",
+      "category": null
+    },
+    {
+      "id": "positive/template-speak.md:3",
+      "expected": "finding",
+      "predicted": "finding",
+      "category": "template-speak"
+    },
+    {
+      "id": "positive/template-speak.md:4",
+      "expected": "finding",
+      "predicted": "finding",
+      "category": "template-speak"
+    },
+    {
+      "id": "negative/legitimate.md:3",
+      "expected": "clean",
+      "predicted": "clean",
+      "category": null
+    },
+    {
+      "id": "negative/legitimate.md:4",
+      "expected": "clean",
+      "predicted": "clean",
+      "category": null
+    },
+    {
+      "id": "negative/legitimate.md:5",
+      "expected": "clean",
+      "predicted": "clean",
+      "category": null
+    },
+    {
+      "id": "negative/legitimate.md:6",
+      "expected": "clean",
+      "predicted": "clean",
+      "category": null
+    },
+    {
+      "id": "negative/legitimate.md:7",
+      "expected": "clean",
+      "predicted": "clean",
+      "category": null
+    },
+    {
+      "id": "negative/legitimate.md:8",
+      "expected": "clean",
+      "predicted": "clean",
+      "category": null
+    },
+    {
+      "id": "negative/legitimate.md:9",
+      "expected": "clean",
+      "predicted": "clean",
+      "category": null
+    },
+    {
+      "id": "negative/legitimate.md:10",
+      "expected": "clean",
+      "predicted": "clean",
+      "category": null
+    }
+  ]
+}

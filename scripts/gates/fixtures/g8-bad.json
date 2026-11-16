@@ -1,0 +1,21 @@
+{
+  "source": "bad case: an undocumented 16x16 icon button and an exception the standard does not recognise",
+  "controls": [
+    {
+      "selector": "button.icon-close",
+      "width": 16,
+      "height": 16,
+      "role": "button",
+      "text": "Close"
+    },
+    {
+      "selector": "button.primary",
+      "width": 20,
+      "height": 20,
+      "role": "button",
+      "text": "Get started",
+      "exception": "design-system-44",
+      "justification": "our comfort preference is 44px"
+    }
+  ]
+}

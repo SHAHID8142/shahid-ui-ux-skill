@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pilot 3 — INP: filter handler (after)</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        padding: 1rem;
+        color: #1a1d23;
+        background: #fff;
+        line-height: 1.5;
+      }
+      main {
+        max-inline-size: 40rem;
+      }
+      #go {
+        font: inherit;
+        min-block-size: 2.75rem;
+        padding-inline: 0.9rem;
+        border: 1px solid #b7bdc9;
+        border-radius: 0.375rem;
+        background: #f4f6fa;
+        cursor: pointer;
+      }
+      #status {
+        display: block;
+        margin-block: 0.75rem;
+        font-weight: 600;
+        color: #3d434d;
+      }
+      li {
+        padding-block: 0.2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Filter results</h1>
+      <p>Same work in both variants: the handler filters the result set before it renders.</p>
+      <button id="go" type="button">Apply filters</button>
+      <output id="status">idle</output>
+      <ul id="results">
+        <li>Record 01 — fixture row</li>
+        <li>Record 02 — fixture row</li>
+        <li>Record 03 — fixture row</li>
+        <li>Record 04 — fixture row</li>
+        <li>Record 05 — fixture row</li>
+        <li>Record 06 — fixture row</li>
+        <li>Record 07 — fixture row</li>
+        <li>Record 08 — fixture row</li>
+        <li>Record 09 — fixture row</li>
+        <li>Record 10 — fixture row</li>
+        <li>Record 11 — fixture row</li>
+        <li>Record 12 — fixture row</li>
+        <li>Record 13 — fixture row</li>
+        <li>Record 14 — fixture row</li>
+        <li>Record 15 — fixture row</li>
+        <li>Record 16 — fixture row</li>
+        <li>Record 17 — fixture row</li>
+        <li>Record 18 — fixture row</li>
+        <li>Record 19 — fixture row</li>
+        <li>Record 20 — fixture row</li>
+      </ul>
+    </main>
+    <script>
+      /* PILOT VARIANT: after — the same work budget, split into short chunks
+         with a yield between them, so input and paint are not blocked.
+         scheduler.yield() is used when the browser exposes it; a timeout is the
+         documented fallback for browsers that do not (issue #14 item 4: the
+         fallback is measured, not assumed). */
+      const WORK_MS = 360;
+      const CHUNK_MS = 20;
+      const status = document.getElementById('status');
+      const results = document.getElementById('results');
+      const hasSchedulerYield = () => typeof globalThis.scheduler?.yield === 'function';
+      const yieldToBrowser = () =>
+        hasSchedulerYield()
+          ? globalThis.scheduler.yield()
+          : new Promise((resolve) => setTimeout(resolve, 0));
+
+      document.getElementById('go').addEventListener('click', async () => {
+        const start = performance.now();
+        const mode = hasSchedulerYield() ? 'yield' : 'timeout';
+        window.__work = { mode, touched: 0, chunks: 0, busyMs: 0 };
+        let busy = 0;
+        while (busy < WORK_MS) {
+          const chunkStart = performance.now();
+          while (performance.now() - chunkStart < CHUNK_MS) {
+            window.__work.touched += 1;
+          }
+          busy += performance.now() - chunkStart;
+          window.__work.chunks += 1;
+          await yieldToBrowser();
+        }
+        window.__work.busyMs = busy;
+        results.dataset.filtered = 'true';
+        status.textContent = 'done';
+      });
+    </script>
+  </body>
+</html>

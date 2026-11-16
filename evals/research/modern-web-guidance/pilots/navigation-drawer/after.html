@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pilot 2 — navigation drawer (after)</title>
+    <script>
+      /* With JS available the nav can collapse; without it the nav stays open
+         (the no-JS fallback is the markup's default state). */
+      document.documentElement.classList.add('js');
+    </script>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        color: #1a1d23;
+        background: #fff;
+        line-height: 1.5;
+      }
+      #app-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 1rem;
+        border-block-end: 1px solid #d6dae2;
+      }
+      #app-header .brand {
+        font-weight: 700;
+        margin-inline-end: auto;
+      }
+      #menu-toggle {
+        font: inherit;
+        min-block-size: 2.75rem;
+        padding-inline: 0.9rem;
+        border: 1px solid #b7bdc9;
+        border-radius: 0.375rem;
+        background: #f4f6fa;
+        cursor: pointer;
+      }
+      #menu-toggle:focus-visible,
+      #drawer a:focus-visible,
+      main a:focus-visible {
+        outline: 2px solid #1b5fd6;
+        outline-offset: 2px;
+      }
+      #drawer {
+        padding: 1rem;
+        border: 1px solid #d6dae2;
+        margin: 1rem;
+        border-radius: 0.5rem;
+      }
+      #drawer ul {
+        margin: 0;
+        padding-inline-start: 1.1rem;
+      }
+      #drawer a {
+        display: inline-block;
+        padding-block: 0.4rem;
+      }
+      main {
+        padding: 1rem;
+        max-inline-size: 40rem;
+      }
+      main section {
+        border-block-end: 1px solid #e5e8ee;
+        padding-block-end: 0.75rem;
+      }
+    </style>
+    <style>
+      html.js #drawer[data-open='false'] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header id="app-header">
+      <p class="brand">Harbor &amp; Leaf</p>
+      <button id="menu-toggle" type="button" aria-expanded="true" aria-controls="drawer">
+        Menu
+      </button>
+    </header>
+
+    <main id="main">
+      <section id="section-1">
+        <h2>Overview</h2>
+        <p>Section 1 body copy. Synthetic content for the pilot page.</p>
+        <p><a href="#section-1-detail">Open overview detail</a></p>
+      </section>
+      <section id="section-2">
+        <h2>Records</h2>
+        <p>Section 2 body copy. Synthetic content for the pilot page.</p>
+        <p><a href="#section-2-detail">Open records detail</a></p>
+      </section>
+      <section id="section-3">
+        <h2>Invoices</h2>
+        <p>Section 3 body copy. Synthetic content for the pilot page.</p>
+        <p><a href="#section-3-detail">Open invoices detail</a></p>
+      </section>
+      <section id="section-4">
+        <h2>Settings</h2>
+        <p>Section 4 body copy. Synthetic content for the pilot page.</p>
+        <p><a href="#section-4-detail">Open settings detail</a></p>
+      </section>
+    </main>
+
+    <nav id="drawer" aria-label="Sections" data-open="true">
+      <ul>
+        <li><a href="#section-1">Overview</a></li>
+        <li><a href="#section-2">Records</a></li>
+        <li><a href="#section-3">Invoices</a></li>
+        <li><a href="#section-4">Settings</a></li>
+      </ul>
+    </nav>
+
+    <script>
+      /* PILOT VARIANT: after — expanded state, Escape dismiss, focus moves into
+         the drawer and returns to the trigger, and the background is inert
+         while the drawer is open. */
+      (function () {
+        const toggle = document.getElementById('menu-toggle');
+        const drawer = document.getElementById('drawer');
+        const main = document.getElementById('main');
+        const firstLink = drawer.querySelector('a');
+
+        function setOpen(open) {
+          drawer.dataset.open = open ? 'true' : 'false';
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+          main.inert = open;
+          if (open) {
+            firstLink.focus();
+          } else {
+            toggle.focus();
+          }
+        }
+
+        toggle.addEventListener('click', () => {
+          setOpen(drawer.dataset.open !== 'true');
+        });
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && drawer.dataset.open === 'true') {
+            event.preventDefault();
+            setOpen(false);
+          }
+        });
+
+        setOpen(false);
+      })();
+    </script>
+  </body>
+</html>

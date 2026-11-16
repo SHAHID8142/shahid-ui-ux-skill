@@ -1,0 +1,36 @@
+{
+  "source": "harness smallTapTargets probe extended with the documented SC 2.5.8 exception per control",
+  "controls": [
+    {
+      "selector": "button.primary",
+      "width": 44,
+      "height": 44,
+      "role": "button",
+      "text": "Get started"
+    },
+    {
+      "selector": "button.icon-close",
+      "width": 24,
+      "height": 24,
+      "role": "button",
+      "text": "Close"
+    },
+    {
+      "selector": "a.inline-doc-link",
+      "width": 18,
+      "height": 18,
+      "role": "link",
+      "text": "See the provenance catalog for the full list",
+      "exception": "inline",
+      "inline": true
+    },
+    {
+      "selector": "input[type=checkbox].consent",
+      "width": 13,
+      "height": 13,
+      "role": "checkbox",
+      "exception": "user-agent",
+      "justification": "size is set by the user agent default checkbox, not by page CSS"
+    }
+  ]
+}

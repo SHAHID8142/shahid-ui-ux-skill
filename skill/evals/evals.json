@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "Triggering evals (T0205 expands this to the full should/should-not suite with recorded results).",
+  "note": "Triggering evals (T0205). skill/evals/trigger-results.json records the deterministic proxy: 4/4 should-trigger hit, 0 false positives, 0 false negatives. Live host-triggering evals (a real host loading the description) have not been run — see docs/LIMITATIONS.md.",
   "shouldTrigger": [
     "Build a marketing landing page for my research tool",
     "Review this admin dashboard for usability and accessibility",

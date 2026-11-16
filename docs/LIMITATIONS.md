@@ -38,15 +38,27 @@ written down is a bug with better manners.
 
 ## 4. Implementation limits found while building
 
-- The dogfood audit covers **five** checks against 36 playbooks' worth of rules. Two of
-  three reference implementations passing says the checks are not exhaustive, not that the
-  sites are exemplary.
-- The admin reference implementation currently **fails** two of those checks (343 px
-  horizontal overflow at 390 px, 4.46:1 contrast). Both are documented in
-  `docs/DOGFOOD_FINDINGS.md` and left unfixed on purpose, because the fixture is the
-  evaluation ruler and a fix needs a deliberate baseline refresh.
-- The suite passes on a warm machine with Chromium pre-installed; a cold CI runner will be
-  slower than the measured 129.8 s for `pnpm regression`.
+- The dogfood audit runs **five** checks over three reference sites. All three pass all five,
+  which says the checks are not exhaustive, not that the sites are exemplary. The five checks
+  exercise four playbooks — `search-filters`, `tabs`, `accordion`, `form-input-validation` —
+  plus gate G4; the other thirty-two playbooks are not dogfooded at all
+  (`packages/eval-core/src/dogfood.ts`).
+- The admin fixture **did** fail two of those checks (343 px horizontal overflow at 390 px,
+  4.46:1 muted contrast). Both were fixed under T1007 (issue #10) and the re-run on
+  2026-11-15 measured 0 overflow at 320/390/768/1440 and `--muted: #5f6775` at 5.28:1 on the
+  page and 5.70:1 on panels. The original numbers stay in `docs/DOGFOOD_FINDINGS.md`
+  verbatim as the record of the first run. A later slice (T1008) gave the fixture a real
+  record list — twelve invoices, two kinds of empty state, loading that keeps the rows,
+  an error that keeps the rows and recovers on retry, filters/sort/page carried in the URL.
+  Issue #10 is closed on that evidence. What no run has done is named in the receipts
+  rather than implied: no assistive-technology session, and no browser zoom as distinct
+  from text scaling, because headless Chromium cannot emulate it
+  (`.sus-dev/VERIFICATION/T1007.md`, `T1008.md`).
+- Every timing in this repository comes from one machine with Chromium pre-installed. The
+  newest clean `pnpm regression` measured 143.7 s
+  (`evals/reports/regression-4aac091d1312.json`, 2026-11-15: 115.5 s verify, 4.0 s demo loop,
+  24.2 s dogfood). No cold-runner figure exists, so any claim about CI duration would be an
+  inference rather than a measurement.
 - Live Studio is exercised end to end on one stack (Astro in the demo) and one editing path
   (Next in T0700wb). Other stacks are claimed only as far as their support-matrix row says,
   and no row currently reaches `supported`.
@@ -55,12 +67,17 @@ written down is a bug with better manners.
 
 | Host | Tier | Basis |
 | --- | --- | --- |
-| FreePi CLI | verified against the current artefact | install/load/invoke smoke test re-run green |
-| ZCode | stale | previous smoke evidence predates the current artefact hash |
-| Codex, Claude Code, Cursor | untested | no smoke evidence |
+| FreePi CLI | experimental (fresh smoke) | `evals/host-smoke/freepi-937a6dab4ba1.json` ran against the current artefact on 2026-11-16 and passed 7/7; the tier stays experimental only because Live Studio was not exercised there |
+| ZCode | experimental (stale) | its smoke evidence predates the current artefact hash |
+| Codex, Claude Code, Cursor | experimental (untested) | no smoke evidence |
 
-Generated from `docs/compatibility.json` by `pnpm support:write`; hand-editing this table
-would make it drift, which is why it is generated and checked by `pnpm support`.
+No row reaches `supported`: that tier also requires Live Studio to pass, and Live Studio was
+not exercised on any host.
+
+The machine-readable record is `docs/compatibility.json`, written by `pnpm support:write`
+from `evals/host-smoke/*.json` and drift-checked by `pnpm support`; the authoritative rendered
+table is [`docs/SUPPORT_MATRIX.md`](SUPPORT_MATRIX.md). This summary is copied from it by hand
+and can lag — when in doubt the generated page wins.
 
 ## 6. What this build is not
 

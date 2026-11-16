@@ -1,7 +1,7 @@
 ---
 name: shahid-ui-ux-skill
 description: Design and build production-quality web UI with evidence-backed judgment. SUS researches the brief, argues with evidence instead of silently complying, never fills templates, and works section by section with explicit human approval for every visible change and source edit. Covers marketing, e-commerce, CMS/CRM admin (Operate mode) and portfolio surfaces; includes anti-slop scanning, semantic design tokens, motion intelligence and a Live Studio bridge for drawing intent directly over a running page. Use when the task involves creating, reviewing or editing web interfaces, design systems, UX flows, SEO/copy quality, or motion and accessibility decisions for the web.
-license: Proprietary — licence decision pending (owner gate D06/B003; no distribution until decided)
+license: Proprietary — all rights reserved; the product licence and distribution channel are undecided (owner gate D06/B003), and the repository being public (D34) does not decide them
 ---
 
 # SUS — Shahid UI UX Skill
@@ -41,12 +41,16 @@ Load only what the task needs (keeps context small):
 
 - `references/precedence.md` — how SUS instructions rank against the host
   agent's own defaults, the user's brief, and project conventions.
-- `references/surfaces.md` — per-surface-mode guidance (M4 playbooks land
-  there as they are built; the file names what exists so far, honestly).
+- `references/surfaces.md` — per-surface-mode status: which surface modes and
+  which of the 36 built playbooks exist, and what is still missing.
+- `references/playbooks/*.json` — the playbooks themselves, one file per
+  component or surface pattern; load the one the task needs, not the set.
 - `references/art-direction.md` — the imagery plan every direction record must
   carry: asset strategy, licensing record, focal points, weight budgets.
-- `scripts/` — deterministic checks (scanner, validators) run via the SUS
-  CLI, not by prompt instructions.
+- `scripts/` — empty in the shipped bundle. The deterministic checks
+  (anti-slop scanner, validators, gate checks) are repository tools under
+  `packages/scanners` and `scripts/`; they run from there, not from prompt
+  instructions.
 
 ## Honesty rules
 
@@ -57,10 +61,31 @@ Load only what the task needs (keeps context small):
 - Unverified claims, missing evidence and known limitations are stated, never
   papered over.
 
-## Status of this bundle (v0.1 skeleton)
+## Status of this bundle
 
-Core execution rules above are authoritative. Surface playbooks, the
-anti-slop corpus, motion contracts and Live Studio workflows are built in
-milestones M3–M8 and are listed in `references/surfaces.md` **only when they
-exist**. Host-specific entries are generated artifacts (ADR-002) and carry
-honest support tiers from M9.
+Core execution rules above are authoritative. What ships in this bundle, as of
+2026-11-16:
+
+- **36 playbooks** in `references/playbooks/`, each carrying all twelve parts of
+  the PRD §6 standard (intent, inputs, anatomy, states, motion with a reduced
+  alternative, accessibility, responsive rules, failure cases, graded references).
+  `references/surfaces.md` maps them to the four surface modes and names what is
+  still missing rather than implying parity.
+- **9 reference files**: `precedence`, `surfaces`, `direction`,
+  `art-direction`, `motion-interruption`, `copy-seo`, and three
+  `foundations-*` files (layout/responsive, colour/typography, heuristics/IA).
+- **`evals/`**: a small triggering set (4 should-trigger, 3 should-not) plus the
+  result of a **deterministic proxy** over description terms — recorded as such.
+  Live host-triggering evals have not run, so this is not a claim that the
+  description triggers correctly in a real host.
+- **`scripts/`**: empty in the bundle by design. The scanner, the validators and
+  the gate checks live in the repository (`packages/scanners`, `scripts/`).
+
+Live Studio is a repository capability, not a bundle file: a bridge with
+annotate → intent → diff → approval-gated apply → verify → undo exists and is
+exercised against one Astro fixture; it needs a host browser over CDP and a
+supported local stack, and no host has passed that path yet. Host-specific
+entries are generated artifacts (ADR-002); their tiers live in
+`docs/SUPPORT_MATRIX.md`, where every row is still `experimental` — FreePi is the only host
+whose smoke receipt matches the current artifact, and it still lacks a Live Studio run — so no
+host is presented as supported.

@@ -39,6 +39,7 @@
     "reach": "node scripts/check-reachability.mjs",
     "regression": "node scripts/regression.mjs",
     "benchmark": "pnpm --filter @sus/eval-core benchmark",
+    "pilots": "SUS_PILOTS=1 vitest run packages/eval-core/tests/pilots.research.test.ts",
     "claims": "node scripts/check-claims.mjs",
     "roadmap": "node scripts/check-roadmap.mjs"
   },

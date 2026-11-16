@@ -1,0 +1,49 @@
+{
+  "source": "bad case: h1 jumps to h3, no main landmark, a div with a click handler, and outline removed with no replacement",
+  "pages": [
+    {
+      "path": "http://localhost:3000/prooflog",
+      "headings": [
+        {
+          "level": 1,
+          "text": "Prooflog"
+        },
+        {
+          "level": 3,
+          "text": "Runs"
+        },
+        {
+          "level": 2,
+          "text": "Bundles"
+        }
+      ],
+      "landmarks": [
+        {
+          "role": "banner",
+          "selector": "header"
+        },
+        {
+          "role": "navigation",
+          "selector": "nav.primary"
+        }
+      ],
+      "clickHandlers": [
+        {
+          "tag": "div",
+          "selector": "div.card-actions",
+          "role": "",
+          "tabIndex": -1,
+          "keyboard": false,
+          "handler": "click"
+        }
+      ],
+      "focusStyles": [
+        {
+          "selector": "button.primary",
+          "outline": "none",
+          "replacement": ""
+        }
+      ]
+    }
+  ]
+}

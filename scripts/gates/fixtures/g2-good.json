@@ -1,0 +1,26 @@
+{
+  "source": ".sus/SECTION_STATUS.md (hand-authored, shape per docs/PRD.md section-state ladder)",
+  "order": ["home", "services", "prooflog", "pricing", "faq"],
+  "sections": [
+    {
+      "id": "home",
+      "status": "accepted"
+    },
+    {
+      "id": "services",
+      "status": "accepted"
+    },
+    {
+      "id": "prooflog",
+      "status": "accepted"
+    },
+    {
+      "id": "pricing",
+      "status": "approved"
+    },
+    {
+      "id": "faq",
+      "status": "draft"
+    }
+  ]
+}

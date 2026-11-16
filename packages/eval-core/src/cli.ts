@@ -140,4 +140,67 @@ if (command === 'budget') {
   process.exit(0);
 }
 
-fail(`unknown command "${String(command)}" — usage: sus-eval score|capture|evidence|budget`);
+if (command === 'audit') {
+  const { AUDIT_HELP } = await import('./audit/contract.js');
+  const { values } = parseArgs({
+    args: args.slice(1),
+    options: {
+      path: { type: 'string' },
+      url: { type: 'string' },
+      out: { type: 'string' },
+      mode: { type: 'string' },
+      route: { type: 'string' },
+      routes: { type: 'string' },
+      authorize: { type: 'string', multiple: true },
+      'fix-plan': { type: 'boolean' },
+      json: { type: 'boolean' },
+      help: { type: 'boolean' },
+    },
+    allowPositionals: false,
+  });
+  if (values.help === true) {
+    console.log(AUDIT_HELP);
+    process.exit(0);
+  }
+  const path = values.path;
+  const url = values.url;
+  if (path !== undefined && url !== undefined) {
+    fail('audit accepts exactly one target: --path <dir> or --url <url>, not both');
+  }
+  if (path === undefined && url === undefined) {
+    fail('audit requires a target: --path <dir> or --url <url> (see --help)');
+  }
+  const out = values.out;
+  if (out === undefined)
+    fail('audit requires --out <dir>: the report is never written into the target');
+  const mode = values.mode ?? 'quick';
+  if (mode !== 'quick' && mode !== 'deep') fail(`--mode must be quick or deep, got "${mode}"`);
+  const route = values.route ?? values.routes ?? null;
+  const authorizedHosts = values.authorize ?? [];
+  const { runAudit } = await import('./audit/pipeline.js');
+  let run;
+  try {
+    run = await runAudit({
+      target: (path ?? url) as string,
+      liveUrl: path !== undefined ? (url ?? null) : null,
+      mode,
+      routes: route,
+      outDir: out,
+      authorizedHosts,
+      fixPlan: values['fix-plan'] === true,
+    });
+  } catch (e) {
+    fail(e instanceof Error ? e.message : String(e));
+  }
+  console.log(values.json === true ? JSON.stringify(run.report, null, 2) : run.markdown.trimEnd());
+  console.log('');
+  console.log(`wrote ${run.reportPath}`);
+  console.log(`wrote ${run.markdownPath}`);
+  if (run.evidencePath !== null) console.log(`wrote ${run.evidencePath}`);
+  if (run.fixPlanPath !== null) {
+    console.log(`wrote ${run.fixPlanPath} (a proposal: nothing was applied)`);
+  }
+  process.exit(run.exitCode);
+}
+
+fail(`unknown command "${String(command)}" — usage: sus-eval score|capture|evidence|budget|audit`);

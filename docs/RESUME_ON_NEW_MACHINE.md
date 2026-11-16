@@ -71,13 +71,13 @@ verified revision is visible without re-running anything.
 
 ## 4. Where the work actually stands
 
-- **98 of 100 tasks done.** The two remaining are owner actions, not build work:
-  **T1003** (independent audit) and **T1005** (release approval).
-- **T1006 (final verified checkpoint) is complete and pushed.** The verified code revision is
-  recorded in `docs/BUILD_COMPLETION_HANDOFF.md` §2, with the checkpoint history in §6.
+- **The count lives in `TASKS.json`, not here.** That document alone owns task status; a number
+  written into prose goes stale on the next commit, so this page does not carry one.
+- **Owner actions, not build work:** **T1003** (independent audit) and **T1005** (release
+  approval / publication).
 - **Nothing is published.** The repository is public (D34); the product is not released.
-- **Do not start new build work** unless the owner authorizes it: the current instruction set
-  ends at "stop before T1003".
+- **Do not invent new scope.** Finish what `TASKS.json` still lists as `pending`, and treat
+  issue triage (owner rule D32) as the only source of new bounded work.
 
 ## 5. If the new machine behaves differently
 

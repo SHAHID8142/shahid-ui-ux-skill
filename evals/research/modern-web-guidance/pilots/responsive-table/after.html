@@ -1,0 +1,133 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pilot 1 — CMS responsive records</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        padding: 1rem;
+        color: #1a1d23;
+        background: #fff;
+        line-height: 1.5;
+      }
+      main {
+        max-inline-size: 60rem;
+        margin-inline: auto;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      table {
+        inline-size: 100%;
+        border-collapse: collapse;
+      }
+      caption {
+        text-align: start;
+        font-weight: 600;
+        padding-block-end: 0.5rem;
+      }
+      th,
+      td {
+        text-align: start;
+        padding: 0.5rem;
+        border-block-end: 1px solid #d6dae2;
+        vertical-align: top;
+      }
+      th {
+        font-size: 0.875rem;
+        color: #3d434d;
+      }
+
+      /* PILOT VARIANT: after — the header row leaves the layout, not the
+         accessibility tree (the technique fixtures/admin ships). */
+      @media (width <= 40rem) {
+        table,
+        tbody {
+          display: block;
+        }
+        thead,
+        thead tr,
+        thead th {
+          position: absolute;
+          inline-size: 1px;
+          block-size: 1px;
+          overflow: hidden;
+          clip-path: inset(50%);
+          white-space: nowrap;
+          display: block;
+        }
+        tr {
+          display: block;
+          border: 1px solid #d6dae2;
+          border-radius: 0.5rem;
+          padding: 0.5rem 0.75rem;
+        }
+        tr + tr {
+          margin-block-start: 0.5rem;
+        }
+        td {
+          display: grid;
+          grid-template-columns: minmax(0, min(6.5rem, 45%)) minmax(0, 1fr);
+          gap: 0.5rem;
+          align-items: baseline;
+          border: 0;
+          padding-block: 0.15rem;
+        }
+        td::before {
+          content: attr(data-label);
+          font-weight: 600;
+          color: #5a6270;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Content queue</h1>
+      <table id="queue">
+        <caption>
+          Queue
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Entry</th>
+            <th scope="col">Status</th>
+            <th scope="col">Editor</th>
+            <th scope="col">Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Entry">Autumn release notes</td>
+            <td data-label="Status">In review</td>
+            <td data-label="Editor">A. Lin</td>
+            <td data-label="Updated">2h ago</td>
+          </tr>
+          <tr>
+            <td data-label="Entry">Pricing page copy</td>
+            <td data-label="Status">Draft</td>
+            <td data-label="Editor">M. Okafor</td>
+            <td data-label="Updated">5h ago</td>
+          </tr>
+          <tr>
+            <td data-label="Entry">Tea-ware catalog (import)</td>
+            <td data-label="Status">Blocked</td>
+            <td data-label="Editor">system</td>
+            <td data-label="Updated">1d ago</td>
+          </tr>
+          <tr>
+            <td data-label="Entry">Homepage hero variants</td>
+            <td data-label="Status">Scheduled</td>
+            <td data-label="Editor">R. Iyer</td>
+            <td data-label="Updated">3d ago</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>

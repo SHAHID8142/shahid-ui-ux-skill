@@ -1,8 +1,9 @@
 /**
  * SUS CLI invocation fallback (T0204) — deterministic entry points for hosts
  * that cannot run model-side skill loading. Every capability states its
- * degradation honestly: what the CLI provides, what requires a capable model,
- * and what is not built yet. No capability claims beyond that.
+ * degradation honestly: what this repository provides, what still requires a
+ * capable model or a host browser, and what the CLI deliberately does not do.
+ * No capability claims beyond that.
  */
 import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
@@ -42,27 +43,34 @@ export const CAPABILITY_MATRIX: Capability[] = [
   },
   {
     id: 'design-direction',
-    cliProvides: 'nothing — direction reasoning is a model capability',
-    requiresModel: 'all of it (M4: direction-reasoning module)',
-    built: false,
+    cliProvides:
+      'validates direction records under evals/directions/ (pnpm directions): schema, three real candidates, a refused blocking default, explained rejections; the direction reference is built',
+    requiresModel:
+      'Deriving a thesis for a new brief is model work — the checker audits a derivation, it cannot produce one',
+    built: true,
   },
   {
     id: 'surface-playbooks',
-    cliProvides: 'nothing yet',
-    requiresModel: 'playbook application is model work guided by built playbooks (M4)',
-    built: false,
+    cliProvides:
+      '36 playbooks in skill/references/playbooks/ validated by pnpm playbooks (schema) and pnpm parts (the twelve-part standard)',
+    requiresModel:
+      'Applying a playbook to a specific screen is model work — the checks validate content, they do not design',
+    built: true,
   },
   {
     id: 'anti-slop-scanning',
-    cliProvides: 'nothing yet (M3 ships the deterministic scanner CLI)',
+    cliProvides:
+      'sus-scan <file|dir> (packages/scanners) with documented exit codes 0 clean / 1 advisory / 2 blocking / 3 usage',
     requiresModel: null,
-    built: false,
+    built: true,
   },
   {
     id: 'live-studio',
-    cliProvides: 'nothing — Studio requires the bridge (M7) with safety prerequisites',
-    requiresModel: null,
-    built: false,
+    cliProvides:
+      'Studio bridge vertical slice: annotate -> intent -> diff -> approval-gated apply -> verify -> undo, exercised by pnpm demo:loop against one Astro fixture',
+    requiresModel:
+      'A host browser over CDP and a supported local dev stack; no row reaches the supported tier yet, so other stacks and a CLI-only Studio are not available',
+    built: true,
   },
 ];
 

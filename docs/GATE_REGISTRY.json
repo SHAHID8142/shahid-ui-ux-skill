@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-11-14",
+  "updated": "2026-11-16",
   "source": "docs/PRD_AMENDMENTS_v1.1.md gates table (G1–G12) + reconciliation G13",
   "rule": "A gate may only be relaxed by a DECISIONS.md entry naming approver, reason, expiry. Silent gate removal is a policy violation. G13 is NEVER waivable.",
   "gates": [
@@ -25,9 +25,10 @@
         "T0502",
         "T0503"
       ],
-      "check": null,
-      "checkStatus": "not-run",
-      "waivable": true
+      "check": "scripts/lib/gates/g2-section-order.mjs evaluateG2 (plain-JS mirror of sectionLockViolation in packages/schemas/src/progressive.ts; run by node scripts/check-gates.mjs)",
+      "checkStatus": "implemented",
+      "waivable": true,
+      "badFixture": "scripts/gates/fixtures/g2-bad.json"
     },
     {
       "id": "G3",
@@ -37,9 +38,10 @@
         "T0303",
         "T0305"
       ],
-      "check": null,
-      "checkStatus": "not-run",
-      "waivable": true
+      "check": "scripts/lib/gates/g3-placeholder-claims.mjs evaluateG3 (filler text, TODO/placeholder markers, numeric claims absent from the claims register; run by node scripts/check-gates.mjs)",
+      "checkStatus": "implemented",
+      "waivable": true,
+      "badFixture": "scripts/gates/fixtures/g3-bad.json"
     },
     {
       "id": "G4",
@@ -72,9 +74,10 @@
       "ownerTasks": [
         "T0603"
       ],
-      "check": null,
-      "checkStatus": "not-run",
-      "waivable": true
+      "check": "scripts/lib/gates/g6-motion-parity.mjs evaluateG6 (information-token parity between default and reduced-motion traces, both directions, fail-closed; run by node scripts/check-gates.mjs)",
+      "checkStatus": "implemented",
+      "waivable": true,
+      "badFixture": "scripts/gates/fixtures/g6-bad.json"
     },
     {
       "id": "G7",
@@ -84,9 +87,10 @@
         "T0551",
         "T0152"
       ],
-      "check": "harness emits overflow fields (partial); full gate not-run",
-      "checkStatus": "not-run",
-      "waivable": true
+      "check": "scripts/lib/gates/g7-reflow.mjs evaluateG7 — 320 CSS px overflow + overflow-hidden-instead-of-reflow measured from harness viewport records; the 400% zoom equivalence component reports not-run because the harness does not drive browser zoom (run by node scripts/check-gates.mjs)",
+      "checkStatus": "implemented",
+      "waivable": true,
+      "badFixture": "scripts/gates/fixtures/g7-bad.json"
     },
     {
       "id": "G8",
@@ -96,9 +100,10 @@
         "T0152",
         "T0152b"
       ],
-      "check": "harness emits smallTapTargets fields (partial); full gate not-run",
-      "checkStatus": "not-run",
-      "waivable": true
+      "check": "scripts/lib/gates/g8-target-size.mjs evaluateG8 — 24x24 CSS px floor with only SC 2.5.8 exceptions (inline, equivalent, user-agent, essential); project 44px is policy, not the standard (run by node scripts/check-gates.mjs)",
+      "checkStatus": "implemented",
+      "waivable": true,
+      "badFixture": "scripts/gates/fixtures/g8-bad.json"
     },
     {
       "id": "G9",
@@ -108,9 +113,10 @@
         "T0807",
         "T0403"
       ],
-      "check": null,
-      "checkStatus": "not-run",
-      "waivable": true
+      "check": "scripts/lib/gates/g9-semantics.mjs evaluateG9 (heading ladder, main landmark, click-only controls, removed focus indicator without replacement; run by node scripts/check-gates.mjs)",
+      "checkStatus": "implemented",
+      "waivable": true,
+      "badFixture": "scripts/gates/fixtures/g9-bad.json"
     },
     {
       "id": "G10",
@@ -119,9 +125,13 @@
       "ownerTasks": [
         "T0305"
       ],
-      "check": null,
-      "checkStatus": "not-run",
-      "waivable": true
+      "check": "scripts/lib/gates/g10-detector-precision.mjs evaluateG10 over the labelled corpus cases in scripts/gates/fixtures/g10-good.json, which node scripts/check-gates.mjs cross-checks against live @sus/scanners scanText so a stale fixture fails",
+      "checkStatus": "implemented",
+      "waivable": true,
+      "badFixture": "scripts/gates/fixtures/g10-bad.json",
+      "precisionTarget": 0.95,
+      "recallTarget": 0.95,
+      "targetProvenance": "Measured 1.0 precision / 1.0 recall on the 12-case labelled corpus (packages/scanners/corpus; .sus-dev/VERIFICATION/T0305.md). Target set at 0.95 = the highest value below the measured result that still tolerates one error per 20 evaluations; on the current corpus any single misclassification scores 0.75, so drift fails. Provenance: docs/PRD_GAP_ANALYSIS.md F4 requires the target to be set before rules ship as blocking."
     },
     {
       "id": "G11",

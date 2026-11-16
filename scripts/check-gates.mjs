@@ -94,6 +94,169 @@ for (const gate of registry.gates) {
   );
 }
 
+// G2/G3/G6/G7/G8/G9/G10: fixture-driven checks (scripts/lib/gates/*).
+// Each module is a pure function over fixture data — no browser, no clock, no
+// randomness — so a verdict here is reproducible from the committed fixtures.
+// Good fixture must pass, bad fixture must fail: a check that passes both is
+// not measuring anything, and one that fails both is broken.
+{
+  const { evaluateG2 } = await import(
+    join(ROOT, 'scripts', 'lib', 'gates', 'g2-section-order.mjs')
+  );
+  const { evaluateG3 } = await import(
+    join(ROOT, 'scripts', 'lib', 'gates', 'g3-placeholder-claims.mjs')
+  );
+  const { evaluateG6 } = await import(
+    join(ROOT, 'scripts', 'lib', 'gates', 'g6-motion-parity.mjs')
+  );
+  const { evaluateG7 } = await import(join(ROOT, 'scripts', 'lib', 'gates', 'g7-reflow.mjs'));
+  const { evaluateG8 } = await import(join(ROOT, 'scripts', 'lib', 'gates', 'g8-target-size.mjs'));
+  const { evaluateG9 } = await import(join(ROOT, 'scripts', 'lib', 'gates', 'g9-semantics.mjs'));
+  const { evaluateG10 } = await import(
+    join(ROOT, 'scripts', 'lib', 'gates', 'g10-detector-precision.mjs')
+  );
+
+  const fixture = (name) =>
+    JSON.parse(readFileSync(join(ROOT, 'scripts', 'gates', 'fixtures', name), 'utf8'));
+
+  const g2Good = evaluateG2(fixture('g2-good.json'));
+  const g2Bad = evaluateG2(fixture('g2-bad.json'));
+  report(g2Good.status === 'pass', 'G2: ordered section states pass', g2Good.detail.join('; '));
+  report(
+    g2Bad.status === 'fail' &&
+      g2Bad.detail.some((line) => line.includes('section-order-violation')),
+    'G2: section N+1 accepted before N fails',
+    g2Bad.detail.join('; '),
+  );
+
+  const g3Good = evaluateG3(fixture('g3-good.json'));
+  const g3Bad = evaluateG3(fixture('g3-bad.json'));
+  report(g3Good.status === 'pass', 'G3: finished copy passes', g3Good.detail.join('; '));
+  const g3Classes = ['filler-text', 'placeholder-marker', 'unregistered-numeric-claim'];
+  const g3Caught = g3Classes.filter((klass) => g3Bad.detail.some((line) => line.startsWith(klass)));
+  report(
+    g3Bad.status === 'fail' && g3Caught.length === g3Classes.length,
+    'G3: filler text, placeholder marker and unregistered numeric claim each fail',
+    g3Caught.length === g3Classes.length
+      ? g3Bad.detail.join('; ')
+      : `only caught ${g3Caught.join(', ')}`,
+  );
+
+  const g6Good = evaluateG6(fixture('g6-good.json'));
+  const g6Bad = evaluateG6(fixture('g6-bad.json'));
+  report(
+    g6Good.status === 'pass',
+    'G6: reduced-motion traces preserve information',
+    g6Good.detail.join('; '),
+  );
+  report(
+    g6Bad.status === 'fail' &&
+      g6Bad.detail.some((line) => line.includes('reduced-motion-information-lost')),
+    'G6: reduced-motion information loss fails',
+    g6Bad.detail.join('; '),
+  );
+  report(evaluateG6({ pairs: [] }).status === 'fail', 'G6: no recorded traces fail closed');
+
+  const g7Good = evaluateG7(fixture('g7-good.json'));
+  const g7Bad = evaluateG7(fixture('g7-bad.json'));
+  report(g7Good.status === 'pass', 'G7: 320 CSS px reflow passes', g7Good.detail.join('; '));
+  report(
+    g7Bad.status === 'fail' && g7Bad.detail.some((line) => line.startsWith('horizontal-overflow')),
+    'G7: horizontal overflow at 320px fails',
+    g7Bad.detail.join('; '),
+  );
+  report(
+    g7Bad.detail.some((line) => line.startsWith('overflow-hidden-not-reflowed')),
+    'G7: overflow:hidden instead of reflowing fails',
+  );
+  report(
+    evaluateG7({ viewports: [{ url: 'u', width: 1280 }] }).status === 'not-run' &&
+      evaluateG7({ viewports: [] }).status === 'not-run',
+    'G7: no 320px measurement is not-run, never pass',
+  );
+  // The zoom half is structurally unmeasurable here; it is reported, not claimed.
+  report(
+    g7Good.zoom.status === 'not-run' && g7Bad.zoom.status === 'not-run',
+    'G7: 400% zoom component is not-run (harness does not drive browser zoom)',
+    g7Good.zoom.detail,
+  );
+
+  const g8Good = evaluateG8(fixture('g8-good.json'));
+  const g8Bad = evaluateG8(fixture('g8-bad.json'));
+  report(g8Good.status === 'pass', 'G8: conforming controls pass', g8Good.detail.join('; '));
+  report(
+    g8Bad.status === 'fail' &&
+      g8Bad.detail.some((line) => line.startsWith('target-too-small')) &&
+      g8Bad.detail.some((line) => line.includes('not a standard SC 2.5.8 exception')),
+    'G8: sub-24px control and non-standard exception both fail',
+    g8Bad.detail.join('; '),
+  );
+  report(
+    evaluateG8({ controls: [] }).status === 'not-run',
+    'G8: no measured controls is not-run, never pass',
+  );
+
+  const g9Good = evaluateG9(fixture('g9-good.json'));
+  const g9Bad = evaluateG9(fixture('g9-bad.json'));
+  report(g9Good.status === 'pass', 'G9: semantic page passes', g9Good.detail.join('; '));
+  const g9Classes = [
+    ['heading-ladder-invalid', 'G9: heading level skip fails'],
+    ['missing-main-landmark', 'G9: missing main landmark fails'],
+    ['click-only-control', 'G9: click-only control fails'],
+    ['focus-indicator-removed', 'G9: removed focus indicator fails'],
+  ];
+  for (const [klass, name] of g9Classes) {
+    report(
+      g9Bad.status === 'fail' && g9Bad.detail.some((line) => line.includes(klass)),
+      name,
+      g9Bad.detail.find((line) => line.includes(klass)) ?? 'not caught',
+    );
+  }
+
+  // G10 targets are the registry's numbers, not the fixture's: a target that
+  // lives in the fixture could be lowered by editing the fixture.
+  const g10Gate = registry.gates.find((gate) => gate.id === 'G10');
+  const g10Fixture = (name) => ({
+    ...fixture(name),
+    precisionTarget: g10Gate?.precisionTarget,
+    recallTarget: g10Gate?.recallTarget,
+  });
+  report(
+    typeof g10Gate?.precisionTarget === 'number' && typeof g10Gate?.recallTarget === 'number',
+    'G10: registry declares numeric precision/recall targets',
+    `precisionTarget=${String(g10Gate?.precisionTarget)}, recallTarget=${String(g10Gate?.recallTarget)}`,
+  );
+  const g10Good = evaluateG10(g10Fixture('g10-good.json'));
+  const g10Bad = evaluateG10(g10Fixture('g10-bad.json'));
+  report(
+    g10Good.status === 'pass',
+    'G10: labelled corpus meets precision/recall targets',
+    g10Good.detail.join('; '),
+  );
+  report(
+    g10Bad.status === 'fail' && g10Bad.detail.some((line) => line.startsWith('recall')),
+    'G10: recall below target fails',
+    g10Bad.detail.join('; '),
+  );
+  report(evaluateG10({ cases: [] }).status === 'fail', 'G10: no labelled cases fails closed');
+  // The fixture must agree with the shipped detector, or it proves nothing.
+  const { scanText } = await import(join(ROOT, 'packages', 'scanners', 'dist', 'index.js'));
+  const corpusDir = join(ROOT, 'packages', 'scanners', 'corpus');
+  const drifted = [];
+  for (const testCase of fixture('g10-good.json').cases) {
+    const [file, lineNumber] = testCase.id.split(':');
+    const line = readFileSync(join(corpusDir, file), 'utf8').split('\n')[Number(lineNumber) - 1];
+    const observed = scanText(line, file).findings.length > 0 ? 'finding' : 'clean';
+    if (observed !== testCase.predicted)
+      drifted.push(`${testCase.id} ${testCase.predicted}->${observed}`);
+  }
+  report(
+    drifted.length === 0,
+    'G10: fixture predictions match the shipped detector (corpus not stale)',
+    drifted.join(', ') || `${fixture('g10-good.json').cases.length} case(s) agree`,
+  );
+}
+
 // G4/G5/G11: evaluators must fail closed on their bad fixtures (in-process proof).
 {
   const { evaluateG4, evaluateG5 } = await import(
@@ -294,7 +457,16 @@ if (failed) {
   console.log('VERDICT: GATE REGISTRY INCONSISTENT — fix owners/checks before continuing.');
   process.exit(1);
 }
+const unimplemented = registry.gates.filter((gate) => gate.checkStatus !== 'implemented');
+// Gate components the harness cannot measure are named here so a green run never
+// reads as "everything was measured".
+const unmeasured = ['G7 400% zoom (harness does not drive browser zoom)'];
 console.log(
-  'VERDICT: registry consistent; implemented gates verified; unimplemented gates reported not-run.',
+  `VERDICT: registry consistent; ${registry.gates.length - unimplemented.length}/` +
+    `${registry.gates.length} gates implemented and verified` +
+    (unimplemented.length === 0
+      ? ''
+      : `; ${unimplemented.map((gate) => gate.id).join(', ')} reported not-run`) +
+    `; still unmeasured inside an implemented gate: ${unmeasured.join('; ')}.`,
 );
 process.exit(0);
