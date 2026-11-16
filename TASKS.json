@@ -4465,7 +4465,11 @@
       "rollback": "drop the alias and keep the CLI entry point",
       "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1023.md",
+        "docs/BESTPRACTICE_COMMAND.md"
+      ]
     },
     {
       "id": "T1024",
