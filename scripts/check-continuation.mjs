@@ -18,6 +18,7 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { checkDocDrift, LIVE_DOCUMENTS } from './lib/doc-drift.mjs';
 
 const ROOT = process.argv.includes('--root')
   ? process.argv[process.argv.indexOf('--root') + 1]
@@ -227,6 +228,33 @@ for (const t of tasks) {
       'fail',
     );
   }
+}
+
+// ---------- 5b. live-document drift (T1026, issue #17) ----------
+// A green suite proves the code ran; it does not prove the documents still describe the code. These
+// are the five contradictions issue #17 found in active documents, now checked instead of trusted.
+{
+  const stateText = readText('.sus-dev/STATE.md') ?? '';
+  const match = /BUILD_COMPLETE_PUSHED=(true|false)/.exec(stateText);
+  const files = {};
+  for (const path of LIVE_DOCUMENTS) {
+    const text = readText(path);
+    if (text !== null) files[path] = text;
+  }
+  const drift = checkDocDrift({
+    tasks: tasksDoc?.tasks ?? [],
+    files,
+    ...(existsSync(join(ROOT, 'docs/compatibility.json'))
+      ? { compatibility: readJson('docs/compatibility.json') }
+      : {}),
+    ...(match === null ? {} : { expectedBuildCompletePushed: match[1] === 'true' }),
+  });
+  check(
+    'live documents do not drift from TASKS.json / compatibility.json / STATE.md',
+    drift.length === 0,
+    drift.map((finding) => `${finding.path}: ${finding.rule} (${finding.detail})`).join('; '),
+    'fail',
+  );
 }
 
 // ---------- 6. gate consistency ----------

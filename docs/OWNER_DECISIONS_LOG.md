@@ -3,6 +3,10 @@
 Running record of every instruction from the owner, so nothing is lost between sessions.
 Newest entries appended at the bottom. **Nothing here is implemented** unless marked.
 
+> **Historical record.** Entries are appended in order and current status lives in `TASKS.json` and
+> `.sus-dev/STATE.md`; a decision's "where it lands" line may name a task that has since been
+> completed. This log is the trail of owner intent, not a status source.
+
 **Format:** `Dnn | date | instruction (owner's intent) | status | where it lands`
 
 ---

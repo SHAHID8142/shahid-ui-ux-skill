@@ -73,9 +73,9 @@ written down is a bug with better manners.
 
 | Host | Tier | Basis |
 | --- | --- | --- |
-| FreePi CLI | experimental (fresh smoke) | `evals/host-smoke/freepi-51ad458af6e0.json` ran against the current artefact on 2026-11-16 and passed 8/8; the tier stays experimental only because Live Studio was not exercised there |
-| ZCode | experimental (stale) | its smoke evidence predates the current artefact hash |
-| Codex, Claude Code, Cursor | experimental (untested) | no smoke evidence |
+| FreePi CLI | experimental (`verified` smoke) | `evals/host-smoke/freepi-ab82c994d5fd.json` ran against the current artefact (`ab82c994d5fd`) and passed 8/8; the tier stays experimental only because Live Studio was not exercised there |
+| ZCode | experimental (`stale` smoke) | its smoke evidence (`evals/host-smoke/zcode-b061cc4.json`) predates the current artefact hash; it is cited as stale and not as a pass |
+| Codex, Claude Code, Cursor | experimental (`missing`) | no smoke evidence; `evidenceState: missing` in `docs/compatibility.json` |
 
 No row reaches `supported`: that tier also requires Live Studio to pass, and Live Studio was
 not exercised on any host.

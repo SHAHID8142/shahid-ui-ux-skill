@@ -1,9 +1,15 @@
-# Studio safety contract — pre-build proposal
+# Studio safety contract — historical proposal, partly superseded
+
+> **Historical document.** The proposal below predates implementation. What actually shipped is
+> governed by ADR-003 (as amended, owner decision D29) and constrained by
+> `docs/THREAT_MODEL.md`, whose "implemented and tested" claims are the current ones; where the two
+> differ, the ADR, the threat model and the security tests win. Read this file for the reasoning that
+> produced the requirements, not as current policy.
 
 Owner-required outcomes: full Studio, explicit authentic approvals, private-by-default
 handling and non-waivable critical security/privacy gate (D24). The implementation
-mechanisms below are proposed refinements to ADR-003, not owner-approved architecture.
-T0004 must resolve consequential architecture choices before affected implementation.
+mechanisms below were proposed refinements to ADR-003, not owner-approved architecture.
+T0004 was to resolve consequential architecture choices before affected implementation.
 
 ## Privilege boundary
 

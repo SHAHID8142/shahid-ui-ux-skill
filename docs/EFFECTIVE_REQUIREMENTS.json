@@ -1,9 +1,9 @@
 {
   "version": 2,
-  "updated": "2026-11-13T23:05:00+06:00",
+  "updated": "2026-11-17T00:00:00+06:00",
   "build_permission": true,
   "authorization_receipt": "OWNER_DECISIONS_LOG.md D28-D31 (same commit as this file's update; discoverable with git log -1 --format=%H -- docs/OWNER_DECISIONS_LOG.md)",
-  "build_complete_pushed": false,
+  "build_complete_pushed": true,
   "authority": [
     "current explicit owner instruction",
     "OWNER_DECISIONS_LOG latest explicit supersession",
@@ -150,5 +150,6 @@
         "amendments A12 automatic breadth cuts"
       ]
     }
-  ]
+  ],
+  "build_complete_pushed_note": "T1006 checkpoint verified at 2f344df and pushed at 1e5213b (see .sus-dev/STATE.md); this flag is current, not historical, and is checked against STATE.md by scripts/lib/doc-drift.mjs"
 }

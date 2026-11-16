@@ -1,6 +1,13 @@
 # Build completion handoff (T1006)
 
-**Status:** build complete and pushed. This document is the truthful summary of what exists,
+> **Historical checkpoint — not current status.** This document records what was verified at one
+> revision (`2f344df`) and is kept as the audit trail of that checkpoint, not as a live claim.
+> Source changes landed after it (through M11 and the M12 hardening queue), so its "every later
+> commit is docs-only" statement describes the window ending at `1e5213b` and no longer describes
+> the branch. Current status lives in `TASKS.json` and `.sus-dev/STATE.md`; do not read this file as
+> a status source.
+
+**Status at that checkpoint:** build complete and pushed. This document is the truthful summary of what exists,
 what was verified, at which revision, and what is deliberately not done. It is written by the
 builder, not the auditor; the independent audit is a separate, owner-commissioned step.
 

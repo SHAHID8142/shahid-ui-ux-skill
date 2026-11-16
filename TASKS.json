@@ -4569,9 +4569,14 @@
       ],
       "risk": "deleting history instead of labelling it, or a gate that only greps and passes on absence",
       "rollback": "keep the documents and add the checker only",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
-      "phase": "build"
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1026.md",
+        "scripts/lib/doc-drift.mjs",
+        "packages/schemas/tests/doc-drift.test.ts"
+      ]
     },
     {
       "id": "T1027",
