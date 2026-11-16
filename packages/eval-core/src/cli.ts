@@ -13,13 +13,58 @@
  */
 import { readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
-import { parseArgs } from 'node:util';
+import { parseArgs, type ParseArgsConfig } from 'node:util';
 import { RubricScore, ScoringVerdict } from '@sus/schemas';
 import { scoreSection } from './scoring.js';
 
 function fail(message: string): never {
   console.error(`error: ${message}`);
   process.exit(2);
+}
+
+const SUBCOMMAND_USAGE: Record<string, string> = {
+  score: 'usage: sus-eval score --in <rubric-score.json> [--out <verdict.json>]',
+  capture:
+    'usage: sus-eval capture --url <url> --out <dir> [--routes <a,b>] [--viewport <w>x<h>] [--theme light|dark]',
+  evidence: 'usage: sus-eval evidence --in <evidence.json> [--json]',
+  budget: 'usage: sus-eval budget --in <results.json> [--json]',
+  audit:
+    'usage: sus-eval audit --path <dir> | --url <url> --out <dir> [--mode quick|deep] (see --help)',
+  bestpractice:
+    'usage: sus-eval bestpractice --path <dir> --scope <selector|file> --out <dir> [--mode quick|deep] (see --help)',
+};
+
+/**
+ * parseArgs throws a `TypeError` with a Node-internal stack for an unknown option, which reads
+ * like a crash rather than a usage error, and `--help` was one of the options it threw on
+ * (found by hand). Both become a one-line usage message with exit 2, and `--help` exits 0.
+ */
+type OptionValue<T> = T extends { type: 'string' }
+  ? string | undefined
+  : T extends { multiple: true }
+    ? string[]
+    : boolean | undefined;
+
+type OptionSpec = NonNullable<ParseArgsConfig['options']>;
+
+function parseOrFail<T extends OptionSpec>(
+  command: string,
+  argv: string[],
+  options: T,
+): { [K in keyof T]: OptionValue<T[K]> } {
+  const usage = SUBCOMMAND_USAGE[command] ?? `usage: sus-eval ${command}`;
+  if (argv.includes('--help') || argv.includes('-h')) {
+    console.log(usage);
+    process.exit(0);
+  }
+  try {
+    return parseArgs({ args: argv, options } as ParseArgsConfig).values as {
+      [K in keyof T]: OptionValue<T[K]>;
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    fail(`${message} — ${usage}`);
+  }
 }
 
 /**
@@ -33,9 +78,9 @@ export async function main(argv: string[]): Promise<void> {
   const command = args[0];
 
   if (command === 'score') {
-    const { values } = parseArgs({
-      args: args.slice(1),
-      options: { in: { type: 'string' }, out: { type: 'string' } },
+    const values = parseOrFail('score', args.slice(1), {
+      in: { type: 'string' },
+      out: { type: 'string' },
     });
     if (!values.in) fail('score requires --in <rubric-score.json>');
     let raw: unknown;
@@ -62,9 +107,9 @@ export async function main(argv: string[]): Promise<void> {
   }
 
   if (command === 'capture') {
-    const { values } = parseArgs({
-      args: args.slice(1),
-      options: { url: { type: 'string' }, out: { type: 'string' } },
+    const values = parseOrFail('capture', args.slice(1), {
+      url: { type: 'string' },
+      out: { type: 'string' },
     });
     if (!values.url || !values.out) fail('capture requires --url <url> --out <dir>');
     // playwright is a devDependency: imported lazily so `score` works without it
@@ -92,9 +137,9 @@ export async function main(argv: string[]): Promise<void> {
   }
 
   if (command === 'evidence') {
-    const { values } = parseArgs({
-      args: args.slice(1),
-      options: { in: { type: 'string' }, out: { type: 'string' } },
+    const values = parseOrFail('evidence', args.slice(1), {
+      in: { type: 'string' },
+      out: { type: 'string' },
     });
     if (!values.in) fail('evidence requires --in <bundle.json>');
     let raw: unknown;
@@ -120,9 +165,9 @@ export async function main(argv: string[]): Promise<void> {
   }
 
   if (command === 'budget') {
-    const { values } = parseArgs({
-      args: args.slice(1),
-      options: { in: { type: 'string' }, budget: { type: 'string' } },
+    const values = parseOrFail('budget', args.slice(1), {
+      in: { type: 'string' },
+      budget: { type: 'string' },
     });
     if (!values.in) fail('budget requires --in <usage.json> (items: [{id, tokens}])');
     const usage = JSON.parse(readFileSync(values.in, 'utf8')) as Array<{
@@ -307,7 +352,8 @@ export async function main(argv: string[]): Promise<void> {
   }
 
   fail(
-    `unknown command "${String(command)}" — usage: sus-eval score|capture|evidence|budget|audit|bestpractice`,
+    (command === undefined ? 'no command given' : `unknown command "${String(command)}"`) +
+      ' — usage: sus-eval score|capture|evidence|budget|audit|bestpractice (--help on any command)',
   );
 }
 

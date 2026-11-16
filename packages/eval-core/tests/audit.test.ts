@@ -922,3 +922,44 @@ describe('reflow check covers both halves of G7', () => {
     });
   });
 });
+
+describe('reports never land inside the audited tree', () => {
+  it('refuses an --out equal to or inside the --path target', async () => {
+    const target = mkdtempSync(join(tmpdir(), 'sus-out-guard-'));
+    writeFileSync(join(target, 'index.html'), '<!doctype html><title>t</title><p>x</p>');
+    await expect(
+      runAudit({
+        target,
+        liveUrl: null,
+        mode: 'quick',
+        outDir: target,
+        routes: null,
+        authorizedHosts: [],
+        fixPlan: false,
+      }),
+    ).rejects.toThrow(/refusing --out inside the audited target/);
+    await expect(
+      runAudit({
+        target,
+        liveUrl: null,
+        mode: 'quick',
+        outDir: join(target, 'report'),
+        routes: null,
+        authorizedHosts: [],
+        fixPlan: false,
+      }),
+    ).rejects.toThrow(/refusing --out inside the audited target/);
+    // A sibling directory is fine: the guard is about the tree under measurement.
+    const out = mkdtempSync(join(tmpdir(), 'sus-out-ok-'));
+    const run = await runAudit({
+      target,
+      liveUrl: null,
+      mode: 'quick',
+      outDir: out,
+      routes: null,
+      authorizedHosts: [],
+      fixPlan: false,
+    });
+    expect(run.reportPath.startsWith(out)).toBe(true);
+  }, 60000);
+});

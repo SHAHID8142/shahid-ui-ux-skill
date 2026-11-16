@@ -90,6 +90,10 @@ Themes: light and dark. Reduced motion: reduce and no-preference (capture runs r
 <out>/evidence/         axe scans and budget table (deep mode)
 ```
 
+`--out` may not be the audited `--path` or live inside it (a report is written *about* a tree, never
+*into* it): that is a usage error, exit 2. On the next run the report directory would otherwise be
+inside the thing being measured.
+
 Exit codes: 0 = report produced, no P0/P1 findings and no required check is not-run; 1 = report produced with at least one P0/P1 finding or a failed check; 2 = usage, target or authorization error (no report written); 3 = report produced, but at least one required check is not-run: never reads as pass
 
 Exit code 3 exists on purpose: a report missing a required measurement is not a pass and

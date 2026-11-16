@@ -120,9 +120,35 @@ export function main(args: string[]): void {
     return;
   }
   if (command === 'load') {
-    const brief = args.slice(1).join(' ');
+    // `--budget` used to be accepted and ignored: the capability text promises a measured budget
+    // and a refusal over it, so a flag that silently did nothing was a lie with a nice name
+    // (found by hand). Unknown flags are refused rather than swallowed.
+    const rest = args.slice(1);
+    const budgetIdx = rest.indexOf('--budget');
+    let budget: number | undefined;
+    if (budgetIdx !== -1) {
+      const raw = rest[budgetIdx + 1];
+      rest.splice(budgetIdx, raw === undefined ? 1 : 2);
+      if (raw === undefined || !/^[0-9]+$/.test(raw) || Number(raw) <= 0) {
+        console.error('error: --budget needs a positive integer (estimated tokens)');
+        process.exitCode = 2;
+        return;
+      }
+      budget = Number(raw);
+    }
+    const unknown = rest.filter((arg) => arg.startsWith('--'));
+    if (unknown.length > 0) {
+      console.error(
+        'error: unknown option ' +
+          unknown.join(', ') +
+          ' — usage: sus load <brief text> [--budget <tokens>]',
+      );
+      process.exitCode = 2;
+      return;
+    }
+    const brief = rest.join(' ');
     const intent = routeIntent(brief || '');
-    const report = loadModules(intent, REPO_ROOT);
+    const report = loadModules(intent, REPO_ROOT, budget);
     console.log(
       JSON.stringify(
         {

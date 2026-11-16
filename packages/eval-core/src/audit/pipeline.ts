@@ -534,6 +534,19 @@ function artifactsFor(inputs: AuditInputs, outDir: string): Map<string, Artifact
 export async function runAudit(options: AuditOptions): Promise<AuditRun> {
   const mode = options.mode;
   const outDir = resolve(options.outDir);
+  // Reports never go into the target. Writing there pollutes the audited tree, and on the next
+  // run the report directory is inside the thing being measured (found by hand, T1024 follow-up).
+  // A live URL target has no local tree, so the check only applies to --path.
+  if (options.liveUrl === null && !/^https?:\/\//i.test(options.target)) {
+    const target = resolve(options.target);
+    if (outDir === target || outDir.startsWith(target + sep)) {
+      throw new Error(
+        'refusing --out inside the audited target (' +
+          target +
+          '): write reports somewhere else, e.g. --out ./audit-out',
+      );
+    }
+  }
   mkdirSync(outDir, { recursive: true });
 
   const resolved = await resolveTarget(options);

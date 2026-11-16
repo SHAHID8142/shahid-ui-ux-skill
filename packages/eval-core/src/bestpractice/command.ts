@@ -13,7 +13,7 @@
  *   3 proposal written but nothing in scope was measured (every item is a judgment)
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { isAbsolute, join, resolve } from 'node:path';
+import { isAbsolute, join, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
   SCOPE_LIMITS,
@@ -190,6 +190,18 @@ export async function runBestPractice(request: BestPracticeRequest): Promise<Bes
   }
   if (request.outDir.trim().length === 0)
     throw new Error('--out is required: reports never go into the target');
+  // Same rule as the audit: a proposal is evidence about a tree, never a file inside it.
+  if (request.liveUrl === null) {
+    const target = resolve(request.target);
+    const out = resolve(request.outDir);
+    if (out === target || out.startsWith(target + sep)) {
+      throw new Error(
+        'refusing --out inside the selected target (' +
+          target +
+          '): write the proposal somewhere else, e.g. --out ./sus-bp',
+      );
+    }
+  }
 
   // 1. The audit: the same engine /sus audit uses. Artifacts go in a subdirectory so the
   //    proposal and its evidence cannot overwrite each other.

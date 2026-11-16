@@ -39,7 +39,16 @@ export function main(argv: string[]): void {
   try {
     results = collectFiles(target).map((f) => scanText(readFileSync(f, 'utf8'), f));
   } catch (e) {
-    console.error(String(e));
+    // A raw ENOENT stack fragment is not an explanation: say which path was wrong, because that is
+    // the only thing the caller can fix.
+    const code = (e as { code?: string }).code;
+    if (code === 'ENOENT') {
+      console.error(`path does not exist: ${target}`);
+    } else if (code === 'EACCES') {
+      console.error(`cannot read ${target}: permission denied`);
+    } else {
+      console.error(e instanceof Error ? e.message : String(e));
+    }
     process.exit(EXIT.USAGE);
   }
   if (args.includes('--format') || args.includes('json')) {

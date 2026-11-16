@@ -138,6 +138,8 @@ propose), `1` proposal written containing P0/P1 items, `2` usage/scope error —
 
 Everything is written under `--out` (`proposal.json`, `proposal.md`, `audit/audit.json`, shots and
 evidence); the target is never written to, and a test hashes the fixture before and after a deep run.
+An `--out` that points at the selected target or inside it is refused (exit 2) for the same reason:
+a proposal is evidence *about* a tree, not a file in it.
 
 ### Attribution: what counts as "in scope"
 

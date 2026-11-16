@@ -77,6 +77,22 @@ describe('CLI contract (T0304)', () => {
     }
   }, 30000);
 
+  it('names a path that does not exist instead of echoing a raw ENOENT', () => {
+    try {
+      execFileSync(process.execPath, [CLI, '/tmp/sus-scanner-does-not-exist-1234'], {
+        stdio: 'pipe',
+        encoding: 'utf8',
+      });
+      throw new Error('should have exited 3');
+    } catch (e) {
+      const error = e as { status: number; stderr?: Buffer | string };
+      expect(error.status).toBe(EXIT.USAGE);
+      const stderr = String(error.stderr ?? '');
+      expect(stderr).toContain('path does not exist: /tmp/sus-scanner-does-not-exist-1234');
+      expect(stderr).not.toContain('ENOENT');
+    }
+  });
+
   it('JSON output is an array of ScanResult-shaped objects', () => {
     const dir = mkdtempSync(join(tmpdir(), 't0304b-'));
     writeFileSync(join(dir, 'sample.md'), 'Unlock the power of speed.');

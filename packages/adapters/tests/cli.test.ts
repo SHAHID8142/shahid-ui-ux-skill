@@ -77,6 +77,25 @@ describe('sus CLI fallback (T0204)', () => {
     expect(report.budgetExceeded).toBe(false);
   });
 
+  it('honours --budget instead of silently ignoring it', () => {
+    // The capability matrix promises "loads built reference modules with measured token budget;
+    // refuses over-budget". The flag used to be swallowed, so the promise was untestable.
+    const tiny = run(['load', 'review the admin dashboard', '--budget', '100']);
+    expect(JSON.parse(tiny.out).budgetExceeded).toBe(true);
+    expect(JSON.parse(tiny.out).budget).toBe(100);
+    const generous = run(['load', 'review the admin dashboard', '--budget', '20000']);
+    expect(JSON.parse(generous.out).budgetExceeded).toBe(false);
+  });
+
+  it('refuses a bad --budget and an unknown option rather than ignoring them', () => {
+    const bad = run(['load', 'review the admin dashboard', '--budget', 'lots']);
+    expect(bad.status).toBe(2);
+    expect(bad.err).toContain('positive integer');
+    const unknown = run(['load', 'review the admin dashboard', '--nope']);
+    expect(unknown.status).toBe(2);
+    expect(unknown.err).toContain('unknown option --nope');
+  });
+
   it('runs when invoked through a bin symlink (a package manager shim)', () => {
     // A pnpm/npm bin shim execs the built file through a symlink, so argv[1] is the
     // symlinked path and import.meta.url is the resolved one. Comparing them without
