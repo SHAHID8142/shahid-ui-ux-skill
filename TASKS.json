@@ -4402,10 +4402,10 @@
         "T1021"
       ],
       "files": [
-        "packages/schemas/",
-        "packages/eval-core/src/audit/",
-        "packages/studio-bridge/",
-        "packages/eval-core/tests/"
+        "packages/eval-core/src/bestpractice/proposal.ts",
+        "packages/eval-core/src/index.ts",
+        "packages/eval-core/tests/bestpractice.proposal.test.ts",
+        "docs/BESTPRACTICE_COMMAND.md"
       ],
       "acc": [
         "a proposal is emitted as a validated record with facts separated from heuristics, and no file changes when only the proposal mode runs",
@@ -4418,9 +4418,25 @@
       ],
       "risk": "a proposal path that writes without approval turns a read-only command into an unattended editor",
       "rollback": "proposal files stay on disk as evidence; revert the writer and keep the plan artifact",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "build"
+      "status": "done",
+      "approval": "D32 issue triage (issue #15) within D28 build authorization",
+      "phase": "build",
+      "owner": "lead",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1022.md"
+      ],
+      "results": [
+        "BestPracticeProposal (sus.bestpractice-proposal/1) is Zod-validated before it exists: every item carries dimension, severity, kind, title, location, evidence, observed, expected, why, remedy, rationale, uxOutcome, risk and a testPlan with at least one step",
+        "two invariants are schema-enforced rather than documented: a fact without observed plus evidence is refused (fact-without-observation), and a heuristic ranked P0/P1 is refused (heuristic-ranked-blocking), so an unmeasured opinion can neither be built nor ranked as blocking",
+        "composeProposal refuses an unresolved scope (ambiguous, not-found, advisory or rejected) quoting the clarifier, and refuses an empty item list as no-items; sorting is worst-first with measured facts before judgment at equal severity",
+        "the record carries a SHA-256 digest over canonically serialised scope, focus, items and untested, and authoriseApply refuses empty approval, a stale digest (content edited after approval), a hunk absent from the proposal, and a change in a dimension listed as untested, allowing only a matching digest with known hunks on measured dimensions",
+        "untested dimensions are copied from the scope's not-applicable list with their reasons and any measured-but-open dimension is merged rather than dropped (both facts are kept), and the rendered report always ends with a Not measured section",
+        "read-only is structural: the module imports no filesystem writer, and a test lists a temp directory before and after composeProposal and requires it identical; applying stays in Studio's T0707 path (content-bound grant, preimage hash recheck, byte-exact rollback) rather than a second writer",
+        "markdown output escapes every '<', '>', '&', '|', '*', '_', '[', ']' and backslash in page-derived text, so a title cannot inject report structure; the test inspects escaping rather than substrings because a backslash-escaped tag still contains the tag text",
+        "20 tests pass with no browser and no I/O; pnpm verify 0",
+        "not claimed: no diff or patch is generated, no command routes sus.bestpractice yet (T1023), this module measures nothing itself, and rollback semantics are T0707's and are cited rather than re-tested"
+      ],
+      "commit": "same commit as .sus-dev/VERIFICATION/T1022.md"
     },
     {
       "id": "T1023",

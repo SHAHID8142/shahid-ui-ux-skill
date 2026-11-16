@@ -1,7 +1,7 @@
 # `/sus-bestpractice` — scoped proposals for a selected UI area (issue #15)
 
-Status, stated before anything else: **only the scope step exists today** (T1021). Scope resolution
-and focus selection are implemented and tested; the proposal record (T1022), the command invocation
+Status, stated before anything else: **scope resolution and the proposal record exist**
+(T1021, T1022), and **no command is routed yet** — the intent, the CLI flags and the slash alias
 (T1023) and the five measured examples (T1024) are `pending` in `TASKS.json` as milestone **M11**.
 This page is not a description of a shipped command, and nothing here claims a host slash binding.
 
@@ -67,9 +67,53 @@ generic scope, because no scripted interaction is driven and a lab number there 
 dressed as evidence; and `copy` is not judged for a record table, because cell wording is content and
 needs a content kind before any rule applies.
 
-## 4. What this step does not do yet
+## 4. The proposal record (T1022)
 
-- It does not emit a proposal, a diff or a plan file (T1022).
+`sus.bestpractice-proposal/1`, validated with Zod before it is written — the same discipline as
+`audit.json`, and for the same reason: an absent value must be deliberate, not quietly zeroed.
+
+Every item states `dimension`, `severity`, `kind`, `title`, `location`, `evidence`, `observed`,
+`expected`, `why`, `remedy`, `rationale`, `uxOutcome`, `risk` and a `testPlan` with at least one
+step. Two invariants are enforced by the schema, not by prose:
+
+| Invariant | What happens if it is broken |
+| --- | --- |
+| a `fact` must carry `observed` **and** `evidence` | `composeProposal` refuses with `fact-without-observation` |
+| a `heuristic` may not be ranked P0 or P1 | refused with `heuristic-ranked-blocking` |
+
+A proposal is also refused when the scope is not `resolved` (`scope-not-resolved` — including the
+`advisory` case, because a screenshot rectangle is not source) and when there is nothing to propose
+(`no-items`). Sorting is worst-first, and measured facts come before judgments at equal severity.
+
+The record carries its own **digest** (SHA-256 over scope, focus, items and untested, canonically
+serialised) and an explicit `approval: { required: true, mode: 'per-hunk', applyPath: 'studio-apply' }`.
+
+## 5. What an approval may apply
+
+`authoriseApply(proposal, { digest, hunkIds })` is the guard, and it refuses in five named cases:
+
+| Refusal | Meaning |
+| --- | --- |
+| `empty-approval` | approving nothing applies nothing |
+| `stale-digest` | the approval was granted for different content — the digest is the binding |
+| `unknown-hunk` | an approved id is not in this proposal |
+| `untested-dimension` | the approved change is in a dimension no conclusion rests on, so the improvement could not be verified |
+| (allowed) | matching digest, known hunks, measured dimensions |
+
+Applying itself stays in Studio (`packages/studio-bridge/src/apply.ts`, T0707): it already refuses to
+write without a live content-bound grant, rechecks the preimage hash instead of overwriting the user's
+uncommitted edits, and restores preimages byte for byte on rollback. This workflow feeds it a proposal
+and a digest; it does not grow a second writer, which is what issue #15 asks for when it says not to
+build a competing engine.
+
+`## Not measured` is part of the rendered report: every dimension that was not-applicable, plus any
+dimension measured only in part, appears with its reason. A report that cannot say what it did not
+look at is not evidence.
+
+## 6. What this workflow does not do yet
+
+- It does not emit a diff or a plan file: the proposal lists remedies and test plans, not patches,
+  and patch generation belongs to Studio's preview path.
 - It does not expose a CLI flag, an intent or a slash alias; `sus.bestpractice` and
   `/sus-bestpractice` are designed in issue #15 but **not routed** until T1023.
 - It does not resolve a Live Studio region to source. That mapping is T1023's work together with
@@ -80,5 +124,6 @@ needs a content kind before any rule applies.
 ## Reproduce
 
 ```bash
-pnpm exec vitest run packages/eval-core/tests/bestpractice.scope.test.ts   # 24 tests, real browser
+pnpm exec vitest run packages/eval-core/tests/bestpractice.scope.test.ts      # 24 tests, real browser
+pnpm exec vitest run packages/eval-core/tests/bestpractice.proposal.test.ts   # 20 tests, no I/O
 ```

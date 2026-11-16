@@ -5,6 +5,22 @@
 export { scoreSection } from './scoring.js';
 export { collectPageMetrics, type PageMetrics } from './harness/metrics.js';
 export {
+  BestPracticeProposal,
+  PROPOSAL_SCHEMA_VERSION,
+  PROPOSAL_SEVERITIES,
+  authoriseApply,
+  composeProposal,
+  digestOf,
+  escapeMarkdown,
+  proposalItemId,
+  renderProposalMarkdown,
+  type ApplyDecision,
+  type BestPracticeProposal as BestPracticeProposalData,
+  type ProposalItem,
+  type ProposalRefusal,
+  type ProposalSeverity,
+} from './bestpractice/proposal.js';
+export {
   COMPONENT_KINDS,
   FOCUS_DIMENSIONS,
   SCOPE_KINDS,

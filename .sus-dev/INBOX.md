@@ -291,3 +291,12 @@ that; see `.sus-dev/VERIFICATION/T1017.md`.
   class fails if a new dimension is added without deciding whether it runs or is not-applicable.
 - `region`/`editor-selection` with `source: 'screenshot'` is advisory until Studio supplies a
   source mapping (T1023). Do not "improve" that by guessing a DOM element from a rectangle.
+
+## 2026-11-17 ~00:05 — pi: T1022 — proposal contract, digest-bound approval
+
+- `packages/eval-core/src/bestpractice/proposal.ts`. Two rules must not be relaxed: a `fact` needs an
+  observation and evidence, and a `heuristic` may never be P0/P1. Both are enforced by
+  `composeProposal`, and tests fail if they are weakened.
+- `authoriseApply` refuses a change in a dimension the proposal lists as `untested`. That is
+  deliberate: do not "helpfully" allow it because the user clicked approve.
+- Applying belongs to Studio (`studio-bridge/src/apply.ts`). Do not add a second writer here.

@@ -912,3 +912,19 @@
   `tag#id.class` and never inner text, so reports cannot leak page content.
   24 tests over a real Chromium page and a real file tree; `pnpm verify` 0. No proposal, no intent,
   no CLI flag, no provider call yet — T1022–T1024 remain `pending`.
+
+- 2026-11-17T00:05:00+06:00 | Pi (FreePi) | T1022 | The proposal record, with two invariants the
+  schema enforces instead of documenting: a `fact` must carry `observed` and `evidence`
+  (`fact-without-observation` otherwise), and a `heuristic` may not be ranked P0/P1
+  (`heuristic-ranked-blocking`). An unresolved scope is refused (`ambiguous`, `not-found`,
+  `advisory` — a screenshot rectangle is not source — and `rejected` all quote their clarifier), as
+  is an empty item list. The record carries a SHA-256 digest over canonically serialised
+  `{scope, focus, items, untested}`, and `authoriseApply` refuses empty approval, a stale digest
+  (content edited after approval), an unknown hunk, and a change in a dimension nothing measured —
+  the last because an "improvement" nobody can verify is not an improvement. Untested dimensions are
+  merged rather than dropped, so both the not-applicable reason and the partially-measured reason
+  survive. Markdown escapes page-derived text; the test checks escaping, not substrings, since
+  `\<img` still contains `<img`. Read-only is structural: the module imports no writer, and a test
+  lists a temp directory before and after. Applying stays with Studio's T0707 path (content-bound
+  grant, preimage recheck, byte-exact rollback). 20 tests, no browser; `pnpm verify` 0. T1023–T1024
+  remain `pending`.
