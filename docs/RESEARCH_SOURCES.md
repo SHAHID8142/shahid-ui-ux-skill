@@ -4,7 +4,8 @@ This document is the integration contract for **optional external research sourc
 currently governs one source — `GoogleChrome/modern-web-guidance` — pinned at revision
 `4dd968349e54ca45a05dd5c818fb035c9054b022` (v1.0.0, Apache-2.0). Owner triage lives in
 issue #14; the machine-readable record is
-[evals/research/modern-web-guidance/pin.json](../evals/research/modern-web-guidance/pin.json);
+[evals/research/modern-web-guidance/pin.json](../evals/research/modern-web-guidance/pin.json),
+measured by [scripts/research/verify-pin.mjs](../scripts/research/verify-pin.mjs);
 the code is [packages/scanners/src/research-provider.ts](../packages/scanners/src/research-provider.ts).
 
 **Read [COMPATIBILITY.md](../evals/research/modern-web-guidance/COMPATIBILITY.md) before planning
@@ -92,41 +93,63 @@ is exercised on every run of the test suite, not only in an outage.
 A pin is a record that specific bytes at a specific commit had specific digests. Updating one is a
 reviewed change, never a side effect of a build.
 
-1. **Fetch, online, deliberately.** Run the lookup with `SUS_RESEARCH_ONLINE=1` against the new
-   revision. Do not install, execute or `npx` any upstream code to do this — see
-   [COMPATIBILITY.md §4](../evals/research/modern-web-guidance/COMPATIBILITY.md).
+1. **Fetch, online, deliberately.** `SUS_RESEARCH_ONLINE=1 node scripts/research/verify-pin.mjs`
+   is the measuring tool: it reads the pin, fetches the licence and every pinned guide, and writes
+   nothing unless you pass `--write`. Do not install, execute or `npx` any upstream code to do
+   this — see [COMPATIBILITY.md §4](../evals/research/modern-web-guidance/COMPATIBILITY.md).
+   It is deliberately absent from `pnpm verify`: a build must not need the network.
 2. **Record per guide.** For each guide in the pin: `sha256` of the content actually read,
    `verified: "verified"`, and the new `revision`. A guide that could not be fetched keeps
    `sha256: null` and `verified: "unverified"`; it does not inherit the parent pin's status.
-3. **Re-check the licence.** The module refuses any licence other than Apache-2.0. A licence change
-   upstream is an owner decision (D06 track), not an edit to the pin.
+   Every file is fetched twice, over the raw content host and the GitHub contents API at the
+   pinned ref, and the two answers must be byte-identical before anything is hashed — a single
+   fetch proves only that one host answered.
+3. **Re-check the licence.** The module refuses any licence other than Apache-2.0, and the pin
+   records `licenseSha256` so the licence claim is a measured digest rather than a remembered
+   name. A licence change upstream is an owner decision (D06 track), not an edit to the pin.
 4. **Diff before accepting.** A revision bump is a content review: which guides changed, and does
    any change touch a row in §6 or a rule in `skill/`? A digest update without a content review is
-   a silent rule change.
-5. **State what was not done.** If a guide was not fetched, the pin says so. The current pin does:
-   it records `sha256: null` for all four guides with a `verificationNote` explaining that this
-   toolchain never fetched upstream, and that the four paths come from owner triage in issue #14.
+   a silent rule change. `--write` therefore **refuses to replace a digest that is already
+   recorded** and stops with the recorded and fetched values side by side; clearing a recorded
+   digest is a deliberate hand edit, not something a refresh can do.
+5. **State what was not done.** The pin is a measurement, never an approval: a matching digest says
+   which bytes, and says nothing about whether SUS adopts their advice. `verificationNote` in the
+   pin is where the current run states its own limits, and `notPinned` lists what the pin does not
+   cover — the ~250 guides it never enumerated, the upstream command surface, and content review.
+   A digest proves the bytes are the bytes; it does not approve what they say.
 
 **Nothing is vendored.** No upstream file is copied into this repository, and no upstream command
 is run by any SUS script. Pinning a digest is not vendoring.
 
 ## 5. Verified versus unverified, as it actually stands
 
-| Item | Fact from issue #14 triage | Independently fetched by this toolchain |
-| --- | --- | --- |
-| Repository | `GoogleChrome/modern-web-guidance` | No |
-| Revision | `4dd9683…b022` (v1.0.0, 2026-11-10) | No |
-| Licence | Apache-2.0 | No |
-| Guide paths | 4 named paths under `skills/modern-web-guidance/guides/` | No |
-| Guide contents | not quoted anywhere in this repository | No |
-| `sha256` per guide | unknown | No — recorded as `null` |
-| Corpus size (~250 guides) | as stated by triage | No |
-| `legacy-scan` scope | covers a subset only | No |
+The pin carries a measured record: on 2026-11-16 every path below was fetched over HTTPS at the
+pinned revision by `scripts/research/verify-pin.mjs`, twice by different transports, and the bytes
+were identical before hashing. Measured is not the same as adopted, so the table keeps both
+questions apart.
 
-The honest consequence: **against the shipped pin the provider cannot return a hit.** It returns
-`{ available: false, reason: 'disabled' }` because the pin is unverified. That is the fail-closed
-behaviour working as designed. Everything in §6 is therefore a *hypothesis for review*, not a
-finding, and no pilot may cite upstream text until a fetch has been recorded.
+| Item | Recorded fact | Independently measured by this toolchain |
+| --- | --- | --- |
+| Repository | `GoogleChrome/modern-web-guidance` | Yes — the host that served every path |
+| Revision | `4dd9683…b022` (v1.0.0, 2026-11-10) | Yes — every URL carries it; the contents API read the same ref |
+| Licence | Apache-2.0 | Yes — `licenseSha256` is a digest of the fetched `LICENSE` |
+| Guide paths | 4 named paths under `skills/modern-web-guidance/guides/` | Yes — each fetched at that path |
+| Guide contents | not quoted anywhere in this repository | **No** — bytes were hashed, never read into a document |
+| `sha256` per guide | recorded for all four | Yes — with the manifest digest covering them |
+| Corpus size (~250 guides) | as stated by triage | No — the pin enumerates four, and `notPinned` says so |
+| `legacy-scan` scope | covers a subset only | No — no upstream command is run |
+| Whether any guide is *correct* | unknown | No — and no digest can answer it |
+
+The honest consequence, in two halves:
+
+- **The pin is now servable.** With a loader that returns the pinned bytes, the provider produces a
+  hit, and every hit still carries `trusted: false` — verification buys provenance, not authority.
+  A loader that returns anything else is rejected exactly as before; verification applies to the
+  pin, never to whatever a transport offers.
+- **The pin still cannot answer the questions §6 and §10 ask.** A digest proves which bytes exist; it
+  does not say whether the advice is right, whether it overlaps a SUS rule, or whether it helps an
+  agent. Everything in §6 remains a *hypothesis for review*, and the provider-present pilot arm
+  remains `not-run` until a real loader supplies fetched text to a paired run.
 
 ## 6. Overlap and contradiction spike (hypotheses only)
 
@@ -181,11 +204,19 @@ When a hit informs a SUS change:
 - Enforced by measurement: three paired pilots with before/after, a negative control and a fallback
   case — see §10. `pnpm pilots` re-measures; `pnpm test` re-checks the committed evidence without a
   browser.
+- Enforced by measurement, in one place: `scripts/research/verify-pin.mjs` is the only code that
+  fetches upstream, and `packages/scanners/tests/verify-pin.test.ts` holds it to the rules that
+  matter without a network — two transports must agree, a recorded digest is never replaced, and the
+  shipped pin's manifest digest is recomputed from its own rows. The script is not in `pnpm verify`
+  on purpose: a build that failed because GitHub was unreachable would teach people to skip it.
 - Enforced by review: the pin review in §4 and the hypothesis rule in §6.
 - **Still not enforced:** nothing prevents a future guide from being quoted in prose without a
   digest. That is a review obligation, and this section states it rather than implying a check that
-  does not exist. The provider-present arm of the pilots is `not-run` for the same reason: the pin is
-  unverified, so there is nothing fetched to cite.
+  does not exist. A verified pin does not close this gap: it makes a *citation* checkable once
+  written, it does not force one to be written.
+- **Still not enforced, second gap:** the provider-present pilot arm. The pin is now verified, but no
+  shipped loader hands fetched text to a paired run, so the arm stays `not-run`. The two facts are
+  independent — a servable pin is a precondition, not a measurement.
 
 ## 10. Pilots
 
@@ -195,9 +226,9 @@ Three paired pilots, their negative controls and their fallback cases live in
 `pnpm test` re-checks the committed digests and the before/after verdict direction without a
 browser, so the evidence cannot silently go stale.
 
-They measure the technique, not the provider: the pin is unverified (§4), so the
-provider-present arm is `not-run` and no result here claims provider benefit. What they do
-settle is §7's requirement that at least one accessibility/AT risk and one modern-feature
-browser-support risk be **tested rather than asserted** — the header-association and focus
-contract are measured, and the yielding handler is measured with and without
-`scheduler.yield`.
+They measure the technique, not the provider: the pin is verified (§5) but no shipped loader
+supplies fetched text to a paired run, so the provider-present arm is `not-run` and no result
+here claims provider benefit. What they do settle is §7's requirement that at least one
+accessibility/AT risk and one modern-feature browser-support risk be **tested rather than
+asserted** — the header-association and focus contract are measured, and the yielding handler is
+measured with and without `scheduler.yield`.

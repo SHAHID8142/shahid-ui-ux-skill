@@ -31,10 +31,13 @@
  *   decision, not a code path.
  *
  * Honest limit: the pin this module ships against (evals/research/
- * modern-web-guidance/pin.json) records `sha256: null` and
- * `verified: "unverified"`, because the run that wrote it did not fetch
- * upstream. Against that pin the provider cannot produce a hit and says so.
- * That is the intended, fail-closed behaviour, not a bug to work around.
+ * modern-web-guidance/pin.json) now records measured digests, and it is still
+ * not a source this module can serve on its own. Two things remain outside it:
+ * a loader still has to exist that supplies bytes matching those digests, and
+ * the digests were measured by `scripts/research/verify-pin.mjs`, which is
+ * deliberately absent from `pnpm verify` because a build must never need the
+ * network. Verification happened once, on a recorded date; this module does not
+ * re-verify, so a stale pin degrades to a rejected hit, never to a quiet one.
  */
 
 /** How much the pin's provenance has actually been checked. */
@@ -55,6 +58,17 @@ export interface ResearchSourcePin {
   retrievedAt: string;
   sha256: string | null;
   verified: ResearchPinVerification;
+  /**
+   * Digest of the upstream licence text, when the pin recorded one. Optional
+   * because a pin may predate the measurement; when present it makes the
+   * licence claim a measured fact rather than a remembered name. The field the
+   * provider *enforces* is `license` above — this one is evidence for a
+   * reviewer, and no call path may infer permission from it.
+   */
+  licenseSha256?: string;
+  /** Date and tool that measured the digests. Provenance for a human, not input. */
+  verifiedAt?: string;
+  verifiedBy?: string;
 }
 
 /**

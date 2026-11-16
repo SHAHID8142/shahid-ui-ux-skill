@@ -7,13 +7,22 @@ Record: [pin.json](pin.json). Contract: [docs/RESEARCH_SOURCES.md](../../../docs
 
 **Nothing in this file was written from upstream guide text.** The four guide paths below are the
 ones named in issue #14; the descriptions of what a guide *probably* covers come from its filename
-and from the triage summary in that issue. Upstream was not fetched by the run that produced the
-pin — every entry is recorded `"sha256": null`, `"verified": "unverified"` — so no passage is
-quoted, no claim about a guide's contents is made, and no guide is described as "read".
+and from the triage summary in that issue.
 
-Consequence for planning: the provider **refuses to serve this pin** (`reason: 'disabled'`). A
-pilot may be designed and its fixtures prepared now; a pilot may not cite upstream text until a
-fetch under `SUS_RESEARCH_ONLINE=1` records real digests.
+The pin itself is now measured rather than assumed: on 2026-11-16
+`scripts/research/verify-pin.mjs` fetched the licence and all four guides at the pinned revision,
+twice by different transports, and recorded a digest for each. That is a statement about **which
+bytes exist**. It is not a statement that anyone read them: no passage is quoted anywhere in this
+repository, no claim about a guide's contents is made here, and no guide is described as "read".
+
+Consequence for planning, in two parts:
+
+- **The provider can now serve this pin.** With a loader that returns the pinned bytes it produces a
+  hit, still typed `trusted: false`. A loader that returns anything else is rejected, exactly as it
+  was before — verification belongs to the pin, not to a transport.
+- **A pilot may still not cite upstream text.** A digest makes a citation checkable once someone has
+  read the passage and written it; it does not produce the citation. Reading a guide is a content
+  review under docs/RESEARCH_SOURCES.md §4 step 4, and it has not happened.
 
 ---
 
@@ -109,8 +118,10 @@ The upstream README describes an install-and-run workflow (`npx modern-web-guida
 `search`, `retrieve`, `legacy-scan`). SUS does **not** use it:
 
 - **No automatic install, no `npx`, no code execution.** No SUS script downloads or runs upstream
-  tooling. The only access path is an injected lookup function, and the shipped pin is unverified,
-  so even that path currently returns `disabled`. See `packages/scanners/src/research-provider.ts`.
+  tooling. The only access path in the provider is an injected lookup function. One script reads
+  upstream bytes — `scripts/research/verify-pin.mjs` — and it fetches files over HTTPS, hashes them
+  and writes the pin; it installs nothing, executes nothing, and never runs during `pnpm verify`.
+  See `packages/scanners/src/research-provider.ts`.
 - **No outbound source transfer.** SUS does not send repository code, fixture content or user data
   to the upstream service. A lookup is a read of public pinned content.
 - **Provenance verified before any install.** If a human ever decides to install upstream tooling,
@@ -119,11 +130,12 @@ The upstream README describes an install-and-run workflow (`npx modern-web-guida
   licence verification, a size/maintenance check and a documented exit path) — plus a pinned
   version, never `@latest`.
 - **Hashes and revision before trust.** A hit only exists when its `sha256` matches the pin's
-  recorded digest. A mismatch drops the hit; it is never "accepted with a warning".
+  recorded digest. A mismatch drops the hit; it is never "accepted with a warning". The pin's own
+  digests are measured, not typed: they were recorded by a script that read bytes and ran nothing.
 - **Apache-2.0 attribution for copied material.** Quoting a bounded excerpt is reference use.
   Copying guide text into SUS requires the Apache-2.0 notice, the upstream URL, the revision and the
-  guide path to travel with it. Nothing has been copied: the four guides are pinned by path only,
-  with `sha256: null`.
+  guide path to travel with it. Nothing has been copied: the four guides are pinned by path and by
+  digest, and no guide text exists anywhere in this repository.
 - **Licence independence.** Upstream's Apache-2.0 governs upstream. SUS's licence and publication
   channel are not decided by this work; owner decision **D06 stays open**. Nothing in this document
   or the provider chooses a licence for SUS.
@@ -143,7 +155,7 @@ The upstream README describes an install-and-run workflow (`npx modern-web-guida
 | SUS's CI measures Chromium only | verified in this repository |
 | `legacy-scan` covers a subset of upstream guidance | from issue #14 triage |
 | The three pilot before/after numbers in §6 | **measured** in this repository by `pnpm pilots` (headless Chromium); see [pilots/results.json](pilots/results.json) for the digests and metrics |
-| Provider-present pilot arm | **not-run** — the pin is `sha256: null` / `unverified`, so the provider returns `disabled` (docs/RESEARCH_SOURCES.md §4) |
+| Provider-present pilot arm | **not-run** — the pin is measured (2026-11-16), but no shipped loader supplies fetched text to a paired run, so there is nothing to compare against the no-provider arm. Precondition met, measurement not done |
 
 ## 6. Measured pilots (T1016)
 
@@ -171,10 +183,11 @@ What this settles, and what it does not:
 - The **browser-support risk** is tested, not asserted: the yielding handler is driven twice,
   once with `scheduler.yield` available and once with `window.scheduler` removed. Both runs
   record zero long tasks, and the fallback run records `mode: "timeout"`.
-- The **provider-present arm is not-run.** The pin is `sha256: null` / `unverified`, so the
-  provider returns `disabled` and no guide text was fetched or vendored. These pilots measure
-  the technique the pinned guide list names, not the source, and they claim nothing about
-  provider benefit. That is the honest state of §4, not a gap hidden by wording.
+- The **provider-present arm is not-run.** The pin is measured, so the provider *could* serve a
+  hit — but no shipped loader hands fetched text to a paired run, and no guide text is quoted or
+  vendored here. These pilots measure the technique the pinned guide list names, not the source,
+  and they claim nothing about provider benefit. A servable pin is a precondition for that arm,
+  never the arm itself.
 
 ### The guard that makes the bad recipe checkable
 

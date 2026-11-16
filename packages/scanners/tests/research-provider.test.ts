@@ -21,14 +21,18 @@
  *   appears fails the test.
  * - **An unavailable provider does not throw.** The callers are render paths.
  * - **The shipped pin is honest.** The last block reads
- *   `evals/research/modern-web-guidance/pin.json` and fails if anyone fills in a
- *   digest that was never fetched, or if the provider ever starts serving that
- *   unverified pin.
+ *   `evals/research/modern-web-guidance/pin.json` and holds it to both halves of
+ *   the claim: every digest is a real 64-hex digest, the parent manifest digest
+ *   is the one the recorded guides imply, and the provider serves a hit from
+ *   that pin only when a loader returns bytes matching it. A pin edited by hand
+ *   breaks the manifest check; a provider that trusts its loader breaks the
+ *   mismatch check.
  *
  * Deterministic and offline: no test performs a request. Every lookup is a local
  * closure and every digest a literal; the only file read is the committed pin,
  * which this package's suite already does for the provenance catalog.
  */
+import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -442,7 +446,7 @@ describe('a verified hit carries full provenance and is never trusted', () => {
   });
 });
 
-describe('the shipped pin cannot serve a hit yet, by design', () => {
+describe('the shipped pin is a measured record, and still not a rulebook', () => {
   const pinPath = join(
     __dirname,
     '..',
@@ -453,24 +457,36 @@ describe('the shipped pin cannot serve a hit yet, by design', () => {
     'modern-web-guidance',
     'pin.json',
   );
+  /** The pin's own row shape is the module's, so the file is checked, not asserted. */
+  type PinGuide = ResearchGuidePin;
   const record = JSON.parse(readFileSync(pinPath, 'utf8')) as {
     id: string;
     upstreamUrl: string;
     revision: string;
     license: string;
+    licenseSha256: string;
     retrievedAt: string;
     sha256: string | null;
     verified: 'verified' | 'unverified';
-    guides: {
-      guideId: string;
-      path: string;
-      title: string;
-      sha256: string | null;
-      verified: 'verified' | 'unverified';
-    }[];
+    verifiedBy: string;
+    verificationNote: string;
+    guides: PinGuide[];
   };
 
-  it('records the revision and licence from issue #14 triage', () => {
+  /**
+   * The manifest digest is defined by the pin's own contents, so a test can
+   * re-derive it without trusting the script that wrote it: revision, licence
+   * digest, then each guide's id, path and digest, NUL-joined. If a guide digest
+   * is edited without the parent, or a guide is added without re-recording, this
+   * stops matching — which is exactly the hand-edit this test exists to catch.
+   */
+  function manifestDigest(): string {
+    const parts = ['modern-web-guidance', record.revision, 'LICENSE', record.licenseSha256];
+    for (const guide of record.guides) parts.push(guide.guideId, guide.path, guide.sha256 ?? '');
+    return createHash('sha256').update(parts.join('\u0000')).digest('hex');
+  }
+
+  it('records the revision, licence and paths from issue #14 triage', () => {
     expect(record.revision).toBe('4dd968349e54ca45a05dd5c818fb035c9054b022');
     expect(record.license).toBe('Apache-2.0');
     expect(record.upstreamUrl).toBe('https://github.com/GoogleChrome/modern-web-guidance');
@@ -483,40 +499,79 @@ describe('the shipped pin cannot serve a hit yet, by design', () => {
     ]);
   });
 
-  it('claims no digest it does not have', () => {
-    // The honest state after triage-only inspection: nothing hashed, nothing
-    // verified. Filling these in without fetching would be fabrication.
-    expect(record.sha256).toBeNull();
-    expect(record.verified).toBe('unverified');
+  it('records digests it can point at a measuring script for', () => {
+    // A verified pin is a claim that bytes were fetched. The claim is only
+    // meaningful if it says which tool measured them, so that a reviewer can
+    // re-run it; the digest shapes below are the ones that tool writes.
+    expect(record.verified).toBe('verified');
+    expect(record.verifiedBy).toBe('scripts/research/verify-pin.mjs');
+    expect(record.sha256).toMatch(/^[0-9a-f]{64}$/);
+    expect(record.licenseSha256).toBe(
+      'cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30',
+    );
     for (const guide of record.guides) {
-      expect(guide.sha256).toBeNull();
-      expect(guide.verified).toBe('unverified');
+      expect(guide.sha256).toMatch(/^[0-9a-f]{64}$/);
+      expect(guide.verified).toBe('verified');
     }
+    // No two guides may claim the same bytes: that would mean one digest was
+    // copied across rows instead of measured.
+    const digests = record.guides.map((guide) => guide.sha256);
+    expect(new Set(digests).size).toBe(digests.length);
   });
 
-  it('refuses to serve that pin even with a loader and the online flag set', async () => {
+  it('reports a parent digest that its own guide rows imply', () => {
+    expect(record.sha256).toBe(manifestDigest());
+  });
+
+  it('says in prose that it is a measured record, not an approved one', () => {
+    // The note has to keep carrying the limits a digest cannot express: a
+    // matching hash proves which bytes, never that SUS adopted their advice.
+    expect(record.verificationNote).toContain('HTTPS');
+    expect(record.verificationNote).toContain('no guide text is quoted');
+  });
+
+  it('serves a hit once a loader returns the pinned bytes', async () => {
     const provider = createResearchProvider({
-      pin: {
-        id: record.id,
-        upstreamUrl: record.upstreamUrl,
-        revision: record.revision,
-        license: record.license,
-        retrievedAt: record.retrievedAt,
-        sha256: record.sha256,
-        verified: record.verified,
-      },
+      // The whole record is passed through, including the measurement fields:
+      // a pin that declares its own provenance must still type-check as one.
+      pin: record,
       guides: record.guides,
-      lookup: () => ({ available: true, hits: [hit('responsive-table', TABLE_SHA)] }),
+      lookup: () => ({
+        available: true,
+        hits: [hit('responsive-table', record.guides[0]?.sha256 ?? null)],
+      }),
       isOnline: () => true,
     });
 
     const result = await provider.search({ query: 'responsive table' });
+    expect(result.available).toBe(true);
+    if (!result.available) throw new Error('unreachable');
+    expect(result.hits).toHaveLength(1);
+    expect(result.hits[0]?.guideId).toBe('responsive-table');
+    expect(result.hits[0]?.sha256).toBe(record.guides[0]?.sha256);
+    // A verified digest buys provenance, not trust: third-party text stays data.
+    expect(result.hits[0]?.trusted).toBe(false);
+  });
+
+  it('rejects a loader that returns different bytes than the pin records', async () => {
+    const provider = createResearchProvider({
+      // The whole record is passed through, including the measurement fields:
+      // a pin that declares its own provenance must still type-check as one.
+      pin: record,
+      guides: record.guides,
+      lookup: () => ({ available: true, hits: [hit('responsive-table', 'e'.repeat(64))] }),
+      isOnline: () => true,
+    });
+
+    const result = await provider.search({ query: 'responsive table' });
+    // Verification applies to the pin, not to whatever the loader offers: a
+    // loader is a transport, and a transport that returns other bytes is wrong.
     expect(result.available).toBe(false);
-    expect(result.reason).toBe('disabled');
+    expect(result.reason).toBe('no-match');
     expect(result.hits).toEqual([]);
   });
 
-  it('refuses before spending a lookup, so a pending pin costs nothing', async () => {
+  it('still refuses an unverified pin before spending a lookup', async () => {
     let loaderCalls = 0;
     const provider = createResearchProvider({
       pin: { ...PIN, sha256: null, verified: 'unverified' },
@@ -528,7 +583,9 @@ describe('the shipped pin cannot serve a hit yet, by design', () => {
       isOnline: () => true,
     });
 
-    await provider.search({ query: 'responsive table' });
+    const result = await provider.search({ query: 'responsive table' });
+    expect(result.available).toBe(false);
+    expect(result.reason).toBe('disabled');
     expect(loaderCalls).toBe(0);
   });
 });

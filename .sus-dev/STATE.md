@@ -1,6 +1,6 @@
 # Development state
 
-Updated: 2026-11-16T10:56:00+06:00
+Updated: 2026-11-16T16:20:00+06:00
 docs/RESUME_ON_NEW_MACHINE.md (install, branch, `pnpm setup`, `pnpm verify`). Host: Pi (FreePi),
 main-integration role; the ZCode peer heartbeat is stale. A second agent/host cooperates per
 D33: claim tasks via TASKS.json leases; read `.sus-dev/INBOX.md`.
@@ -19,11 +19,13 @@ feasibility GO on both Next.js and Astro. zcode stale. Concurrency: 2 workers (D
 via lease before editing.
 
 Current task: none in the build tree. The last owner-issue item closed (issue #14 research
-source: the pin is recorded and stays `unverified`, so the provider arm is `not-run` rather
-than assumed; the responsive-table guard is executable and tested by 22 tests; three pilots
-carry measured before/after evidence). What is left is owner-gated and is not started by an
-agent: T1003 (independent audit, which a builder must never self-certify) and T1005 (release
-approval and publication).
+source: the pin's digests are now **measured**, not assumed — `scripts/research/verify-pin.mjs`
+fetched the licence and all four guides twice by independent transports and recorded them; the
+responsive-table guard is executable and tested by 22 tests; three pilots carry measured
+before/after evidence). A servable pin is a precondition, not the measurement: no shipped loader
+supplies fetched text to a paired run, so the provider arm stays `not-run` and no guide text is
+quoted anywhere. What is left is owner-gated and is not started by an agent: T1003 (independent
+audit, which a builder must never self-certify) and T1005 (release approval and publication).
 Issue #13 is closed on the build side: the audit composes the existing evaluators rather than
 adding a second engine, and every gate in the registry is now executable except the 400% zoom
 component, which is reported `not-run` on every run rather than absorbed into the 320px result.
@@ -65,10 +67,13 @@ closed item.
 Blockers: standing B003 (licence/publication, later phase) and B004 (irreversible externals
 during build). Active files: none after checkpoint.
 
-Latest checks: 2026-11-16T10:52 +06:00 — `pnpm verify` green (74 files + 3 skipped, **845 tests
-passed / 9 skipped**, 89.5 s), 13/13 gates implemented with 55 `[PASS]` lines, claims/handoff/roadmap
-consistent all green; earlier `SUS_DOGFOOD=1 pnpm dogfood` 15/15 and **CI run 43736564619 success on
-`e788e90`**.
+Latest checks: 2026-11-16T16:18 +06:00 — `pnpm verify` green (**75 files + 3 skipped, 862 tests
+passed / 9 skipped**; the two new files are `packages/scanners/tests/verify-pin.test.ts` and the
+research-provider rewrite), 13/13 gates implemented with 55 `[PASS]` lines, claims/handoff/roadmap
+consistent all green; earlier `SUS_DOGFOOD=1 pnpm dogfood` 15/15 and **CI run 43831171205 success on
+`88e4431`** (the host-entry-point fix). The pin measurement is deliberately outside this run:
+`scripts/research/verify-pin.mjs` is the only script that touches the network and a build must never
+need it.
 Owner issue #10 is CLOSED; issue #9 stays open by design (it is the standing continuous-execution
 rule, and closing it would end the rule while the product is unpublished).
 Bootstrap defect fixed: `pnpm setup`

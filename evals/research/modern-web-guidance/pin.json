@@ -4,43 +4,47 @@
   "release": "v1.0.0",
   "revision": "4dd968349e54ca45a05dd5c818fb035c9054b022",
   "license": "Apache-2.0",
+  "licenseSha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
   "retrievedAt": "2026-11-10",
-  "sha256": null,
-  "verified": "unverified",
-  "verificationNote": "Upstream content was NOT independently fetched by the run that wrote this pin. Every fact below (revision, release, licence, guide paths) comes from owner triage recorded in issue #14, which inspected upstream main at that revision on 2026-11-10. No digest was computed, no excerpt was read, and no guide text is quoted anywhere in this directory. 'retrievedAt' therefore records when upstream was inspected by triage, not a retrieval by this toolchain. The pin stays 'unverified' until a run under SUS_RESEARCH_ONLINE=1 fetches each guide and records its sha256; packages/scanners/src/research-provider.ts refuses to emit a hit from an unverified pin, so this record enables documentation and planning only.",
+  "sha256": "86872acde276e316c8e8533db89a64900155852efe25611bd9cf2e8f21e78f72",
+  "verified": "verified",
+  "verifiedAt": "2026-11-16",
+  "verifiedBy": "scripts/research/verify-pin.mjs",
+  "verificationNote": "Measured, not asserted. On 2026-11-16 every path below was fetched over HTTPS at the revision above, twice by different transports (raw.githubusercontent.com and the GitHub contents API at the same ref), and the two answers were byte-identical before anything was hashed. LICENSE was fetched the same way, so the Apache-2.0 claim rests on the licence text rather than on issue #14 triage. 'sha256' is a manifest digest over the revision, the licence digest and each guide's path plus digest in this file's order; it is recomputed by scripts/research/verify-pin.mjs, which is the only script that touches the network and never runs as part of pnpm verify. No upstream file is copied into this repository and no upstream command is installed or executed: only bytes were read, and no guide text is quoted anywhere in this directory. Re-check with SUS_RESEARCH_ONLINE=1 node scripts/research/verify-pin.mjs; the script refuses to replace a digest that has already been recorded, because bytes moving under a fixed revision are a content review (docs/RESEARCH_SOURCES.md §4 step 4), not a refresh.",
   "attribution": "GoogleChrome/modern-web-guidance is Apache-2.0. If any guide text is later copied into SUS, the Apache-2.0 notice, the upstream repository URL, the revision above and the guide path must travel with it. Quoting for reference does not change SUS's own licence position (owner decision D06 stays open).",
   "guides": [
     {
       "guideId": "responsive-table",
       "path": "skills/modern-web-guidance/guides/ui-atoms/responsive-table.md",
       "title": "Responsive table",
-      "sha256": null,
-      "verified": "unverified"
+      "sha256": "b1b1c84034398b83cda29a04fbd152c94aced38b11151791b3eb1c9d05af7666",
+      "verified": "verified"
     },
     {
       "guideId": "responsive-design",
       "path": "skills/modern-web-guidance/guides/css/responsive-design.md",
       "title": "Responsive design",
-      "sha256": null,
-      "verified": "unverified"
+      "sha256": "4bd7f40d677cbaeaebddac90aa2b23a81701ef6c2215b689148906f8d4d2da8f",
+      "verified": "verified"
     },
     {
       "guideId": "identify-inp-causes",
       "path": "skills/modern-web-guidance/guides/performance/identify-inp-causes.md",
       "title": "Identify INP causes",
-      "sha256": null,
-      "verified": "unverified"
+      "sha256": "2a2a4c8ce12872a62de18690022b00655cc89ca201dd8d2058b65d81b95fa138",
+      "verified": "verified"
     },
     {
       "guideId": "navigation-drawer",
       "path": "skills/modern-web-guidance/guides/ui-components/navigation-drawer.md",
       "title": "Navigation drawer",
-      "sha256": null,
-      "verified": "unverified"
+      "sha256": "94597ab44b89e25feb43be3696bca5e420334c25bc236b3f2eed7f39d614dc56",
+      "verified": "verified"
     }
   ],
   "notPinned": [
     "The remaining ~250 guides at this revision. Only the four paths named in issue #14 are listed above; the rest were never enumerated here and must not be implied to exist under these ids.",
-    "Upstream tooling behaviour (search, retrieve, legacy-scan, install). Its README describes them; this repository pins no command surface and runs none of it."
+    "Upstream tooling behaviour (search, retrieve, legacy-scan, install). Its README describes them; this repository pins no command surface and runs none of it.",
+    "Guide content review. A matching digest proves the bytes are the bytes; it does not approve what they say, and no guide text is quoted or copied into SUS."
   ]
 }
