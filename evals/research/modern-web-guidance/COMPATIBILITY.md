@@ -148,7 +148,7 @@ The upstream README describes an install-and-run workflow (`npx modern-web-guida
 
 | Claim | Status |
 | --- | --- |
-| Upstream revision, release, licence, four guide paths | from issue #14 triage, not independently fetched |
+| Upstream revision, release, licence, four guide paths | **measured** 2026-11-16 — every path fetched twice by independent transports and hashed; the licence is a digest of upstream's own `LICENSE` text, not a remembered name |
 | Guide contents, recommendations, API usage | **unknown** — not read; the table in `docs/RESEARCH_SOURCES.md` §6 is labelled hypotheses for this reason |
 | SUS pseudo-label implementation (`globals.css:470`), its documented limits | verified in this repository |
 | `content: attr(data-label)` is not a header association | **measured** (§6): the generated label text does reach the cell's accessible name in Chromium, but the association itself is gone when the header row leaves the layout. A real screen-reader session is still `not-run` |
