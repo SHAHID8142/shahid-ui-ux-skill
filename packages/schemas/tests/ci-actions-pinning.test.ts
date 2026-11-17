@@ -99,3 +99,39 @@ describe('the workflow pins every third-party action to a commit', () => {
     expect(docker.filter((u) => /:latest$|:main$|:master$/.test(u.uses))).toEqual([]);
   });
 });
+
+/**
+ * T1048 (audit finding T1003-3): the host-smoke step is the only CI surface that exercises the
+ * audit entry point end to end, and its own name promises "fails the build if any check fails".
+ * Under GitHub's default run shell (`bash -e`, no pipefail) a `| tee` pipe reports tee's status,
+ * so a failing smoke used to ship green — a vacuous check in exactly the failure mode this
+ * repository treats as serious. A comment cannot fail; this file can.
+ */
+describe('the host-smoke step can actually fail the build (T1048)', () => {
+  const smokeLine = (): { line: number; text: string } | null => {
+    const lines = WORKFLOW.split('\n');
+    const index = lines.findIndex((raw) => raw.includes('smoke-host.mjs'));
+    return index === -1 ? null : { line: index + 1, text: lines[index] ?? '' };
+  };
+
+  it('runs the smoke by redirection, never piped into another command', () => {
+    const step = smokeLine();
+    expect(step).not.toBeNull();
+    expect(step?.text).toMatch(/smoke-host\.mjs\s*>\s*\S+/);
+    expect(step?.text).not.toContain('|');
+  });
+
+  it('still writes the JSON receipt the job documents', () => {
+    expect(smokeLine()?.text).toContain('$RUNNER_TEMP/smoke.json');
+  });
+});
+
+/** T1075 (audit finding T1003-31): the header comment may not claim more than the triggers do. */
+describe('the workflow header matches its triggers (T1003-31)', () => {
+  const header = WORKFLOW.split('\n').slice(0, 8).join('\n');
+
+  it('scopes the main claim to the push trigger, since pull_request builds PR merge commits', () => {
+    expect(header).toContain('push trigger ignores main');
+    expect(header).not.toContain('main is never built here');
+  });
+});

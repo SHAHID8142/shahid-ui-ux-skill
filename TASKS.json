@@ -5340,10 +5340,14 @@
       ],
       "risk": "a broken audit entry point ships green through the pipeline",
       "rollback": "restore the pipe; CI behaves as before (smoke status silently discarded)",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1048.md",
+        ".github/workflows/ci.yml",
+        "packages/schemas/tests/ci-actions-pinning.test.ts"
+      ]
     },
     {
       "id": "T1049",
@@ -6012,10 +6016,14 @@
       ],
       "risk": "a reader trusts a comment the trigger contradicts",
       "rollback": "revert the comment",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1048.md",
+        ".github/workflows/ci.yml",
+        "packages/schemas/tests/ci-actions-pinning.test.ts"
+      ]
     }
   ]
 }

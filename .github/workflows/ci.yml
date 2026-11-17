@@ -1,8 +1,10 @@
 name: CI
 
 # Build-phase verification pipeline (protocol §0.5): automated checks on dev
-# branches. main is never built here; the final verified checkpoint push is T1006
-# (public repository per D34; the product itself is not published).
+# branches — the push trigger ignores main, so nothing builds main here directly
+# (a pull_request into main builds that PR's merge commit; branch policy is the
+# owner's). The final verified checkpoint push is T1006 (public repository per
+# D34; the product itself is not published).
 'on':
   push:
     branches-ignore: [main]
@@ -118,9 +120,12 @@ jobs:
       - name: Build (the smoke runs the built CLI, not the sources)
         run: pnpm build
       # The script is the assertion: exit 0 means verdict PASS over all 8 checks
-      # (`process.exitCode = failed ? 1 : 0`), and it prints the JSON receipt.
+      # (`process.exitCode = failed ? 1 : 0`), and it prints the JSON receipt. T1048 (audit
+      # finding T1003-3): the receipt is written by redirection, not a `| tee` pipe — GitHub's
+      # default run shell is `bash -e` without pipefail, so a pipe would discard the smoke's
+      # exit code and this step could never turn red.
       - name: Host smoke (fails the build if any check fails)
-        run: node scripts/coord/smoke-host.mjs | tee "$RUNNER_TEMP/smoke.json"
+        run: node scripts/coord/smoke-host.mjs > "$RUNNER_TEMP/smoke.json"
       - name: Support matrix on this runner is the generated one
         run: pnpm support
 
