@@ -314,8 +314,17 @@ export async function runBestPractice(request: BestPracticeRequest): Promise<Bes
   } = selection;
 
   if (items.length === 0) {
+    // A file scope has no way to attribute a DOM finding (issue #21 R8). "[A] nothing to propose"
+    // would then read as "measured and clean" while the audit had in fact measured plenty and could
+    // not name any of it in the selection's terms. So the cause is stated and the exit code is 3
+    // (nothing in scope was measured), not 0.
+    const fileScoped =
+      scope.reference.kind === 'component-path' || scope.reference.kind === 'editor-selection';
+    const blockedByAttribution = fileScoped && unattributed > 0;
     const markdown = [
-      '# Best practice proposal — nothing to propose',
+      blockedByAttribution
+        ? '# Best practice proposal — not attributable to a file'
+        : '# Best practice proposal — nothing to propose',
       '',
       'Scope: `' +
         scope.reference.kind +
@@ -325,15 +334,32 @@ export async function runBestPractice(request: BestPracticeRequest): Promise<Bes
         scope.focus.kind +
         ')',
       '',
-      'The audit measured ' +
-        dimensions.join(', ') +
-        ' and found nothing to change inside this scope' +
-        (outOfScope === 0 ? '' : '; ' + outOfScope + ' finding(s) in other dimensions') +
-        (unattributed === 0
-          ? ''
-          : '; ' + unattributed + ' finding(s) the audit attributes elsewhere on the page') +
-        '.',
+      blockedByAttribution
+        ? 'The audit measured ' +
+          dimensions.join(', ') +
+          ' and reports ' +
+          unattributed +
+          ' finding(s), but **none can be attributed to a file**: a finding names an element\n' +
+          '(a descriptor such as `input#email`) and this scope names a source file, so matching them\n' +
+          'would be a guess. Nothing was proposed and nothing was changed.'
+        : 'The audit measured ' +
+          dimensions.join(', ') +
+          ' and found nothing to change inside this scope' +
+          (outOfScope === 0 ? '' : '; ' + outOfScope + ' finding(s) in other dimensions') +
+          (unattributed === 0
+            ? ''
+            : '; ' + unattributed + ' finding(s) the audit attributes elsewhere on the page') +
+          '.',
       '',
+      ...(blockedByAttribution
+        ? [
+            '## What would work',
+            '',
+            "Select the element instead of the file, e.g. `--scope '#email'` or",
+            "`--scope 'form#signup'`, or ask for the whole document with `--scope page`.",
+            '',
+          ]
+        : []),
       '## Not measured',
       ...extraUntested.map((entry) => '- **' + entry.dimension + '** — ' + entry.reason),
       '',
@@ -341,14 +367,18 @@ export async function runBestPractice(request: BestPracticeRequest): Promise<Bes
     const markdownPath = join(request.outDir, 'proposal.md');
     writeFileSync(markdownPath, markdown, 'utf8');
     return {
-      exitCode: 0,
+      exitCode: blockedByAttribution ? 3 : 0,
       audit,
       scope,
       proposal: null,
       markdown,
       proposalPath: null,
       markdownPath,
-      message: 'nothing to propose in this scope',
+      message: blockedByAttribution
+        ? 'a file scope cannot attribute the ' +
+          unattributed +
+          ' finding(s) the audit measured: select an element or the page'
+        : 'nothing to propose in this scope',
     };
   }
 

@@ -2666,7 +2666,8 @@
         "T1033",
         "T1034",
         "T1035",
-        "T1036"
+        "T1036",
+        "T1037"
       ],
       "files": [],
       "acc": [
@@ -4930,6 +4931,38 @@
         "packages/eval-core/tests/motion-probe.test.ts",
         "fixtures/bestpractice/motion/index.html",
         "fixtures/bestpractice/motion-lost/index.html"
+      ]
+    },
+    {
+      "id": "T1037",
+      "m": "M12",
+      "title": "A file scope states that findings cannot be attributed, and exits 3 (issue #21 R8)",
+      "obj": "--scope-kind component-path resolved and then exited 0 'nothing to propose' while the audit had measured 51 findings, so 'nothing' hid which nothing it was. State the cause, name the scopes that can attribute, and use exit 3 (nothing in scope was measured) instead of 0 (measured and clean).",
+      "deps": [
+        "T1036"
+      ],
+      "files": [
+        "packages/eval-core/src/bestpractice/",
+        "packages/eval-core/tests/",
+        "docs/"
+      ],
+      "acc": [
+        "a file scope with unattributed findings exits 3 and says why",
+        "the markdown names the remedies (element selector, page scope) and does not claim 'nothing to change'",
+        "a file scope that genuinely measured nothing still exits 0",
+        "selector and page scopes are unchanged"
+      ],
+      "tests": [
+        "packages/eval-core/tests/bestpractice.file-scope.test.ts"
+      ],
+      "risk": "turning a visible 'nothing' into an error without closing the underlying mapping gap",
+      "rollback": "restore exit 0 and the single message; no attribution logic changes",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1037.md",
+        "packages/eval-core/tests/bestpractice.file-scope.test.ts"
       ]
     }
   ]

@@ -168,6 +168,23 @@ is attributable *by construction* rather than by string matching, and the propos
   mode still produce no element scoped axe items, and a selector axe cannot include is recorded as a
   scoped-scan failure instead of being silently treated as clean.
 
+### A file scope refuses to guess attribution (T1037)
+
+A `component-path` scope resolves (the file must exist) but **cannot** propose DOM findings: a finding is
+located by an element descriptor (`input#email`) and nothing in this repository maps descriptors to
+source files. Rather than print "nothing to propose" — which reads as "measured and clean" — the command
+states the cause and exits **3**:
+
+```
+sus bestpractice --path fixtures/bestpractice --scope-kind component-path --scope motion/index.html
+→ The audit measured responsive, a11y, visual and reports 51 finding(s), but none can be attributed to a
+  file: a finding names an element … and this scope names a source file, so matching them would be a
+  guess. Nothing was proposed and nothing was changed.
+  → select the element instead: --scope '#email', or the whole document: --scope page   (exit 3)
+```
+
+Exit 0 is reserved for a scope that genuinely measured nothing to change.
+
 ### A page scope proposes the page's own findings (T1031)
 
 `--scope page` (also `document`, `whole page`) selects the document itself. No browser is opened to
