@@ -123,8 +123,9 @@ M8 Studio hardening → M9 multi-agent adapters → M10 benchmarks & release.
    file; the repository being public (D34) is not that decision. Nothing is published.
 2. Studio stack and first supported web framework — the slice runs on Astro and Next has one
    editing path; no host reaches the `supported` tier yet.
-3. Real identities/versions of target hosts — FreePi holds a fresh receipt (`51ad458af6e0`,
-   2026-11-16, 8/8) but stays `experimental` because Live Studio never ran there; ZCode's
+3. Real identities/versions of target hosts — FreePi holds a fresh receipt (`293168993dee`,
+   2026-11-16, 8/8, against the current artifact — `docs/SUPPORT_MATRIX.md` is the generated
+   record) but stays `experimental` because Live Studio never ran there; ZCode's
    receipt is stale and Codex, Claude Code and Cursor have none. No host reaches `supported`
    (`docs/SUPPORT_MATRIX.md` is the generated record).
 4. Telemetry, screenshot/DOM retention, remote-work policy — retention is constrained in code

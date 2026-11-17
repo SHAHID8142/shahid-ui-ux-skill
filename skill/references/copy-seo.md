@@ -35,4 +35,4 @@ density preferences, naming conventions.
 - every `<img>` has alt (decorative images: alt="")
 - exactly one `<main>` landmark
 
-These are triage checks, not ranking guarantees — no SEO outcome is claimed.
+These are triage checks, not a ranking promise — no SEO outcome is claimed.

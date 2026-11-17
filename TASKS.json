@@ -5368,10 +5368,12 @@
       ],
       "risk": "the owner's licence decision (D06) is made on a false inventory",
       "rollback": "revert the row to the false claim (never)",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1049.md"
+      ]
     },
     {
       "id": "T1050",
@@ -5586,10 +5588,12 @@
       ],
       "risk": "overstatement ships unflagged in the documents a release reader trusts",
       "rollback": "restore the 6-file TARGETS; the coverage hole returns",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1049.md"
+      ]
     },
     {
       "id": "T1058",
@@ -5635,10 +5639,12 @@
       ],
       "risk": "an auditor trusts a row that describes a tree that does not exist",
       "rollback": "revert the wording; the packet goes stale with the next task again",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1049.md"
+      ]
     },
     {
       "id": "T1060",
@@ -5705,10 +5711,12 @@
       "tests": [],
       "risk": "an unbounded sessions map in a long-lived process",
       "rollback": "not applicable — no change made",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1049.md"
+      ]
     },
     {
       "id": "T1063",
@@ -5948,10 +5956,12 @@
       ],
       "risk": "a fresh reader or agent takes either file at its word",
       "rollback": "revert the wording alignment",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1049.md"
+      ]
     },
     {
       "id": "T1073",
@@ -5970,10 +5980,12 @@
       ],
       "risk": "a reader lands on a stale receipt for a different artifact",
       "rollback": "revert the pointer",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1049.md"
+      ]
     },
     {
       "id": "T1074",

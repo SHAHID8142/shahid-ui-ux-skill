@@ -18,11 +18,29 @@ const ROOT = fileURLToPath(new URL('..', import.meta.url));
 /** The publishable claim surface: what a reader is meant to trust. */
 const TARGETS = [
   'README.md',
+  'ROADMAP.md',
+  'HANDOFF.md',
+  'TEST_EVIDENCE.md',
   'docs/LIMITATIONS.md',
   'docs/MAINTENANCE.md',
   'docs/SUPPORT_MATRIX.md',
   'docs/COVERAGE_MATRIX.md',
+  'docs/STUDIO.md',
+  'docs/BESTPRACTICE_EXAMPLES.md',
+  'docs/BUILD_COMPLETION_HANDOFF.md',
   'skill/SKILL.md',
+  'skill/README.md',
+  // The shipped product text (T1057, audit finding T1003-12): a comparative claim in a
+  // reference file would never have been caught by the six-file scan set.
+  'skill/references/art-direction.md',
+  'skill/references/copy-seo.md',
+  'skill/references/direction.md',
+  'skill/references/foundations-color-typography.md',
+  'skill/references/foundations-heuristics-ia.md',
+  'skill/references/foundations-layout-responsive.md',
+  'skill/references/motion-interruption.md',
+  'skill/references/precedence.md',
+  'skill/references/surfaces.md',
 ];
 
 function readStatus() {

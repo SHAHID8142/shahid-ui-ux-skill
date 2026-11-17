@@ -27,7 +27,7 @@ build when the two disagree, so this page cannot drift again. It was hand-writte
 | M10 | Regression, benchmark, independent review, docs, release | T1001–T1020 (20 tasks) | **18/20 done** — pending: T1003, T1005 |
 | M11 | Scoped best-practice workflow (/sus-bestpractice, issue #15) | T1021–T1024 (4 tasks) | **done** — 4/4 |
 | M12 | Post-M11 hardening from issue triage (#16-#20, D32) | T1025–T1045 (21 tasks) | **done** — 21/21 |
-| M13 | Independent audit (T1003, D35) findings — the fixes and their measurements | T1046–T1075 (30 tasks) | **1/30 done** — pending: T1046, T1047, T1048, T1049, T1051, T1052, T1053, T1054, T1055, T1056, T1057, T1058, T1059, T1060, T1061, T1062, T1063, T1064, T1065, T1066, T1067, T1068, T1069, T1070, T1071, T1072, T1073, T1074, T1075 |
+| M13 | Independent audit (T1003, D35) findings — the fixes and their measurements | T1046–T1075 (30 tasks) | **5/30 done** — pending: T1049, T1051, T1052, T1053, T1054, T1055, T1056, T1057, T1058, T1059, T1060, T1061, T1062, T1063, T1064, T1065, T1066, T1067, T1068, T1069, T1070, T1071, T1072, T1073, T1074 |
 <!-- roadmap:table end -->
 
 ## What is left

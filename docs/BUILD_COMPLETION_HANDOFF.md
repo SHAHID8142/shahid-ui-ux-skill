@@ -51,7 +51,7 @@ Run at the verified revision, on macOS (darwin), Node 26, pnpm 11.22.0:
 | Deterministic benchmark | `pnpm benchmark` | **pass** — baseline arm measured on 4 surfaces; claim gate `allowed: false` |
 | Install | `pnpm install --frozen-lockfile` | **pass** — already up to date |
 | Secrets scan | regex sweep for private keys, AWS/GitHub/Slack tokens | **clean** (no matches) |
-| Dependency licences | `pnpm licenses list` | all dependencies permissively licensed (MIT/Apache-2.0/BSD/ISC family); recorded here rather than asserted in prose |
+| Dependency licences | `pnpm licenses list` | mostly permissive (MIT / Apache-2.0 / BSD / ISC / BlueOak-1.0.0 / 0BSD / CC0 / MIT-0); **MPL-2.0** `axe-core` + `@axe-core/playwright` (production dependencies of eval-core and studio-bridge — compatible with proprietary use, upstream notices must be preserved); **LGPL-3.0-or-later** `@img/sharp-libvips-*` prebuilts (fixture **build tooling only**, nothing shipped); **FSL-1.1-Apache-2.0** `sentry` (dev-only, via lighthouse); data licences: CC-BY-4.0 `caniuse-lite`, PSF-2.0/Python-2.0 `argparse`. Recorded here rather than asserted in prose; the product licence itself is owner decision D06 |
 | Ancestry reachability | `pnpm reach` | **pass** — 94/94 finished non-M10 tasks backed at the current tree (80 commit, 10 receipt, 4 files, 0 evidence) |
 | Claim gate | `pnpm claims` | **pass** — no comparative or absolute claim in the publishable surface |
 | Pre-push gate | `.githooks/pre-push` → `gate-push.mjs` | **pass** — the release suite runs before every push; no bypass was used |
@@ -71,8 +71,8 @@ oracle plus playbook motion lint for motion, `frozen-lockfile` install for insta
 - **No release approval.** `T1005` is an owner decision.
 - **No comparative claim.** The benchmark's `sus-assisted` and `human` arms are `not-run`
   (no assisted artefacts; no recruited participants), so `comparativeClaimAllowed` returns
-  `false` and `pnpm claims` enforces it. Nothing in these docs claims SUS is better than any
-  alternative.
+  `false` and `pnpm claims` enforces it. Nothing in these docs compares SUS with any
+  alternative tool.
 - **No invented human results.** The protocol states the power calculation (41 raters per
   arm for a 0.5-point effect at sd 0.8) and says plainly that n = 20 is underpowered for
   that effect.

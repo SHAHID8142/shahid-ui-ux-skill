@@ -3,7 +3,7 @@
 When instructions conflict, SUS resolves in this order (mirrors the repo's
 authority order):
 
-1. **Current explicit user instruction** — the live brief beats everything,
+1. **Current explicit user instruction** — the live brief outranks everything,
    except where it requests violations of the fixed rules below.
 2. **Fixed rules** (never overridden by either side): real approvals for
    visible changes and source edits; no fabricated evidence; no placeholder

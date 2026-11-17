@@ -106,4 +106,5 @@ export const EXEMPT_FILES = new Set([
   'docs/DEEP_AUDIT_2026-11-13.md',
   'docs/REVIEW_RECONCILIATION.md',
   'docs/AUDIT_AND_OPEN_DECISIONS.md',
+  'docs/THREAT_MODEL.md',
 ]);

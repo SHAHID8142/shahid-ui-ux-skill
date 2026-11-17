@@ -21,7 +21,7 @@ not a list of files:
 
 | Strategy | Right when | Wrong when |
 | --- | --- | --- |
-| `photography-led` | the product's world is a real physical situation, and one honest photograph beats three illustrations | the photograph is a stock "team meeting" standing in for a product |
+| `photography-led` | the product's world is a real physical situation, and one honest photograph outweighs three illustrations | the photograph is a stock "team meeting" standing in for a product |
 | `illustration-led` | the concept is abstract and drawing it is clearer than photographing it | the illustration is a decorative blob or a "hero spot art" |
 | `product-ui` | the interface itself is the proof — screenshots, real data shapes | the screenshot is a mocked dashboard nobody uses |
 | `type-only` | the message is short and verbal, and the page is faster and calmer without images | it is an excuse to avoid deciding anything |

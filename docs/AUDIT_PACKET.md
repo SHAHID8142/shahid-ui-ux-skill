@@ -37,7 +37,7 @@ Three habits make your review worth more than the build's own receipts:
 | Checkpoint | T1006, the verified final push before this audit |
 | Node / pnpm | 26.13.1 / 11.22.0 |
 | Build state claimed by the author | `pnpm verify` green: 96 test files + 3 skipped, 1050 tests passing, 61/61 gates |
-| Task state claimed by the author | `TASKS.json`: 133 of 135 done; pending only T1003 and T1005 |
+| Task state claimed by the author | `TASKS.json`: pending exactly T1003 and T1005 (T1003 was commissioned after this row was written; absolute done/total counts rot with every task — read `git show HEAD:TASKS.json` yourself for the count at the revision you audit) |
 
 Verify all five lines yourself. A wrong row here is a finding in itself (severity: high — the documents would
 be describing a tree that is not the one under review).
@@ -113,7 +113,9 @@ node packages/eval-core/dist/cli.js audit --url http://example.com --out /tmp/a1
 # An HTML file scope attributes its own route and proposes (2 items here, exit 0):
 node packages/eval-core/dist/cli.js bestpractice --path fixtures/bestpractice --scope-kind component-path \
   --scope "$PWD/fixtures/bestpractice/states-flat/index.html" --out /tmp/bp1 --mode deep
-#   → 2 item(s), 2 measured, 0 blocking; 82 finding(s) outside the scope
+#   → 2 item(s), 2 measured, 0 blocking; exit 0. The "N finding(s) outside the scope" count is
+#     machine-dependent (±8 run-to-run on a loaded machine — the state probes measure, they do
+#     not count), so the stable expectations are the exit code and the item/blocked counts.
 
 # A component scope refuses: exit 3, not 0, with the remedy named:
 node packages/eval-core/dist/cli.js bestpractice --path fixtures/bestpractice --scope-kind component-path \
