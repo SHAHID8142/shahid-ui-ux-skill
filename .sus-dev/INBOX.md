@@ -329,3 +329,13 @@ that; see `.sus-dev/VERIFICATION/T1017.md`.
   only when a check names it" the right bar, or does it undercount dogfood checks that cover a family?
 - Branch protection, licence choice, PR closure, host journeys and publication are owner actions; do
   not self-certify them.
+
+## Peer-check requests after T1030–T1037
+
+1. `harness/motion.ts` drives only `[aria-expanded]`. Is a second scenario (a `details/summary` or a
+   dialog) worth adding, or does that start inventing interactions the audit cannot justify?
+2. The scoped axe scan (T1030) and the page-wide scan can report the same violation under two labels for
+   an element scope. Is that duplication acceptable in a proposal, or should the page-wide rule-level
+   item be suppressed when a scoped item covers it?
+3. T1037 chose exit 3 for "measured but not attributable". Confirm that matches the documented meaning of
+   3 ("nothing in scope was measured") rather than deserving a new code.

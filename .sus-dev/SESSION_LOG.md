@@ -967,3 +967,28 @@
   flagged the two documents still citing it before commit.
 - Owner-only remains: T1003 independent review, T1005 release/publication, licence D06/B003, branch
   protection policy, closing superseded review PRs, and any host install/journey.
+
+## 2026-11-18 — issue #21 R-series (T1030–T1037)
+
+Closed 9 of the 12 proposals from issue #21, each with a receipt, tests and a CI-verified push:
+
+| Task | Proposal | Commit | Claim |
+| --- | --- | --- | --- |
+| T1030 | R2 | `34d93df` | axe runs confined to the selected element, so an a11y violation is attributable by construction |
+| T1031 | R1 | `4cc55b1` | `--scope page` resolves without a browser and attributes by dimension |
+| T1032 | R3 | `bcbae54` | `sus <command>` dispatches to the owning CLI; the map is checked against each CLI's own usage line |
+| T1033 | R4 | `956b50f` | `pnpm studio:bridge` + `docs/STUDIO.md`; the Studio page does not exist and no doc says it does |
+| T1034 | R9 | `e790366` | git's expected "not a git repository" no longer prints during the demo |
+| T1035 | R11 | `e790366` | every performance number says "lab measurement, no field data, no comparative claim" |
+| T1036 | R7 | `da2a7f7` | motion measured by driving one disclosure (pointer, keyboard, reduced motion) |
+| T1037 | R8 | `ce4e5f8` | a file scope exits 3 and says why, instead of 0 "nothing to propose" |
+
+Left alone on purpose: R6 (component-state probes, large), R10 (needs a zcode host), R12 (owner decision
+D06). T1003 and T1005 remain owner-only and unselfcertified.
+
+Lessons worth carrying:
+- `innerText` on a hidden element falls back to `textContent`; parity checks must read visibility.
+- A wrapper that lists commands must be tested against the wrapped CLIs' own help output, in both
+  directions, or it drifts.
+- A test timeout can measure the runner: measure the phase before changing the code.
+- Verify CI with `gh run list` per commit; never infer "CI green" from a local `pnpm verify`.
