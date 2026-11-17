@@ -12,7 +12,14 @@
  *   2 usage, target or scope error — no proposal written
  *   3 proposal written but nothing in scope was measured (every item is a judgment)
  */
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  realpathSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
@@ -149,14 +156,19 @@ export function htmlScopeRoute(
   if (!/[^/]\.html?$/i.test(reference.value)) return null;
   const file = resolve(reference.value);
   if (!existsSync(file) || statSync(file).isDirectory()) return null;
-  const root = targetIsDirectory ? resolve(target) : dirname(resolve(target));
-  const rel = relative(root, file).split(sep).join('/');
+  const raw = targetIsDirectory ? resolve(target) : dirname(resolve(target));
+  // The route must survive a path that reaches the same file through a symlink (macOS `/tmp` is one).
+  // Comparing lexical paths made an equivalent scope name silently unattributable, which is the same
+  // class of defect as guessing: the answer depended on how the user spelled the path.
+  const parent = existsSync(raw) ? realpathSync(raw) : raw;
+  const canonical = realpathSync(file);
+  const rel = relative(parent, canonical).split(sep).join('/');
   if (rel.startsWith('..')) return null;
-  if (rel === 'index.html' || rel === 'index.htm') return { route: '/', file };
+  if (rel === 'index.html' || rel === 'index.htm') return { route: '/', file: canonical };
   if (rel.endsWith('/index.html') || rel.endsWith('/index.htm')) {
-    return { route: '/' + rel.slice(0, rel.lastIndexOf('/')), file };
+    return { route: '/' + rel.slice(0, rel.lastIndexOf('/')), file: canonical };
   }
-  return { route: '/' + rel, file };
+  return { route: '/' + rel, file: canonical };
 }
 
 export interface ScopedSelection {

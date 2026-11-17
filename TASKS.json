@@ -2679,7 +2679,8 @@
         "T1038",
         "T1039",
         "T1040",
-        "T1041"
+        "T1041",
+        "T1042"
       ],
       "files": [],
       "acc": [
@@ -5119,6 +5120,38 @@
         ".sus-dev/VERIFICATION/T1041.md",
         "packages/eval-core/tests/bestpractice.file-scope.test.ts",
         "packages/eval-core/src/bestpractice/command.ts"
+      ]
+    },
+    {
+      "id": "T1042",
+      "m": "M12",
+      "title": "Fix scope route derivation for symlinked paths (found preparing the audit)",
+      "obj": "Re-running the audit packet's commands on a fresh clone showed an HTML file scope reached through a symlink derived no route and fell back to the cannot-attribute refusal, so attribution depended on how the path was spelled. Canonicalise the file and its root before computing the route.",
+      "deps": [
+        "T1041"
+      ],
+      "files": [
+        "packages/eval-core/src/bestpractice/command.ts",
+        "packages/eval-core/tests/bestpractice.file-scope.test.ts",
+        "docs/AUDIT_PACKET.md"
+      ],
+      "acc": [
+        "a scope path through a symlink derives the same route as the canonical path",
+        "a component scope still exits 3 and a clean HTML scope still exits 0",
+        "the audit packet's commands were executed on a fresh clone before being relied on"
+      ],
+      "tests": [
+        "packages/eval-core/tests/bestpractice.file-scope.test.ts"
+      ],
+      "risk": "an answer that depends on the spelling of an input while sounding like an honest refusal",
+      "rollback": "revert to lexical comparison; symlinked scope paths refuse again",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1042.md",
+        "packages/eval-core/tests/bestpractice.file-scope.test.ts",
+        "docs/AUDIT_PACKET.md"
       ]
     }
   ]

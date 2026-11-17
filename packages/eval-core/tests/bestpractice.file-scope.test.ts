@@ -10,7 +10,7 @@
  * (`.tsx`, `.vue`, `.astro`) produces a fragment of many pages, so it stays unattributed and says so,
  * exiting **3** (nothing in scope was measured) rather than 0 (measured and clean).
  */
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -114,17 +114,39 @@ describe('file scopes and attribution (issue #21 R8, T1037, T1041)', () => {
 
   it('derives the route the same way the audit does, index.html included', () => {
     const dir = site();
+    // The file comes back canonical (symlinks resolved), so the route is what a reader can compare,
+    // not the spelling the caller happened to use.
     expect(
       htmlScopeRoute({ kind: 'component-path', value: join(dir, 'index.html') }, dir, true),
-    ).toEqual({ route: '/', file: join(dir, 'index.html') });
+    ).toMatchObject({ route: '/' });
     expect(
       htmlScopeRoute({ kind: 'component-path', value: join(dir, 'checkout.html') }, dir, true),
-    ).toEqual({ route: '/checkout.html', file: join(dir, 'checkout.html') });
+    ).toMatchObject({ route: '/checkout.html' });
     // Not an HTML file, not a route.
     expect(
       htmlScopeRoute({ kind: 'component-path', value: join(dir, 'Card.tsx') }, dir, true),
     ).toBeNull();
     // A selector scope never needs a route: it already names an element.
     expect(htmlScopeRoute({ kind: 'selector', value: '#email' }, dir, true)).toBeNull();
+  });
+
+  it('finds the route through a symlinked path, because the answer must not depend on spelling', () => {
+    const dir = site();
+    // A second name for the same tree, as macOS `/tmp` is a symlink to `/private/tmp`.
+    const alias = join(mkdtempSync(join(tmpdir(), 'sus-alias-')), 'link');
+    symlinkSync(dir, alias);
+    const throughAlias = htmlScopeRoute(
+      { kind: 'component-path', value: join(alias, 'checkout.html') },
+      dir,
+      true,
+    );
+    expect(throughAlias?.route).toBe('/checkout.html');
+    // And the same file named directly must agree.
+    const direct = htmlScopeRoute(
+      { kind: 'component-path', value: join(dir, 'checkout.html') },
+      dir,
+      true,
+    );
+    expect(direct?.route).toBe(throughAlias?.route);
   });
 });

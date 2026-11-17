@@ -128,6 +128,13 @@ Scope paths resolve against the target unless given as absolute paths; a relativ
 exist under the target is refused as `scope not-found` (exit 2), which is the intended behaviour and worth
 checking rather than assuming.
 
+**These commands were re-run on a fresh `--depth 1` clone at `e5b6ad2`** (install from the lockfile, build,
+then the three blocks above), not only in the author's working tree. That exercise found a real defect: a
+scope path spelled through a symlink (macOS `/tmp` -> `/private/tmp`) derived no route and fell back to the
+"cannot attribute" refusal, so the same file was attributable under one spelling and not another. Fixed in
+T1042 by canonicalising both paths; the packet's command line is unchanged because the behaviour was wrong,
+not the instruction.
+
 Gate registry, limitations and the claim gate are the three places where an overstatement would hide:
 `node scripts/check-claims.mjs`, `docs/LIMITATIONS.md`, `docs/GATE_REGISTRY.json`.
 
