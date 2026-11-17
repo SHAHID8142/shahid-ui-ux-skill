@@ -2680,7 +2680,10 @@
         "T1039",
         "T1040",
         "T1041",
-        "T1042"
+        "T1042",
+        "T1043",
+        "T1044",
+        "T1045"
       ],
       "files": [],
       "acc": [
@@ -5152,6 +5155,105 @@
         ".sus-dev/VERIFICATION/T1042.md",
         "packages/eval-core/tests/bestpractice.file-scope.test.ts",
         "docs/AUDIT_PACKET.md"
+      ]
+    },
+    {
+      "id": "T1043",
+      "m": "M12",
+      "title": "Fix CONNECT IPv6 parsing and the silent tunnel failure in the authorized proxy",
+      "obj": "Answering a pending peer-review question found that CONNECT parsed its target by splitting on ':', so an IPv6 literal became host '[', an authorized IPv6 host was unreachable and the refusal named a host the operator could not authorize; and a tunnel that could not open was dropped with no response. Parse the target as a URL, strip the brackets the predicate does not expect, and answer 502.",
+      "deps": [
+        "T1042"
+      ],
+      "files": [
+        "packages/eval-core/src/harness/authorized-proxy.ts",
+        "packages/eval-core/tests/proxy-connect.test.ts"
+      ],
+      "acc": [
+        "an IPv6 CONNECT target is refused or admitted by its real address, never as '['",
+        "the refusal list contains a host that can be passed back to --authorize",
+        "a tunnel that cannot open answers 502 instead of waiting for the client timeout",
+        "the 403 body carries nothing the caller did not send"
+      ],
+      "tests": [
+        "packages/eval-core/tests/proxy-connect.test.ts"
+      ],
+      "risk": "a fail-closed refusal that names the wrong host hides an unreachable authorized target",
+      "rollback": "restore the split parse; IPv6 tunnels refuse again",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1043.md",
+        "packages/eval-core/tests/proxy-connect.test.ts",
+        "packages/eval-core/src/harness/authorized-proxy.ts"
+      ]
+    },
+    {
+      "id": "T1044",
+      "m": "M12",
+      "title": "Refuse an apply target that resolves outside the project root",
+      "obj": "The apply path joined proposal file paths onto the root and wrote them, with nothing asserting containment. Proposal paths come from walking the root so traversal was not reachable, but an apply is where that assumption should be checked: resolve the parent, do not resolve the leaf, and refuse path-outside-root.",
+      "deps": [
+        "T1043"
+      ],
+      "files": [
+        "packages/studio-bridge/src/apply.ts",
+        "packages/studio-bridge/tests/apply.test.ts",
+        "docs/STUDIO_SAFETY_CONTRACT.md"
+      ],
+      "acc": [
+        "a path that walks out of the root is refused as path-outside-root",
+        "a path whose directory is a symlink out of the root is refused",
+        "an absolute path inside the root is accepted",
+        "a path that normalises to inside is not refused out of caution",
+        "the safety contract states that an apply never writes outside the approved tree"
+      ],
+      "tests": [
+        "packages/studio-bridge/tests/apply.test.ts"
+      ],
+      "risk": "a write outside the tree the owner approved",
+      "rollback": "remove the guard; apply behaves as before, with no containment assertion",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1044.md",
+        "packages/studio-bridge/tests/apply.test.ts",
+        "docs/STUDIO_SAFETY_CONTRACT.md"
+      ]
+    },
+    {
+      "id": "T1045",
+      "m": "M12",
+      "title": "Stop two test timeouts from measuring machine contention",
+      "obj": "A full verify run failed four files that pass alone: the deep best-practice test exceeded its 420 s budget at 285 s of real work under parallel Lighthouse runs, and two fixture-server suites waited 30 s for next start to bind. Record the measured duration, widen the headroom, and make the readiness error say how long it waited.",
+      "deps": [
+        "T1044"
+      ],
+      "files": [
+        "packages/eval-core/tests/",
+        "docs/"
+      ],
+      "acc": [
+        "the deep best-practice timeout records the measured duration it was widened from",
+        "a fixture server that never binds reports how long it waited",
+        "no assertion was weakened to make the suite pass"
+      ],
+      "tests": [
+        "packages/eval-core/tests/bestpractice.command.test.ts",
+        "packages/eval-core/tests/harness.test.ts",
+        "packages/eval-core/tests/a11y-budgets.test.ts"
+      ],
+      "risk": "a timeout that hides a real slowdown, or a flaky suite taught to pass by waiting longer",
+      "rollback": "restore the previous timeouts; the suite becomes contention-sensitive again",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1045.md",
+        "packages/eval-core/tests/bestpractice.command.test.ts",
+        "packages/eval-core/tests/harness.test.ts"
       ]
     }
   ]

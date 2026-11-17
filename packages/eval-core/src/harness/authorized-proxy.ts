@@ -27,7 +27,11 @@ export async function startAuthorizedProxy(
   authorizedHosts: readonly string[],
 ): Promise<AuthorizedProxy> {
   const refused: string[] = [];
-  const record = (host: string): boolean => {
+  const record = (rawHost: string): boolean => {
+    // A WHATWG URL keeps the brackets on an IPv6 hostname (`[::1]`), while an `--authorize` value is
+    // written bare (`::1`). Comparing the two spellings never matched an authorized IPv6 host, and the
+    // refusal named a host the operator could not paste back into `--authorize`.
+    const host = rawHost.replace(/^\[/, '').replace(/\]$/, '');
     if (isAuthorizedHost(host, authorizedHosts)) return true;
     refused.push(host);
     return false;
@@ -63,12 +67,22 @@ export async function startAuthorizedProxy(
   });
 
   proxy.on('connect', (req: { url?: string }, socket: Socket, head: Buffer) => {
-    const [host, rawPort] = (req.url ?? '').split(':');
-    if (host === undefined || !record(host)) {
+    // A `CONNECT` target is `host:port`, and an IPv6 literal is `[::1]:443`. Splitting on ':' read that
+    // as host `[`, which is refused — safe, but it also meant an authorized IPv6 host could never be
+    // reached and the refusal named a host nobody asked for. Parsed as a URL instead.
+    let target: URL;
+    try {
+      target = new URL('http://' + (req.url ?? ''));
+    } catch {
+      socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+      return;
+    }
+    const host = target.hostname;
+    if (host.length === 0 || !record(host)) {
       socket.end('HTTP/1.1 403 Forbidden\r\n\r\n');
       return;
     }
-    const port = Number(rawPort ?? '443');
+    const port = Number(target.port === '' ? '443' : target.port);
     if (!Number.isInteger(port) || port <= 0 || port > 65535) {
       socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
       return;
@@ -79,7 +93,11 @@ export async function startAuthorizedProxy(
       upstream.pipe(socket);
       socket.pipe(upstream);
     });
-    upstream.on('error', () => socket.destroy());
+    // A tunnel that cannot open used to be dropped without a response, so the client waited for its own
+    // timeout. Say what happened, then close.
+    upstream.on('error', () => {
+      socket.end('HTTP/1.1 502 Bad Gateway\r\n\r\n');
+    });
     socket.on('error', () => upstream.destroy());
   });
 

@@ -37,7 +37,9 @@ copy only allowed project inputs. No preview writes to consuming-project sources
 Proposal generation is read-only. Any exceptions require explicit scope authorization.
 
 Apply: validate receipt/ownership/fence → persist and sync preimages + transaction
-manifest → stage changes → recheck hashes/fence → apply file replacements while
+manifest → **refuse any target whose resolved path leaves the project root** (T1044: the parent is
+realpath-resolved and the leaf is not, so a symlinked file is replaced by the atomic rename rather than
+written through) → stage changes → recheck hashes/fence → apply file replacements while
 journaling progress → verify → accept or conflict-aware transaction rollback.
 Persist file identity, original/new hashes, existence, modes and operation ID for
 all files. Per-file rename is not global atomicity. Recovery consults durable states

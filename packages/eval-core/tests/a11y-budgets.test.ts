@@ -27,7 +27,10 @@ const FIXTURE = join(__dirname, '..', '..', '..', 'fixtures', 'marketing');
 let server: ChildProcess | undefined;
 let evidenceDir: string;
 
-async function waitForReady(url: string, timeoutMs = 30000): Promise<void> {
+// The wait is for `next start` to bind, not an assertion about speed. 30 s was enough in isolation and
+// not enough when the whole suite ran in parallel (two suites failed this way in one run and passed
+// alone), so the wait is wider and the failure says how long it waited.
+async function waitForReady(url: string, timeoutMs = 90000): Promise<void> {
   const start = Date.now();
   while (Date.now() - start < timeoutMs) {
     try {
@@ -37,7 +40,7 @@ async function waitForReady(url: string, timeoutMs = 30000): Promise<void> {
     }
     await new Promise((r) => setTimeout(r, 300));
   }
-  throw new Error(`fixture server not ready at ${url}`);
+  throw new Error(`fixture server not ready at ${url} after ${timeoutMs} ms`);
 }
 
 beforeAll(async () => {

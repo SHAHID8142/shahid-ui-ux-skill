@@ -29,10 +29,11 @@ import {
   mkdirSync,
   readFileSync,
   readdirSync,
+  realpathSync,
   renameSync,
   writeFileSync,
 } from 'node:fs';
-import { join } from 'node:path';
+import { basename, dirname, join, resolve, sep } from 'node:path';
 import type { ApprovalGrant, Proposal } from './preview.js';
 import type { PreviewSession } from './preview.js';
 import { Transaction, sha256 } from './transaction.js';
@@ -66,6 +67,7 @@ export type RefusalReason =
   | 'stale-approval'
   | 'grant-mismatch'
   | 'plan-file-mismatch'
+  | 'path-outside-root'
   | 'unfinished-transaction'
   | 'conflicting-user-edit'
   | 'transaction-verify-failed'
@@ -119,6 +121,30 @@ export interface UndoResult {
   reason: RefusalReason | null;
   detail: string;
   restored: string[];
+}
+
+/**
+ * Whether a proposal path stays inside the project root, after symlinks are resolved.
+ *
+ * Proposal paths are produced by walking the root, so traversal is not reachable through the public API
+ * today. This refuses it anyway, because the cost of the guard is one `realpath` and the cost of the bug
+ * would be a write outside the tree the owner approved — the one thing an apply path must never do.
+ * Exported so the guard can be tested without constructing a whole session.
+ */
+export function insideRoot(root: string, path: string): boolean {
+  try {
+    const canonicalRoot = realpathSync(root);
+    // `resolve`, not `join`: join concatenates, so an absolute `path` would have been glued onto the root
+    // and then failed to exist, refusing a legitimate inside path. resolve also normalises `..`.
+    const absolute = resolve(root, path);
+    // The parent is resolved, the leaf is joined: resolving the leaf too would make a symlinked file
+    // look like its target, and the write replaces the link rather than following it.
+    const parent = realpathSync(dirname(absolute));
+    const canonical = join(parent, basename(absolute));
+    return canonical === canonicalRoot || canonical.startsWith(canonicalRoot + sep);
+  } catch {
+    return false;
+  }
 }
 
 const OPS_DIR = join('.sus', 'ops');
@@ -322,6 +348,13 @@ export class ApplyEngine {
     // grant verification and here.
     const currentSources = new Map<string, string>();
     for (const file of proposal.files) {
+      if (!insideRoot(this.root, file.path)) {
+        return refuse(
+          'path-outside-root',
+          `${file.path} resolves outside ${this.root}; an apply never writes outside the approved tree`,
+          proposalFiles,
+        );
+      }
       const absolute = join(this.root, file.path);
       if (!existsSync(absolute)) {
         return refuse(

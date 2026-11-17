@@ -14,12 +14,20 @@
  *  - a replayed operation id returns the stored receipt instead of writing twice.
  */
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import ts from 'typescript';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { ApplyEngine, interruptedTransactions, type VerifyFn } from '../src/apply.js';
+import { ApplyEngine, insideRoot, interruptedTransactions, type VerifyFn } from '../src/apply.js';
 import { applyAstEdit } from '../src/editor.js';
 import { ActionBoundary, CapabilityAuthority, type CapabilityBinding } from '../src/security.js';
 import { PreviewSession, type ApprovalGrant } from '../src/preview.js';
@@ -560,5 +568,36 @@ describe('engine construction fails closed', () => {
         }),
     ).toThrow(/requires a verify function/);
     rmSync(root, { recursive: true, force: true });
+  });
+});
+
+/**
+ * T1044 — an apply must not write outside the tree the owner approved.
+ *
+ * Proposal paths come from walking the root, so traversal is not reachable through the public API today.
+ * The guard exists because the failure would be a write outside the approved tree, and because an apply
+ * path is exactly where defence in depth belongs. The leaf is deliberately *not* resolved: a symlinked
+ * file is replaced by the atomic rename rather than written through, so resolving it would weaken the
+ * guard instead of strengthening it.
+ */
+describe('apply path containment (T1044)', () => {
+  it('accepts a path inside the root and refuses one that walks out', () => {
+    const root = mkdtempSync(join(tmpdir(), 'sus-root-'));
+    mkdirSync(join(root, 'src'), { recursive: true });
+    writeFileSync(join(root, 'src', 'card.astro'), '<div></div>', 'utf8');
+    expect(insideRoot(root, 'src/card.astro')).toBe(true);
+    // `join` normalises first, so this one really is inside: the guard must not refuse it out of caution.
+    expect(insideRoot(root, 'src/card.astro/../../escape.ts')).toBe(true);
+    expect(insideRoot(root, '../escape.ts')).toBe(false);
+    expect(insideRoot(root, 'src/../../escape.ts')).toBe(false);
+    expect(insideRoot(root, join(root, 'src', 'card.astro'))).toBe(true);
+  });
+
+  it('refuses a path whose directory is a symlink out of the root', () => {
+    const root = mkdtempSync(join(tmpdir(), 'sus-root-'));
+    const outside = mkdtempSync(join(tmpdir(), 'sus-outside-'));
+    writeFileSync(join(outside, 'secret.ts'), 'x', 'utf8');
+    symlinkSync(outside, join(root, 'linked'), 'dir');
+    expect(insideRoot(root, 'linked/secret.ts')).toBe(false);
   });
 });
