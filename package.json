@@ -2,6 +2,9 @@
   "name": "sus",
   "version": "0.0.0",
   "private": true,
+  "bin": {
+    "sus": "bin/sus.mjs"
+  },
   "description": "SUS \u2014 Shahid UI UX Skill monorepo (ADR-001 layout). Public repository (D34); the product is not published.",
   "packageManager": "pnpm@11.22.0",
   "engines": {

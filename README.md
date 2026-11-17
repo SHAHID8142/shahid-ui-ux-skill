@@ -35,6 +35,12 @@ and security-reporting route.
 
 ## Commands
 
+**One entry point (T1032):** `pnpm exec sus <command>` (or `node bin/sus.mjs …`) runs the command
+that owns it — `audit`, `bestpractice`, `capture`, `evidence`, `score`, `budget` (eval-core), `scan`
+(scanners), `route`, `load`, `precedence`, `capabilities`, `status` (adapters). Arguments and exit
+codes pass through unchanged, so `sus audit --help` shows exactly what `sus-eval audit --help` shows.
+It runs the built packages: `pnpm build` first. Nothing is published (T1005 is the owner's decision).
+
 | Command | What it does |
 | --- | --- |
 | `pnpm verify` | handoff + reachability + claim checker + gate suite + lint/format/typecheck/build + direction, motion and playbook gates + support-matrix drift + all unit tests |

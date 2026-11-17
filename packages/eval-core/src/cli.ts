@@ -39,10 +39,12 @@ const SUBCOMMAND_USAGE: Record<string, string> = {
  * like a crash rather than a usage error, and `--help` was one of the options it threw on
  * (found by hand). Both become a one-line usage message with exit 2, and `--help` exits 0.
  */
-type OptionValue<T> = T extends { type: 'string' }
-  ? string | undefined
-  : T extends { multiple: true }
-    ? string[]
+// `multiple` first: a `{ type: 'string', multiple: true }` option parses to string[], and checking
+// `type` first silently typed it as a bare string.
+type OptionValue<T> = T extends { multiple: true }
+  ? string[]
+  : T extends { type: 'string' }
+    ? string | undefined
     : boolean | undefined;
 
 type OptionSpec = NonNullable<ParseArgsConfig['options']>;
@@ -202,26 +204,23 @@ export async function main(argv: string[]): Promise<void> {
 
   if (command === 'audit') {
     const { AUDIT_HELP } = await import('./audit/contract.js');
-    const { values } = parseArgs({
-      args: args.slice(1),
-      options: {
-        path: { type: 'string' },
-        url: { type: 'string' },
-        out: { type: 'string' },
-        mode: { type: 'string' },
-        route: { type: 'string' },
-        routes: { type: 'string' },
-        authorize: { type: 'string', multiple: true },
-        'fix-plan': { type: 'boolean' },
-        json: { type: 'boolean' },
-        help: { type: 'boolean' },
-      },
-      allowPositionals: false,
-    });
-    if (values.help === true) {
+    if (args.includes('--help') || args.includes('-h')) {
       console.log(AUDIT_HELP);
       process.exit(0);
     }
+    // parseOrFail, not parseArgs: an unknown option must be a one-line usage error with exit 2, not
+    // a Node-internal stack fragment (found by hand through `sus audit --bogus`).
+    const values = parseOrFail('audit', args.slice(1), {
+      path: { type: 'string' },
+      url: { type: 'string' },
+      out: { type: 'string' },
+      mode: { type: 'string' },
+      route: { type: 'string' },
+      routes: { type: 'string' },
+      authorize: { type: 'string', multiple: true },
+      'fix-plan': { type: 'boolean' },
+      json: { type: 'boolean' },
+    });
     const path = values.path;
     const url = values.url;
     if (path !== undefined && url !== undefined) {

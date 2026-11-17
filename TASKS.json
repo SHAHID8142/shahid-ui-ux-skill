@@ -2661,7 +2661,8 @@
         "T1028",
         "T1029",
         "T1030",
-        "T1031"
+        "T1031",
+        "T1032"
       ],
       "files": [],
       "acc": [
@@ -4749,6 +4750,44 @@
       "evidence": [
         ".sus-dev/VERIFICATION/T1031.md",
         "packages/eval-core/tests/bestpractice.page-scope.test.ts"
+      ]
+    },
+    {
+      "id": "T1032",
+      "m": "M12",
+      "title": "One entry point: sus <command> dispatches to the CLI that owns it (issue #21 R3)",
+      "obj": "Using SUS meant knowing three dist paths or three pnpm exec names. Add one in-repo entry point that hands arguments and exit codes to the owning CLI, and prove it cannot drift from the CLIs' own command lists.",
+      "deps": [
+        "T1031"
+      ],
+      "files": [
+        "bin/",
+        "package.json",
+        "packages/eval-core/src/cli.ts",
+        "packages/eval-core/tests/",
+        "docs/",
+        "README.md"
+      ],
+      "acc": [
+        "the map equals the commands each CLI advertises, checked in both directions",
+        "arguments and exit codes pass through unchanged",
+        "an unknown command exits 2 without guessing a replacement",
+        "--help reaches the owner CLI; the wrapper's own --help exits 0",
+        "a missing build is a clear error, not a stack",
+        "audit --bogus is a one-line usage error with exit 2 (was a Node stack with exit 0)"
+      ],
+      "tests": [
+        "packages/eval-core/tests/cli-entry.test.ts"
+      ],
+      "risk": "a wrapper that silently claims a command the CLIs do not have, or rewrites contractual exit codes",
+      "rollback": "remove bin/ and the bin field; the three CLIs are untouched",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1032.md",
+        "packages/eval-core/tests/cli-entry.test.ts",
+        "bin/sus.mjs"
       ]
     }
   ]

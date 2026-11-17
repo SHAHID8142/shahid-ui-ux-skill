@@ -1,7 +1,7 @@
 # `/sus-bestpractice` — scoped proposals for a selected UI area (issue #15)
 
 Status, stated before anything else: the **CLI equivalent works end to end** (T1023) —
-`sus-eval bestpractice` runs the audit, resolves the scope and writes a read-only proposal. **No
+`sus bestpractice` (also `sus-eval bestpractice`) runs the audit, resolves the scope and writes a read-only proposal. **No
 slash binding is verified on any host**: `/sus-bestpractice` is a documented intent, the same honest
 position `/sus audit` holds. The five measured example classes are **done** (T1024, milestone M11;
 `docs/BESTPRACTICE_EXAMPLES.md` is the committed record and `pnpm examples:check` keeps it honest).

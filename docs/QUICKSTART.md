@@ -21,13 +21,17 @@ push or run the browser phases.
 A built site on disk (no server, no network):
 
 ```bash
-node packages/eval-core/dist/cli.js audit --path path/to/your-site/dist --out /tmp/sus-audit --mode quick
+pnpm exec sus audit --path path/to/your-site/dist --out /tmp/sus-audit --mode quick
 ```
+
+`pnpm exec sus <command>` is one entry point for all of them (`audit`, `bestpractice`, `scan`,
+`route`, `load`, `capabilities`, `status`, …); it passes arguments and exit codes to the package that
+owns the command, so `node packages/eval-core/dist/cli.js audit …` is the same thing spelled out.
 
 A running server:
 
 ```bash
-node packages/eval-core/dist/cli.js audit --url http://localhost:3000 --out /tmp/sus-audit --mode deep
+pnpm exec sus audit --url http://localhost:3000 --out /tmp/sus-audit --mode deep
 ```
 
 `--mode quick` reads the HTML and runs the text/SEO/structure checks; `--mode deep` additionally
@@ -42,7 +46,7 @@ browser phases run behind an allowlisting proxy.
 ## 3. Propose a fix for one selected area
 
 ```bash
-node packages/eval-core/dist/cli.js bestpractice \
+pnpm exec sus bestpractice \
   --path path/to/your-site/dist \
   --scope '#signup' \
   --out /tmp/sus-proposal --mode deep
@@ -54,13 +58,18 @@ usage/scope error, `3` every item needs human judgment. It is read-only: nothing
 `docs/BESTPRACTICE_COMMAND.md` for scope kinds (`selector`, `component`, `file`), focus, and the
 approval digest that Studio binds an apply to.
 
+Ask for the whole document with `--scope page`: it needs no browser to resolve and proposes what the
+audit measured on that page, including defects that belong to no element (a missing meta description).
+
 ## 4. Read the result honestly
 
 - `not-run` means the instrument did not run (for example `--mode quick` never opens a browser). It is
   never a pass.
 - `needs-review` items are human judgments the tool will not make for you.
-- A finding names where it was observed; a rule-id-only finding (axe) is reported as attributed
-  elsewhere rather than pinned to your selection.
+- A finding names where it was observed. For an **element** scope, a rule-id-only finding (axe's
+  page-wide scan) is reported as attributed elsewhere rather than pinned to your selection; since T1030
+  an element scope also gets a scan confined to that element, so its own violations do reach it.
+- A `page` scope attributes by dimension, because the page is the unit the audit measured.
 
 ## 5. Using the skill inside an agent host
 
@@ -78,4 +87,5 @@ the hosts the owner named that have never been run here. Do not assume `/sus aud
 | `scope not-found: …` | the selector matches nothing in the audited page | check the selector against that page, or pass a component path |
 | `scope ambiguous: …` | the selector matches several components | narrow it with a more specific selector |
 | `nothing to propose in this scope` | `--mode quick` measured no browser dimensions | re-run with `--mode deep` |
+| page-level defects never appear in a scoped proposal | they belong to no element | use `--scope page` |
 | `--out` inside the target | the audit would write into what it measures | choose a directory outside the target |
