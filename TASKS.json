@@ -5426,10 +5426,15 @@
       ],
       "risk": "any process that can write into the consumer's tree pre-arms an arbitrary write/delete",
       "rollback": "revert the containment and sentinel change; recovery behaves as before",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1051.md",
+        "packages/studio-bridge/src/transaction.ts",
+        "packages/studio-bridge/src/paths.ts",
+        "packages/studio-bridge/tests/transaction.test.ts"
+      ]
     },
     {
       "id": "T1052",

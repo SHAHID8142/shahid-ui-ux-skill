@@ -29,11 +29,11 @@ import {
   mkdirSync,
   readFileSync,
   readdirSync,
-  realpathSync,
   renameSync,
   writeFileSync,
 } from 'node:fs';
-import { basename, dirname, join, resolve, sep } from 'node:path';
+import { join } from 'node:path';
+import { insideRoot } from './paths.js';
 import type { ApprovalGrant, Proposal } from './preview.js';
 import type { PreviewSession } from './preview.js';
 import { Transaction, sha256 } from './transaction.js';
@@ -131,21 +131,10 @@ export interface UndoResult {
  * would be a write outside the tree the owner approved — the one thing an apply path must never do.
  * Exported so the guard can be tested without constructing a whole session.
  */
-export function insideRoot(root: string, path: string): boolean {
-  try {
-    const canonicalRoot = realpathSync(root);
-    // `resolve`, not `join`: join concatenates, so an absolute `path` would have been glued onto the root
-    // and then failed to exist, refusing a legitimate inside path. resolve also normalises `..`.
-    const absolute = resolve(root, path);
-    // The parent is resolved, the leaf is joined: resolving the leaf too would make a symlinked file
-    // look like its target, and the write replaces the link rather than following it.
-    const parent = realpathSync(dirname(absolute));
-    const canonical = join(parent, basename(absolute));
-    return canonical === canonicalRoot || canonical.startsWith(canonicalRoot + sep);
-  } catch {
-    return false;
-  }
-}
+// T1051: the containment guard moved to `paths.ts` so the durable `Transaction` machinery can
+// hold the same line without importing this module (which would be circular). Re-exported below
+// so existing importers are unaffected.
+export { insideRoot };
 
 const OPS_DIR = join('.sus', 'ops');
 const TX_DIR = join('.sus', 'transactions');

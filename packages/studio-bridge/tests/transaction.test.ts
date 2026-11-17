@@ -5,11 +5,11 @@
  */
 import { execFileSync } from 'node:child_process';
 import { readdirSync } from 'node:fs';
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { Transaction } from '../src/transaction.js';
+import { sha256, Transaction } from '../src/transaction.js';
 
 function fixtureProject(): string {
   const dir = mkdtempSync(join(tmpdir(), 't0805-fixture-'));
@@ -133,5 +133,120 @@ describe('durable transaction recovery (T0805, DA-35)', () => {
     expect(readFileSync(join(root, 'styles.css'), 'utf8')).toContain('blue');
     expect(readFileSync(join(root, 'user-notes.md'), 'utf8')).toContain('preserve me');
     rmSync(scriptPath, { force: true }); // self-clean the generated child
+  });
+});
+
+/**
+ * T1051 (audit finding T1003-6): the recovery manifest is data on disk inside the consumer's
+ * tree — attacker-writable. Recovery must hold the same containment line the apply path does,
+ * and a digest field that spells a sentinel must never be readable as a content hash: the old
+ * classifier compared the literal 'missing' against stored values, so a planted prepared
+ * manifest could write or delete outside the root on the next recovery.
+ */
+describe('planted-manifest containment (T1051, audit finding T1003-6)', () => {
+  /** Writes a prepared manifest by hand, exactly the way an attacker with tree write access would. */
+  function plantManifest(root: string, files: unknown[]): string {
+    const opId = 'planted-0000';
+    const dir = join(root, '.sus', 'transactions', opId);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, 'manifest.json'), JSON.stringify({
+      opId,
+      planId: 'planted-plan',
+      contractVersion: 1,
+      createdAt: new Date().toISOString(),
+      state: 'prepared',
+      files,
+    }, null, 2));
+    return opId;
+  }
+
+  it('refuses a planted manifest whose preimage digest spells the "missing" sentinel', () => {
+    const root = fixtureProject();
+    // The target is INSIDE the root on purpose: this isolates the sentinel defence from the
+    // containment defence. The old classifier compared the literal 'missing' against a genuinely
+    // absent file's hash and matched — so the postimage would have been written wherever the
+    // manifest pointed.
+    const opId = plantManifest(root, [
+      {
+        path: 'innocent.md',
+        preimageSha256: 'missing',
+        postimageSha256: 'a'.repeat(64),
+        mode: 0o644,
+      },
+    ]);
+    writeFileSync(join(root, '.sus', 'transactions', opId, 'postimage-0.bin'), 'payload');
+    const result = Transaction.recover(root, opId).recover('roll-forward');
+    expect(result.status).toBe('conflict');
+    expect(result.conflicts.join(' ')).toContain('not a SHA-256');
+    expect(existsSync(join(root, 'innocent.md'))).toBe(false);
+  });
+
+  it('refuses a planted manifest whose target resolves outside the root, for writes and deletions alike', () => {
+    const root = fixtureProject();
+    const opId = plantManifest(root, [
+      {
+        path: '../../victim.txt',
+        preimageMissing: true,
+        postimageSha256: 'b'.repeat(64),
+        mode: 0o644,
+      },
+      {
+        path: '../../gone.txt',
+        preimageSha256: 'c'.repeat(64),
+        postimageSha256: 'absent',
+        mode: 0o644,
+        deletion: true,
+      },
+    ]);
+    writeFileSync(join(root, '.sus', 'transactions', opId, 'postimage-0.bin'), 'payload');
+    const result = Transaction.recover(root, opId).recover('roll-forward');
+    expect(result.status).toBe('conflict');
+    expect(result.conflicts.join(' ')).toContain('outside the project root');
+    expect(existsSync(join(root, '..', 'victim.txt'))).toBe(false);
+    expect(existsSync(join(root, '..', 'gone.txt'))).toBe(false);
+  });
+
+  it('apply() refuses a hand-edited manifest with an escaping path before writing anything', () => {
+    const root = fixtureProject();
+    const opId = plantManifest(root, [
+      {
+        path: '../outside.txt',
+        preimageSha256: 'd'.repeat(64),
+        postimageSha256: 'e'.repeat(64),
+        mode: 0o644,
+      },
+    ]);
+    writeFileSync(join(root, '.sus', 'transactions', opId, 'postimage-0.bin'), 'payload');
+    const tx = Transaction.recover(root, opId);
+    expect(() => tx.apply()).toThrow(/outside the project root/);
+    expect(existsSync(join(root, '..', 'outside.txt'))).toBe(false);
+  });
+
+  it('a manifest declaring preimageMissing rolls forward a legitimate create inside the root', () => {
+    const root = fixtureProject();
+    const content = 'created by a legitimate plan';
+    const opId = plantManifest(root, [
+      {
+        path: 'new-file.md',
+        preimageMissing: true,
+        postimageSha256: sha256(content),
+        mode: 0o644,
+      },
+    ]);
+    writeFileSync(join(root, '.sus', 'transactions', opId, 'postimage-0.bin'), content);
+    const result = Transaction.recover(root, opId).recover('roll-forward');
+    expect(result.status).toBe('recovered');
+    expect(readFileSync(join(root, 'new-file.md'), 'utf8')).toBe('created by a legitimate plan');
+    // and roll-back removes the created file (its preimage was "absent")
+    const back = Transaction.recover(root, opId).recover('roll-back');
+    expect(back.status).toBe('recovered');
+  });
+
+  it('prepare() refuses an escaping target before any preimage is read or written', () => {
+    const root = fixtureProject();
+    expect(() =>
+      Transaction.prepare(root, 'plan-x', 1, [{ path: '../escape.ts', postimage: 'x' }]),
+    ).toThrow(/outside the project root/);
+    expect(existsSync(join(root, '..', 'escape.ts'))).toBe(false);
   });
 });

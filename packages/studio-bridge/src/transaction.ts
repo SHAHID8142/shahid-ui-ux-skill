@@ -25,6 +25,10 @@ import {
 } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { randomUUID } from 'node:crypto';
+import { insideRoot } from './paths.js';
+
+/** A digest field must be a real SHA-256 hex digest — never a sentinel that reads as one. */
+const HEX64 = /^[0-9a-f]{64}$/;
 
 export type TxState = 'prepared' | 'applied' | 'verified' | 'rolled-back';
 
@@ -33,6 +37,13 @@ export interface TxFile {
   path: string;
   /** SHA-256 of the file BEFORE mutation (the preimage). */
   preimageSha256: string;
+  /**
+   * True when the target did not exist before the transaction (a create): the preimage is
+   * "absent" and the stored `preimageSha256` field is not a hash and must never be compared
+   * against one. Set explicitly, because the classifier cannot tell "no preimage" from a
+   * digest that spells `missing` (T1051, audit finding T1003-6).
+   */
+  preimageMissing?: boolean;
   /** SHA-256 of the intended AFTER content. */
   postimageSha256: string;
   /** File mode in octal (e.g. 420 for 0644). */
@@ -88,6 +99,16 @@ export class Transaction {
     contractVersion: number,
     files: Array<{ path: string; postimage?: string; mode?: number; deletion?: boolean }>,
   ): Transaction {
+    // T1051 (audit finding T1003-6): the preimage step reads the target, so an escaping path
+    // would hash — and the transaction would later write — outside the approved tree. Refuse
+    // before anything is persisted.
+    for (const f of files) {
+      if (!insideRoot(root, f.path)) {
+        throw new Error(
+          `transaction target resolves outside the project root: ${f.path} — a transaction never touches a file the root does not contain`,
+        );
+      }
+    }
     const manifest: TransactionManifest = {
       opId: randomUUID(),
       planId,
@@ -143,6 +164,16 @@ export class Transaction {
     if (this.manifest.state !== 'prepared') {
       throw new Error(`cannot apply from state "${this.manifest.state}"`);
     }
+    // T1051 (audit finding T1003-6): the manifest is data on disk inside the consumer's tree,
+    // so it is attacker-writable; applying it must never write outside the root it was prepared
+    // for. Refuse rather than normalise.
+    for (const file of this.manifest.files) {
+      if (!insideRoot(this.root, file.path)) {
+        throw new Error(
+          `transaction ${this.manifest.opId} refuses a target outside the project root: ${file.path}`,
+        );
+      }
+    }
     const limit = stopAfter ?? this.manifest.files.length;
     for (let i = 0; i < limit; i += 1) {
       const file = this.manifest.files[i]!;
@@ -171,11 +202,30 @@ export class Transaction {
   } {
     const conflicts: string[] = [];
     for (const f of this.manifest.files) {
-      const current = existsSync(join(this.root, f.path))
-        ? sha256(readFileSync(join(this.root, f.path)))
-        : 'missing';
-      const postimage = f.deletion ? 'missing' : f.postimageSha256;
-      if (current !== f.preimageSha256 && current !== postimage) {
+      const absolute = join(this.root, f.path);
+      // T1051 (audit finding T1003-6): a manifest is on-disk data in the consumer's tree, so it
+      // is attacker-writable — recovery must hold the same containment line the apply path does.
+      // An escaping path is a conflict: recovery stops and reports, it never guesses.
+      if (!insideRoot(this.root, f.path)) {
+        conflicts.push(`${f.path} (resolves outside the project root)`);
+        continue;
+      }
+      // The classifier once compared the literal sentinel 'missing' against stored digest
+      // fields, so a planted manifest declaring preimageSha256 'missing' matched a genuinely
+      // absent file and its postimage was written anywhere. A stored digest that is not a
+      // real SHA-256 hex digest is now a conflict — unverifiable, never executed.
+      if (f.preimageMissing !== true && !HEX64.test(f.preimageSha256)) {
+        conflicts.push(`${f.path} (manifest preimage digest is not a SHA-256)`);
+        continue;
+      }
+      if (f.deletion !== true && !HEX64.test(f.postimageSha256)) {
+        conflicts.push(`${f.path} (manifest postimage digest is not a SHA-256)`);
+        continue;
+      }
+      const current = existsSync(absolute) ? sha256(readFileSync(absolute)) : null;
+      const preimage = f.preimageMissing === true ? null : f.preimageSha256;
+      const postimage = f.deletion === true ? null : f.postimageSha256;
+      if (current !== preimage && current !== postimage) {
         conflicts.push(f.path);
       }
     }
@@ -185,7 +235,10 @@ export class Transaction {
     this.manifest.files.forEach((f, i) => {
       const absolute = join(this.root, f.path);
       if (mode === 'roll-forward' && f.deletion) rmSync(absolute, { force: true });
-      else if (
+      else if (mode === 'roll-back' && f.preimageMissing === true) {
+        // rolling back a create: the preimage was "absent", so restore absence (T1051)
+        rmSync(absolute, { force: true });
+      } else if (
         mode === 'roll-back' &&
         f.deletion &&
         !existsSync(join(this.dir, `postimage-${i}.bin`))
@@ -209,6 +262,9 @@ export class Transaction {
   verify(): boolean {
     for (const f of this.manifest.files) {
       const absolute = join(this.root, f.path);
+      // T1051: a manifest path that leaves the root can never verify — verification reads and
+      // hashes only inside the approved tree.
+      if (!insideRoot(this.root, f.path)) return false;
       if (f.deletion) {
         if (existsSync(absolute)) return false;
         continue;
