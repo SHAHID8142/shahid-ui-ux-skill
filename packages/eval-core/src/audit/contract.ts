@@ -34,6 +34,17 @@ export type AuditSeverity = 'P0' | 'P1' | 'P2' | 'P3';
 
 export const AUDIT_SEVERITIES: readonly AuditSeverity[] = ['P0', 'P1', 'P2', 'P3'];
 
+/**
+ * What a performance number in a SUS report is, said next to the number (issue #21 R11).
+ *
+ * Lighthouse ran in this browser on this machine: that is a lab measurement, not field data about
+ * real users. T1005 is unpublished and no human benchmark has been run, so no comparative claim is
+ * permitted either. A reader who sees a duration must not have to reach a limitations page to learn
+ * what it is.
+ */
+export const LAB_MEASUREMENT_NOTICE =
+  'lab measurement: Lighthouse in this browser, no field data, no comparative claim';
+
 /** What each severity means, so a report consumer never has to guess the scale. */
 export const AUDIT_SEVERITY_MEANING: Readonly<Record<AuditSeverity, string>> = {
   P0: 'blocks every use: an accessibility barrier or layout overflow at a documented width',

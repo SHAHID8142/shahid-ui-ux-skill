@@ -184,10 +184,18 @@ export function interruptedTransactions(
   return out;
 }
 
-function gitSnapshot(root: string): GitSnapshot | null {
+export function gitSnapshot(root: string): GitSnapshot | null {
+  // stderr is swallowed on purpose: "not a git repository" is an expected answer here (a temp fixture
+  // is not a checkout), and letting git print it made `pnpm demo:loop` look like it had failed. The
+  // failure is already observed through the throw below, so no information is lost.
+  const quiet: { cwd: string; encoding: 'utf8'; stdio: ['ignore', 'pipe', 'ignore'] } = {
+    cwd: root,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'ignore'],
+  };
   try {
-    const head = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
-    const status = execFileSync('git', ['status', '--porcelain'], { cwd: root, encoding: 'utf8' });
+    const head = execFileSync('git', ['rev-parse', 'HEAD'], quiet).trim();
+    const status = execFileSync('git', ['status', '--porcelain'], quiet);
     const dirtyPaths = status.split('\n').filter((line) => line.trim() !== '').length;
     return { head, dirtyPaths };
   } catch {

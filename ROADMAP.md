@@ -26,7 +26,7 @@ build when the two disagree, so this page cannot drift again. It was hand-writte
 | M9 | Adapters + installer + support matrix + dogfood sites | T0901–T0906 (6 tasks) | **done** — 6/6 |
 | M10 | Regression, benchmark, independent review, docs, release | T1001–T1020 (20 tasks) | **18/20 done** — pending: T1003, T1005 |
 | M11 | Scoped best-practice workflow (/sus-bestpractice, issue #15) | T1021–T1024 (4 tasks) | **done** — 4/4 |
-| M12 | Post-M11 hardening from issue triage (#16-#20, D32) | T1025–T1033 (9 tasks) | **done** — 9/9 |
+| M12 | Post-M11 hardening from issue triage (#16-#20, D32) | T1025–T1035 (11 tasks) | **done** — 11/11 |
 <!-- roadmap:table end -->
 
 ## What is left

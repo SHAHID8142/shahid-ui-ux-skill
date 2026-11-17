@@ -21,7 +21,7 @@ import { evaluateG4, evaluateG5 } from '../harness/a11y-budgets.js';
 import type { CaptureResult } from '../harness/capture.js';
 import type { HardeningResult } from '../hardening.js';
 import type { AuditMode } from './contract.js';
-import { AUDIT_CHECKS, AUDIT_VIEWPORTS } from './contract.js';
+import { AUDIT_CHECKS, AUDIT_VIEWPORTS, LAB_MEASUREMENT_NOTICE } from './contract.js';
 import type {
   AuditCheckResult,
   AuditFinding,
@@ -482,7 +482,7 @@ function lighthouseFindings(samples: readonly LiveSample<LighthouseSummary>[]): 
           severity: 'P1',
           effort: 'structural',
           title: 'Budget miss: ' + metricOf(line),
-          detail: line,
+          detail: line + ' (' + LAB_MEASUREMENT_NOTICE + ')',
           route: sample.route,
           viewport: 'desktop-1440',
           evidence: ['G5'],
@@ -635,7 +635,12 @@ export function buildEvidenceBundle(inputs: AuditInputs): EvidenceBundleData | n
   const lh = inputs.lighthouse.samples.map((s) => s.value);
   if (lh.length > 0) {
     const verdict = evaluateG5(lh);
-    gates.push({ gate: 'G5', status: verdict.status, detail: verdict.detail });
+    // The notice travels with the numbers so no reader has to find a limitations page first.
+    gates.push({
+      gate: 'G5',
+      status: verdict.status,
+      detail: [...verdict.detail, LAB_MEASUREMENT_NOTICE],
+    });
   }
   if (shots.length === 0 || metrics.length === 0 || gates.length === 0) return null;
   return {
@@ -891,7 +896,11 @@ export function composeReport(inputs: AuditInputs): AuditReport {
   if (lhReason === null && lhSamples.length > 0) {
     const verdict = evaluateG5(lhSamples);
     checks.push(
-      checkResult('lighthouse-budgets', 'Lighthouse budgets', 'G5', verdict.status, verdict.detail),
+      checkResult('lighthouse-budgets', 'Lighthouse budgets', 'G5', verdict.status, [
+        ...verdict.detail,
+        // The check a reader looks at carries the notice too: a pass is still a lab pass.
+        LAB_MEASUREMENT_NOTICE,
+      ]),
     );
   } else {
     checks.push(

@@ -128,3 +128,35 @@ describe('studio bridge launcher (issue #21 R4)', () => {
     expect(code).toBe(2);
   }, 30_000);
 });
+
+/**
+ * R9: a demo run must not print git's complaints about the fixture not being a repository. The
+ * snapshot still returns null (the same answer as before), it just stops writing to stderr.
+ */
+describe('git snapshot in a non-repository (issue #21 R9)', () => {
+  it('answers "unknown" without printing to stderr', async () => {
+    const { mkdtempSync } = await import('node:fs');
+    const { tmpdir } = await import('node:os');
+    const outside = mkdtempSync(join(tmpdir(), 'sus-not-a-repo-'));
+    const probe = spawn(
+      process.execPath,
+      [
+        '--input-type=module',
+        '-e',
+        "const m = await import('file://' + process.argv[1] + '/packages/studio-bridge/dist/index.js');" +
+          'process.stdout.write(JSON.stringify(m.gitSnapshot(process.argv[2])));',
+        process.cwd(),
+        outside,
+      ],
+      { stdio: 'pipe' },
+    );
+    let stdout = '';
+    let stderr = '';
+    probe.stdout.on('data', (chunk: Buffer) => (stdout += chunk.toString('utf8')));
+    probe.stderr.on('data', (chunk: Buffer) => (stderr += chunk.toString('utf8')));
+    const code = await new Promise<number | null>((resolve) => probe.on('exit', resolve));
+    expect(code).toBe(0);
+    expect(stdout).toBe('null');
+    expect(stderr).toBe('');
+  }, 60_000);
+});

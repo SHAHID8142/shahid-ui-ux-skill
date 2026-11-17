@@ -11,7 +11,7 @@ BUILD_COMPLETE_PUSHED=true at release revision 2f344df — pnpm regression 3 sta
 679 tests). Architecture: ADR-001/002/004/005/006 adopted, ADR-003 as amended (D29).
 Repository is PUBLIC (D34); the product is unpublished.
 
-Canonical task statuses: TASKS.json (125 of 127 done; owner-only T1003 independent audit and
+Canonical task statuses: TASKS.json (127 of 129 done; owner-only T1003 independent audit and
 T1005 release approval/publish remain, both owner-only, and the M12 hardening queue T1026–T1029
 from issue triage is open). Every D32 owner-issue item from
 triaging issues #13/#14 is done and receipted. Issue #15 (`/sus-bestpractice`) is triaged into
@@ -35,7 +35,10 @@ observation. T1032 added one in-repo entry point (`pnpm exec sus <command>`) tha
 exit codes to the CLI that owns the command; a test compares its map against each CLI's own usage line,
 so it cannot drift. T1033 gave the Live Studio the half that exists a startable surface
 (`pnpm studio:bridge`, with its guards proven through the launcher) and an honest inventory in
-`docs/STUDIO.md`: the loop and the bridge are built, the Studio *page* is not.
+`docs/STUDIO.md`: the loop and the bridge are built, the Studio *page* is not. T1034 quieted git's expected
+"not a git repository" answer in the demo, and T1035 put "lab measurement, no field data, no comparative
+claim" next to every performance number (audit.md, the G5 check detail including on a pass, budget
+findings, performance proposal items) instead of relying on the limitations page being read first.
 T0706 preview, T0806 security/G13, T0707 apply + rollback, T0700w CLOSED — dual-stack
 feasibility GO on both Next.js and Astro. zcode stale. Concurrency: 2 workers (D33) — claim
 via lease before editing.

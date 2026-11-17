@@ -93,6 +93,9 @@ and can lag — when in doubt the generated page wins.
   annotate → intent → diff → approve → apply → verify → undo for real, and `pnpm studio:bridge` starts
   the bridge, but `@sus/studio-web` is a controller library with no bundler entry, so there is nothing
   to open in a browser. `docs/STUDIO.md` is the honest inventory.
+- Performance numbers are **lab measurements** (Lighthouse in this browser) with no field data and no
+  human benchmark, so no comparative claim is permitted. Since T1035 every report and proposal prints
+  that next to the number instead of relying on this page being read first.
 - Not published. The repository is public (D34); the **product** is not released, and
   post-build audit, licensing and publication remain owner decisions.
 - The scoped best-practice workflow (issue #15, T1021–T1024, T1030) attributes a finding to a

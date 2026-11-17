@@ -14,7 +14,12 @@ import { createHash } from 'node:crypto';
 import { z } from 'zod';
 import { IsoTimestamp } from '@sus/schemas';
 import type { AuditCheckStatus, AuditEffort, AuditSeverity } from './contract.js';
-import { AUDIT_CHECKS, AUDIT_SEVERITIES, AUDIT_SEVERITY_MEANING } from './contract.js';
+import {
+  AUDIT_CHECKS,
+  AUDIT_SEVERITIES,
+  AUDIT_SEVERITY_MEANING,
+  LAB_MEASUREMENT_NOTICE,
+} from './contract.js';
 
 const CheckStatus = z.enum(['pass', 'fail', 'not-run']);
 const Severity = z.enum(['P0', 'P1', 'P2', 'P3']);
@@ -434,6 +439,14 @@ export function finding(input: {
 }
 
 /** Markdown rendering of the report. Same data, no extra claims. */
+/** Does this report contain a performance number at all? Then it needs the lab-vs-field notice. */
+function reportsPerformance(report: AuditReport): boolean {
+  return (
+    report.findings.some((finding) => finding.check === 'lighthouse-budgets') ||
+    report.checks.some((check) => check.id === 'lighthouse-budgets')
+  );
+}
+
 export function renderAuditMarkdown(report: AuditReport): string {
   const checkRows = report.checks.map(
     (c) =>
@@ -524,6 +537,9 @@ export function renderAuditMarkdown(report: AuditReport): string {
     '| --- | --- | --- |',
     ...severityRows,
     '',
+    ...(reportsPerformance(report)
+      ? ['> Performance numbers are a **' + LAB_MEASUREMENT_NOTICE + '**.', '']
+      : []),
     'Quick wins: ' +
       report.summary.quickWins +
       ' - structural: ' +

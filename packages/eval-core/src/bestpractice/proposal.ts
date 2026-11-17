@@ -23,6 +23,7 @@ import { createHash } from 'node:crypto';
 import { z } from 'zod';
 import { IsoTimestamp } from '@sus/schemas';
 import type { FocusDimension, ScopeResolution } from '../audit/scope.js';
+import { LAB_MEASUREMENT_NOTICE } from '../audit/contract.js';
 
 /** Named so a consumer can refuse a proposal it does not understand. */
 export const PROPOSAL_SCHEMA_VERSION = 'sus.bestpractice-proposal/1';
@@ -450,6 +451,10 @@ export function renderProposalMarkdown(proposal: BestPracticeProposal): string {
                 ' ' +
                 escapeMarkdown(item.expected.unit)),
         );
+      }
+      if (item.dimension === 'performance') {
+        // The number is a lab measurement; the proposal states that where the number is.
+        lines.push('- Measurement basis: ' + escapeMarkdown(LAB_MEASUREMENT_NOTICE));
       }
       lines.push('- Why: ' + escapeMarkdown(item.why));
       lines.push('- Remedy: ' + escapeMarkdown(item.remedy));

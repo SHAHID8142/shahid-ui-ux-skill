@@ -33,6 +33,7 @@ export { compileIntent, deriveRelationship, type CompileInput } from './intent-c
 export {
   ApplyEngine,
   OperationReceipts,
+  gitSnapshot,
   interruptedTransactions,
   type ApplyReceipt,
   type ApplyRequest,

@@ -2663,7 +2663,9 @@
         "T1030",
         "T1031",
         "T1032",
-        "T1033"
+        "T1033",
+        "T1034",
+        "T1035"
       ],
       "files": [],
       "acc": [
@@ -4825,6 +4827,70 @@
         ".sus-dev/VERIFICATION/T1033.md",
         "packages/studio-bridge/tests/bridge-launcher.test.ts",
         "docs/STUDIO.md"
+      ]
+    },
+    {
+      "id": "T1034",
+      "m": "M12",
+      "title": "A demo run no longer prints git's complaints about a non-repository (issue #21 R9)",
+      "obj": "pnpm demo:loop printed 'fatal: not a git repository' from a git call inside a temp fixture, which reads like a failure even though the snapshot already handled it as unknown.",
+      "deps": [
+        "T1033"
+      ],
+      "files": [
+        "packages/studio-bridge/src/",
+        "packages/studio-bridge/tests/"
+      ],
+      "acc": [
+        "the snapshot still returns null for a non-repository",
+        "nothing is written to stderr in that case",
+        "demo:loop output contains no git complaint"
+      ],
+      "tests": [
+        "packages/studio-bridge/tests/bridge-launcher.test.ts"
+      ],
+      "risk": "hiding a real git failure instead of an expected one",
+      "rollback": "restore inherited stderr; the behaviour is unchanged either way",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1034.md",
+        "packages/studio-bridge/tests/bridge-launcher.test.ts"
+      ]
+    },
+    {
+      "id": "T1035",
+      "m": "M12",
+      "title": "A performance number says it is a lab measurement (issue #21 R11)",
+      "obj": "Reports printed Lighthouse numbers without saying they are lab-only and non-comparative, leaving the reader to find docs/LIMITATIONS.md. Put the basis next to the number.",
+      "deps": [
+        "T1034"
+      ],
+      "files": [
+        "packages/eval-core/src/audit/",
+        "packages/eval-core/src/bestpractice/",
+        "packages/eval-core/tests/",
+        "docs/"
+      ],
+      "acc": [
+        "audit.md carries the notice whenever a Lighthouse check exists",
+        "the G5 check detail carries it, including on a pass",
+        "every budget finding detail carries it",
+        "a performance item carries it in the proposal",
+        "no comparative claim is added anywhere"
+      ],
+      "tests": [
+        "packages/eval-core/tests/lab-notice.test.ts"
+      ],
+      "risk": "labelling that reads as a hedge rather than a measurement basis, or the notice silently dropping from one surface",
+      "rollback": "remove the constant and its four call sites; no measurement changes",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1035.md",
+        "packages/eval-core/tests/lab-notice.test.ts"
       ]
     }
   ]
