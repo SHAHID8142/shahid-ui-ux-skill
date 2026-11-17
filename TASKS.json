@@ -2665,7 +2665,8 @@
         "T1032",
         "T1033",
         "T1034",
-        "T1035"
+        "T1035",
+        "T1036"
       ],
       "files": [],
       "acc": [
@@ -4891,6 +4892,44 @@
       "evidence": [
         ".sus-dev/VERIFICATION/T1035.md",
         "packages/eval-core/tests/lab-notice.test.ts"
+      ]
+    },
+    {
+      "id": "T1036",
+      "m": "M12",
+      "title": "Motion is measured: drive one disclosure and hand the traces to the oracles (issue #21 R7)",
+      "obj": "transition-oracle needed a recorded interaction and nothing produced one, so G6 was not-run forever and the reduced-motion guard shipped unmeasured. Drive an aria-expanded disclosure in pointer, keyboard and reduced-motion contexts, record what a user sees, and let the existing oracles judge parity.",
+      "deps": [
+        "T1035"
+      ],
+      "files": [
+        "packages/eval-core/src/harness/",
+        "packages/eval-core/src/audit/",
+        "packages/eval-core/tests/",
+        "fixtures/bestpractice/",
+        "docs/"
+      ],
+      "acc": [
+        "a disclosure that keeps its information under reduced motion passes G6",
+        "a disclosure that hides content under reduced motion fails with reduced-motion-information-lost and a P1 finding at the trigger",
+        "a page with no aria-expanded element is not-run with the reason, never a pass",
+        "the motion dimension reaches a best-practice proposal",
+        "parity compares information tokens and explicit visibility, not CSS durations",
+        "reports name the route, not the ephemeral local port"
+      ],
+      "tests": [
+        "packages/eval-core/tests/motion-probe.test.ts"
+      ],
+      "risk": "claiming page-wide motion verification from driving a single disclosure",
+      "rollback": "drop the probe; G6 returns to not-run with the authored-cases reason",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1036.md",
+        "packages/eval-core/tests/motion-probe.test.ts",
+        "fixtures/bestpractice/motion/index.html",
+        "fixtures/bestpractice/motion-lost/index.html"
       ]
     }
   ]

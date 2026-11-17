@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Motion parity fixture — information lost</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        font:
+          16px/1.5 system-ui,
+          sans-serif;
+        margin: 2rem auto;
+        max-width: 40rem;
+      }
+      #details {
+        display: none;
+      }
+      #toggle[aria-expanded='true'] + #details {
+        display: block;
+      }
+      #details {
+        transition:
+          opacity 180ms ease-out,
+          transform 180ms ease-out;
+      }
+      /* The defect: reduced motion removes the panel instead of the movement, so a user who asks for
+         less animation loses the invoice altogether. */
+      @media (prefers-reduced-motion: reduce) {
+        #details {
+          display: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Account</h1>
+      <button id="toggle" type="button" aria-expanded="false" aria-controls="details">
+        Payment details
+      </button>
+      <div id="details" role="region" aria-label="Payment details">
+        <p>Invoice 2026-10-31: 1,440.00 unpaid.</p>
+        <p>Due 2026-11-14 — pay now to avoid the late fee.</p>
+      </div>
+    </main>
+    <script>
+      const toggle = document.getElementById('toggle');
+      const details = document.getElementById('details');
+      toggle.addEventListener('click', () => {
+        const open = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!open));
+        details.style.display = open ? 'none' : 'block';
+      });
+    </script>
+  </body>
+</html>

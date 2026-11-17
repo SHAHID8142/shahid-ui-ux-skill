@@ -16,6 +16,7 @@ import { evaluateG11 } from '@sus/schemas';
 import type { ScanResult } from '@sus/scanners';
 import { checkSeo } from '@sus/scanners';
 import type { AxeScanResult, LighthouseSummary } from '../harness/a11y-budgets.js';
+import type { MotionProbeResult } from '../harness/motion.js';
 import type { KeyboardScanResult } from '../harness/keyboard.js';
 import { evaluateG4, evaluateG5 } from '../harness/a11y-budgets.js';
 import type { CaptureResult } from '../harness/capture.js';
@@ -97,6 +98,8 @@ export interface AuditInputs {
   readonly lighthouse: LiveGroup<LighthouseSummary>;
   /** axe runs confined to selected subtrees (issue #21 R2); empty when no scope was requested. */
   readonly scopedAxe?: LiveGroup<AxeScanResult>;
+  /** Traces from the driven disclosure probe (issue #21 R7); absent means motion was not probed. */
+  readonly motion?: LiveGroup<MotionProbeResult>;
   /**
    * Recorded artefacts keyed by the route they belong to. Only the pipeline can
    * fill this: it is the layer that writes files and can therefore hash them.
@@ -921,16 +924,83 @@ export function composeReport(inputs: AuditInputs): AuditReport {
   findings.push(...slopFindings(inputs.slop));
   checks.push(slopCheck(inputs.slop));
 
-  checks.push(
-    checkResult(
-      'transition-oracle',
-      'State-transition oracle cases',
-      'G6',
-      'not-run',
-      [],
-      'no transition cases were authored for this target: the oracle needs per-component scenarios and the audit does not invent them',
-    ),
-  );
+  const motionSamples = inputs.motion?.samples.map((sample) => sample.value) ?? [];
+  const motionMeasured = motionSamples.filter((sample) => sample.status === 'measured');
+  const motionMissing = motionSamples.filter((sample) => sample.status === 'not-run');
+  if (motionMeasured.length === 0) {
+    // Nothing was driven: say which answer that is, and never let it read as a pass.
+    const reasons = [
+      ...motionMissing.map(
+        (sample) => (sample.trigger ?? 'page') + ': ' + (sample.reason ?? 'not driven'),
+      ),
+      ...(inputs.motion?.failed.map((failure) => failure.route + ': ' + failure.reason) ?? []),
+    ];
+    checks.push(
+      checkResult(
+        'transition-oracle',
+        'State-transition oracle cases',
+        'G6',
+        'not-run',
+        [],
+        reasons.length === 0
+          ? 'no transition cases were authored for this target: the oracle needs per-component scenarios and the audit does not invent them'
+          : reasons.join('; '),
+      ),
+    );
+  } else {
+    const failed = motionMeasured.filter((sample) => sample.verdict?.status === 'fail');
+    const detail = motionMeasured.flatMap((sample) =>
+      (sample.verdict?.detail ?? []).map((line) => sample.trigger + ': ' + line),
+    );
+    if (motionMissing.length > 0) {
+      detail.push(
+        'not driven on ' +
+          motionMissing.length +
+          ' route(s): ' +
+          motionMissing.map((sample) => sample.reason ?? 'no reason').join('; '),
+      );
+    }
+    checks.push(
+      checkResult(
+        'transition-oracle',
+        'State-transition oracle cases',
+        'G6',
+        failed.length === 0 && motionMissing.length === 0 ? 'pass' : 'fail',
+        detail,
+      ),
+    );
+    for (const entry of inputs.motion?.samples ?? []) {
+      const sample = entry.value;
+      if (sample.verdict?.status !== 'fail') continue;
+      const first = sample.verdict.detail[0] ?? 'an oracle failed without a detail line';
+      findings.push(
+        finding({
+          check: 'transition-oracle',
+          severity: 'P1',
+          effort: 'quick-win',
+          title: 'Motion parity: ' + first.split(' — ')[0],
+          detail:
+            first +
+            ' Driven on ' +
+            sample.trigger +
+            ' with a transition of ' +
+            sample.transitionsMs +
+            ' ms; the reduced-motion trace must carry the same information, not less.',
+          route: entry.route,
+          viewport: 'desktop-1440',
+          evidence: [sample.trigger ?? 'disclosure'],
+          evaluator: 'probeMotion + evaluateTransitionOracles',
+          location: sample.trigger,
+          confidence: 'measured',
+          expected: { value: 0, unit: 'parity violations' },
+          observed: { value: sample.verdict?.detail.length ?? 1, unit: 'parity violations' },
+          remediation:
+            'Keep the information and drop the movement: guard the animation with ' +
+            'prefers-reduced-motion instead of hiding the content it reveals.',
+        }),
+      );
+    }
+  }
 
   const bundle = buildEvidenceBundle(inputs);
   if (bundle === null) {
@@ -982,9 +1052,9 @@ export function composeReport(inputs: AuditInputs): AuditReport {
   if (lhReason !== null) {
     needsReview.push('Lighthouse did not run: ' + lhReason);
   }
-  needsReview.push(
-    'transition-oracle cases were not authored: G6 is unverified for this target, not passed',
-  );
+  if (motionMeasured.length === 0) {
+    needsReview.push('motion was not driven on this target: G6 is unverified here, not passed');
+  }
 
   const sorted = sortFindings(attachArtifacts(findings, inputs.artifacts));
   return AuditReportSchema.parse({

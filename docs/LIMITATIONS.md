@@ -109,8 +109,12 @@ and can lag — when in doubt the generated page wins.
   page is the unit the audit measured and every finding on it is about that page. These are stated limits, not fallbacks: guessing containment from selector strings
   would attribute one element's defect to another.
 - The five measured best-practice examples apply their fixes to a temporary copy of the fixture and
-  measure there; nothing is applied to a repository fixture, and the motion dimension stays `not-run`
-  because no example drives an interaction.
+  measure there; nothing is applied to a repository fixture.
+- Motion is measured by driving **one** disclosure per route (an element declaring `aria-expanded`) in
+  pointer, keyboard and `prefers-reduced-motion: reduce` contexts (T1036). A page with no such element
+  reports `not-run` with that reason, and hover-only transitions, carousels, drag gestures and
+  scroll-linked animation are not driven at all — so a G6 pass means "this disclosure kept its
+  information under reduced motion", not "the whole page's motion is verified".
 - Not audited independently yet. The final checkpoint (T1006) precedes that audit by
   design; `T1003`/`T1005` are owner actions.
 - Not a template library. It is a skill plus a verification apparatus; the playbooks are

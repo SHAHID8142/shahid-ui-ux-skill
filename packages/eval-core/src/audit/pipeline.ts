@@ -31,6 +31,7 @@ import {
   launchGuardedBrowser,
 } from '../harness/net-guard.js';
 import { chromeForTestingPath, runLighthouse, scanA11y } from '../harness/scans.js';
+import { probeMotionWith, type MotionProbeResult } from '../harness/motion.js';
 import type { AuditMode } from './contract.js';
 import { AUDIT_OUTPUT_FILES, assertAuthorizedUrl, parseRoutes } from './contract.js';
 import type { ArtifactRef, AuditInputs, LiveGroup, RouteHtml, SlopInput } from './compose.js';
@@ -531,6 +532,7 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
   let keyboard: LiveGroup<KeyboardScanResult>;
   let lighthouse: LiveGroup<LighthouseSummary>;
   let scopedAxe: LiveGroup<AxeScanResult>;
+  let motion: LiveGroup<MotionProbeResult>;
   let browser: string | null = null;
   if (mode === 'quick') {
     const reason =
@@ -541,6 +543,7 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
     keyboard = emptyGroup<KeyboardScanResult>(reason);
     lighthouse = emptyGroup<LighthouseSummary>(reason);
     scopedAxe = emptyGroup<AxeScanResult>(reason);
+    motion = emptyGroup<MotionProbeResult>(reason);
   } else {
     capture = await collectCapture(
       origin,
@@ -554,6 +557,7 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
     keyboard = scans.keyboard;
     lighthouse = scans.lighthouse;
     scopedAxe = scans.scopedAxe;
+    motion = await collectMotion(origin, routes, authorizedHosts);
     browser = scans.browser;
   }
 
@@ -575,7 +579,40 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
     keyboard,
     lighthouse,
     scopedAxe,
+    motion,
   };
+}
+
+/**
+ * Motion is measured by driving one disclosure per route (issue #21 R7). It gets its own browser
+ * phases because reduced motion is a context-level emulation, so it cannot share the axe page.
+ */
+async function collectMotion(
+  origin: string,
+  routes: readonly string[],
+  authorizedHosts: readonly string[],
+): Promise<LiveGroup<MotionProbeResult>> {
+  const samples: { route: string; value: MotionProbeResult }[] = [];
+  const failed: { route: string; reason: string }[] = [];
+  const guarded = await launchGuardedBrowser(authorizedHosts);
+  try {
+    for (const route of routes) {
+      try {
+        samples.push({
+          route,
+          value: await probeMotionWith(guarded.browser, routeUrl(origin, route), authorizedHosts),
+        });
+      } catch (error) {
+        failed.push({ route, reason: describeError(error) });
+      }
+    }
+  } catch (error) {
+    const reason = 'no browser: ' + describeError(error);
+    for (const route of routes) failed.push({ route, reason });
+  } finally {
+    await guarded.close();
+  }
+  return { samples, failed, skipped: null };
 }
 
 /** sha256 of a file on disk, hex encoded. The only hashing the audit performs. */

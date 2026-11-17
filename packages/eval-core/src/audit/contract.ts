@@ -175,7 +175,7 @@ export const AUDIT_CHECKS: readonly AuditCheckDescriptor[] = [
   },
   {
     id: 'transition-oracle',
-    title: 'State-transition oracle cases: needs authored cases per target',
+    title: 'State-transition oracle cases: one disclosure is driven per route (T1036)',
     gate: 'G6',
     modes: ['deep'],
     effort: 'structural',
@@ -208,7 +208,8 @@ export const AUDIT_WILL_NOT: readonly string[] = [
   'will not edit the target, its dependencies or its lockfile: the audit is read-only',
   'will not apply a fix: a proposal is written to a plan file that needs explicit approval',
   'will not score human judgment as a machine pass: manual items stay needs-review',
-  'will not invent transition-oracle cases, translations, screen-reader sessions or a user-agent zoom setting: 400% zoom is measured only as the CSS px viewport it produces (320x256 at device scale factor 4)',
+  'will not invent an interaction: motion is measured by driving an element that declares aria-expanded (pointer, keyboard, and again under prefers-reduced-motion), so a page with no such element reports not-run rather than a made-up scenario, and hover-only transitions, carousels or drag gestures are not driven at all',
+  'will not invent translations, screen-reader sessions or a user-agent zoom setting: 400% zoom is measured only as the CSS px viewport it produces (320x256 at device scale factor 4)',
   'will not treat a missing measurement as a pass: an unrun check is reported as not-run',
   'will not audit a host that was not authorized: loopback is allowed, anything else needs --authorize',
   'will not press Escape, arrow keys or a screen reader: the keyboard check records Tab order, focus indicators, detours and cycles, not Escape dismissal, composite-widget semantics or announcements',

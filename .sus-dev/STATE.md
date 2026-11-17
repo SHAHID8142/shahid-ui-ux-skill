@@ -11,7 +11,7 @@ BUILD_COMPLETE_PUSHED=true at release revision 2f344df — pnpm regression 3 sta
 679 tests). Architecture: ADR-001/002/004/005/006 adopted, ADR-003 as amended (D29).
 Repository is PUBLIC (D34); the product is unpublished.
 
-Canonical task statuses: TASKS.json (127 of 129 done; owner-only T1003 independent audit and
+Canonical task statuses: TASKS.json (128 of 130 done; owner-only T1003 independent audit and
 T1005 release approval/publish remain, both owner-only, and the M12 hardening queue T1026–T1029
 from issue triage is open). Every D32 owner-issue item from
 triaging issues #13/#14 is done and receipted. Issue #15 (`/sus-bestpractice`) is triaged into
@@ -39,6 +39,9 @@ so it cannot drift. T1033 gave the Live Studio the half that exists a startable 
 "not a git repository" answer in the demo, and T1035 put "lab measurement, no field data, no comparative
 claim" next to every performance number (audit.md, the G5 check detail including on a pass, budget
 findings, performance proposal items) instead of relying on the limitations page being read first.
+T1036 made motion measurable: one aria-expanded disclosure is driven in pointer, keyboard and
+reduced-motion contexts and its traces go to the existing oracles, so G6 is pass/fail on such a page and
+still not-run (with the reason) when there is nothing to drive.
 T0706 preview, T0806 security/G13, T0707 apply + rollback, T0700w CLOSED — dual-stack
 feasibility GO on both Next.js and Astro. zcode stale. Concurrency: 2 workers (D33) — claim
 via lease before editing.

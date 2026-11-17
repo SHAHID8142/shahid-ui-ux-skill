@@ -106,7 +106,10 @@ describe('scoped run against a real fixture (deep)', () => {
     // The target is untouched: the run wrote only under --out.
     expect(sha256(join(FIXTURE, 'index.html'))).toBe(targetBefore);
     expect(existsSync(join(outDir, 'audit', 'audit.json'))).toBe(true);
-  }, 180000);
+    // A deep audit of the whole best-practice fixture (five routes: capture, reflow, axe, keyboard,
+    // Lighthouse, motion and one full Lighthouse budget run per route) takes ~110 s on a laptop and
+    // exceeded 180 s on a loaded CI runner. The timeout is headroom, not a claim about speed.
+  }, 420000);
 
   it('writes no proposal and changes nothing when the selector matches nothing', async () => {
     const out = mkdtempSync(join(tmpdir(), 'sus-bp-miss-'));
