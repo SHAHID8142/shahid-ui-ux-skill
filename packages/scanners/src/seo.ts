@@ -7,6 +7,13 @@ export interface SeoCheck {
   id: string;
   status: 'pass' | 'fail';
   detail: string;
+  /**
+   * What was counted and what the rule expects, so a finding can carry a real observation instead of
+   * only a sentence. Both are numbers in `unit`: a check that cannot say how many is not measured.
+   */
+  observed?: number;
+  expected?: number;
+  unit?: string;
 }
 
 export interface SeoResult {
@@ -27,6 +34,9 @@ export function checkSeo(html: string): SeoResult {
     detail: title
       ? `title ${title.length} chars${title.length > 60 ? ' (>60, truncates in SERP)' : ''}`
       : 'missing <title>',
+    observed: title.length,
+    expected: 1,
+    unit: 'title characters (maximum 60 preferred)',
   });
 
   const desc = /<meta\s+name="description"\s+content="([^"]*)"/i.exec(html)?.[1] ?? '';
@@ -34,6 +44,9 @@ export function checkSeo(html: string): SeoResult {
     id: 'meta-description',
     status: desc.length >= 50 && desc.length <= 158 ? 'pass' : 'fail',
     detail: desc ? `meta description ${desc.length} chars` : 'missing meta description',
+    observed: desc.length,
+    expected: 50,
+    unit: 'description characters (minimum; 50–158 preferred)',
   });
 
   const h1Count = (html.match(/<h1[\s>]/gi) ?? []).length;
@@ -41,6 +54,9 @@ export function checkSeo(html: string): SeoResult {
     id: 'single-h1',
     status: h1Count === 1 ? 'pass' : 'fail',
     detail: `${h1Count} h1 element(s)`,
+    observed: h1Count,
+    expected: 1,
+    unit: 'h1 elements',
   });
   if (h1Count !== 1) g9detail.push(`${h1Count} h1 elements (project convention: exactly one)`);
 
@@ -53,6 +69,9 @@ export function checkSeo(html: string): SeoResult {
     id: 'heading-ladder',
     status: skipFound ? 'fail' : 'pass',
     detail: skipFound ? 'skipped heading level' : 'no skipped levels',
+    observed: skipFound ? 1 : 0,
+    expected: 0,
+    unit: 'skipped heading levels',
   });
   if (skipFound) g9detail.push('heading ladder skips a level');
 
@@ -62,6 +81,9 @@ export function checkSeo(html: string): SeoResult {
     id: 'img-alt',
     status: noAlt.length === 0 ? 'pass' : 'fail',
     detail: `${noAlt.length} of ${imgs.length} images missing alt`,
+    observed: noAlt.length,
+    expected: 0,
+    unit: 'images without alt text',
   });
   if (noAlt.length > 0) g9detail.push(`${noAlt.length} images without alt text`);
 
@@ -73,6 +95,9 @@ export function checkSeo(html: string): SeoResult {
     detail: placeholder
       ? `placeholder text found: "${String(placeholder[0])}"`
       : 'no placeholder content',
+    observed: placeholder ? 1 : 0,
+    expected: 0,
+    unit: 'placeholder strings',
   });
   if (placeholder) g3detail.push(`placeholder content: "${String(placeholder[0])}"`);
 
@@ -81,6 +106,9 @@ export function checkSeo(html: string): SeoResult {
     id: 'single-main',
     status: mains === 1 ? 'pass' : 'fail',
     detail: `${mains} main landmark(s)`,
+    observed: mains,
+    expected: 1,
+    unit: 'main landmarks',
   });
   if (mains !== 1) g9detail.push(`${mains} main landmarks (expected exactly 1)`);
 

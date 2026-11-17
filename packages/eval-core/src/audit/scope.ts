@@ -36,6 +36,10 @@ export interface ScopeReference {
 
 /** The component classes this repository has guidance for. */
 export const COMPONENT_KINDS = [
+  // The whole document is a selection too: some defects belong to no element at all (a missing
+  // description, an unlabelled document), and a scope that can only name elements proposes nothing
+  // for them. `page` is what `--scope page` resolves to.
+  'page',
   'navbar',
   'button',
   'form',
@@ -177,6 +181,12 @@ export function selectFocus(kind: ComponentKind): FocusSelection {
     ComponentKind,
     { run: FocusDimension[]; skip: Partial<Record<FocusDimension, string>> }
   > = {
+    page: {
+      // A page is the one selection where every dimension is measurable: the audit measured them on
+      // exactly this unit, so nothing is declared out of scope by kind.
+      run: [...FOCUS_DIMENSIONS],
+      skip: {},
+    },
     navbar: {
       run: ['responsive', 'a11y', 'visual', 'copy'],
       skip: {
@@ -242,6 +252,43 @@ export function selectFocus(kind: ComponentKind): FocusSelection {
       dimension,
       reason: chosen.skip[dimension] ?? 'not relevant to this component class',
     })),
+  };
+}
+
+/**
+ * The tokens that name the whole document. Unlike a selector these need no browser: the page is
+ * already the unit an audit measured, so asking for it is a request for the audit's own page-level
+ * findings rather than for a subtree.
+ */
+export const PAGE_SCOPE_ALIASES = ['page', 'document', 'whole page', 'whole-page'] as const;
+
+export function isPageScopeReference(reference: ScopeReference): boolean {
+  if (reference.kind !== 'selector') return false;
+  const value = reference.value.trim().toLowerCase();
+  return (PAGE_SCOPE_ALIASES as readonly string[]).includes(value);
+}
+
+/**
+ * Resolve the whole document as the selection. No DOM read, no guessing: the target is the document
+ * root, and page-level findings are attributed by the rule that they are reported at their own route.
+ */
+export function resolvePageScope(reference: ScopeReference): ScopeResolution {
+  return {
+    outcome: 'resolved',
+    reference,
+    targets: [
+      {
+        selector: 'html',
+        tag: 'html',
+        role: 'document',
+        kind: 'page',
+        file: null,
+      },
+    ],
+    clarification: null,
+    reason: null,
+    advisory: false,
+    focus: selectFocus('page'),
   };
 }
 

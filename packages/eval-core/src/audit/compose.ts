@@ -546,6 +546,13 @@ function seoFindings(html: readonly RouteHtml[]): AuditFinding[] {
     const result = checkSeo(entry.html);
     for (const check of result.checks) {
       if (check.status === 'pass') continue;
+      const measured =
+        check.observed === undefined || check.expected === undefined || check.unit === undefined
+          ? null
+          : {
+              expected: { value: check.expected, unit: check.unit },
+              observed: { value: check.observed, unit: check.unit },
+            };
       found.push(
         finding({
           check: 'seo-structure',
@@ -558,6 +565,7 @@ function seoFindings(html: readonly RouteHtml[]): AuditFinding[] {
           evidence: [check.id],
           evaluator: 'checkSeo',
           location: entry.route,
+          ...(measured === null ? {} : measured),
           confidence: 'measured',
           remediation: 'Correct the HTML this check inspects: ' + check.detail,
         }),

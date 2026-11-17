@@ -17,6 +17,8 @@ import { isAbsolute, join, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
   SCOPE_LIMITS,
+  isPageScopeReference,
+  resolvePageScope,
   resolveScope,
   selectFocus,
   type FocusDimension,
@@ -45,7 +47,8 @@ into the target. Applying needs per-hunk approval in Studio, bound to the propos
 options:
   --path <dir>        local project or built output (audited; selectors resolve against index.html)
   --url <origin>      authorized live target (loopback by default, else --authorize <host>)
-  --scope <value>     what is in scope: a CSS selector (--url or built HTML) or a file path
+  --scope <value>     what is in scope: a CSS selector (--url or built HTML), "page" for the whole
+                      document, or a file path
   --scope-kind <k>    selector | component-path | editor-selection | region   (default: selector)
   --source <s>        source | screenshot   (screenshot ⇒ advisory: no proposal is written)
   --focus <list>      comma-separated subset of responsive,a11y,motion,copy,performance,visual
@@ -166,10 +169,13 @@ export function selectScopedItems(
     requested.includes(entry.dimension),
   );
   // A selection owns what is inside it: the form's input is measured as part of the form.
-  const targets = scope.targets.flatMap((target) => [
-    target.selector,
-    ...(target.descendants ?? []),
-  ]);
+  // The page owns everything measured on it: no element descriptor can be "outside" the document,
+  // and the page-level findings (a missing description) are reported at their own route, which no
+  // element descriptor would ever match. So a page scope attributes by dimension, not by selector.
+  const targets =
+    scope.focus.kind === 'page'
+      ? undefined
+      : scope.targets.flatMap((target) => [target.selector, ...(target.descendants ?? [])]);
   const { items, outOfScope, unattributed, unmapped } = itemsFromReport(report, {
     dimensions,
     targets,
@@ -219,7 +225,10 @@ export async function runBestPractice(request: BestPracticeRequest): Promise<Bes
     ? statSync(resolve(request.target)).isDirectory()
     : false;
   let scope: ScopeResolution;
-  if (request.scope.kind === 'selector') {
+  if (isPageScopeReference(request.scope)) {
+    // No browser and no DOM: the page is already the unit the audit measured.
+    scope = resolvePageScope(request.scope);
+  } else if (request.scope.kind === 'selector') {
     let opened: Awaited<ReturnType<typeof openScopePage>> = null;
     try {
       opened = await openScopePage(request, targetIsDirectory);
@@ -247,8 +256,10 @@ export async function runBestPractice(request: BestPracticeRequest): Promise<Bes
   //    and its evidence cannot overwrite each other. When the scope resolved to one selected
   //    element, axe also scans inside it, which is what makes an a11y finding attributable to the
   //    selection instead of to the page.
+  // A page scope needs no confined scan: the page-wide scan already measured exactly that unit, and
+  // running both would report the same violation twice under two labels.
   const scopeSelectors =
-    request.mode === 'deep' && scope.outcome === 'resolved'
+    request.mode === 'deep' && scope.outcome === 'resolved' && scope.focus?.kind !== 'page'
       ? scope.targets.map((target) => ({ selector: target.selector, label: target.selector }))
       : [];
   const audit = await runAudit({

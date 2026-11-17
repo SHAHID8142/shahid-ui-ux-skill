@@ -42,6 +42,7 @@ fields, so a UI never has to parse prose to decide whether to proceed.
 | `kind` | `value` | Resolution |
 | --- | --- | --- |
 | `selector` | CSS selector, ≤ 200 characters | queried against the live page; descriptors only (`tag#id.class`), never inner text |
+| `selector` | the token `page` (or `document`) | the whole document, selected without a browser: the page is the unit the audit measured (T1031) |
 | `component-path` | file path | read through an injected reader; the file must exist, and the component class comes from its path segments |
 | `editor-selection` | file path | same as `component-path` |
 | `region` | annotation id | **advisory by construction**; a drawn region is not source |
@@ -117,6 +118,7 @@ look at is not evidence.
 ## 6. The CLI equivalent (T1023)
 
 ```bash
+sus-eval bestpractice --path ./fixtures/bestpractice --scope page       --out .sus-bp --mode deep
 sus-eval bestpractice --path ./fixtures/bestpractice --scope '#skip'     --out .sus-bp --mode deep
 sus-eval bestpractice --url http://127.0.0.1:3000  --scope 'nav .cta'     --out .sus-bp --mode deep
 sus-eval bestpractice --path ./src/components/Nav.astro --scope-kind component-path \
@@ -127,7 +129,7 @@ sus-eval bestpractice --help
 | Option | Meaning |
 | --- | --- |
 | `--path <dir>` / `--url <origin>` | exactly one target, as with `/sus audit`; a non-loopback host needs `--authorize` |
-| `--scope <value>` | a CSS selector (resolved against the live URL, or the built `index.html` over `file://`) or a file path |
+| `--scope <value>` | a CSS selector (resolved against the live URL, or the built `index.html` over `file://`), the token `page` (the whole document, no browser needed), or a file path |
 | `--scope-kind` | `selector` (default), `component-path`, `editor-selection`, `region` |
 | `--source` | `source` (default) or `screenshot` — a screenshot scope is advisory and produces no proposal |
 | `--focus` | comma-separated subset of the six dimensions; unknown names are refused, not ignored |
@@ -165,6 +167,35 @@ is attributable *by construction* rather than by string matching, and the propos
 - scoped scans exist only for `selector` scopes in `deep` mode. `component-path` scopes and `quick`
   mode still produce no element scoped axe items, and a selector axe cannot include is recorded as a
   scoped-scan failure instead of being silently treated as clean.
+
+### A page scope proposes the page's own findings (T1031)
+
+`--scope page` (also `document`, `whole page`) selects the document itself. No browser is opened to
+resolve it, because the page is already the unit the audit measured. Attribution then works by
+dimension instead of by element descriptor: **the page owns everything measured on it**, which is what
+makes a page-level defect reachable at all.
+
+This matters because some findings belong to no element. A missing meta description is reported at its
+own route (`/`), so before T1031 `--scope page` exited 0 with "nothing to propose" while the audit had
+failed G9 on the same page — a silent contradiction. Now:
+
+```
+sus-eval bestpractice --path …/index.html --scope page --mode deep
+→ 7 item(s), 7 measured, 2 blocking
+  P0 | fact | a11y | label (critical)                    (rule-level, page consequence)
+  P2 | fact | copy | meta-description on / | /
+```
+
+Two consequences are stated plainly:
+
+- the a11y items keep the audit's own location (a rule id), so a page scope shows *what* axe objected
+  to rather than pretending to point at an element;
+- element scopes are unchanged: they still attribute only what their own descriptor or descendants
+  name, and no confined axe scan runs for a page scope (the page-wide scan already measured that exact
+  unit, so running both would report the same violation twice under two labels).
+
+Every SEO check now also reports `observed` / `expected` counts, because the proposal contract refuses
+a fact without an observation — the page scope is what surfaced that gap.
 
 ## 7. The five measured example classes (T1024, done)
 

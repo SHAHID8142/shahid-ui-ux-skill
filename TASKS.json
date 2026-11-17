@@ -2660,7 +2660,8 @@
         "T1027",
         "T1028",
         "T1029",
-        "T1030"
+        "T1030",
+        "T1031"
       ],
       "files": [],
       "acc": [
@@ -4712,6 +4713,42 @@
         ".sus-dev/VERIFICATION/T1030.md",
         "packages/eval-core/tests/bestpractice.scoped-axe.test.ts",
         "fixtures/bestpractice/scoped-axe/index.html"
+      ]
+    },
+    {
+      "id": "T1031",
+      "m": "M12",
+      "title": "--scope page proposes the page's own findings (issue #21 R1)",
+      "obj": "A page-level defect (missing meta description) was unreachable: attribution matched element descriptors while the audit reports those findings at their own route, so bestpractice exited 0 'nothing to propose' on a page whose gate had failed. Select the whole document explicitly and attribute it by dimension, without inventing containment.",
+      "deps": [
+        "T1030"
+      ],
+      "files": [
+        "packages/eval-core/src/audit/",
+        "packages/eval-core/src/bestpractice/",
+        "packages/scanners/src/",
+        "packages/eval-core/tests/",
+        "docs/"
+      ],
+      "acc": [
+        "--scope page / document resolves without a browser",
+        "page-level findings reported at their own route are proposed",
+        "element findings on the page are proposed too and nothing is counted attributed elsewhere",
+        "page scope runs every dimension and declares none not-applicable",
+        "an element scope is unchanged and keeps the confined axe scan",
+        "every SEO check carries observed/expected counts so a fact has an observation"
+      ],
+      "tests": [
+        "packages/eval-core/tests/bestpractice.page-scope.test.ts"
+      ],
+      "risk": "a page scope laundering element-level attribution, or proposing unmeasured claims",
+      "rollback": "remove the page token; element scopes are untouched",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1031.md",
+        "packages/eval-core/tests/bestpractice.page-scope.test.ts"
       ]
     }
   ]

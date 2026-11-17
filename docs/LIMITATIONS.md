@@ -98,7 +98,8 @@ and can lag — when in doubt the generated page wins.
   also gets an axe scan confined to that element (`include`), and those findings are attributable by
   construction. A `component-path` scope still resolves but proposes nothing until DOM descriptors
   can be mapped to source files, `quick` mode has no scoped axe, and a screenshot region stays
-  `advisory`. These are stated limits, not fallbacks: guessing containment from selector strings
+  `advisory`. A `page` scope is the deliberate exception: it attributes **by dimension**, because the
+  page is the unit the audit measured and every finding on it is about that page. These are stated limits, not fallbacks: guessing containment from selector strings
   would attribute one element's defect to another.
 - The five measured best-practice examples apply their fixes to a temporary copy of the fixture and
   measure there; nothing is applied to a repository fixture, and the motion dimension stays `not-run`
