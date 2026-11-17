@@ -992,3 +992,6 @@ Lessons worth carrying:
   directions, or it drifts.
 - A test timeout can measure the runner: measure the phase before changing the code.
 - Verify CI with `gh run list` per commit; never infer "CI green" from a local `pnpm verify`.
+- T1038 (R6) `0e349a4`: pressed/disabled driven and counted; loading/success/error named as not driven.
+  R6 is closed to the extent it can be: three of five states are application states no generic probe can
+  invent without measuring its own guess.

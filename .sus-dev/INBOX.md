@@ -339,3 +339,5 @@ that; see `.sus-dev/VERIFICATION/T1017.md`.
    item be suppressed when a scoped item covers it?
 3. T1037 chose exit 3 for "measured but not attributable". Confirm that matches the documented meaning of
    3 ("nothing in scope was measured") rather than deserving a new code.
+4. T1038 drives at most three controls per route. Is document order the right sample, or should the
+   probe prefer controls that are actually visible in the first viewport?
