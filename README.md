@@ -5,7 +5,9 @@
 # SUS — Shahid UI UX Skill
 
 **SUS** is an agent-agnostic design-intelligence skill plus a mandatory **Live Studio** for
-building web UI one approved section at a time. It ships rules a coding agent can follow,
+building web UI one approved section at a time. The Studio's tested loop and local session bridge
+exist; the Studio *page* does not — [`docs/STUDIO.md`](docs/STUDIO.md) states what is built, what is
+not, and the one command that starts the part that is (`pnpm studio:bridge`). It ships rules a coding agent can follow,
 checks that make those rules falsifiable, and receipts that record what was actually run.
 
 **Scope (owner decision D14):** web UI/UX — marketing sites, e-commerce, CRM/dashboards,
@@ -47,6 +49,7 @@ It runs the built packages: `pnpm build` first. Nothing is published (T1005 is t
 | `pnpm regression` | the above plus the end-to-end studio demo and the dogfood audit; writes a report naming the revision |
 | `pnpm benchmark` | deterministic benchmark arm; writes the status the claim gate reads |
 | `pnpm demo:loop` | the full annotate → intent → diff → approve → apply → verify → undo loop on a real Astro build |
+| `pnpm studio:bridge` | starts the Live Studio session bridge on 127.0.0.1 (read-only; no Studio page exists yet — see `docs/STUDIO.md`) |
 | `pnpm dogfood` | builds and audits the three reference implementations |
 | `pnpm support` / `pnpm support:status` | regenerated support matrix, drift check, CLI status text |
 

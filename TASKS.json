@@ -2662,7 +2662,8 @@
         "T1029",
         "T1030",
         "T1031",
-        "T1032"
+        "T1032",
+        "T1033"
       ],
       "files": [],
       "acc": [
@@ -4788,6 +4789,42 @@
         ".sus-dev/VERIFICATION/T1032.md",
         "packages/eval-core/tests/cli-entry.test.ts",
         "bin/sus.mjs"
+      ]
+    },
+    {
+      "id": "T1033",
+      "m": "M12",
+      "title": "Startable Studio bridge plus an honest Studio inventory (issue #21 R4)",
+      "obj": "README called the Live Studio mandatory while nothing documented a way to start it. Add a launcher for the part that exists (the read-only session bridge), prove its guards through that launcher, and state in the docs exactly which Studio parts are built and which are not.",
+      "deps": [
+        "T1032"
+      ],
+      "files": [
+        "scripts/studio/",
+        "package.json",
+        "packages/studio-bridge/tests/",
+        "docs/",
+        "README.md"
+      ],
+      "acc": [
+        "one documented command starts the bridge on 127.0.0.1 and prints a usable session",
+        "the started script still refuses a bad token (401), a foreign Origin (403) and a non-envelope (400)",
+        "a bad argument exits 2 instead of starting",
+        "no document claims a Studio page exists; STUDIO.md inventories built vs not built",
+        "the loop stays proven by pnpm demo:loop"
+      ],
+      "tests": [
+        "packages/studio-bridge/tests/bridge-launcher.test.ts"
+      ],
+      "risk": "a launcher that reads as a Studio UI, or one that opens a second, weaker entry into the bridge",
+      "rollback": "remove the script and the studio:bridge entry; docs revert to the previous wording",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1033.md",
+        "packages/studio-bridge/tests/bridge-launcher.test.ts",
+        "docs/STUDIO.md"
       ]
     }
   ]

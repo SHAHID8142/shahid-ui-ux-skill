@@ -35,6 +35,7 @@
     "motion": "node scripts/check-motion.mjs",
     "parts": "node scripts/check-playbook-parts.mjs",
     "demo:loop": "pnpm --filter @sus/studio-bridge demo:loop",
+    "studio:bridge": "node scripts/studio/bridge.mjs",
     "support": "node scripts/generate-support.mjs --check",
     "support:write": "node scripts/generate-support.mjs",
     "support:status": "node scripts/generate-support.mjs --status",
