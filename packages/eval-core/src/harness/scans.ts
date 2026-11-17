@@ -43,14 +43,35 @@ export function chromeForTestingPath(): string | undefined {
   }
 }
 
-export async function runLighthouse(url: string, chromePath?: string): Promise<LighthouseSummary> {
+export interface LighthouseLaunchOptions {
+  /**
+   * Route every request the Lighthouse Chrome makes through this allowlisting proxy (T1046,
+   * audit finding T1003-1). Without it the performance phase was the one browser phase that
+   * could reach an unauthorized host directly: its Chrome is launched by chrome-launcher, not
+   * playwright, so `launchGuardedBrowser` never covered it.
+   */
+  proxyUrl?: string;
+}
+
+export async function runLighthouse(
+  url: string,
+  chromePath?: string,
+  options: LighthouseLaunchOptions = {},
+): Promise<LighthouseSummary> {
   const lighthouse = (await import('lighthouse')).default;
   const { launch } = await import('chrome-launcher');
   // Chrome 136+ refuses remote debugging on the default profile (ADR-003 note):
   // each run launches its own Chrome-for-Testing with a fresh profile.
+  const chromeFlags = ['--headless=new', '--no-sandbox', '--disable-gpu'];
+  if (options.proxyUrl !== undefined) {
+    // `--proxy-bypass-list=<-loopback>` is required for the same reason launchGuardedBrowser
+    // needs it: Chromium otherwise bypasses proxies for loopback targets, which is exactly the
+    // target class the audit points at most.
+    chromeFlags.push('--proxy-server=' + options.proxyUrl, '--proxy-bypass-list=<-loopback>');
+  }
   const chrome = await launch({
     chromePath: chromePath ?? (await import('chrome-launcher')).getChromePath(),
-    chromeFlags: ['--headless=new', '--no-sandbox', '--disable-gpu'],
+    chromeFlags,
   });
   let result;
   try {

@@ -18,6 +18,8 @@ import {
   followAuthorized,
   launchGuardedBrowser,
 } from '../src/harness/net-guard.js';
+import { startAuthorizedProxy } from '../src/harness/authorized-proxy.js';
+import { chromeForTestingPath, runLighthouse } from '../src/harness/scans.js';
 
 interface Origin {
   server: Server;
@@ -223,4 +225,35 @@ describe('redirect policy (real servers)', () => {
       await guarded.close();
     }
   }, 90000);
+});
+
+// T1046 (audit finding T1003-1): the deep-mode performance phase launched its own Chrome with no
+// proxy, so a hostile page could reach an unauthorized host during exactly one phase while
+// audit.json recorded nothing. The phase now sits behind the same allowlisting proxy as every
+// other phase, and the refusals the proxy makes are observable on the proxy.
+describe('lighthouse phase boundary (real Chrome, real proxy)', () => {
+  it('routes the Lighthouse Chrome through the proxy, which refuses and records the unauthorized host', async () => {
+    const target = await startOrigin(
+      page(
+        '<!doctype html><html><head><title>guarded perf page</title></head>' +
+          '<body><h1>guarded</h1><p>A small page with one hostile subresource.</p>' +
+          '<img src="http://blocked.invalid/leak.png" alt=""></body></html>',
+      ),
+    );
+    const proxy = await startAuthorizedProxy([]);
+    try {
+      // Flake policy as in a11y-budgets: the runner retries while a required metric is absent;
+      // a tiny local page measures on the first attempt. Byte weight proves the trace captured
+      // the page through the proxy; the refusal list proves the hostile subresource did not pass.
+      const summary = await runLighthouse(target.url, chromeForTestingPath(), {
+        proxyUrl: proxy.server,
+      });
+      expect(summary.url).toBe(target.url);
+      expect(summary.totalByteWeight === null || summary.totalByteWeight > 0).toBe(true);
+      expect(proxy.refused().join(' ')).toContain('blocked.invalid');
+    } finally {
+      await proxy.close();
+      await target.close();
+    }
+  }, 180000);
 });

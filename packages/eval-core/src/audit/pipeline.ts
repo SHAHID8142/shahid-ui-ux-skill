@@ -30,6 +30,7 @@ import {
   isAuthorizationRefused,
   launchGuardedBrowser,
 } from '../harness/net-guard.js';
+import { startAuthorizedProxy } from '../harness/authorized-proxy.js';
 import { chromeForTestingPath, runLighthouse, scanA11y } from '../harness/scans.js';
 import { probeMotionWith, type MotionProbeResult } from '../harness/motion.js';
 import { probeStatesWith, type StatesProbeResult } from '../harness/states.js';
@@ -375,11 +376,35 @@ async function collectScans(
     }
   }
   const chromePath = chromeForTestingPath();
-  for (const route of routes) {
+  // T1046 (audit finding T1003-1): the performance phase launches its own Chrome through
+  // chrome-launcher, which no playwright guard ever covered — the one phase a page could reach an
+  // unauthorized host directly. It gets its own allowlisting proxy (the guarded browser's proxy
+  // was closed with the guarded browser) held across every route, under the same policy every
+  // other phase answers to: a host that is not authorized is refused and the refusal is recorded.
+  try {
+    const lighthouseProxy = await startAuthorizedProxy(authorizedHosts);
     try {
-      lighthouse.push({ route, value: await runLighthouse(routeUrl(origin, route), chromePath) });
-    } catch (error) {
-      lhFailed.push({ route, reason: describeError(error) });
+      for (const route of routes) {
+        try {
+          lighthouse.push({
+            route,
+            value: await runLighthouse(routeUrl(origin, route), chromePath, {
+              proxyUrl: lighthouseProxy.server,
+            }),
+          });
+        } catch (error) {
+          lhFailed.push({ route, reason: describeError(error) });
+        }
+      }
+    } finally {
+      await lighthouseProxy.close();
+    }
+  } catch (error) {
+    // Fail-closed: without the proxy the phase does not run at all rather than run unguarded;
+    // every route lands in `failed`, which keeps the lighthouse check out of `pass`.
+    const reason = 'no network guard: ' + describeError(error);
+    for (const route of routes) {
+      lhFailed.push({ route, reason });
     }
   }
   return {

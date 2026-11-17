@@ -5279,10 +5279,14 @@
       ],
       "risk": "a hostile page turns a deep audit into an SSRF platform (internal-network probing, cloud metadata)",
       "rollback": "revert the scans.ts/pipeline.ts proxy wiring; the Lighthouse phase behaves as before, unguarded",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1046.md",
+        "packages/eval-core/tests/lighthouse-guard.test.ts",
+        "packages/eval-core/tests/net-guard.test.ts"
+      ]
     },
     {
       "id": "T1047",
