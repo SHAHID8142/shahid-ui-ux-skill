@@ -1,8 +1,8 @@
 {
   "meta": {
-    "product": "SUS \u2014 Shahid UI UX Skill",
+    "product": "SUS — Shahid UI UX Skill",
     "version": "planning-v1.4",
-    "updated": "2026-11-16",
+    "updated": "2026-11-18",
     "protocol": "docs/AGENT_CONTINUE_PROTOCOL.md; docs/TASK_RECORD_CONTRACT.md",
     "build_gate": "APERIO received 2026-11-13 (D28): build authorized; TASKS.json statuses are canonical",
     "concurrency": {
@@ -52,11 +52,11 @@
         "docs/PRD_GAP_ANALYSIS.md"
       ],
       "acc": [
-        "findings F1\u2013DA-20 with severity",
+        "findings F1–DA-20 with severity",
         "conflicts named, not silently resolved"
       ],
       "tests": [
-        "manual line-by-line review against \u00a71\u2013\u00a722"
+        "manual line-by-line review against §1–§22"
       ],
       "risk": "review is single-context (no subagent tool)",
       "rollback": "n/a (documented findings)",
@@ -80,8 +80,8 @@
         "docs/COVERAGE_MATRIX.md"
       ],
       "acc": [
-        "every PRD \u00a719 risk has an owner-mechanism",
-        "coverage matrix lists \u2705/\ud83d\udfe1/\u274c per surface"
+        "every PRD §19 risk has an owner-mechanism",
+        "coverage matrix lists ✅/🟡/❌ per surface"
       ],
       "tests": [
         "matrix reviewed against D14 scope"
@@ -138,7 +138,7 @@
         "ROADMAP.md"
       ],
       "acc": [
-        "every milestone decomposed to 15\u201360 min tasks",
+        "every milestone decomposed to 15–60 min tasks",
         "first batch identified"
       ],
       "tests": [
@@ -301,7 +301,7 @@
       "id": "T0151",
       "m": "M1.5",
       "title": "Rubric schema + scoring CLI",
-      "obj": "12 axes, 1\u20135 anchors, deterministic/hybrid/judged tiers (amendments Part 3)",
+      "obj": "12 axes, 1–5 anchors, deterministic/hybrid/judged tiers (amendments Part 3)",
       "deps": [
         "T0104"
       ],
@@ -334,7 +334,7 @@
       "id": "T0152",
       "m": "M1.5",
       "title": "Screenshot + DOM metric harness",
-      "obj": "Playwright: 3 viewports \u00d7 2 themes, overflow/CLS/LCP proxy, tap targets",
+      "obj": "Playwright: 3 viewports × 2 themes, overflow/CLS/LCP proxy, tap targets",
       "deps": [
         "T0102"
       ],
@@ -385,7 +385,7 @@
       "tests": [
         "inject known violation into fixture; gate fails"
       ],
-      "risk": "axe covers ~1/3 of WCAG \u2014 manual protocol needed",
+      "risk": "axe covers ~1/3 of WCAG — manual protocol needed",
       "rollback": "manual checklist generated per section",
       "status": "done",
       "approval": "D28/D29 build authorization (self-verified per protocol)",
@@ -478,7 +478,7 @@
       "id": "T0155",
       "m": "M1.5",
       "title": "Blind judge protocol + calibration run 1",
-      "obj": "Fresh-context critic vs human ratings; agreement \u226580% \u00b11 target",
+      "obj": "Fresh-context critic vs human ratings; agreement ≥80% ±1 target",
       "deps": [
         "T0151",
         "T0153"
@@ -493,7 +493,7 @@
       "tests": [
         "calibration report artifact"
       ],
-      "risk": "no human raters available \u2192 owner rates",
+      "risk": "no human raters available → owner rates",
       "rollback": "judged tier stays advisory",
       "status": "done",
       "approval": "pending",
@@ -538,7 +538,7 @@
       ],
       "commit": "same commit as .sus-dev/VERIFICATION/T0156.md",
       "results": [
-        "budget target 30000 PROPOSED to owner \u2014 decision required before adoption"
+        "budget target 30000 PROPOSED to owner — decision required before adoption"
       ]
     },
     {
@@ -559,8 +559,8 @@
       ],
       "acc": [
         "name/dir match",
-        "description \u22641024 chars",
-        "\u22645k tokens"
+        "description ≤1024 chars",
+        "≤5k tokens"
       ],
       "tests": [
         "validator CLI on valid+invalid fixtures"
@@ -583,7 +583,7 @@
       "id": "T0202",
       "m": "M2",
       "title": "Intent schema + router",
-      "obj": "audit/unslop/refine/redesign/create/system/live \u2192 module selection",
+      "obj": "audit/unslop/refine/redesign/create/system/live → module selection",
       "deps": [
         "T0201"
       ],
@@ -593,7 +593,7 @@
       ],
       "acc": [
         "every intent maps to explicit module set",
-        "unknown intent \u2192 honest fallback"
+        "unknown intent → honest fallback"
       ],
       "tests": [
         "router table fixtures"
@@ -616,7 +616,7 @@
       "id": "T0203",
       "m": "M2",
       "title": "Just-in-time loader + precedence resolver",
-      "obj": "Foundation/playbook loading with code-enforced precedence (\u00a76)",
+      "obj": "Foundation/playbook loading with code-enforced precedence (§6)",
       "deps": [
         "T0202"
       ],
@@ -708,7 +708,7 @@
       "id": "T0301",
       "m": "M3",
       "title": "Evidence schema + provenance catalog + offline mode",
-      "obj": "Citations with URL/date/classification; offline \u2192 unverified",
+      "obj": "Citations with URL/date/classification; offline → unverified",
       "deps": [
         "T0104",
         "T0155",
@@ -723,7 +723,7 @@
       "acc": [
         "no fabricated citation passes validation",
         "research plan contract: questions, budget, stop rule, revisit trigger (DA-09)",
-        "claim\u2192source map with quoted supporting passage, primary/secondary distinction, conflict-of-interest note; no unsourced specific counts (DA-08)",
+        "claim→source map with quoted supporting passage, primary/secondary distinction, conflict-of-interest note; no unsourced specific counts (DA-08)",
         "Research synthesis is planning hypotheses until claim-to-inspected-passage provenance supports each load-bearing assertion; unreachable sources remain unverified"
       ],
       "tests": [
@@ -746,7 +746,7 @@
       "id": "T0302",
       "m": "M3",
       "title": "Slop taxonomy schema + counterexamples",
-      "obj": "Versioned pattern records with legitimate-use cases (\u00a78.2)",
+      "obj": "Versioned pattern records with legitimate-use cases (§8.2)",
       "deps": [
         "T0301"
       ],
@@ -754,7 +754,7 @@
         "knowledge/anti-slop/"
       ],
       "acc": [
-        "every rule has \u22651 false-positive case"
+        "every rule has ≥1 false-positive case"
       ],
       "tests": [
         "taxonomy lint"
@@ -874,7 +874,7 @@
       "id": "T0400",
       "m": "M4",
       "title": "Direction Reasoning module (E1: no templates)",
-      "obj": "Derive direction from brief: 3 candidates \u2192 thesis \u2192 anti-references",
+      "obj": "Derive direction from brief: 3 candidates → thesis → anti-references",
       "deps": [
         "T0203",
         "T0301",
@@ -888,7 +888,7 @@
         "banned-defaults check runs"
       ],
       "tests": [
-        "one brief \u2192 3 distinct reasoned directions"
+        "one brief → 3 distinct reasoned directions"
       ],
       "risk": "library converges into new defaults",
       "rollback": "taxonomy stays small + audited",
@@ -970,7 +970,7 @@
         "foundation fixtures"
       ],
       "risk": "prose bloat",
-      "rollback": "\u22642k tokens per file enforced",
+      "rollback": "≤2k tokens per file enforced",
       "status": "done",
       "approval": "pending",
       "phase": "build",
@@ -1260,7 +1260,7 @@
       "id": "T0502",
       "m": "M5",
       "title": "Section state machine + section locks (5A)",
-      "obj": "planned\u2192\u2026\u2192accepted states; lease file prevents concurrent section edits (DA-12)",
+      "obj": "planned→…→accepted states; lease file prevents concurrent section edits (DA-12)",
       "deps": [
         "T0501"
       ],
@@ -1296,7 +1296,7 @@
       "id": "T0503",
       "m": "M5",
       "title": "Change-plan / review interface + diff contract",
-      "obj": "Bounded proposal: files, mock, criteria, risk \u2014 before any code",
+      "obj": "Bounded proposal: files, mock, criteria, risk — before any code",
       "deps": [
         "T0501"
       ],
@@ -1405,7 +1405,7 @@
       ],
       "acc": [
         "matrix result per section in evidence bundle",
-        "locale set prioritized per brief: shaping/fallback fonts, segmentation, input methods, currency/date/numerals, translated errors \u2014 not a universal locale claim (DA-46)",
+        "locale set prioritized per brief: shaping/fallback fonts, segmentation, input methods, currency/date/numerals, translated errors — not a universal locale claim (DA-46)",
         "issue #10: hardening matrix extended to the admin fixture at 320/390/768/1440 with negative overflow fixture"
       ],
       "tests": [
@@ -1461,7 +1461,7 @@
       "id": "T0601",
       "m": "M6",
       "title": "Motion taxonomy + tokens + reduced-motion semantics",
-      "obj": "8 motion categories (\u00a79.1); duration/easing tokens; reduced-motion = alternative not faster",
+      "obj": "8 motion categories (§9.1); duration/easing tokens; reduced-motion = alternative not faster",
       "deps": [
         "T0600",
         "T0401"
@@ -1471,7 +1471,7 @@
         "packages/tokens/"
       ],
       "acc": [
-        "every transition spec has all 12 fields (\u00a79.2)"
+        "every transition spec has all 12 fields (§9.2)"
       ],
       "tests": [
         "spec completeness lint"
@@ -1504,7 +1504,7 @@
       "acc": [
         "no click duplication",
         "focus preserved across animated change",
-        "every launch playbook carries a motion decision record \u2014 including \"none, with reason\" \u2014 and reduced-motion equivalence preserves information and operation, not just a CSS branch (kilo M2)"
+        "every launch playbook carries a motion decision record — including \"none, with reason\" — and reduced-motion equivalence preserves information and operation, not just a CSS branch (kilo M2)"
       ],
       "tests": [
         "fixture interaction tests"
@@ -1574,7 +1574,7 @@
     {
       "id": "T0700",
       "m": "M7",
-      "title": "Dual-stack mapping spike \u2014 GO/NO-GO",
+      "title": "Dual-stack mapping spike — GO/NO-GO",
       "obj": "Read-only dual-stack target/edit-owner mapping feasibility; writes deferred to safe-write experiment T0700w",
       "deps": [
         "T0102",
@@ -1589,7 +1589,7 @@
         "Both Next.js and Astro evaluated on labelled target and edit-owner ground truth; repeated/shared components, CSS/content ownership, responsive variants, HMR and mixed source languages",
         "Pre-register sampling, denominators and acceptance criteria before evaluation; report target correctness, owner correctness, coverage, abstention and uncertainty separately",
         "No evidence-tier score is treated as calibrated probability; unknown owners abstain; wrong-owner cases fail supported-write eligibility",
-        "Full draw \u2192 intent \u2192 preview \u2192 approve \u2192 apply \u2192 undo proof is T0700w; this read-only spike alone cannot authorize source writes"
+        "Full draw → intent → preview → approve → apply → undo proof is T0700w; this read-only spike alone cannot authorize source writes"
       ],
       "tests": [
         "spike report with numbers, committed"
@@ -1681,7 +1681,7 @@
       "id": "T0703",
       "m": "M7",
       "title": "Element selection + stable anchors",
-      "obj": "Pick element \u2192 semantic selector + sus-id + confidence tier (\u00a77.1)",
+      "obj": "Pick element → semantic selector + sus-id + confidence tier (§7.1)",
       "deps": [
         "T0702"
       ],
@@ -1689,7 +1689,7 @@
         "packages/studio-web/"
       ],
       "acc": [
-        "below 0.6 confidence \u2192 never edit; ask user from ranked candidates"
+        "below 0.6 confidence → never edit; ask user from ranked candidates"
       ],
       "tests": [
         "selection fixtures across both stacks"
@@ -1746,7 +1746,7 @@
       "id": "T0705",
       "m": "M7",
       "title": "Visual Intent Schema + constraint compiler",
-      "obj": "Strokes \u2192 relationships/order/alignment/reflow constraints; pixels never reach source (\u00a77.3)",
+      "obj": "Strokes → relationships/order/alignment/reflow constraints; pixels never reach source (§7.3)",
       "deps": [
         "T0704"
       ],
@@ -1755,7 +1755,7 @@
         "packages/studio-bridge/"
       ],
       "acc": [
-        "ambiguous target \u2192 focused clarification, not a guess"
+        "ambiguous target → focused clarification, not a guess"
       ],
       "tests": [
         "compiler property tests (fast-check)"
@@ -1791,7 +1791,7 @@
         "Isolated disposable preview workspace/server only; proposal generation and preview do not write consuming-project source; apply needs separate fresh approval"
       ],
       "tests": [
-        "E2E: propose\u2192reject leaves tree clean"
+        "E2E: propose→reject leaves tree clean"
       ],
       "risk": "diff readability",
       "rollback": "unified + split views",
@@ -1818,7 +1818,7 @@
       "id": "T0707",
       "m": "M7",
       "title": "Approval-gated apply + rollback (AST writes)",
-      "obj": "ts-morph/recast edits; git snapshot; typecheck+build verify; auto-revert on failure (\u00a77.2)",
+      "obj": "ts-morph/recast edits; git snapshot; typecheck+build verify; auto-revert on failure (§7.2)",
       "deps": [
         "T0706",
         "T0503",
@@ -1862,14 +1862,14 @@
         "refusal order proven by tests: receipt replay, unfinished transaction, approval grant, plan coverage, action boundary (DA-31+capability), preimage recheck, ambiguous owner, durable transaction, verification, receipt",
         "typecheck/build verification required at construction; failure reverts exactly (real TS diagnostics test); undo is transaction-specific and refuses undo-conflict; no git reset anywhere",
         "durable receipts survive restart; replayed operationId returns the stored receipt without a second write; crash recovery entry point rolls back prepared transactions",
-        "Transaction gained real file deletion with recoverable undo (preimage + mode); 45 new tests (158 package), mutation-checked; full pnpm verify exit 0 \u2014 48 files / 426 tests"
+        "Transaction gained real file deletion with recoverable undo (preimage + mode); 45 new tests (158 package), mutation-checked; full pnpm verify exit 0 — 48 files / 426 tests"
       ]
     },
     {
       "id": "T0708",
       "m": "M7",
       "title": "Studio E2E demo: desktop/mobile + reconnect",
-      "obj": "Full loop on fixture: annotate\u2192intent\u2192diff\u2192approve\u2192apply\u2192verify\u2192undo",
+      "obj": "Full loop on fixture: annotate→intent→diff→approve→apply→verify→undo",
       "deps": [
         "T0707",
         "T0790",
@@ -1908,7 +1908,7 @@
       "id": "T0790",
       "m": "M7",
       "title": "Verification loop (M7.9)",
-      "obj": "apply\u2192build\u2192axe\u2192shots\u2192motion\u2192gate summary; hard-gate failure = auto-revert (\u00a77.4)",
+      "obj": "apply→build→axe→shots→motion→gate summary; hard-gate failure = auto-revert (§7.4)",
       "deps": [
         "T0707",
         "T0152b",
@@ -1936,7 +1936,7 @@
         "packages/studio-bridge/tests/verification-loop.test.ts"
       ],
       "results": [
-        "five distinct outcomes: preview-failed, apply-failed, verification-failed, rollback-blocked, accepted \u2014 each with a different user action",
+        "five distinct outcomes: preview-failed, apply-failed, verification-failed, rollback-blocked, accepted — each with a different user action",
         "DA-36 enforced at the decision point: transactionIntact() is consulted immediately before reverting and only then (call order asserted); a diverged tree is NEVER reverted, the report explains that the user edits were left untouched on purpose",
         "failing gate yields explanation + affected operation + curated recovery steps + retry stance; soft gates are reported without reverting a completed change",
         "diagnostics redacted by default (home paths, bearer tokens, sk_/pk_/rk_ incl. sk_live_, ghp_, emails, long digests) while keeping file:line and TS codes; caller redactor honoured; a throwing stage becomes a redacted failure, not a crashed loop",
@@ -2042,7 +2042,7 @@
       ],
       "results": [
         "VariantSession: provenance is a precondition (intent, model, prompt sha256 shape, run id, timestamp; intent must match) or the comparison is refused",
-        "A/B/C side by side at mobile/tablet/desktop simultaneously from ONE document per variant (390/768/1280) \u2014 documented and tested",
+        "A/B/C side by side at mobile/tablet/desktop simultaneously from ONE document per variant (390/768/1280) — documented and tested",
         "discard is cheap by construction: payload released, provenance kept, bytes released reported and measurable; accept-one drops the rest and records the decision with applyStrategy full-page-reload (the recorded HMR rollback)",
         "variant markup is data: script/iframe/object/base/inline-handler/javascript: refused at open, and every frame is fully sandboxed (no tokens) so one mistake is not a compromise",
         "no event hook on the model (peer finding: isolated worlds isolate JS state, not DOM events); accepting is a trusted-host call",
@@ -2101,7 +2101,7 @@
         "packages/studio-bridge/"
       ],
       "acc": [
-        "kill -9 mid-session \u2192 recovery without data loss",
+        "kill -9 mid-session → recovery without data loss",
         "multi-file apply is one transaction with durable recovery manifest; atomic rename alone is insufficient (DA-35)",
         "Persist typed operation ID, preimages, file modes, hashes and multi-file manifest before first mutation; state machine has explicit crash points",
         "Use disposable transaction fixtures before production writer exists; kill at every step, recover exactly or stop on conflict; preserve index and untracked user bytes"
@@ -2129,7 +2129,7 @@
     {
       "id": "T0806",
       "m": "M8",
-      "title": "Security test suite (\u00a77.5)",
+      "title": "Security test suite (§7.5)",
       "obj": "CSP/origin/auth/prompt-injection/retention/redaction/audit-log coverage",
       "deps": [
         "T0701",
@@ -2139,7 +2139,7 @@
         "packages/studio-bridge/"
       ],
       "acc": [
-        "threat-model doc + passing suite; no critical open; indirect injection via drawings, OCR, screenshots, recalled lessons rejected at the action boundary \u2014 untrusted content never authorizes writes/commands/network (DA-31)",
+        "threat-model doc + passing suite; no critical open; indirect injection via drawings, OCR, screenshots, recalled lessons rejected at the action boundary — untrusted content never authorizes writes/commands/network (DA-31)",
         "G13 authoritative owner: non-waivable critical security/privacy check with negative fixtures",
         "Hostile page attempts token reads, synthetic approval, UI replacement, cross-frame confusion, navigation/reconnect replay, direct commands, DNS rebinding and path escape; all denied",
         "Unmarked sensitive CRM text, screenshots, logs and outbound payloads: minimize/redact before consented capture; retention/deletion tested"
@@ -2169,7 +2169,7 @@
         "DA-31 action boundary refuses untrusted provenance before the capability is examined; single-use capability bound to session/frame/kind/proposal hash/fence/TTL with replay+expiry denial",
         "capture minimisation redacts unmarked CRM records/names/emails/phones/cards/secrets (counts only, consent required); store accepts only RedactedResult; purge/delete/revoke consent tested; audit log residue-free",
         "G13 wired: registry implemented + badFixture, six in-process fail-closed negatives in check-gates, dedicated CI security job; not-applicable refused, waivable false",
-        "server.start() now resolves the actual ephemeral port (fixes the fixed-port collision class); full pnpm verify exit 0 \u2014 46 files / 381 tests"
+        "server.start() now resolves the actual ephemeral port (fixes the fixed-port collision class); full pnpm verify exit 0 — 46 files / 381 tests"
       ]
     },
     {
@@ -2218,7 +2218,7 @@
       "id": "T0901",
       "m": "M9",
       "title": "Capability matrix + adapter interface",
-      "obj": "Typed adapter contract; unsupported capability \u2192 explicit error (\u00a712)",
+      "obj": "Typed adapter contract; unsupported capability → explicit error (§12)",
       "deps": [
         "T0204"
       ],
@@ -2327,7 +2327,7 @@
       "acc": [
         "uninstall restores prior state; doctor reports drift",
         "installed dir name + generated host entries tested: long paths, update, uninstall preserves user files (DA-45)",
-        "`.sus/` migration fixture v1\u2192v2 passes via doctor; supported-upgrade policy stated in release docs (kilo M5)",
+        "`.sus/` migration fixture v1→v2 passes via doctor; supported-upgrade policy stated in release docs (kilo M5)",
         "Doctor/install cover absent browser cache, consented browser acquisition, download size/version/licence, offline and interrupted download, read-only directories; uninstall preserves unrelated caches/profiles"
       ],
       "tests": [
@@ -2352,7 +2352,7 @@
       "id": "T0905",
       "m": "M9",
       "title": "Generated support matrix (A9)",
-      "obj": "compatibility.json \u2192 docs page + CLI status output",
+      "obj": "compatibility.json → docs page + CLI status output",
       "deps": [
         "T0902",
         "T0903",
@@ -2393,7 +2393,7 @@
       "id": "T1001",
       "m": "M10",
       "title": "Cross-module regression suite",
-      "obj": "All gates G1\u2013G12 + skill evals + studio E2E in one pipeline",
+      "obj": "All gates G1–G12 + skill evals + studio E2E in one pipeline",
       "deps": [
         "T0001",
         "T0002",
@@ -2517,7 +2517,7 @@
       "results": [
         "single command `pnpm regression` runs verify + demo:loop + dogfood, measured 129.8s (under the 10 minute acceptance) and writes a report naming the exact revision, branch and dirty state",
         "fail-closed aggregation: an empty run fails, a stage that did not run is not-run and prevents pass, a missing Playwright downgrades the E2E stages to not-run rather than dropping them",
-        "reachability (audit H6) is now part of pnpm verify: every finished non-M10 task must be backed by an ancestry commit id, a tracked receipt, a delivered file or recorded evidence \u2014 94/94 backed (79 commit, 10 receipt, 4 files, 1 evidence)",
+        "reachability (audit H6) is now part of pnpm verify: every finished non-M10 task must be backed by an ancestry commit id, a tracked receipt, a delivered file or recorded evidence — 94/94 backed (79 commit, 10 receipt, 4 files, 1 evidence)",
         "T0001 was a done claim with nothing behind it until the check existed; it is now backed by its recorded evidence path rather than exempted",
         "14 new tests (7 reachability, 7 regression aggregation) pin the negative cases; full verify exit 0"
       ]
@@ -2526,7 +2526,7 @@
       "id": "T1002",
       "m": "M10",
       "title": "Benchmark protocol + run (Part 9)",
-      "obj": "briefs covering all four surface modes; blind human A/B n\u226520; deterministic metrics; reproducible",
+      "obj": "briefs covering all four surface modes; blind human A/B n≥20; deterministic metrics; reproducible",
       "deps": [
         "T0155",
         "T1001"
@@ -2590,7 +2590,7 @@
         "review report (T1003.md)"
       ],
       "risk": "no independent reviewer available",
-      "rollback": "Do not self-author an independent audit; if no independent reviewer is available, report the audit as not-run and leave T1003 pending \u2014 never convert this into a pass",
+      "rollback": "Do not self-author an independent audit; if no independent reviewer is available, report the audit as not-run and leave T1003 pending — never convert this into a pass",
       "status": "pending",
       "approval": "owner-commissioned (D35, 2026-11-17)",
       "phase": "post-build-audit"
@@ -2630,7 +2630,7 @@
         "README.md"
       ],
       "results": [
-        "docs/LIMITATIONS.md ships the coverage matrix \u00a75 limitation statements verbatim plus what this build discovered (no human benchmark arm, three provenance claim ids, dogfood coverage narrow, admin reference failing two checks, warm-machine timing, one stack end-to-end, no supported host row)",
+        "docs/LIMITATIONS.md ships the coverage matrix §5 limitation statements verbatim plus what this build discovered (no human benchmark arm, three provenance claim ids, dogfood coverage narrow, admin reference failing two checks, warm-machine timing, one stack end-to-end, no supported host row)",
         "docs/MAINTENANCE.md defines owner (SHAHID8142) and maintainer role, review calendar (commit/checkpoint/monthly/quarterly/release), supported upgrade period (current+previous minor, 90-day security backport, schema bump for contract breaks) and the security reporting route with G13 never waivable",
         "pnpm claims (docs lint claim-checker) runs inside pnpm verify: comparative claims blocked while the benchmark gate is closed (gate read from the benchmark artefact, not a flag), absolute claims blocked always, code blocks and negated limitation statements exempt",
         "README rewritten from a stale \"specification only, no code written\" state to what exists, what was verified, what is deliberately not done, pointing at TASKS.json as the only status authority, with the six real commands",
@@ -2687,7 +2687,7 @@
       ],
       "files": [],
       "acc": [
-        "\u00a722 Definition of Done met; human approval recorded"
+        "§22 Definition of Done met; human approval recorded"
       ],
       "tests": [
         "release checklist"
@@ -2769,7 +2769,7 @@
       "id": "T0310",
       "m": "M3",
       "title": "Trend/research review loop",
-      "obj": "Versioned on-demand refresh: candidate \u2192 evaluated \u2192 adopted/rejected/watch/superseded; no background scheduler claim (DA-10)",
+      "obj": "Versioned on-demand refresh: candidate → evaluated → adopted/rejected/watch/superseded; no background scheduler claim (DA-10)",
       "deps": [
         "T0301"
       ],
@@ -2870,7 +2870,7 @@
       "id": "T0506",
       "m": "M5",
       "title": "Prediction + lesson lifecycle",
-      "obj": "Event \u2260 explanation: candidate \u2192 tested locally \u2192 reviewed \u2192 promoted with scope \u2192 challenged/retired; cross-project sharing only via explicit sanitized publication boundary (DA-11/DA-12)",
+      "obj": "Event ≠ explanation: candidate → tested locally → reviewed → promoted with scope → challenged/retired; cross-project sharing only via explicit sanitized publication boundary (DA-11/DA-12)",
       "deps": [
         "T0504"
       ],
@@ -3086,7 +3086,7 @@
       "id": "T0159",
       "m": "M1.5",
       "title": "Gate registry + executable gate checks",
-      "obj": "Every gate G1\u2013G12 needs an owning task, a command with a four-value verdict (pass/fail/not-run/not-applicable) and a negative fixture; registry drift fails CI (audit: 9 of 12 gates had no owner)",
+      "obj": "Every gate G1–G12 needs an owning task, a command with a four-value verdict (pass/fail/not-run/not-applicable) and a negative fixture; registry drift fails CI (audit: 9 of 12 gates had no owner)",
       "deps": [
         "T0151",
         "T0154"
@@ -3099,7 +3099,7 @@
         "validator fails if a gate lacks owner task or check",
         "unimplemented checks reported as not-run, never pass",
         "each landed gate ships a bad fixture proving failure",
-        "assertion shipped as a test: ancestry(T1001) \u2287 every non-M10 task; ancestry(T1005) \u2287 every task; measurement tasks (T0156, T0158) are not orphans (review H4/M2)",
+        "assertion shipped as a test: ancestry(T1001) ⊇ every non-M10 task; ancestry(T1005) ⊇ every task; measurement tasks (T0156, T0158) are not orphans (review H4/M2)",
         "Exact bidirectional gate ownership comparison; missing/extra/duplicate owners fail",
         "check_verdict is pass/fail/not-run/not-applicable; acceptance_disposition is separate; exceptions cannot turn failure into pass",
         "Semantic DAG negative fixtures remove fixture, evaluation and safe-write prerequisites; all must fail; include G13 and T1006 private-build closure"
@@ -3207,7 +3207,7 @@
       "id": "T0402b",
       "m": "M4",
       "title": "Foundations: heuristics, usability, onboarding, navigation + IA",
-      "obj": "PRD \u00a76 names UX heuristics, usability, onboarding, navigation and information architecture as a foundation module; no task owned it (locate: DA-05, review H2). Includes user-flow research + validation deliverable so an attractive section is judged as part of a usable flow.",
+      "obj": "PRD §6 names UX heuristics, usability, onboarding, navigation and information architecture as a foundation module; no task owned it (locate: DA-05, review H2). Includes user-flow research + validation deliverable so an attractive section is judged as part of a usable flow.",
       "deps": [
         "T0403"
       ],
@@ -3215,11 +3215,11 @@
         "skill/foundations/"
       ],
       "acc": [
-        "flow map per surface mode (entry \u2192 task \u2192 success)",
+        "flow map per surface mode (entry → task → success)",
         "heuristic evaluation checklist applied to each accepted section",
         "navigation/IA decisions recorded with rationale",
         "validation method named (unmoderated test, click-through, or explicit not-run)",
-        "i18n foundations included: logical CSS properties, mirrored icons, script-specific type stacks; hardening matrix covers \u22652 non-Latin scripts and mixed-direction content (kilo M3)",
+        "i18n foundations included: logical CSS properties, mirrored icons, script-specific type stacks; hardening matrix covers ≥2 non-Latin scripts and mixed-direction content (kilo M3)",
         "Representative user-task journeys for commerce/admin/onboarding and Read: success, error recovery and comprehension; simulated results never count as participant evidence"
       ],
       "tests": [
@@ -3258,7 +3258,7 @@
         "Traceable per-task receipt with positive and negative checks where applicable"
       ],
       "risk": "False continuity or unsafe resumption",
-      "rollback": "Revert only this task\u2019s known changes; preserve unrelated work",
+      "rollback": "Revert only this task’s known changes; preserve unrelated work",
       "status": "done",
       "approval": "D24 planning authorization",
       "phase": "planning",
@@ -3288,7 +3288,7 @@
         "Traceable per-task receipt with positive and negative checks where applicable"
       ],
       "risk": "False continuity or unsafe resumption",
-      "rollback": "Revert only this task\u2019s known changes; preserve unrelated work",
+      "rollback": "Revert only this task’s known changes; preserve unrelated work",
       "status": "done",
       "approval": "D24 planning authorization + B001/B002 closure (D28/D29, same commit as TASKS.json update)",
       "phase": "planning",
@@ -3320,7 +3320,7 @@
         "Traceable per-task receipt with positive and negative checks where applicable"
       ],
       "risk": "False continuity or unsafe resumption",
-      "rollback": "Revert only this task\u2019s known changes; preserve unrelated work",
+      "rollback": "Revert only this task’s known changes; preserve unrelated work",
       "status": "done",
       "approval": "D28/D29 build authorization (self-verified per protocol)",
       "phase": "build",
@@ -3346,7 +3346,7 @@
         "packages/"
       ],
       "acc": [
-        "Both stacks prove selection \u2192 correct owner \u2192 isolated preview \u2192 authentic approval \u2192 apply \u2192 verification \u2192 undo on disposable fixtures",
+        "Both stacks prove selection → correct owner → isolated preview → authentic approval → apply → verification → undo on disposable fixtures",
         "Zero observed harmful wrong-owner writes; unknown ownership refuses; security and recovery negatives pass before promotion",
         "Do not proceed with expensive production knowledge acceptance until this feasibility evidence exists"
       ],
@@ -3420,7 +3420,7 @@
       "id": "T0700wb",
       "m": "M7",
       "title": "Dual-stack end-to-end safe-write proof",
-      "obj": "Prove selection \u2192 correct owner \u2192 isolated preview \u2192 authentic approval \u2192 apply \u2192 verification \u2192 undo on disposable copies of the Next.js and Astro fixtures, with zero harmful wrong-owner writes",
+      "obj": "Prove selection → correct owner → isolated preview → authentic approval → apply → verification → undo on disposable copies of the Next.js and Astro fixtures, with zero harmful wrong-owner writes",
       "deps": [
         "T0700wa"
       ],
@@ -3599,7 +3599,7 @@
       "id": "T1008",
       "m": "M10",
       "title": "Admin invoice record list: states, filters, volume and long values (issue #10, slice 2)",
-      "obj": "Give the admin reference implementation a record list that can be in every state the playbooks describe \u2014 no-records vs no-matches, loading, error keeping the rows, URL-carried filters/sort/page, announced counts \u2014 and prove twelve records with a 47-character identifier fit 320px, at 200% text size, with distinct accessible names",
+      "obj": "Give the admin reference implementation a record list that can be in every state the playbooks describe — no-records vs no-matches, loading, error keeping the rows, URL-carried filters/sort/page, announced counts — and prove twelve records with a 47-character identifier fit 320px, at 200% text size, with distinct accessible names",
       "deps": [
         "T1007",
         "T0407",
@@ -3667,7 +3667,7 @@
       ],
       "acc": [
         "all visible CI runs enumerated with run ID/SHA/step and root-cause classification",
-        "G4/G5 fail closed on empty/absent scans, missing budgets, non-finite metrics \u2014 negative and positive tests",
+        "G4/G5 fail closed on empty/absent scans, missing budgets, non-finite metrics — negative and positive tests",
         "stylelint + Playwright chromium install verified in CI; exact HEAD SHA green on Node 22 and 24",
         "VERIFICATION/CI_ACTIONS_PRIVATE.md factual report; issue #8 updated and closed only when acceptance met"
       ],
@@ -3776,7 +3776,7 @@
     {
       "id": "T0704b",
       "m": "M7",
-      "title": "Annotation overlay UI (pi live claim \u2014 T0704 split delivery)",
+      "title": "Annotation overlay UI (pi live claim — T0704 split delivery)",
       "obj": "Overlay drawing (rect/pen/arrow) consuming the landed sus.annotation contract; serialization + undo wired to overlay",
       "deps": [
         "T0704"
@@ -5255,6 +5255,759 @@
         "packages/eval-core/tests/bestpractice.command.test.ts",
         "packages/eval-core/tests/harness.test.ts"
       ]
+    },
+    {
+      "id": "T1046",
+      "m": "M13",
+      "title": "T1003-1 (high) — route the deep-mode Lighthouse Chrome through the authorized proxy",
+      "obj": "The performance phase launched its own chrome-launcher Chrome with no --proxy-server and no navigation guard, so subresources, scripts and redirects reached unauthorized hosts from the operator's machine (reproduced three times against a local LAN listener) while every other phase went through startAuthorizedProxy; audit.json carried zero refusal records.",
+      "deps": [],
+      "files": [
+        "packages/eval-core/src/harness/scans.ts",
+        "packages/eval-core/src/audit/pipeline.ts",
+        "packages/eval-core/tests/net-guard.test.ts",
+        "docs/AUDIT_COMMAND.md"
+      ],
+      "acc": [
+        "a deep audit's Lighthouse phase reaches the network only through the authorized proxy",
+        "an unauthorized-host subresource during the Lighthouse phase is refused and the refusal is recorded",
+        "guarded phases keep their existing proxy posture (ps-level flags unchanged)",
+        "a deep audit of a page whose resources point elsewhere reports the refusal instead of clean numbers"
+      ],
+      "tests": [
+        "packages/eval-core/tests/net-guard.test.ts"
+      ],
+      "risk": "a hostile page turns a deep audit into an SSRF platform (internal-network probing, cloud metadata)",
+      "rollback": "revert the scans.ts/pipeline.ts proxy wiring; the Lighthouse phase behaves as before, unguarded",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1047",
+      "m": "M13",
+      "title": "T1003-2 (high) — a partially measured route set never reads as a clean component-states or transition-oracle check",
+      "obj": "The transition-oracle else-branch never read inputs.motion.failed and the component-states else-branch looped only over measured samples, so routes with no drivable control or a failed probe vanished from a green pass (reproduced against the built composer).",
+      "deps": [],
+      "files": [
+        "packages/eval-core/src/audit/compose.ts",
+        "packages/eval-core/tests/component-states.test.ts",
+        "packages/eval-core/tests/motion.test.ts"
+      ],
+      "acc": [
+        "a route whose states probe did not measure keeps both checks out of pass, with the per-route reason in the detail",
+        "a route in states.failed or motion.failed keeps the check not-run, never pass",
+        "an all-measured clean route set still passes",
+        "a mixed two-route group is pinned by test"
+      ],
+      "tests": [
+        "packages/eval-core/tests/component-states.test.ts",
+        "packages/eval-core/tests/motion.test.ts"
+      ],
+      "risk": "an audit verdict systematically wrong in the direction of safe on every multi-route page",
+      "rollback": "revert the else-branches; mixed runs pass again (the pre-audit behaviour)",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1048",
+      "m": "M13",
+      "title": "T1003-3 (high) — the CI host-smoke step can actually fail the build",
+      "obj": "The workflow ran `smoke-host.mjs | tee` under GitHub's default `bash -e` (no pipefail), so the smoke's exit 1 was discarded and the only CI surface exercising the audit CLI end to end could never turn red.",
+      "deps": [],
+      "files": [
+        ".github/workflows/ci.yml",
+        "packages/schemas/tests/ci-actions-pinning.test.ts"
+      ],
+      "acc": [
+        "the smoke step preserves the producer's exit code (redirect or explicit pipefail shell)",
+        "a test fails if the smoke run line pipes into another command without pipefail",
+        "the 'main is never built here' comment matches the pull_request trigger scope (T1003-31)"
+      ],
+      "tests": [
+        "packages/schemas/tests/ci-actions-pinning.test.ts"
+      ],
+      "risk": "a broken audit entry point ships green through the pipeline",
+      "rollback": "restore the pipe; CI behaves as before (smoke status silently discarded)",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1049",
+      "m": "M13",
+      "title": "T1003-4 (high) — the release handoff states the real dependency licence distribution",
+      "obj": "BUILD_COMPLETION_HANDOFF claimed all dependencies were permissively licensed (MIT/Apache/BSD/ISC family); the tree actually contains MPL-2.0 (axe-core, production), LGPL-3.0-or-later (libvips prebuilts, fixture tooling) and FSL-1.1-Apache-2.0 (sentry, dev via lighthouse), plus CC-BY-4.0/BlueOak/CC0/0BSD/PSF-2.0 rows.",
+      "deps": [],
+      "files": [
+        "docs/BUILD_COMPLETION_HANDOFF.md"
+      ],
+      "acc": [
+        "the licence row names the actual distribution and where each non-permissive licence is contained",
+        "`pnpm licenses list` output matches the row when re-run",
+        "the owner's D06 packet can weigh MPL/LGPL/FSL explicitly from this row"
+      ],
+      "tests": [
+        "docs/BUILD_COMPLETION_HANDOFF.md"
+      ],
+      "risk": "the owner's licence decision (D06) is made on a false inventory",
+      "rollback": "revert the row to the false claim (never)",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1050",
+      "m": "M13",
+      "title": "T1003-5 (high at 69c8a45) — apply path containment (fixed during the audit by T1044)",
+      "obj": "The audit found the ApplyEngine joined proposal paths onto the root with no containment of its own; before the audit closed, commit cfd3049 (T1044) landed insideRoot (realpath parent, unresolved leaf) plus the path-outside-root refusal, exactly the demanded fix.",
+      "deps": [
+        "T1044"
+      ],
+      "files": [
+        "packages/studio-bridge/src/apply.ts",
+        "packages/studio-bridge/tests/apply.test.ts"
+      ],
+      "acc": [
+        "an apply target resolving outside the root is refused as path-outside-root",
+        "the guard is asserted by the apply suite on the committed tree"
+      ],
+      "tests": [
+        "packages/studio-bridge/tests/apply.test.ts"
+      ],
+      "risk": "a write outside the tree the owner approved",
+      "rollback": "not applicable — fix already landed; this record closes the finding",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1044.md",
+        ".sus-dev/VERIFICATION/T1003.md",
+        "commit cfd3049"
+      ]
+    },
+    {
+      "id": "T1051",
+      "m": "M13",
+      "title": "T1003-6 (medium) — recovery honors the same containment, and 'missing' cannot masquerade as a hash",
+      "obj": "Transaction.apply/recover executed manifest file paths with no containment check, so a planted prepared manifest could write or delete outside the root on the next recovery; the conflict classifier compared the literal sentinel 'missing' against stored preimageSha256, so a manifest declaring 'missing' defeated the check.",
+      "deps": [],
+      "files": [
+        "packages/studio-bridge/src/transaction.ts",
+        "packages/studio-bridge/tests/transaction.test.ts"
+      ],
+      "acc": [
+        "a manifest whose paths resolve outside the root is a conflict, never executed",
+        "a stored preimageSha256 of 'missing' cannot satisfy the classifier for an existing file",
+        "a manifest that declares a file missing through an explicit flag classifies correctly",
+        "legitimate recovery (real prepared transaction, files unchanged) still rolls forward and back"
+      ],
+      "tests": [
+        "packages/studio-bridge/tests/transaction.test.ts"
+      ],
+      "risk": "any process that can write into the consumer's tree pre-arms an arbitrary write/delete",
+      "rollback": "revert the containment and sentinel change; recovery behaves as before",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1052",
+      "m": "M13",
+      "title": "T1003-7 (medium) — the report says what the network boundary refused",
+      "obj": "proxy.refused() and guard.blocked() had no production consumer and net-guard's header promise ('a stated limitation, printed in the report's limitations rather than hidden') was unimplemented: a page measured with refused subresources reported clean numbers.",
+      "deps": [],
+      "files": [
+        "packages/eval-core/src/harness/net-guard.ts",
+        "packages/eval-core/src/audit/pipeline.ts",
+        "packages/eval-core/src/audit/compose.ts",
+        "packages/eval-core/src/audit/report.ts",
+        "packages/eval-core/tests/net-guard.test.ts",
+        "packages/eval-core/tests/audit.test.ts",
+        "docs/LIMITATIONS.md"
+      ],
+      "acc": [
+        "a deep audit with an unauthorized subresource records the refused host in the report",
+        "the report states the subresource allowance as a limitation of the measurement",
+        "a run with nothing refused renders no network section"
+      ],
+      "tests": [
+        "packages/eval-core/tests/audit.test.ts",
+        "packages/eval-core/tests/net-guard.test.ts"
+      ],
+      "risk": "measurements of a half-loaded page read as measurements of the page",
+      "rollback": "revert the threading; refusals stay internal as before",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1053",
+      "m": "M13",
+      "title": "T1003-8 (medium) — a quick-mode proposal names its unmeasured dimensions instead of claiming a complete sweep",
+      "obj": "Quick mode omits browser checks from report.checks entirely, so untestedFromReport saw none missing and the proposal printed 'Every dimension in scope was measured' while a11y, responsive, motion and performance were never measured.",
+      "deps": [],
+      "files": [
+        "packages/eval-core/src/bestpractice/from-audit.ts",
+        "packages/eval-core/src/bestpractice/command.ts",
+        "packages/eval-core/tests/bestpractice.proposal.test.ts"
+      ],
+      "acc": [
+        "a quick-mode proposal lists the browser dimensions as untested with per-dimension reasons",
+        "the 'nothing to propose' markdown no longer says a11y was measured when quick mode never measured it",
+        "a deep proposal's untested list is unchanged"
+      ],
+      "tests": [
+        "packages/eval-core/tests/bestpractice.proposal.test.ts"
+      ],
+      "risk": "an approver approves against a false completeness claim",
+      "rollback": "revert untestedFromReport; quick-mode proposals claim completeness again (never)",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1054",
+      "m": "M13",
+      "title": "T1003-9 (medium) — the seo-structure check status agrees with the findings it pushed",
+      "obj": "seoCheck derived pass/fail from g3/g9 status only, while seoFindings pushed a finding for every failing sub-check, so a page whose only SEO defects were title/meta showed a green check row beside two P2 findings (T1039-class residual, reproduced against the built composer).",
+      "deps": [],
+      "files": [
+        "packages/eval-core/src/audit/compose.ts",
+        "packages/eval-core/tests/audit.test.ts"
+      ],
+      "acc": [
+        "a title-only failure makes the seo-structure check row fail, matching its findings",
+        "an all-clean page still passes",
+        "a test with a title-only failure pins the agreement"
+      ],
+      "tests": [
+        "packages/eval-core/tests/audit.test.ts"
+      ],
+      "risk": "a check table that contradicts the findings list misleads both readers and tools",
+      "rollback": "revert seoCheck; the T1039-class disagreement returns",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1055",
+      "m": "M13",
+      "title": "T1003-10 (medium) — a measured boolean keyboard finding composes into a proposal",
+      "obj": "Keyboard findings (indicatorMissing, cycle) are boolean rules carrying no observed value; itemFromFinding typed every measured finding as a fact, so composeProposal refused fact-without-observation and any scope containing one keyboard defect made every proposal impossible (exit 2, no proposal).",
+      "deps": [],
+      "files": [
+        "packages/eval-core/src/audit/compose.ts",
+        "packages/eval-core/src/bestpractice/from-audit.ts",
+        "packages/eval-core/tests/audit.test.ts",
+        "packages/eval-core/tests/bestpractice.proposal.test.ts"
+      ],
+      "acc": [
+        "a measured indicatorMissing finding composes into a proposal as a fact with a boolean observation",
+        "an unmeasured fact is still refused (the contract's real target)",
+        "a scope containing a keyboard defect produces a proposal instead of an error"
+      ],
+      "tests": [
+        "packages/eval-core/tests/bestpractice.proposal.test.ts",
+        "packages/eval-core/tests/audit.test.ts"
+      ],
+      "risk": "fail-closed to the point of unusability: the contract blocks its legitimate inputs",
+      "rollback": "revert the observation synthesis; keyboard findings refuse proposals again",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1056",
+      "m": "M13",
+      "title": "T1003-11 (medium) — removing a gate-checker assertion is detectable",
+      "obj": "check-gates.mjs had no registry of its own expected assertions and no test read its output, so a regression that deleted a negative-assertion report() line still exited 0 printing '13/13 gates implemented and verified'.",
+      "deps": [],
+      "files": [
+        "scripts/check-gates.mjs",
+        "packages/schemas/tests/check-gates-coverage.test.ts"
+      ],
+      "acc": [
+        "a test enumerates the checker's report() assertions from source and fails if any is missing from a live run's output",
+        "deleting one negative assertion line turns the test red",
+        "the checker itself stays untouched in behaviour"
+      ],
+      "tests": [
+        "packages/schemas/tests/check-gates-coverage.test.ts"
+      ],
+      "risk": "a gate's 'verified' state is asserted rather than earned, invisibly",
+      "rollback": "delete the coverage test; assertion removal becomes invisible again",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1057",
+      "m": "M13",
+      "title": "T1003-12 (medium) — the claim gate scans the release-facing documents",
+      "obj": "check-claims TARGETS listed 6 files; ROADMAP.md, docs/STUDIO.md, docs/BESTPRACTICE_EXAMPLES.md, docs/BUILD_COMPLETION_HANDOFF.md (where the false licence claim lived), skill/README.md and all 9 skill/references/*.md — the shipped product text — were outside its coverage.",
+      "deps": [],
+      "files": [
+        "scripts/check-claims.mjs",
+        "scripts/lib/claims.mjs",
+        "docs/BUILD_COMPLETION_HANDOFF.md",
+        "README.md"
+      ],
+      "acc": [
+        "TARGETS includes the release-facing set including skill/references",
+        "check-claims passes on the extended set (policy docs that quote forbidden words are exempted explicitly)",
+        "the gate still fails closed on a missing benchmark status"
+      ],
+      "tests": [
+        "scripts/check-claims.mjs"
+      ],
+      "risk": "overstatement ships unflagged in the documents a release reader trusts",
+      "rollback": "restore the 6-file TARGETS; the coverage hole returns",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1058",
+      "m": "M13",
+      "title": "T1003-13 (medium) — runBestPractice authorizes liveUrl before any browser contact",
+      "obj": "The library API navigated request.liveUrl with a plain chromium.launch() before the audit's authorization check ran; the shipped CLI refuses correctly on every flag combination (verified dynamically), but a programmatic caller got a full page load — subresources executing — 861ms before the refusal.",
+      "deps": [],
+      "files": [
+        "packages/eval-core/src/bestpractice/command.ts",
+        "packages/eval-core/src/bestpractice/proposal.ts",
+        "packages/eval-core/tests/bestpractice.command.test.ts"
+      ],
+      "acc": [
+        "a library caller passing an unauthorized liveUrl is refused before any contact",
+        "an authorized liveUrl is browsed through the guarded proxy",
+        "the CLI's mutual-exclusion and --url refusals are unchanged"
+      ],
+      "tests": [
+        "packages/eval-core/tests/bestpractice.command.test.ts"
+      ],
+      "risk": "library consumers of runBestPractice contact unauthorized hosts before refusal",
+      "rollback": "revert the pre-authorization; the latent contact-before-refusal returns",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1059",
+      "m": "M13",
+      "title": "T1003-14/T1003-17 (medium) — the audit packet describes the tree it audits",
+      "obj": "The packet's §1 task-state row said 133 of 135 (true only at the commission commit e5b6ad2, stale at 69c8a45) and §3 quoted expected finding counts that drift ±8 run-to-run on a loaded machine.",
+      "deps": [],
+      "files": [
+        "docs/AUDIT_PACKET.md"
+      ],
+      "acc": [
+        "the §1 row states counts at the audited revision or drops absolute counts for the pending-only truth",
+        "§3 marks observed finding counts as machine-dependent and keeps exit codes and item counts as the stable expectations"
+      ],
+      "tests": [
+        "docs/AUDIT_PACKET.md"
+      ],
+      "risk": "an auditor trusts a row that describes a tree that does not exist",
+      "rollback": "revert the wording; the packet goes stale with the next task again",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1060",
+      "m": "M13",
+      "title": "T1003-15 (low) — the baselines suite binds an ephemeral port",
+      "obj": "baselines.test.ts bound fixed port 4345, so any concurrent run or orphaned worker failed the whole suite with a misleading beforeAll timeout; the T0807 receipt proposed listen(0) on 2026-11-14 and it was never applied — it failed this audit's own verify run.",
+      "deps": [],
+      "files": [
+        "packages/eval-core/tests/baselines.test.ts"
+      ],
+      "acc": [
+        "the suite binds an ephemeral port and reads server.address().port",
+        "two concurrent suite runs do not collide",
+        "the suite still passes on a quiet machine"
+      ],
+      "tests": [
+        "packages/eval-core/tests/baselines.test.ts"
+      ],
+      "risk": "recurring red verifies that are not regressions",
+      "rollback": "restore the fixed port; concurrent runs collide again",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1061",
+      "m": "M13",
+      "title": "T1003-16 (low) — pnpm verify builds the workspace once and gives the deep bestpractice test headroom",
+      "obj": "verify built the workspace twice (ensure:built/typecheck then pnpm build), a next build collision cost one audit run, and the deep bestpractice command test carried a 420s timeout on a ~240s solo run, failing under load.",
+      "deps": [],
+      "files": [
+        "package.json",
+        "packages/eval-core/tests/bestpractice.command.test.ts"
+      ],
+      "acc": [
+        "verify does not build the same workspace twice",
+        "the deep bestpractice test's timeout has headroom for a loaded machine",
+        "verify on a quiet machine stays green end to end"
+      ],
+      "tests": [
+        "packages/eval-core/tests/bestpractice.command.test.ts"
+      ],
+      "risk": "agents on a shared machine see red verifies that are not regressions",
+      "rollback": "restore the double build and the tight timeout",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1062",
+      "m": "M13",
+      "title": "T1003-18 (low, deferred) — bridge sessions expire and prune",
+      "obj": "Bridge sessions never expired and the sessions map never pruned; the token lifetime is the process lifetime, documented honestly in bridge.mjs. The reviewer noted this is acceptable until a long-lived trusted surface exists — deferred rather than risk breaking the studio flow.",
+      "deps": [],
+      "files": [
+        "packages/studio-bridge/src/server.ts"
+      ],
+      "acc": [
+        "deferred: a session TTL or pruning loop lands when a long-lived surface exists",
+        "the deferral is stated in the T1003 receipt response for the owner to accept"
+      ],
+      "tests": [],
+      "risk": "an unbounded sessions map in a long-lived process",
+      "rollback": "not applicable — no change made",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1063",
+      "m": "M13",
+      "title": "T1003-19 (low) — payload caps count bytes, not UTF-16 code units",
+      "obj": "The bridge's payload caps compared body.length (UTF-16 code units), so a multi-byte body up to ~1MB of bytes was accepted against the documented 64KB cap.",
+      "deps": [],
+      "files": [
+        "packages/studio-bridge/src/server.ts",
+        "packages/studio-bridge/tests/server.test.ts"
+      ],
+      "acc": [
+        "a multi-byte body exceeding the byte cap is rejected with 413",
+        "a body under the byte cap in multi-byte characters is still accepted",
+        "the drain cap uses the same byte accounting"
+      ],
+      "tests": [
+        "packages/studio-bridge/tests/server.test.ts"
+      ],
+      "risk": "the documented 64KB cap is not the real cap",
+      "rollback": "restore the code-unit comparison",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1064",
+      "m": "M13",
+      "title": "T1003-20 (low) — the apply engine cross-checks capability and grant proposal digests",
+      "obj": "The engine verified the grant against the proposal and the capability binding against its issue, but never compared request.binding.proposalSha256 to request.grant.proposalSha256, so a capability for proposal A with a grant for proposal B passed both checks.",
+      "deps": [],
+      "files": [
+        "packages/studio-bridge/src/apply.ts",
+        "packages/studio-bridge/tests/apply.test.ts"
+      ],
+      "acc": [
+        "a capability bound to proposal A with a grant for proposal B is refused as grant-mismatch",
+        "matching digests still apply"
+      ],
+      "tests": [
+        "packages/studio-bridge/tests/apply.test.ts"
+      ],
+      "risk": "defense in depth: the content binding rests on one trusted surface",
+      "rollback": "remove the refusal; the cross-check disappears",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1065",
+      "m": "M13",
+      "title": "T1003-21 (low) — operation receipt paths are built from validated ids",
+      "obj": "OperationReceipts joined caller-supplied operationId into .sus/ops paths without validation, so save/load/undo accepted '../../x' and placed a receipt outside the directory.",
+      "deps": [],
+      "files": [
+        "packages/studio-bridge/src/apply.ts",
+        "packages/studio-bridge/tests/apply.test.ts"
+      ],
+      "acc": [
+        "an operationId containing '/' or '..' is refused at save/load/undo",
+        "ids matching ^[A-Za-z0-9][A-Za-z0-9._-]*$ behave as before"
+      ],
+      "tests": [
+        "packages/studio-bridge/tests/apply.test.ts"
+      ],
+      "risk": "a trusted-caller input can place receipts outside .sus/ops",
+      "rollback": "remove the validation",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1066",
+      "m": "M13",
+      "title": "T1003-22 (low) — a truncated page is measured as truncated",
+      "obj": "fetchHtml returned {html: sliced, reason: 'truncated…'} for >4MB pages and the pipeline dropped the reason whenever html was non-null, so the prefix was measured as if whole with no disclosure.",
+      "deps": [],
+      "files": [
+        "packages/eval-core/src/audit/pipeline.ts",
+        "packages/eval-core/src/audit/compose.ts",
+        "packages/eval-core/tests/audit.test.ts"
+      ],
+      "acc": [
+        "a >4MB page's seo detail names the truncation (or the check reads not-run with the reason)",
+        "pages under the cap are unchanged"
+      ],
+      "tests": [
+        "packages/eval-core/tests/audit.test.ts"
+      ],
+      "risk": "defects below the cutoff are missed and reported clean",
+      "rollback": "revert; truncation stays silent",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1067",
+      "m": "M13",
+      "title": "T1003-23 (low) — capture and reflow composers refuse pass on empty samples",
+      "obj": "The capture and reflow composer branches passed on reasonFor === null without a samples-length guard their siblings (keyboard, axe, lighthouse) have; reachable only by direct callers of the pure composer today.",
+      "deps": [],
+      "files": [
+        "packages/eval-core/src/audit/compose.ts",
+        "packages/eval-core/tests/audit.test.ts"
+      ],
+      "acc": [
+        "an empty capture or reflow group reads not-run with the zero-measured detail, never pass",
+        "the CLI path is unchanged (resolveTarget already guarantees a route)"
+      ],
+      "tests": [
+        "packages/eval-core/tests/audit.test.ts"
+      ],
+      "risk": "a future caller of the pure composer can produce a vacuous pass",
+      "rollback": "revert the guards",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1068",
+      "m": "M13",
+      "title": "T1003-24 (low) — G9 treats an unrecorded probe as unmeasured, not clean",
+      "obj": "g9-semantics defaulted absent clickHandlers/focusStyles records to [] and passed, while absent headings/landmarks failed closed: 'we did not look' read as pass for two of G9's four defect classes if a future harness omitted the fields.",
+      "deps": [],
+      "files": [
+        "scripts/lib/gates/g9-semantics.mjs",
+        "scripts/check-gates.mjs",
+        "docs/GATE_REGISTRY.json"
+      ],
+      "acc": [
+        "a page object without the probe fields fails G9 (or reads not-run), never pass",
+        "committed fixtures carrying the fields still pass",
+        "the gate's bad fixture pins the new behaviour"
+      ],
+      "tests": [
+        "scripts/check-gates.mjs"
+      ],
+      "risk": "a harness change silently vacates two G9 defect classes",
+      "rollback": "restore the ?? [] defaults",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1069",
+      "m": "M13",
+      "title": "T1003-25 (low) — the gate verdict does not count G12 as verified in-process",
+      "obj": "check-gates.mjs counted every implemented gate as verified by its own run, but G12 has no in-process block; its negatives live in packages/tokens/tests/pipeline.test.ts, which CI runs.",
+      "deps": [],
+      "files": [
+        "scripts/check-gates.mjs"
+      ],
+      "acc": [
+        "the verdict names G12 as verified by the test suite, not by this script's tally",
+        "the tally stays 13/13 with the wording corrected"
+      ],
+      "tests": [
+        "scripts/check-gates.mjs"
+      ],
+      "risk": "a verdict line overstates what it exercised",
+      "rollback": "restore the old wording",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1070",
+      "m": "M13",
+      "title": "T1003-26 (low) — a route the motion probe never drove reads as incomplete, not as a parity failure",
+      "obj": "The transition-oracle pass branch required failed.length === 0 && motionMissing.length === 0, so one measured route plus one route with no disclosure rendered fail with the not-run reason buried in detail — defects inflated, exit 1 on a measurement that never happened.",
+      "deps": [],
+      "files": [
+        "packages/eval-core/src/audit/compose.ts",
+        "packages/eval-core/tests/motion.test.ts"
+      ],
+      "acc": [
+        "a measured route plus a never-driven route reads not-run with the per-route reason when no verdict failed",
+        "a real parity failure still fails"
+      ],
+      "tests": [
+        "packages/eval-core/tests/motion.test.ts"
+      ],
+      "risk": "unmeasured routes inflate defect counts and exit codes",
+      "rollback": "restore the fail branch",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1071",
+      "m": "M13",
+      "title": "T1003-27 (low) — claim-gate line numbers survive fenced code blocks",
+      "obj": "stripCode replaced each fenced block with a single space, collapsing its lines, so every violation after a fence reported a line number shifted down by the fence's length (executed: physical line 6 reported as 4).",
+      "deps": [],
+      "files": [
+        "scripts/lib/claims.mjs",
+        "scripts/check-claims.mjs"
+      ],
+      "acc": [
+        "a violation after a fenced block reports its physical line",
+        "fenced content is still stripped from matching"
+      ],
+      "tests": [
+        "scripts/check-claims.mjs"
+      ],
+      "risk": "an operator chases the wrong line when the gate fires",
+      "rollback": "restore the collapsing strip",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1072",
+      "m": "M13",
+      "title": "T1003-28 (low) — one word for the build-gate state",
+      "obj": "README said 'The build gate is open (owner decision D28)' while ROADMAP and the decision log said 'closed' for the same D28 state.",
+      "deps": [],
+      "files": [
+        "README.md",
+        "ROADMAP.md"
+      ],
+      "acc": [
+        "README and the generated roadmap use the same wording for the same D28 state",
+        "the roadmap generator and README agree when regenerated"
+      ],
+      "tests": [
+        "scripts/check-roadmap.mjs"
+      ],
+      "risk": "a fresh reader or agent takes either file at its word",
+      "rollback": "revert the wording alignment",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1073",
+      "m": "M13",
+      "title": "T1003-29 (low) — README cites the receipt the generated matrix names",
+      "obj": "README called superseded receipt 51ad458af6e0 'fresh'; the authoritative SUPPORT_MATRIX correctly cites 293168993dee for the current artifact.",
+      "deps": [],
+      "files": [
+        "README.md"
+      ],
+      "acc": [
+        "README's FreePi evidence pointer matches docs/SUPPORT_MATRIX.md or omits the hash"
+      ],
+      "tests": [
+        "scripts/generate-support.mjs"
+      ],
+      "risk": "a reader lands on a stale receipt for a different artifact",
+      "rollback": "revert the pointer",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1074",
+      "m": "M13",
+      "title": "T1003-30 (low) — the push gate attributes its verification to the tree it actually verified",
+      "obj": "gate-push warned on a dirty tree, verified the dirty tree, then printed 'verified tree: <HEAD>'; the baseline restore also used checkout -- which discards intentional uncommitted baseline edits.",
+      "deps": [],
+      "files": [
+        "scripts/gate-push.mjs"
+      ],
+      "acc": [
+        "the verdict line names the actually-verified tree state (dirty trees are named as such)",
+        "the baseline restore no longer discards non-baseline-local edits (stash/restore instead of checkout --)"
+      ],
+      "tests": [
+        "scripts/gate-push.mjs"
+      ],
+      "risk": "a receipt claiming the pushed tree passed when a different tree did",
+      "rollback": "revert the attribution and restore changes",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1075",
+      "m": "M13",
+      "title": "T1003-31 (low) — the CI comment matches the pull_request trigger scope",
+      "obj": "ci.yml commented 'main is never built here' while the unfiltered pull_request trigger builds main+PR merge commits.",
+      "deps": [],
+      "files": [
+        ".github/workflows/ci.yml"
+      ],
+      "acc": [
+        "the comment scopes its claim to push (or the trigger ignores main)",
+        "a workflow-consistency test passes"
+      ],
+      "tests": [
+        "packages/schemas/tests/ci-actions-pinning.test.ts"
+      ],
+      "risk": "a reader trusts a comment the trigger contradicts",
+      "rollback": "revert the comment",
+      "status": "pending",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": []
     }
   ]
 }

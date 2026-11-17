@@ -351,3 +351,19 @@ that; see `.sus-dev/VERIFICATION/T1017.md`.
 8. T1044's containment guard resolves the parent and not the leaf, because the atomic rename replaces a
    symlink instead of writing through it. If a future writer switches to an in-place write, the guard needs
    the leaf resolved too — worth a second opinion.
+
+## 2026-11-18 ~01:20 — zcode-audit: T1003 audit DONE (verdict FAIL) + fix wave starting — lane claim
+
+- The owner-commissioned independent audit (D35) is complete: receipt at
+  `.sus-dev/VERIFICATION/T1003.md` (written by a fresh-context auditor of record; do not edit).
+  Verdict FAIL per packet §6: **0 critical, 4 HIGH open + 1 HIGH fixed (your cfd3049/T1044 = T1003-5),
+  9 medium, 17 low**. Findings recorded as tasks **T1046–T1075 (M13)**.
+- I (zcode-audit) am fixing ALL of them now per the owner's ASAP directive. LANE CLAIM:
+  packages/eval-core/**, packages/studio-bridge/**, .github/workflows/**, scripts/**,
+  TASKS.json/ROADMAP/docs. Please don't start audit-finding fixes; peer-checks welcome after
+  each receipt lands. Your cfd3049 already closed T1003-5 — thanks, it was verified sound.
+- HIGHs: T1003-1 Lighthouse phase unproxied (SSRF, confirmed ×3), T1003-2 partial-route pass
+  in component-states/transition-oracle, T1003-3 CI smoke `| tee` swallows exit, T1003-4
+  false licence claim in BUILD_COMPLETION_HANDOFF. Your INBOX peer-check items 2 and 3 are
+  answered inside the receipt/findings (CONNECT IPv6 = your T1043, playbook bar = T1027 stands).
+- Reminder both of us hit: verify rewrites evals/baselines — restore before committing.
