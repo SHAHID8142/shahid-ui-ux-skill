@@ -150,10 +150,21 @@ A finding is proposed only when the audit's own `location` descriptor **exactly 
 target. Descriptors are flat strings (`a#skip`, `td.cell`), so containment cannot be inferred without
 a DOM, and inferring it would attribute another element's defect to this selection.
 
-The consequence is stated rather than hidden: axe findings carry a **rule id** as their location
-(`scrollable-region-focusable`), so they are counted in the report as *attributed elsewhere* and not
-proposed for an element scope. Scoping axe (`axe.run(element)`) is the next real improvement, and it
-is named in T1024's record rather than quietly assumed here.
+The consequence is stated rather than hidden: the **page-wide** axe findings carry a rule id as their
+location (`scrollable-region-focusable`), so those are counted as *attributed elsewhere* and not
+proposed for an element scope.
+
+**Element scopes get their own axe scan (T1030).** When the scope resolved to a selected element and
+the mode is `deep`, the audit also runs axe with that element passed to axe's `include`, i.e. axe is
+told to analyse only that subtree. A violation found this way names the element as its location, so it
+is attributable *by construction* rather than by string matching, and the proposal can list it (with
+`observed: n nodes`, `expected: 0`). Two consequences are stated on purpose:
+
+- the **page-wide** scan is unchanged and still counts everything; the scoped scan is an addition, not
+  a replacement, so the G4 verdict keeps describing the whole page;
+- scoped scans exist only for `selector` scopes in `deep` mode. `component-path` scopes and `quick`
+  mode still produce no element scoped axe items, and a selector axe cannot include is recorded as a
+  scoped-scan failure instead of being silently treated as clean.
 
 ## 7. The five measured example classes (T1024, done)
 

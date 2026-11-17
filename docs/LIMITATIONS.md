@@ -91,11 +91,13 @@ and can lag — when in doubt the generated page wins.
 
 - Not published. The repository is public (D34); the **product** is not released, and
   post-build audit, licensing and publication remain owner decisions.
-- The scoped best-practice workflow (issue #15, T1021–T1024) attributes a finding to a selection
-  only when the audit's own location or evidence names that element, or one of its bounded
-  descendants. Findings the audit reports at rule level (axe) are therefore counted as attributed
-  elsewhere and never proposed for an element scope, and a `component-path` scope resolves but
-  proposes nothing until DOM descriptors can be mapped to source files. A screenshot region stays
+- The scoped best-practice workflow (issue #15, T1021–T1024, T1030) attributes a finding to a
+  selection when the audit's own location or evidence names that element, or one of its bounded
+  descendants. **Page-wide** axe findings carry a rule id, so those are counted as attributed
+  elsewhere and never proposed for an element scope; since T1030 a `selector` scope in `deep` mode
+  also gets an axe scan confined to that element (`include`), and those findings are attributable by
+  construction. A `component-path` scope still resolves but proposes nothing until DOM descriptors
+  can be mapped to source files, `quick` mode has no scoped axe, and a screenshot region stays
   `advisory`. These are stated limits, not fallbacks: guessing containment from selector strings
   would attribute one element's defect to another.
 - The five measured best-practice examples apply their fixes to a temporary copy of the fixture and

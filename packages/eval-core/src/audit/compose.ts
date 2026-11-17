@@ -95,6 +95,8 @@ export interface AuditInputs {
   readonly keyboard: LiveGroup<KeyboardScanResult>;
   readonly axe: LiveGroup<AxeScanResult>;
   readonly lighthouse: LiveGroup<LighthouseSummary>;
+  /** axe runs confined to selected subtrees (issue #21 R2); empty when no scope was requested. */
+  readonly scopedAxe?: LiveGroup<AxeScanResult>;
   /**
    * Recorded artefacts keyed by the route they belong to. Only the pipeline can
    * fill this: it is the layer that writes files and can therefore hash them.
@@ -398,6 +400,55 @@ function axeFindings(samples: readonly LiveSample<AxeScanResult>[]): AuditFindin
             'Fix the underlying markup, not the axe rule: ' +
             violation.help +
             ' Re-run the scan to confirm the violation count reaches zero.',
+        }),
+      );
+    }
+  }
+  return found;
+}
+
+/**
+ * Findings from the scope-confined axe runs (issue #21 R2).
+ *
+ * These are the same violations the page-wide scan may also report, but seen from inside one
+ * element: axe was told to include only that subtree, so `location` can honestly name the selection
+ * instead of the rule id. They are kept separate from the page-wide findings so the G4 verdict keeps
+ * describing the whole page.
+ */
+function scopedAxeFindings(samples: readonly LiveSample<AxeScanResult>[]): AuditFinding[] {
+  const found: AuditFinding[] = [];
+  for (const sample of samples) {
+    const scope = sample.value.scope;
+    if (scope === undefined) continue;
+    for (const violation of sample.value.violations) {
+      const impact = violation.impact;
+      if (impact !== 'serious' && impact !== 'critical') continue;
+      found.push(
+        finding({
+          check: 'axe-a11y',
+          severity: 'P0',
+          effort: 'structural',
+          title: violation.id + ' (' + impact + ') within ' + scope,
+          detail:
+            violation.help +
+            ' Affects ' +
+            violation.nodes +
+            ' node(s) inside the selected element. The scan was confined to that element, so this ' +
+            'finding belongs to the selection rather than somewhere on the page.',
+          route: sample.route,
+          viewport: null,
+          evidence: [violation.id],
+          evaluator: 'scanA11y(include: scope)',
+          expected: { value: 0, unit: 'serious/critical violations in scope' },
+          observed: { value: violation.nodes, unit: 'affected nodes in scope' },
+          location: scope,
+          confidence: 'measured',
+          remediation:
+            'Fix the markup inside ' +
+            scope +
+            ': ' +
+            violation.help +
+            ' Re-run the scoped scan to confirm the count reaches zero.',
         }),
       );
     }
@@ -806,6 +857,8 @@ export function composeReport(inputs: AuditInputs): AuditReport {
   const axeSamples = inputs.axe.samples.map((s) => s.value);
   const axeProblems = axeFindings(inputs.axe.samples);
   findings.push(...axeProblems);
+  const scopedProblems = scopedAxeFindings(inputs.scopedAxe?.samples ?? []);
+  findings.push(...scopedProblems);
   if (axeReason === null && axeSamples.length > 0) {
     const verdict = evaluateG4(axeSamples);
     checks.push(

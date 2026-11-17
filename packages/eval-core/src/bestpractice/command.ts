@@ -12,7 +12,7 @@
  *   2 usage, target or scope error — no proposal written
  *   3 proposal written but nothing in scope was measured (every item is a judgment)
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { isAbsolute, join, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
@@ -110,11 +110,17 @@ async function openScopePage(
   close: () => Promise<void>;
 } | null> {
   if (request.scope.kind !== 'selector') return null;
+  // A directory is resolved through its index.html; a single .html file is itself the page. Both
+  // are file:// so resolving a selector never needs the network.
   const url =
     request.liveUrl ??
-    (targetIsDirectory && existsSync(join(request.target, 'index.html'))
-      ? pathToFileURL(join(request.target, 'index.html')).href
-      : null);
+    (targetIsDirectory
+      ? existsSync(join(request.target, 'index.html'))
+        ? pathToFileURL(join(request.target, 'index.html')).href
+        : null
+      : /[^/]\.html?$/i.test(request.target)
+        ? pathToFileURL(request.target).href
+        : null);
   if (url === null) return null;
   const { chromium } = await import('playwright');
   const browser = await chromium.launch();
@@ -203,20 +209,15 @@ export async function runBestPractice(request: BestPracticeRequest): Promise<Bes
     }
   }
 
-  // 1. The audit: the same engine /sus audit uses. Artifacts go in a subdirectory so the
-  //    proposal and its evidence cannot overwrite each other.
-  const audit = await runAudit({
-    target: request.target,
-    liveUrl: request.liveUrl,
-    mode: request.mode,
-    routes: null,
-    outDir: join(request.outDir, 'audit'),
-    authorizedHosts: [...(request.authorizedHosts ?? [])],
-    fixPlan: false,
-  });
-
-  // 2. The scope: resolved or refused, never guessed.
-  const targetIsDirectory = !request.target.includes('.') || existsSync(request.target);
+  // 1. The scope: resolved or refused, never guessed. It is resolved first because a resolved
+  //    selector lets the audit confine axe to that element (issue #21 R2), and a scope that cannot
+  //    be resolved must not spend a deep audit.
+  // 1. scope
+  // `includes('.')` guessed wrong for a path like `fixtures/site/index.html` (it is a file, not a
+  // directory) and made a single-page target resolve no selector at all. Ask the filesystem.
+  const targetIsDirectory = existsSync(resolve(request.target))
+    ? statSync(resolve(request.target)).isDirectory()
+    : false;
   let scope: ScopeResolution;
   if (request.scope.kind === 'selector') {
     let opened: Awaited<ReturnType<typeof openScopePage>> = null;
@@ -241,6 +242,25 @@ export async function runBestPractice(request: BestPracticeRequest): Promise<Bes
   } else {
     scope = await resolveScope(null, request.scope, { readFile: fileReader(request.target) });
   }
+
+  // 2. The audit: the same engine /sus audit uses. Artifacts go in a subdirectory so the proposal
+  //    and its evidence cannot overwrite each other. When the scope resolved to one selected
+  //    element, axe also scans inside it, which is what makes an a11y finding attributable to the
+  //    selection instead of to the page.
+  const scopeSelectors =
+    request.mode === 'deep' && scope.outcome === 'resolved'
+      ? scope.targets.map((target) => ({ selector: target.selector, label: target.selector }))
+      : [];
+  const audit = await runAudit({
+    target: request.target,
+    liveUrl: request.liveUrl,
+    mode: request.mode,
+    routes: null,
+    outDir: join(request.outDir, 'audit'),
+    authorizedHosts: [...(request.authorizedHosts ?? [])],
+    fixPlan: false,
+    scopeSelectors,
+  });
 
   mkdirSync(request.outDir, { recursive: true });
   if (scope.outcome !== 'resolved' || scope.focus === null) {

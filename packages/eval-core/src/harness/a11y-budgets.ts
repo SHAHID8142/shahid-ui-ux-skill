@@ -12,6 +12,11 @@ import { join } from 'node:path';
 
 export interface AxeScanResult {
   url: string;
+  /**
+   * Set when this scan covered only a selected subtree (issue #21 R2). Absent for the page-wide
+   * scan, so a consumer can tell "the whole page" from "inside this element" without guessing.
+   */
+  scope?: string;
   /** axe result object as produced by @axe-core/playwright. */
   violations: Array<{
     id: string;

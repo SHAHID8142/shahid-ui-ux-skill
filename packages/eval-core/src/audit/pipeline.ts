@@ -60,6 +60,20 @@ export interface AuditOptions {
   readonly authorizedHosts?: readonly string[];
   /** Write a remediation plan proposal next to the report (never applied). */
   readonly fixPlan?: boolean;
+  /**
+   * Element descriptors to scan with axe *inside* their own subtree (issue #21 R2 / #15).
+   * Each selector is passed to axe's `include`, so a violation found this way belongs to that
+   * element by construction; the page-wide scan is unchanged and still counts everything.
+   */
+  readonly scopeSelectors?: readonly ScopeSelector[];
+}
+
+/** A scope for the element-confined axe scan: what axe includes, and what the finding names. */
+export interface ScopeSelector {
+  /** CSS selector handed to axe's `include`; it must be a valid selector. */
+  readonly selector: string;
+  /** Element descriptor the finding is attributed to (the resolved target's own name). */
+  readonly label: string;
 }
 
 export interface AuditRun {
@@ -277,10 +291,12 @@ async function collectScans(
   origin: string,
   routes: readonly string[],
   authorizedHosts: readonly string[],
+  scopeSelectors: readonly ScopeSelector[],
 ): Promise<{
   axe: LiveGroup<AxeScanResult>;
   keyboard: LiveGroup<KeyboardScanResult>;
   lighthouse: LiveGroup<LighthouseSummary>;
+  scopedAxe: LiveGroup<AxeScanResult>;
   browser: string | null;
 }> {
   const axe: { route: string; value: AxeScanResult }[] = [];
@@ -289,6 +305,8 @@ async function collectScans(
   const axeFailed: { route: string; reason: string }[] = [];
   const keyboardFailed: { route: string; reason: string }[] = [];
   const lhFailed: { route: string; reason: string }[] = [];
+  const scopedAxe: { route: string; value: AxeScanResult }[] = [];
+  const scopedAxeFailed: { route: string; reason: string }[] = [];
   let browser: string | null = null;
   try {
     const guarded = await launchGuardedBrowser(authorizedHosts);
@@ -304,6 +322,22 @@ async function collectScans(
           axeGuard.assertOnAuthorizedPage(page);
         } catch (error) {
           axeFailed.push({ route, reason: describeError(error) });
+        }
+        // Scoped scans reuse the same loaded page. axe's `include` confines the analysis to the
+        // element's subtree, which is what makes a scoped finding attributable instead of "somewhere
+        // on the page" (issue #21 R2).
+        for (const scope of scopeSelectors) {
+          try {
+            scopedAxe.push({
+              route,
+              value: await scanA11y(page, routeUrl(origin, route), {
+                include: [scope.selector],
+                scope: scope.label,
+              }),
+            });
+          } catch (error) {
+            scopedAxeFailed.push({ route, reason: scope.selector + ': ' + describeError(error) });
+          }
         }
       }
       // Keyboard traversal gets its own page at the desktop anchor: Tab order is a
@@ -350,6 +384,11 @@ async function collectScans(
     axe: { samples: axe, failed: axeFailed, skipped: null },
     keyboard: { samples: keyboard, failed: keyboardFailed, skipped: null },
     lighthouse: { samples: lighthouse, failed: lhFailed, skipped: null },
+    // An empty selector list means "no scoped scan was asked for", not "the scan was skipped".
+    scopedAxe:
+      scopeSelectors.length === 0
+        ? { samples: [], failed: [], skipped: 'no scopes requested' }
+        : { samples: scopedAxe, failed: scopedAxeFailed, skipped: null },
     browser,
   };
 }
@@ -468,11 +507,12 @@ interface MeasureRequest {
   readonly site: LocalSite | null;
   readonly outDir: string;
   readonly authorizedHosts: readonly string[];
+  readonly scopeSelectors: readonly ScopeSelector[];
 }
 
 /** Collect every observation the composer needs; performs no writing of its own. */
 async function measure(request: MeasureRequest): Promise<AuditInputs> {
-  const { mode, origin, outDir, authorizedHosts } = request;
+  const { mode, origin, outDir, authorizedHosts, scopeSelectors } = request;
   const routes = request.target.routes;
 
   const html: RouteHtml[] = [];
@@ -490,6 +530,7 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
   let axe: LiveGroup<AxeScanResult>;
   let keyboard: LiveGroup<KeyboardScanResult>;
   let lighthouse: LiveGroup<LighthouseSummary>;
+  let scopedAxe: LiveGroup<AxeScanResult>;
   let browser: string | null = null;
   if (mode === 'quick') {
     const reason =
@@ -499,6 +540,7 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
     axe = emptyGroup<AxeScanResult>(reason);
     keyboard = emptyGroup<KeyboardScanResult>(reason);
     lighthouse = emptyGroup<LighthouseSummary>(reason);
+    scopedAxe = emptyGroup<AxeScanResult>(reason);
   } else {
     capture = await collectCapture(
       origin,
@@ -507,10 +549,11 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
       authorizedHosts,
     );
     reflow = await collectReflow(origin, routes, authorizedHosts);
-    const scans = await collectScans(origin, routes, authorizedHosts);
+    const scans = await collectScans(origin, routes, authorizedHosts, scopeSelectors);
     axe = scans.axe;
     keyboard = scans.keyboard;
     lighthouse = scans.lighthouse;
+    scopedAxe = scans.scopedAxe;
     browser = scans.browser;
   }
 
@@ -531,6 +574,7 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
     axe,
     keyboard,
     lighthouse,
+    scopedAxe,
   };
 }
 
@@ -598,6 +642,7 @@ export async function runAudit(options: AuditOptions): Promise<AuditRun> {
       site: resolved.site,
       outDir,
       authorizedHosts: options.authorizedHosts ?? [],
+      scopeSelectors: options.scopeSelectors ?? [],
     });
     const artifacts = artifactsFor(measured, outDir);
     const inputs: AuditInputs = artifacts.size === 0 ? measured : { ...measured, artifacts };

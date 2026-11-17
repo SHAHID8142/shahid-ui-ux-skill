@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scoped axe fixture</title>
+  </head>
+  <body>
+    <main>
+      <h1>Newsletter</h1>
+      <!-- Deliberate defect INSIDE the scope: an input with no accessible name. -->
+      <form id="signup" action="/subscribe" method="post">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" />
+        <input name="company" type="text" />
+        <button type="submit">Subscribe</button>
+      </form>
+      <!-- Deliberate defect OUTSIDE the scope: an image with no alt text. -->
+      <figure id="outside">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />
+        <figcaption>Decorative mark</figcaption>
+      </figure>
+    </main>
+  </body>
+</html>

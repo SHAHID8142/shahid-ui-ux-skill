@@ -8,12 +8,22 @@ import { chromium } from 'playwright';
 import { AxeBuilder } from '@axe-core/playwright';
 import type { AxeScanResult, LighthouseSummary } from './a11y-budgets.js';
 
-export async function scanA11y(page: Page, url: string): Promise<AxeScanResult> {
+export async function scanA11y(
+  page: Page,
+  url: string,
+  /**
+   * Limit the scan to these subtrees (axe `include`). Used by the scoped best-practice path
+   * (issue #21 R2): a violation reported this way is inside the selection by construction.
+   */
+  options: { include?: readonly string[]; scope?: string } = {},
+): Promise<AxeScanResult> {
   await page.goto(url, { waitUntil: 'networkidle' });
-  const builder = new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']);
+  let builder = new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']);
+  for (const selector of options.include ?? []) builder = builder.include(selector);
   const results = await builder.analyze();
   return {
     url,
+    ...(options.scope === undefined ? {} : { scope: options.scope }),
     passes: results.passes.length,
     violations: results.violations.map((v) => ({
       id: v.id,

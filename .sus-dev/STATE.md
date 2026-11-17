@@ -11,7 +11,7 @@ BUILD_COMPLETE_PUSHED=true at release revision 2f344df — pnpm regression 3 sta
 679 tests). Architecture: ADR-001/002/004/005/006 adopted, ADR-003 as amended (D29).
 Repository is PUBLIC (D34); the product is unpublished.
 
-Canonical task statuses: TASKS.json (121 of 123 done; owner-only T1003 independent audit and
+Canonical task statuses: TASKS.json (122 of 124 done; owner-only T1003 independent audit and
 T1005 release approval/publish remain, both owner-only, and the M12 hardening queue T1026–T1029
 from issue triage is open). Every D32 owner-issue item from
 triaging issues #13/#14 is done and receipted. Issue #15 (`/sus-bestpractice`) is triaged into
@@ -25,7 +25,9 @@ issue #18), T1026 (live-document drift now fails the continuation gate, issue #1
 hosts as untested rows, first-run quickstart, issue #16) and T1029 (review-PR inventory, protection
 proposal, licence packet; issue #19) are **done**. No host journey has been performed on any host —
 that half of #16 stays not-run — and branch protection, licence choice, PR closure and publication
-remain owner actions.
+remain owner actions. T1030 (issue #21 R2) closed the "axe cannot be scoped" limit: a selector scope in
+`deep` mode is scanned with axe confined to that element, so an a11y violation is attributable to the
+selection by construction; the page-wide scan and G4 verdict are unchanged.
 T0706 preview, T0806 security/G13, T0707 apply + rollback, T0700w CLOSED — dual-stack
 feasibility GO on both Next.js and Astro. zcode stale. Concurrency: 2 workers (D33) — claim
 via lease before editing.

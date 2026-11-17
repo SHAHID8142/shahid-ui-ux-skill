@@ -2659,7 +2659,8 @@
         "T1026",
         "T1027",
         "T1028",
-        "T1029"
+        "T1029",
+        "T1030"
       ],
       "files": [],
       "acc": [
@@ -4673,6 +4674,44 @@
         "docs/GOVERNANCE.md",
         "docs/RELEASE_REVIEW_INDEX.md",
         "docs/LICENSE_DECISION_PACKET.md"
+      ]
+    },
+    {
+      "id": "T1030",
+      "m": "M12",
+      "title": "Scope-confined axe: an a11y finding can belong to the selected element (issue #21 R2 / #15)",
+      "obj": "Issue #21 R2: every axe finding carried a rule id as its location, so a scoped proposal could not attribute an accessibility violation to the user's selection without guessing containment from strings. Run axe confined to the resolved element and make the finding name it, without changing the page-wide scan or the G4 verdict.",
+      "deps": [
+        "T1029"
+      ],
+      "files": [
+        "packages/eval-core/src/harness/",
+        "packages/eval-core/src/audit/",
+        "packages/eval-core/src/bestpractice/",
+        "packages/eval-core/tests/",
+        "fixtures/bestpractice/",
+        "docs/"
+      ],
+      "acc": [
+        "a selector scope in deep mode gets an axe scan confined to that element",
+        "scoped findings name the element as their location and carry expected/observed",
+        "the page-wide scan and the G4 verdict are unchanged",
+        "an out-of-scope violation is never attributed to the scope",
+        "a selector axe cannot include is recorded as a failure, not as clean",
+        "a single-file target resolves a selector (regression fixed)"
+      ],
+      "tests": [
+        "packages/eval-core/tests/bestpractice.scoped-axe.test.ts"
+      ],
+      "risk": "claiming an element is a11y-clean because a confined scan found nothing, while axe include silently failed",
+      "rollback": "drop the scoped scan; the page-wide findings and their 'attributed elsewhere' label remain",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1030.md",
+        "packages/eval-core/tests/bestpractice.scoped-axe.test.ts",
+        "fixtures/bestpractice/scoped-axe/index.html"
       ]
     }
   ]
