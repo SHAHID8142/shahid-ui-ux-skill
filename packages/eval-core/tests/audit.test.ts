@@ -40,6 +40,8 @@ import {
 } from '../src/audit/compose.js';
 import type { AxeScanResult } from '../src/harness/a11y-budgets.js';
 import type { CaptureResult } from '../src/harness/capture.js';
+import type { MotionProbeResult } from '../src/harness/motion.js';
+import type { StatesProbeResult } from '../src/harness/states.js';
 import { runAudit } from '../src/audit/pipeline.js';
 
 const WORK = mkdtempSync(join(tmpdir(), 'sus-audit-test-'));
@@ -497,6 +499,178 @@ describe('audit evidence contract (T1013)', () => {
     const check = report.checks.find((c) => c.id === 'keyboard-flow');
     expect(check?.status).toBe('not-run');
     expect(check?.reason).toContain('no browser');
+  });
+
+  // T1047 (audit finding T1003-2): a route the probe never measured must keep a check out of
+  // pass. The all-unmeasured and all-measured paths were pinned; the mixed run — one route clean,
+  // one route without a control, one probe error — is exactly the case that used to go green.
+
+  /** One measured state sample for a control that shows all three driven differences. */
+  const measuredStates = (route: string): LiveGroup<StatesProbeResult> => ({
+    samples: [
+      {
+        route,
+        value: {
+          url: 'http://127.0.0.1:1' + route,
+          status: 'measured',
+          reason: null,
+          controls: [
+            {
+              descriptor: 'button#save',
+              hover: { changed: ['background-color'], styleCount: 10 },
+              pressed: { changed: ['transform'], styleCount: 10 },
+              pressSkippedReason: null,
+              disabled: { changed: ['opacity'], styleCount: 10 },
+              checked: null,
+              checkedSkippedReason: null,
+            },
+          ],
+          notDriven: [],
+        },
+      },
+    ],
+    failed: [],
+    skipped: null,
+  });
+
+  const notRunStates = (route: string) => ({
+    route,
+    value: {
+      url: 'http://127.0.0.1:1' + route,
+      status: 'not-run',
+      reason: 'no interactive control on this route',
+      controls: [],
+      notDriven: [],
+    },
+  });
+
+  it('keeps component-states out of pass when some routes were never measured (T1003-2)', () => {
+    const group = measuredStates('/');
+    const report = composeReport(
+      base({
+        states: {
+          ...group,
+          samples: [...group.samples, notRunStates('/about')],
+          failed: [{ route: '/pricing', reason: 'probe timed out' }],
+        },
+      }),
+    );
+    const check = report.checks.find((c) => c.id === 'component-states');
+    expect(check?.status).toBe('not-run');
+    expect(check?.detail.join(' ')).toContain('/about');
+    expect(check?.detail.join(' ')).toContain('/pricing');
+    expect(check?.reason).toContain('/pricing');
+  });
+
+  it('passes component-states only when every route measured clean (T1003-2)', () => {
+    const report = composeReport(base({ states: measuredStates('/') }));
+    const check = report.checks.find((c) => c.id === 'component-states');
+    expect(check?.status).toBe('pass');
+  });
+
+  it('fails component-states on a measured defect even when other routes are unmeasured (T1003-2)', () => {
+    const group = measuredStates('/');
+    const silentHover = {
+      ...group.samples[0]!.value,
+      controls: [
+        { ...group.samples[0]!.value.controls[0]!, hover: { changed: [], styleCount: 10 } },
+      ],
+    };
+    const report = composeReport(
+      base({
+        states: {
+          ...group,
+          samples: [{ route: '/', value: silentHover }],
+          failed: [{ route: '/pricing', reason: 'probe timed out' }],
+        },
+      }),
+    );
+    const check = report.checks.find((c) => c.id === 'component-states');
+    expect(check?.status).toBe('fail');
+    expect(check?.detail.join(' ')).toContain('/pricing');
+    expect(
+      report.findings.some((f) => f.check === 'component-states' && f.title.includes('hover')),
+    ).toBe(true);
+  });
+
+  /** One measured motion sample with a chosen verdict. */
+  const measuredMotion = (
+    route: string,
+    verdictStatus: 'pass' | 'fail',
+  ): LiveGroup<MotionProbeResult> => ({
+    samples: [
+      {
+        route,
+        value: {
+          url: 'http://127.0.0.1:1' + route,
+          status: 'measured',
+          reason: null,
+          trigger: 'button#disclosure',
+          transitionsMs: 120,
+          verdict:
+            verdictStatus === 'fail'
+              ? {
+                  status: 'fail',
+                  detail: ['reduced-motion trace lost the panel content — parity violated'],
+                }
+              : { status: 'pass', detail: ['reduced-motion trace carried the same information'] },
+        },
+      },
+    ],
+    failed: [],
+    skipped: null,
+  });
+
+  const notRunMotion = (route: string) => ({
+    route,
+    value: {
+      url: 'http://127.0.0.1:1' + route,
+      status: 'not-run',
+      reason: 'no disclosure on this route',
+      trigger: null,
+      transitionsMs: 0,
+      verdict: null,
+    },
+  });
+
+  it('keeps transition-oracle out of pass when a route errored or was never driven (T1003-2)', () => {
+    const group = measuredMotion('/', 'pass');
+    const report = composeReport(
+      base({
+        motion: {
+          ...group,
+          samples: [...group.samples, notRunMotion('/about')],
+          failed: [{ route: '/pricing', reason: 'navigation refused' }],
+        },
+      }),
+    );
+    const check = report.checks.find((c) => c.id === 'transition-oracle');
+    expect(check?.status).toBe('not-run');
+    expect(check?.detail.join(' ')).toContain('/about');
+    expect(check?.detail.join(' ')).toContain('/pricing');
+    expect(check?.reason).toContain('/pricing');
+  });
+
+  it('reads a measured parity failure as fail even when another route was unmeasured', () => {
+    const group = measuredMotion('/', 'fail');
+    const report = composeReport(
+      base({
+        motion: { ...group, samples: [...group.samples, notRunMotion('/about')] },
+      }),
+    );
+    const check = report.checks.find((c) => c.id === 'transition-oracle');
+    expect(check?.status).toBe('fail');
+    expect(report.findings.filter((f) => f.check === 'transition-oracle')).toHaveLength(1);
+  });
+
+  it('reads a partial motion run as not-run rather than a parity failure (T1003-26)', () => {
+    const group = measuredMotion('/', 'pass');
+    const partial = composeReport(
+      base({ motion: { ...group, samples: [...group.samples, notRunMotion('/about')] } }),
+    );
+    const check = partial.checks.find((c) => c.id === 'transition-oracle');
+    expect(check?.status).toBe('not-run');
+    expect(check?.detail.join(' ')).toContain('/about');
   });
 
   /** One captured route whose mobile layout overflows: a measured P0 with a shot. */

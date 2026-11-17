@@ -5311,10 +5311,14 @@
       ],
       "risk": "an audit verdict systematically wrong in the direction of safe on every multi-route page",
       "rollback": "revert the else-branches; mixed runs pass again (the pre-audit behaviour)",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1047.md",
+        "packages/eval-core/tests/audit.test.ts",
+        "packages/eval-core/src/audit/compose.ts"
+      ]
     },
     {
       "id": "T1048",

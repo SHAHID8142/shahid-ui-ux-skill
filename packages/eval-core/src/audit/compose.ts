@@ -955,21 +955,48 @@ export function composeReport(inputs: AuditInputs): AuditReport {
     const detail = motionMeasured.flatMap((sample) =>
       (sample.verdict?.detail ?? []).map((line) => sample.trigger + ': ' + line),
     );
-    if (motionMissing.length > 0) {
+    // T1047 (audit finding T1003-2): routes whose probe errored were dropped on the floor here —
+    // the else-branch never read inputs.motion.failed, so a run with one errored route reported a
+    // green check naming only the routes that happened to measure.
+    const motionFailed = inputs.motion?.failed ?? [];
+    for (const failure of motionFailed) {
+      detail.push(failure.route + ': probe failed — ' + failure.reason);
+    }
+    const motionMissingEntries = (inputs.motion?.samples ?? []).filter(
+      (entry) => entry.value.status === 'not-run',
+    );
+    if (motionMissingEntries.length > 0) {
       detail.push(
         'not driven on ' +
-          motionMissing.length +
+          motionMissingEntries.length +
           ' route(s): ' +
-          motionMissing.map((sample) => sample.reason ?? 'no reason').join('; '),
+          motionMissingEntries
+            .map((entry) => entry.route + ': ' + (entry.value.reason ?? 'no reason'))
+            .join('; '),
       );
     }
+    // Partial measurement is not a parity failure: an actually failing verdict is the only thing
+    // that reads as fail; routes the probe never drove (or that errored) keep the check at
+    // not-run with the reasons in the detail (T1003-2/T1003-26).
+    const unmeasured = motionMissingEntries.length + motionFailed.length;
+    const status =
+      failed.length > 0 ? 'fail' : unmeasured > 0 ? 'not-run' : 'pass';
     checks.push(
       checkResult(
         'transition-oracle',
         'State-transition oracle cases',
         'G6',
-        failed.length === 0 && motionMissing.length === 0 ? 'pass' : 'fail',
+        status,
         detail,
+        status === 'not-run'
+          ? 'the probe did not drive every route: ' +
+            [
+              ...motionMissingEntries.map(
+                (entry) => entry.route + ': ' + (entry.value.reason ?? 'not driven'),
+              ),
+              ...motionFailed.map((failure) => failure.route + ': ' + failure.reason),
+            ].join('; ')
+          : undefined,
       ),
     );
     for (const entry of inputs.motion?.samples ?? []) {
@@ -1174,19 +1201,41 @@ export function composeReport(inputs: AuditInputs): AuditReport {
         detail.push(sample.route + ': not driven — ' + notDriven + ' (application states)');
       }
     }
+    // T1047 (audit finding T1003-2): routes the states probe never measured (no drivable control)
+    // and routes whose probe errored were dropped here, so a mixed run reported a green pass
+    // naming only the routes that happened to measure. Name them, and keep the check out of pass.
+    const stateNotRun = stateSamples.filter((sample) => sample.value.status !== 'measured');
+    for (const sample of stateNotRun) {
+      detail.push(sample.route + ': not driven — ' + (sample.value.reason ?? 'no reason'));
+    }
+    const stateFailed = inputs.states?.failed ?? [];
+    for (const failure of stateFailed) {
+      detail.push(failure.route + ': probe failed — ' + failure.reason);
+    }
     // The status is read from the findings just pushed, so the check can never say pass while the
-    // report carries a component-state finding.
+    // report carries a component-state finding; partial coverage reads not-run, not pass.
     const stateFindings = findings.filter((entry) => entry.check === 'component-states').length;
+    const partial = stateNotRun.length + stateFailed.length;
+    const stateStatus = stateFindings > 0 ? 'fail' : partial > 0 ? 'not-run' : 'pass';
     checks.push(
       checkResult(
         'component-states',
         'Component states: hover, pressed, disabled and checked are driven and their style deltas measured',
         null,
-        stateFindings === 0 ? 'pass' : 'fail',
+        stateStatus,
         detail,
+        stateStatus === 'not-run'
+          ? 'the states probe did not measure every route: ' +
+            [
+              ...stateNotRun.map(
+                (sample) => sample.route + ': ' + (sample.value.reason ?? 'not driven'),
+              ),
+              ...stateFailed.map((failure) => failure.route + ': ' + failure.reason),
+            ].join('; ')
+          : undefined,
       ),
     );
-    if (stateFindings === 0) {
+    if (stateStatus === 'pass') {
       // Keep the pass honest: a pass means every driven state was visible, not that nothing was checked.
       checks[checks.length - 1] = {
         ...checks[checks.length - 1]!,
