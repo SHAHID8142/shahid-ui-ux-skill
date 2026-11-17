@@ -2667,7 +2667,8 @@
         "T1034",
         "T1035",
         "T1036",
-        "T1037"
+        "T1037",
+        "T1038"
       ],
       "files": [],
       "acc": [
@@ -4963,6 +4964,44 @@
       "evidence": [
         ".sus-dev/VERIFICATION/T1037.md",
         "packages/eval-core/tests/bestpractice.file-scope.test.ts"
+      ]
+    },
+    {
+      "id": "T1038",
+      "m": "M12",
+      "title": "Component states: drive pressed and disabled, name loading/success/error as not driven (issue #21 R6)",
+      "obj": "pressed/loading/disabled/success/error had no instrument, which is why issue #15's fifth box read partly. Drive the two states that are real DOM states, count changed computed properties, and name the three application states as not driven rather than simulating them with a guessed class.",
+      "deps": [
+        "T1037"
+      ],
+      "files": [
+        "packages/eval-core/src/harness/",
+        "packages/eval-core/src/audit/",
+        "packages/eval-core/src/bestpractice/",
+        "packages/eval-core/tests/",
+        "fixtures/bestpractice/",
+        "docs/"
+      ],
+      "acc": [
+        "a control with a pressed state reports a non-zero press delta and passes",
+        "a control with none fails with a P2 finding carrying expected 1 / observed 0 and its descriptor",
+        "the disabled state is measured separately",
+        "loading, success and error are named as not driven in every report",
+        "a route with no interactive control is not-run with the reason, never a pass",
+        "the probe is read-only: it restores the disabled attribute it sets"
+      ],
+      "tests": [
+        "packages/eval-core/tests/component-states.test.ts"
+      ],
+      "risk": "a guessed application state measuring our guess, or a presence check being read as a quality judgment",
+      "rollback": "drop the probe and the check; the audit behaves as before",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1038.md",
+        "packages/eval-core/tests/component-states.test.ts",
+        "fixtures/bestpractice/states/index.html"
       ]
     }
   ]

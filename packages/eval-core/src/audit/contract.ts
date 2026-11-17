@@ -182,6 +182,16 @@ export const AUDIT_CHECKS: readonly AuditCheckDescriptor[] = [
     required: false,
   },
   {
+    id: 'component-states',
+    title:
+      'Component states: pressed and disabled are driven and their style deltas measured (T1038)',
+    // Audit-only evidence: the state rules belong to the playbooks, and no gate consumes a style delta.
+    gate: null,
+    modes: ['deep'],
+    effort: 'quick-win',
+    required: false,
+  },
+  {
     id: 'evidence-bundle',
     title: 'Evidence bundle completeness (G11) over the produced evidence',
     gate: 'G11',
@@ -208,6 +218,7 @@ export const AUDIT_WILL_NOT: readonly string[] = [
   'will not edit the target, its dependencies or its lockfile: the audit is read-only',
   'will not apply a fix: a proposal is written to a plan file that needs explicit approval',
   'will not score human judgment as a machine pass: manual items stay needs-review',
+  'will not invent an application state: component states are measured by driving a press and the disabled state, while loading, success and error are named as not driven rather than simulated with a guessed class',
   'will not invent an interaction: motion is measured by driving an element that declares aria-expanded (pointer, keyboard, and again under prefers-reduced-motion), so a page with no such element reports not-run rather than a made-up scenario, and hover-only transitions, carousels or drag gestures are not driven at all',
   'will not invent translations, screen-reader sessions or a user-agent zoom setting: 400% zoom is measured only as the CSS px viewport it produces (320x256 at device scale factor 4)',
   'will not treat a missing measurement as a pass: an unrun check is reported as not-run',

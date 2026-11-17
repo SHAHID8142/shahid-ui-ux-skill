@@ -32,6 +32,7 @@ import {
 } from '../harness/net-guard.js';
 import { chromeForTestingPath, runLighthouse, scanA11y } from '../harness/scans.js';
 import { probeMotionWith, type MotionProbeResult } from '../harness/motion.js';
+import { probeStatesWith, type StatesProbeResult } from '../harness/states.js';
 import type { AuditMode } from './contract.js';
 import { AUDIT_OUTPUT_FILES, assertAuthorizedUrl, parseRoutes } from './contract.js';
 import type { ArtifactRef, AuditInputs, LiveGroup, RouteHtml, SlopInput } from './compose.js';
@@ -533,6 +534,7 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
   let lighthouse: LiveGroup<LighthouseSummary>;
   let scopedAxe: LiveGroup<AxeScanResult>;
   let motion: LiveGroup<MotionProbeResult>;
+  let states: LiveGroup<StatesProbeResult>;
   let browser: string | null = null;
   if (mode === 'quick') {
     const reason =
@@ -544,6 +546,7 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
     lighthouse = emptyGroup<LighthouseSummary>(reason);
     scopedAxe = emptyGroup<AxeScanResult>(reason);
     motion = emptyGroup<MotionProbeResult>(reason);
+    states = emptyGroup<StatesProbeResult>(reason);
   } else {
     capture = await collectCapture(
       origin,
@@ -558,6 +561,7 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
     lighthouse = scans.lighthouse;
     scopedAxe = scans.scopedAxe;
     motion = await collectMotion(origin, routes, authorizedHosts);
+    states = await collectStates(origin, routes, authorizedHosts);
     browser = scans.browser;
   }
 
@@ -580,6 +584,7 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
     lighthouse,
     scopedAxe,
     motion,
+    states,
   };
 }
 
@@ -601,6 +606,35 @@ async function collectMotion(
         samples.push({
           route,
           value: await probeMotionWith(guarded.browser, routeUrl(origin, route), authorizedHosts),
+        });
+      } catch (error) {
+        failed.push({ route, reason: describeError(error) });
+      }
+    }
+  } catch (error) {
+    const reason = 'no browser: ' + describeError(error);
+    for (const route of routes) failed.push({ route, reason });
+  } finally {
+    await guarded.close();
+  }
+  return { samples, failed, skipped: null };
+}
+
+/** Component states share one browser, like motion: the probe is one navigation per route. */
+async function collectStates(
+  origin: string,
+  routes: readonly string[],
+  authorizedHosts: readonly string[],
+): Promise<LiveGroup<StatesProbeResult>> {
+  const samples: { route: string; value: StatesProbeResult }[] = [];
+  const failed: { route: string; reason: string }[] = [];
+  const guarded = await launchGuardedBrowser(authorizedHosts);
+  try {
+    for (const route of routes) {
+      try {
+        samples.push({
+          route,
+          value: await probeStatesWith(guarded.browser, routeUrl(origin, route), authorizedHosts),
         });
       } catch (error) {
         failed.push({ route, reason: describeError(error) });

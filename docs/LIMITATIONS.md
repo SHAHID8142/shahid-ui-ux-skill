@@ -110,6 +110,12 @@ and can lag — when in doubt the generated page wins.
   would attribute one element's defect to another.
 - The five measured best-practice examples apply their fixes to a temporary copy of the fixture and
   measure there; nothing is applied to a repository fixture.
+- Component states are measured where they exist in the DOM: **pressed** (a real pointer press) and
+  **disabled** (the control's own state) are driven and their changed computed properties counted
+  (T1038), so a control that acknowledges neither is reported with a number. **loading**, **success** and
+  **error** are application states and are named as not driven in every report — a guessed `.is-loading`
+  class would measure the guess. At most three controls per route are driven, so a page with more
+  interactive elements is partly measured and the check says which descriptors it drove.
 - Motion is measured by driving **one** disclosure per route (an element declaring `aria-expanded`) in
   pointer, keyboard and `prefers-reduced-motion: reduce` contexts (T1036). A page with no such element
   reports `not-run` with that reason, and hover-only transitions, carousels, drag gestures and

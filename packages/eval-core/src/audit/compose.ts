@@ -17,6 +17,7 @@ import type { ScanResult } from '@sus/scanners';
 import { checkSeo } from '@sus/scanners';
 import type { AxeScanResult, LighthouseSummary } from '../harness/a11y-budgets.js';
 import type { MotionProbeResult } from '../harness/motion.js';
+import type { StatesProbeResult } from '../harness/states.js';
 import type { KeyboardScanResult } from '../harness/keyboard.js';
 import { evaluateG4, evaluateG5 } from '../harness/a11y-budgets.js';
 import type { CaptureResult } from '../harness/capture.js';
@@ -100,6 +101,8 @@ export interface AuditInputs {
   readonly scopedAxe?: LiveGroup<AxeScanResult>;
   /** Traces from the driven disclosure probe (issue #21 R7); absent means motion was not probed. */
   readonly motion?: LiveGroup<MotionProbeResult>;
+  /** Pressed/disabled style deltas from the state probe (issue #21 R6). */
+  readonly states?: LiveGroup<StatesProbeResult>;
   /**
    * Recorded artefacts keyed by the route they belong to. Only the pipeline can
    * fill this: it is the layer that writes files and can therefore hash them.
@@ -1000,6 +1003,124 @@ export function composeReport(inputs: AuditInputs): AuditReport {
         }),
       );
     }
+  }
+
+  // Component states (issue #21 R6): pressed and disabled are driven; loading/success/error are named
+  // as not driven so their absence can never read as a pass.
+  const stateSamples = inputs.states?.samples ?? [];
+  const stateMeasured = stateSamples.filter((sample) => sample.value.status === 'measured');
+  if (stateMeasured.length === 0) {
+    const reasons = [
+      ...stateSamples.map((sample) => sample.route + ': ' + (sample.value.reason ?? 'not driven')),
+      ...(inputs.states?.failed.map((failure) => failure.route + ': ' + failure.reason) ?? []),
+    ];
+    checks.push(
+      checkResult(
+        'component-states',
+        'Component states: pressed and disabled are driven and their style deltas measured',
+        null,
+        'not-run',
+        [],
+        reasons.length === 0
+          ? 'states were not probed for this run'
+          : reasons.join('; ') +
+              ' — loading, success and error are application states and are never invented here',
+      ),
+    );
+  } else {
+    const detail: string[] = [];
+    for (const sample of stateMeasured) {
+      for (const control of sample.value.controls) {
+        detail.push(
+          sample.route +
+            ' ' +
+            control.descriptor +
+            ': pressed changed ' +
+            control.pressed.changed.length +
+            '/' +
+            control.pressed.styleCount +
+            ' style properties, disabled changed ' +
+            control.disabled.changed.length +
+            '/' +
+            control.disabled.styleCount,
+        );
+        if (control.pressed.changed.length === 0) {
+          findings.push(
+            finding({
+              check: 'component-states',
+              severity: 'P2',
+              effort: 'quick-win',
+              title: 'No press feedback on ' + control.descriptor,
+              detail:
+                'A pointer press changed none of the ' +
+                control.pressed.styleCount +
+                ' computed properties a press usually moves (background, border, shadow, transform, ' +
+                'opacity), so the control gives no perceptible acknowledgement that it was pressed.',
+              route: sample.route,
+              viewport: 'desktop-1440',
+              evidence: [control.descriptor],
+              evaluator: 'probeStates (pointer down)',
+              location: control.descriptor,
+              confidence: 'measured',
+              expected: { value: 1, unit: 'changed style properties on press' },
+              observed: { value: 0, unit: 'changed style properties on press' },
+              remediation:
+                'Add a visible pressed state (' +
+                control.descriptor +
+                '): a background or border shift, a 1px inset shadow, or a small transform, and keep it ' +
+                'visible under prefers-reduced-motion.',
+            }),
+          );
+        }
+        if (control.disabled.changed.length === 0) {
+          findings.push(
+            finding({
+              check: 'component-states',
+              severity: 'P2',
+              effort: 'quick-win',
+              title: 'Disabled state looks enabled on ' + control.descriptor,
+              detail:
+                'Setting the disabled state changed none of the ' +
+                control.disabled.styleCount +
+                ' computed properties that usually signal it, so the control still looks actionable.',
+              route: sample.route,
+              viewport: 'desktop-1440',
+              evidence: [control.descriptor],
+              evaluator: 'probeStates (disabled attribute)',
+              location: control.descriptor,
+              confidence: 'measured',
+              expected: { value: 1, unit: 'changed style properties when disabled' },
+              observed: { value: 0, unit: 'changed style properties when disabled' },
+              remediation:
+                'Style the disabled state explicitly: reduced contrast, not-allowed cursor where the' +
+                ' platform does not already provide one, and keep the label readable.',
+            }),
+          );
+        }
+      }
+      const notDriven = sample.value.notDriven.join(', ');
+      if (notDriven !== '') {
+        detail.push(sample.route + ': not driven — ' + notDriven + ' (application states)');
+      }
+    }
+    const failedCount = stateMeasured.reduce(
+      (total, sample) =>
+        total +
+        sample.value.controls.filter(
+          (control) =>
+            control.pressed.changed.length === 0 || control.disabled.changed.length === 0,
+        ).length,
+      0,
+    );
+    checks.push(
+      checkResult(
+        'component-states',
+        'Component states: pressed and disabled are driven and their style deltas measured',
+        null,
+        failedCount === 0 ? 'pass' : 'fail',
+        detail,
+      ),
+    );
   }
 
   const bundle = buildEvidenceBundle(inputs);

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A page whose primary button acknowledges a press and whose disabled state is visible, so the state probe has something honest to measure."
+    />
+    <title>Component states fixture</title>
+    <style>
+      body {
+        font:
+          16px/1.5 system-ui,
+          sans-serif;
+        margin: 2rem auto;
+        max-width: 36rem;
+      }
+      .primary {
+        background: #1b4d3e;
+        border: 1px solid #1b4d3e;
+        border-radius: 6px;
+        color: #fff;
+        padding: 0.6rem 1rem;
+        transition: transform 80ms ease-out;
+      }
+      .primary:active {
+        transform: translateY(1px);
+        background: #143a2f;
+      }
+      .primary:disabled,
+      .primary[aria-disabled='true'] {
+        background: #8aa39a;
+        color: #eef2f0;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .primary {
+          transition: none;
+        }
+        .primary:active {
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Save your work</h1>
+      <p>Changes are kept for seven days.</p>
+      <button class="primary" type="button">Save</button>
+    </main>
+  </body>
+</html>

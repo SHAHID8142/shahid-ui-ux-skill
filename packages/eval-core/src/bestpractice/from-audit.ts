@@ -35,6 +35,8 @@ export const DIMENSION_BY_CHECK: Readonly<Record<string, FocusDimension>> = {
   'seo-structure': 'copy',
   'anti-slop': 'visual',
   'transition-oracle': 'motion',
+  // Component states are what a control looks like when used: a visual property of the element.
+  'component-states': 'visual',
   // The evidence bundle is packaging, not a finding source: it never maps to a dimension.
   'evidence-bundle': 'visual',
 };
