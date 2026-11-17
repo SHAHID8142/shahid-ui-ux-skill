@@ -995,3 +995,14 @@ Lessons worth carrying:
 - T1038 (R6) `0e349a4`: pressed/disabled driven and counted; loading/success/error named as not driven.
   R6 is closed to the extent it can be: three of five states are application states no generic probe can
   invent without measuring its own guess.
+- T1039 `ba4db55`: hover + checked driven. Three defects in T1038's own probe found by doing the work:
+  the press was measured against idle (so hover masked a missing `:active`), `mouse.down` on a checkbox
+  clicked it and reverted the state the checked probe measured, and `:checked` does not re-resolve in the
+  task that flips it. Native checkboxes are "not judged", not claimed broken.
+- T1040 `ba4db55`: a native `details > summary` disclosure is driven as a second motion shape (Space, not
+  Enter; state from `details.open`).
+- T1041 `ba4db55`: an HTML file scope attributes its own route's findings — the only attribution that is
+  true without a descriptor→file map. A component scope still exits 3. Counting bug fixed: findings on
+  other routes are out of scope, not unattributed.
+- Lesson: a check whose status is recomputed by a second hand-written predicate drifts from the findings it
+  pushed. Derive the status from the findings.

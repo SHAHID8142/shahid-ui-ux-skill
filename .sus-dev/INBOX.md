@@ -341,3 +341,7 @@ that; see `.sus-dev/VERIFICATION/T1017.md`.
    3 ("nothing in scope was measured") rather than deserving a new code.
 4. T1038 drives at most three controls per route. Is document order the right sample, or should the
    probe prefer controls that are actually visible in the first viewport?
+5. T1041 treats an HTML file as the page it serves. Is that the right line, or should a build output that
+   inlines a component be attributed to the component file instead (which would need a real map)?
+6. T1039 skips the press on a checkbox because pressing it toggles it. Should a toggle get a separate
+   "press affordance" probe (pointer held down without release), or is the checked state enough?
