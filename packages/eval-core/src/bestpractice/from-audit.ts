@@ -11,6 +11,7 @@
  *  - a finding whose confidence is not `measured` becomes a `heuristic`, and its severity is capped
  *    at P2 — the proposal contract forbids ranking an unmeasured recommendation as blocking.
  */
+import { AUDIT_CHECKS } from '../audit/contract.js';
 import type { AuditFinding, AuditReport } from '../audit/report.js';
 import type { FocusDimension } from '../audit/scope.js';
 import {
@@ -362,6 +363,25 @@ export function untestedFromReport(
         check.id +
         '` was not run for this scope' +
         (check.reason === undefined || check.reason === null ? '' : ': ' + check.reason),
+    });
+  }
+  // T1053 (audit finding T1003-8): quick mode omits the browser checks from report.checks
+  // entirely, so an empty not-run list used to read as "every dimension in scope was measured"
+  // while a11y, reflow, motion and performance were never measured at all. A check the requested
+  // mode does not carry is an unmeasured dimension too — say so instead of implying a full sweep.
+  // A report without a mode reads as deep (the pipeline's default), which carries every check —
+  // so the derivation below adds nothing and the not-run rows above stay the only source.
+  const mode = report.mode ?? 'deep';
+  for (const descriptor of AUDIT_CHECKS) {
+    if (descriptor.modes.includes(mode)) continue;
+    const dimension = dimensionForCheck(descriptor.id);
+    if (dimension === null) continue;
+    if (!selection.dimensions.includes(dimension)) continue;
+    if (found.some((entry) => entry.dimension === dimension)) continue;
+    found.push({
+      dimension,
+      reason:
+        'check `' + descriptor.id + '` is not part of ' + mode + ' mode: the dimensions it measures were not measured, not passed',
     });
   }
   return found;

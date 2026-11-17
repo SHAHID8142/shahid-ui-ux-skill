@@ -5488,10 +5488,12 @@
       ],
       "risk": "an approver approves against a false completeness claim",
       "rollback": "revert untestedFromReport; quick-mode proposals claim completeness again (never)",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1053.md"
+      ]
     },
     {
       "id": "T1054",
@@ -5513,10 +5515,12 @@
       ],
       "risk": "a check table that contradicts the findings list misleads both readers and tools",
       "rollback": "revert seoCheck; the T1039-class disagreement returns",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1053.md"
+      ]
     },
     {
       "id": "T1055",
@@ -5541,10 +5545,12 @@
       ],
       "risk": "fail-closed to the point of unusability: the contract blocks its legitimate inputs",
       "rollback": "revert the observation synthesis; keyboard findings refuse proposals again",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1053.md"
+      ]
     },
     {
       "id": "T1056",

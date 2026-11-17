@@ -314,6 +314,11 @@ function keyboardFindings(samples: readonly LiveSample<KeyboardScanResult>[]): A
           viewport: null,
           evidence: [selector],
           evaluator: 'scanKeyboard (Tab traversal, computed style while focused)',
+          // T1055 (audit finding T1003-10): a boolean rule still observes something — name the
+          // observation, so a measured finding composes into a proposal instead of dying on
+          // fact-without-observation.
+          expected: { value: 1, unit: 'visible focus indicator while focused' },
+          observed: { value: 0, unit: 'visible focus indicator while focused' },
           location: selector,
           confidence: 'measured',
           remediation:
@@ -365,6 +370,8 @@ function keyboardFindings(samples: readonly LiveSample<KeyboardScanResult>[]): A
           viewport: null,
           evidence: [result.cycle.selector],
           evaluator: 'scanKeyboard (Tab traversal)',
+          expected: { value: 0, unit: 're-focuses of the same element' },
+          observed: { value: result.cycle.repeats, unit: 're-focuses of the same element' },
           location: result.cycle.selector,
           confidence: 'measured',
           remediation:
@@ -723,9 +730,21 @@ function seoCheck(html: readonly RouteHtml[]): AuditCheckResult {
   let failed = false;
   for (const entry of evaluated) {
     const result = checkSeo(entry.html as string);
-    if (result.g3.status === 'fail' || result.g9.status === 'fail') failed = true;
+    // T1054 (audit finding T1003-9): the status must agree with the findings this check pushes.
+    // seoFindings emits a finding for every sub-check that is not a pass (title, meta description,
+    // …), but g3/g9 detail never carried those, so a page whose only SEO defects were title/meta
+    // showed a green check row beside two P2 findings. Derive fail from the same list.
+    if (result.checks.some((check) => check.status !== 'pass')) failed = true;
     for (const line of [...result.g3.detail, ...result.g9.detail]) {
       detail.push(entry.route + ': ' + line);
+    }
+    for (const check of result.checks) {
+      if (check.status === 'pass') continue;
+      const alreadyDetailed =
+        result.g3.detail.includes(check.detail) || result.g9.detail.includes(check.detail);
+      if (!alreadyDetailed) {
+        detail.push(entry.route + ': ' + check.id + ' — ' + check.detail);
+      }
     }
   }
   const missing = html.filter((e) => e.html === null);

@@ -229,4 +229,28 @@ describe('selection helpers refuse to invent what they did not see', () => {
     expect(untested[0]!.dimension).toBe('responsive');
     expect(untested[0]!.reason).toContain('quick mode runs no browser');
   });
+
+  // T1053 (audit finding T1003-8): quick mode omits the browser checks from report.checks
+  // entirely, so an empty not-run list must not read as "every dimension was measured". A check
+  // the mode does not carry is an unmeasured dimension, and the proposal names it.
+  it('names the dimensions quick mode never measured when no not-run row exists', () => {
+    const report = {
+      mode: 'quick',
+      findings: [],
+      checks: [{ id: 'seo-structure', status: 'pass', detail: [] }],
+    } as unknown as Parameters<typeof untestedFromReport>[0];
+    const untested = untestedFromReport(report, {
+      dimensions: ['a11y', 'responsive', 'motion', 'performance', 'copy'],
+    });
+    const dimensions = new Set(untested.map((entry) => entry.dimension));
+    for (const expected of ['a11y', 'responsive', 'motion', 'performance']) {
+      expect(dimensions.has(expected)).toBe(true);
+    }
+    for (const entry of untested) {
+      expect(entry.reason).toContain('not measured, not passed');
+      expect(entry.reason.length).toBeGreaterThan(20);
+    }
+    // copy is measured in quick mode; it must not be listed as untested
+    expect(dimensions.has('copy')).toBe(false);
+  });
 });

@@ -465,6 +465,10 @@ describe('audit evidence contract (T1013)', () => {
     expect(found[0]!.severity).toBe('P1');
     expect(found[0]!.observation.location).toBe('button#save');
     expect(found[0]!.observation.confidence).toBe('measured');
+    // T1055 (audit finding T1003-10): a boolean rule still observes something. Without an
+    // observation this finding used to refuse the whole proposal (fact-without-observation).
+    expect(found[0]!.observation.expected).toEqual({ value: 1, unit: 'visible focus indicator while focused' });
+    expect(found[0]!.observation.observed).toEqual({ value: 0, unit: 'visible focus indicator while focused' });
     expect(report.checks.find((c) => c.id === 'keyboard-flow')?.status).toBe('fail');
     expect(report.summary.P1).toBe(1);
   });
@@ -492,6 +496,27 @@ describe('audit evidence contract (T1013)', () => {
     expect(found.map((f) => f.severity).sort()).toEqual(['P1', 'P2']);
     // Escape is never pressed, so the cycle stays an observation, not a verdict.
     expect(found.find((f) => f.severity === 'P2')?.title).toContain('cycles');
+  });
+
+  // T1054 (audit finding T1003-9): the check row must agree with the findings it pushed. A page
+  // whose only SEO defects are title/meta (P2 level) used to show a green `seo-structure` row
+  // beside two P2 findings, because the status came from g3/g9 detail alone.
+  it('fails seo-structure when only the title/meta sub-checks fail, matching its findings', () => {
+    const report = composeReport(
+      base({
+        html: [
+          {
+            route: '/',
+            html: '<!doctype html><html><body><h1>Untitled page</h1><p>Body text long enough to matter for the meta description check to have something to say about length.</p></body></html>',
+          },
+        ],
+      }),
+    );
+    const check = report.checks.find((c) => c.id === 'seo-structure');
+    expect(check?.status).toBe('fail');
+    expect(check?.detail.join(' ')).toContain('title');
+    const seoFindings = report.findings.filter((f) => f.check === 'seo-structure');
+    expect(seoFindings.length).toBeGreaterThan(0);
   });
 
   it('never passes keyboard-flow when no traversal was recorded', () => {
