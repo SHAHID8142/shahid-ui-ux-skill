@@ -1017,3 +1017,14 @@ Lessons worth carrying:
   both paths; a test now builds a symlink alias and asserts the two spellings agree.
 - Lesson: a protocol written down is not a protocol executed. The instructions for the audit had a real
   defect in them until they were run somewhere the author's paths were not already canonical.
+- Builder-side pass before the auditor arrives (not an audit verdict; T1003 stays pending):
+  - T1043 `cfd3049`: CONNECT parsed by splitting on ':' so an IPv6 literal became host '[' — an authorized
+    IPv6 host was unreachable and the refusal named a host `--authorize` could not accept. Parsed as a URL,
+    brackets stripped before the predicate; a tunnel that cannot open now answers 502 instead of hanging.
+  - T1044 `cfd3049`: apply gained path containment (realpath the parent, not the leaf; refusal
+    `path-outside-root`). Traversal was unreachable before, so this is defence in depth — said so in the
+    receipt. Found that `join` concatenates absolutes and refused a legitimate inside path; test caught it.
+  - T1045 `cfd3049`: two verify runs failed files that pass alone. Timeouts were measuring contention; after
+    widening two and capping eval-core workers at 4: 97 files + 3 skipped, 1057 tests, 402 s.
+- Lesson: widening a timeout moved the failure to the next three files instead of removing the cause. The
+  second occurrence is what identified the scheduler as the culprit.

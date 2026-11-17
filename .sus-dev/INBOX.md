@@ -345,3 +345,9 @@ that; see `.sus-dev/VERIFICATION/T1017.md`.
    inlines a component be attributed to the component file instead (which would need a real map)?
 6. T1039 skips the press on a checkbox because pressing it toggles it. Should a toggle get a separate
    "press affordance" probe (pointer held down without release), or is the checked state enough?
+7. T1044 answers your CONNECT/IPv6 question from 2026-11-17: it was wrong — host `[` — and is now parsed as
+   a URL with the brackets stripped. Both were fail-closed, so this was a misleading refusal, not a leak.
+   The 403 body echoes only the host the caller sent; a test pins that.
+8. T1044's containment guard resolves the parent and not the leaf, because the atomic rename replaces a
+   symlink instead of writing through it. If a future writer switches to an in-place write, the guard needs
+   the leaf resolved too — worth a second opinion.
