@@ -1006,3 +1006,8 @@ Lessons worth carrying:
   other routes are out of scope, not unattributed.
 - Lesson: a check whose status is recomputed by a second hand-written predicate drifts from the findings it
   pushed. Derive the status from the findings.
+- 2026-11-17: owner said "go ahead" to commissioning **T1003**. Wrote `docs/AUDIT_PACKET.md` (scope with
+  file pointers, §0 distrust-the-author preamble, severity rubric where a vacuous gate is critical,
+  reproduction commands run before being written down — three of them initially did not run as written and
+  were corrected), recorded D35/D35a/D35b/D35c, and opened issue #22 as the claim point. T1003 stays
+  `pending`: the receipt belongs to the auditor.

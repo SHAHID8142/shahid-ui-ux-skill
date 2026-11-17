@@ -65,7 +65,8 @@ oracle plus playbook motion lint for motion, `frozen-lockfile` install for insta
 
 - **No product publication.** No release, no package publish, no site deployment. The
   repository is public by owner decision; the product is unpublished by the same authority.
-- **No independent audit.** `T1003` is owner-commissioned and has not happened. This
+- **No independent audit.** `T1003` is owner-commissioned (D35, 2026-11-17) and has not happened; the
+  packet is `docs/AUDIT_PACKET.md`. This
   document describes what the builder verified, which is not the same thing.
 - **No release approval.** `T1005` is an owner decision.
 - **No comparative claim.** The benchmark's `sus-assisted` and `human` arms are `not-run`

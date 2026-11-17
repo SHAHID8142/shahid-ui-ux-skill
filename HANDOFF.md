@@ -15,7 +15,10 @@ Task status is exclusively TASKS.json; do not infer completion from older report
 > chore/continuation-reconciliation`, then follow `docs/RESUME_ON_NEW_MACHINE.md`.
 > Canonical status is TASKS.json, not this line: read it. The build tree is empty — every
 > task this loop could do is done and receipted — so what remains is owner-only: T1003
-> (independent audit, which a builder must never self-certify) and T1005 (release approval). Owner issue #10 is closed by evidence: the two measured admin findings are
+> (independent audit, which a builder must never self-certify) and T1005 (release approval).
+> **T1003 is now commissioned (D35, 2026-11-17):** the packet an auditor needs is
+> `docs/AUDIT_PACKET.md`, and the finding protocol is in its §5. The builder may reproduce evidence
+> and fix findings; it may not write the T1003 receipt or close the finding. Owner issue #10 is closed by evidence: the two measured admin findings are
 > fixed, and the record lists now demonstrate two empty kinds, loading, error-keeping-rows,
 > URL state, twelve records and 200% text (see docs/MOBILE_RECORD_PATTERNS.md). Not run and
 > named: a real screen-reader session, browser zoom, real translations.

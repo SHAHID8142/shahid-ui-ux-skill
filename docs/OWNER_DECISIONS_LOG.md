@@ -185,3 +185,29 @@ authorization channel per D32.
   repo visibility is NOT the D06 product-licence decision, which stays pending.
   Post-flip verification required (visibility read-back, anonymous access,
   fresh CI on the exact SHA) before issue #11 closes.
+
+## 2026-11-17 — independent audit commissioned (D35)
+
+Source: owner instruction "go ahead" in response to the build agent's proposal to commission T1003
+(the independent security/a11y/licence review) at the post-build checkpoint. The build had reached the
+point where every measurable gap was closed and only owner decisions remained, which is the sequence
+AGENTS.md requires: complete the build, verify the final checkpoint push (T1006), then stop for a
+separately commissioned audit.
+
+- D35 | **T1003 is hereby commissioned.** The commission packet is `docs/AUDIT_PACKET.md` (scope,
+  attack surfaces with file pointers, severity rubric, reproduction commands, reporting protocol, exit
+  criteria). A public GitHub issue carries the same text so an auditor can claim it without repository
+  access to the owner's machine. The packet is written by the interested party and says so in §0: its
+  claims are claims, and the auditor is instructed to falsify them, to re-run five receipts at random,
+  and to report "nothing found" only alongside an enumeration of what was tried.
+- D35a | **The build agent may not certify T1003.** It may prepare the packet, reproduce the audit's
+  evidence, fix what the auditor finds, and answer findings with measurements. It may not write
+  `.sus-dev/VERIFICATION/T1003.md` and may not move `T1003` to `done`; that record belongs to the
+  auditor and, for acceptance, to the owner. This preserves the independence the task exists to buy.
+- D35b | **Findings are closed by the owner or the auditor, not by the fixer.** A finding is closed when
+  the measurement it demanded is accepted, per `docs/AUDIT_PACKET.md` §5. Severity follows the rubric in
+  §4, where a systematically vacuous gate is a *critical*: the product's value is that its verdicts are
+  honest, so a verdict that is wrong in the safe-looking direction is worse than a missing feature.
+- D35c | **Licence and release stay owner decisions.** An audit finding about the licence choice (D06)
+  or publication (T1005) is reported as "owner decision pending", not as a defect. The auditor is not
+  asked to settle either.

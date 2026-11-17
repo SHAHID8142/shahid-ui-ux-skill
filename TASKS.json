@@ -2569,22 +2569,30 @@
       "id": "T1003",
       "m": "M10",
       "title": "Independent security/a11y/licence review",
-      "obj": "Separately commissioned independent security/accessibility/licence audit of the verified privately pushed SHA; builder stops before this task",
+      "obj": "Separately commissioned independent security/accessibility/licence audit of the verified checkpoint (T1006); builder stops before this task. Commissioned by the owner 2026-11-17 (D35) with the packet docs/AUDIT_PACKET.md. The build agent prepares, reproduces and fixes; it does not certify.",
       "deps": [
         "T1006"
       ],
-      "files": [],
+      "files": [
+        "docs/AUDIT_PACKET.md",
+        "docs/OWNER_DECISIONS_LOG.md",
+        "docs/LIMITATIONS.md",
+        "https://github.com/SHAHID8142/shahid-ui-ux-skill/issues/22"
+      ],
       "acc": [
-        "findings triaged; criticals zero",
+        "every finding has a severity and a one-command reproduction",
+        "no open critical remains; every open high is fixed with a measurement or accepted in writing by the owner",
+        "the reviewer states which claims were verified and which were not",
+        ".sus-dev/VERIFICATION/T1003.md exists, names the audited revision and carries a verdict, and was written by the auditor, not the build agent",
         "single review-fallback policy; no document may offer a weaker fallback (DA-42)"
       ],
       "tests": [
-        "review report"
+        "review report (T1003.md)"
       ],
       "risk": "no independent reviewer available",
-      "rollback": "Do not self-author an independent audit; report audit not-run until commissioned after private push",
+      "rollback": "Do not self-author an independent audit; if no independent reviewer is available, report the audit as not-run and leave T1003 pending \u2014 never convert this into a pass",
       "status": "pending",
-      "approval": "pending",
+      "approval": "owner-commissioned (D35, 2026-11-17)",
       "phase": "post-build-audit"
     },
     {
