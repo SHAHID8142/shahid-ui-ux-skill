@@ -1011,3 +1011,9 @@ Lessons worth carrying:
   reproduction commands run before being written down — three of them initially did not run as written and
   were corrected), recorded D35/D35a/D35b/D35c, and opened issue #22 as the claim point. T1003 stays
   `pending`: the receipt belongs to the auditor.
+- T1042 `c3af784`: ran the audit packet's commands on a fresh `--depth 1` clone instead of only the working
+  tree. Found that a scope path reached through a symlink (macOS `/tmp`) derived no route and fell back to the
+  "cannot attribute" refusal — the same file attributable under one spelling and not another. Canonicalised
+  both paths; a test now builds a symlink alias and asserts the two spellings agree.
+- Lesson: a protocol written down is not a protocol executed. The instructions for the audit had a real
+  defect in them until they were run somewhere the author's paths were not already canonical.
