@@ -168,12 +168,24 @@ is attributable *by construction* rather than by string matching, and the propos
   mode still produce no element scoped axe items, and a selector axe cannot include is recorded as a
   scoped-scan failure instead of being silently treated as clean.
 
-### A file scope refuses to guess attribution (T1037)
+### A file scope attributes an HTML file and refuses to guess for a component (T1037, T1041)
 
-A `component-path` scope resolves (the file must exist) but **cannot** propose DOM findings: a finding is
-located by an element descriptor (`input#email`) and nothing in this repository maps descriptors to
-source files. Rather than print "nothing to propose" — which reads as "measured and clean" — the command
-states the cause and exits **3**:
+A `component-path` scope resolves (the file must exist). Two cases follow, and they are not the same:
+
+- **An HTML file is the page it serves.** `--scope checkout.html` narrows the selection to the route
+  that file becomes (`/checkout.html`, or `/checkout` for `checkout/index.html`), and the findings the
+  audit measured on that route *are* findings about that file. Nothing about a descriptor is mapped, so
+  nothing is guessed. The proposal says so beside its scope line:
+
+  ```
+  Attribution: this HTML file is the page it serves, so the audit findings measured on the
+  `/checkout.html` route are findings about this file.
+  ```
+
+- **A component file is a fragment of many pages.** `.tsx`, `.vue`, `.astro`, `svelte` files cannot be
+  attributed: a finding is located by an element descriptor (`input#email`) and nothing in this
+  repository maps descriptors to source files. Rather than print "nothing to propose" — which reads as
+  "measured and clean" — the command states the cause and exits **3**:
 
 ```
 sus bestpractice --path fixtures/bestpractice --scope-kind component-path --scope motion/index.html
@@ -183,7 +195,9 @@ sus bestpractice --path fixtures/bestpractice --scope-kind component-path --scop
   → select the element instead: --scope '#email', or the whole document: --scope page   (exit 3)
 ```
 
-Exit 0 is reserved for a scope that genuinely measured nothing to change.
+Exit 0 is reserved for a scope that genuinely measured nothing to change. For an HTML file scope,
+findings measured on *other* routes are reported as "on other routes (this file serves only `X`)", so
+they are never confused with findings that could not be attributed at all.
 
 ### A page scope proposes the page's own findings (T1031)
 

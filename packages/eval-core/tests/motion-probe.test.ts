@@ -8,13 +8,16 @@
  * motion keeps the information — so the test is about the measurement, not about the CSS.
  */
 import { pathToFileURL } from 'node:url';
-import { describe, expect, it } from 'vitest';
+import { expect, it, describe } from 'vitest';
 import { probeMotion, motionCases } from '../src/harness/motion.js';
 import { informationTokens } from '../src/harness/transition-oracle.js';
 
 const HONEST = pathToFileURL('fixtures/bestpractice/motion/index.html').href;
 const LOSSY = pathToFileURL('fixtures/bestpractice/motion-lost/index.html').href;
 const NO_DISCLOSURE = pathToFileURL('fixtures/bestpractice/scoped-axe/index.html').href;
+// The second disclosure shape (T1040): a native details/summary instead of an aria-expanded widget.
+const DETAILS = pathToFileURL('fixtures/bestpractice/motion-details/index.html').href;
+const DETAILS_LOST = pathToFileURL('fixtures/bestpractice/motion-details-lost/index.html').href;
 
 describe('motion probe (issue #21 R7)', () => {
   it('measures an honest disclosure and passes parity', async () => {
@@ -31,6 +34,20 @@ describe('motion probe (issue #21 R7)', () => {
     expect(result.verdict?.status).toBe('fail');
     expect(result.verdict?.detail.join('\n')).toContain('reduced-motion-information-lost');
   }, 120000);
+
+  it('drives a native details/summary disclosure too (T1040)', async () => {
+    const result = await probeMotion(DETAILS, []);
+    expect(result.status).toBe('measured');
+    expect(result.trigger).toContain('details > summary');
+    expect(result.verdict!.status).toBe('pass');
+  }, 180000);
+
+  it('sees information lost behind a native disclosure under reduced motion', async () => {
+    const result = await probeMotion(DETAILS_LOST, []);
+    expect(result.status).toBe('measured');
+    expect(result.verdict!.status).toBe('fail');
+    expect(result.verdict!.detail.join(' ')).toContain('reduced-motion-information-lost');
+  }, 180000);
 
   it('reports not-run, with a reason, when the page has nothing to drive', async () => {
     const result = await probeMotion(NO_DISCLOSURE, []);

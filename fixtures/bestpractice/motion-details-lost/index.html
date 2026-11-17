@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A page that loses its content when reduced motion is requested, used to prove the motion probe can see the loss."
+    />
+    <title>Native disclosure, lossy</title>
+    <style>
+      body {
+        font:
+          16px/1.5 system-ui,
+          sans-serif;
+        margin: 2rem auto;
+        max-width: 36rem;
+      }
+      details {
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 0.5rem 0.75rem;
+      }
+      details[open] {
+        border-color: #1b4d3e;
+      }
+      summary {
+        cursor: pointer;
+        font-weight: 600;
+      }
+      /* The defect: reduced motion is treated as "show less", and the answer disappears. */
+      @media (prefers-reduced-motion: reduce) {
+        details {
+          transition: none;
+        }
+        details[open] p {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Delivery</h1>
+      <details>
+        <summary>Shipping options</summary>
+        <p>Standard delivery takes three to five working days.</p>
+      </details>
+    </main>
+  </body>
+</html>

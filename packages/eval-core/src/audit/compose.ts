@@ -1017,7 +1017,7 @@ export function composeReport(inputs: AuditInputs): AuditReport {
     checks.push(
       checkResult(
         'component-states',
-        'Component states: pressed and disabled are driven and their style deltas measured',
+        'Component states: hover, pressed, disabled and checked are driven and their style deltas measured',
         null,
         'not-run',
         [],
@@ -1035,16 +1035,87 @@ export function composeReport(inputs: AuditInputs): AuditReport {
           sample.route +
             ' ' +
             control.descriptor +
-            ': pressed changed ' +
+            ': hover ' +
+            control.hover.changed.length +
+            ', pressed ' +
             control.pressed.changed.length +
-            '/' +
-            control.pressed.styleCount +
-            ' style properties, disabled changed ' +
+            ', disabled ' +
             control.disabled.changed.length +
-            '/' +
-            control.disabled.styleCount,
+            ' of ' +
+            control.hover.styleCount +
+            ' style properties' +
+            (control.checked === null
+              ? control.checkedSkippedReason === null
+                ? ''
+                : ', checked not judged (' + control.checkedSkippedReason + ')'
+              : ', checked ' + control.checked.changed.length),
         );
-        if (control.pressed.changed.length === 0) {
+        if (control.hover.changed.length === 0) {
+          findings.push(
+            finding({
+              check: 'component-states',
+              severity: 'P2',
+              effort: 'quick-win',
+              title: 'No hover feedback on ' + control.descriptor,
+              detail:
+                'Moving the pointer over the control changed none of the ' +
+                control.hover.styleCount +
+                ' computed properties a hover state usually moves (background, border, shadow, opacity), ' +
+                'so a pointer user gets no confirmation that the control is interactive.',
+              route: sample.route,
+              viewport: 'desktop-1440',
+              evidence: [control.descriptor],
+              evaluator: 'probeStates (pointer over)',
+              location: control.descriptor,
+              confidence: 'measured',
+              expected: { value: 1, unit: 'changed style properties on hover' },
+              observed: { value: 0, unit: 'changed style properties on hover' },
+              remediation:
+                'Add a hover state for ' +
+                control.descriptor +
+                ' that is distinguishable from idle but not the only affordance: hover is unavailable ' +
+                'to touch and keyboard users, so it must not carry information nothing else carries.',
+            }),
+          );
+        }
+        if (control.checked !== null && control.checked.changed.length === 0) {
+          findings.push(
+            finding({
+              check: 'component-states',
+              severity: 'P2',
+              effort: 'quick-win',
+              title: 'Checked state looks unchecked on ' + control.descriptor,
+              detail:
+                'Toggling the control changed none of the ' +
+                control.checked.styleCount +
+                ' computed properties that usually carry the checked state, so the state is only in the ' +
+                'form data, not on screen.',
+              route: sample.route,
+              viewport: 'desktop-1440',
+              evidence: [control.descriptor],
+              evaluator: 'probeStates (checked toggle)',
+              location: control.descriptor,
+              confidence: 'measured',
+              expected: { value: 1, unit: 'changed style properties when checked' },
+              observed: { value: 0, unit: 'changed style properties when checked' },
+              remediation:
+                'Draw the checked state (' +
+                control.descriptor +
+                '): the native control keeps it, so an appearance-reset needs a replacement indicator ' +
+                'plus a non-colour cue.',
+            }),
+          );
+        }
+        if (control.pressSkippedReason !== null) {
+          detail.push(
+            sample.route +
+              ' ' +
+              control.descriptor +
+              ': press not driven — ' +
+              control.pressSkippedReason,
+          );
+        }
+        if (control.pressSkippedReason === null && control.pressed.changed.length === 0) {
           findings.push(
             finding({
               check: 'component-states',
@@ -1103,24 +1174,28 @@ export function composeReport(inputs: AuditInputs): AuditReport {
         detail.push(sample.route + ': not driven — ' + notDriven + ' (application states)');
       }
     }
-    const failedCount = stateMeasured.reduce(
-      (total, sample) =>
-        total +
-        sample.value.controls.filter(
-          (control) =>
-            control.pressed.changed.length === 0 || control.disabled.changed.length === 0,
-        ).length,
-      0,
-    );
+    // The status is read from the findings just pushed, so the check can never say pass while the
+    // report carries a component-state finding.
+    const stateFindings = findings.filter((entry) => entry.check === 'component-states').length;
     checks.push(
       checkResult(
         'component-states',
-        'Component states: pressed and disabled are driven and their style deltas measured',
+        'Component states: hover, pressed, disabled and checked are driven and their style deltas measured',
         null,
-        failedCount === 0 ? 'pass' : 'fail',
+        stateFindings === 0 ? 'pass' : 'fail',
         detail,
       ),
     );
+    if (stateFindings === 0) {
+      // Keep the pass honest: a pass means every driven state was visible, not that nothing was checked.
+      checks[checks.length - 1] = {
+        ...checks[checks.length - 1]!,
+        detail: [
+          ...detail,
+          'every control driven showed a hover, press and disabled difference, and every custom checked state did',
+        ],
+      };
+    }
   }
 
   const bundle = buildEvidenceBundle(inputs);

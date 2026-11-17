@@ -110,16 +110,20 @@ and can lag — when in doubt the generated page wins.
   would attribute one element's defect to another.
 - The five measured best-practice examples apply their fixes to a temporary copy of the fixture and
   measure there; nothing is applied to a repository fixture.
-- Component states are measured where they exist in the DOM: **pressed** (a real pointer press) and
-  **disabled** (the control's own state) are driven and their changed computed properties counted
-  (T1038), so a control that acknowledges neither is reported with a number. **loading**, **success** and
-  **error** are application states and are named as not driven in every report — a guessed `.is-loading`
-  class would measure the guess. At most three controls per route are driven, so a page with more
-  interactive elements is partly measured and the check says which descriptors it drove.
-- Motion is measured by driving **one** disclosure per route (an element declaring `aria-expanded`) in
-  pointer, keyboard and `prefers-reduced-motion: reduce` contexts (T1036). A page with no such element
-  reports `not-run` with that reason, and hover-only transitions, carousels, drag gestures and
-  scroll-linked animation are not driven at all — so a G6 pass means "this disclosure kept its
+- Component states are measured where they exist in the DOM: **hover**, **pressed** (a real pointer press,
+  compared with hover so a press that only repeats the hover style is caught), **disabled** and
+  **checked** (a checkbox or radio whose appearance is custom) are driven and their changed computed
+  properties counted (T1038, T1039), so a control that acknowledges none of them is reported with a
+  number. Two exclusions are deliberate: a **native** checkbox or radio paints its tick outside computed
+  style, so its checked state is *not judged* rather than claimed broken; and a press on a checkbox is
+  skipped because a press there *is* the state change. **loading**, **success** and **error** are
+  application states and are named as not driven in every report — a guessed `.is-loading` class would
+  measure the guess. At most three controls per route are driven, in document order, so a page with more
+  interactive elements is partly measured and the check names the descriptors it drove.
+- Motion is measured by driving **one** disclosure per route — an element declaring `aria-expanded`, or a
+  native `details > summary` when the page has none (T1036, T1040) — in pointer, keyboard and
+  `prefers-reduced-motion: reduce` contexts. A page with neither reports `not-run` with that reason, and
+  hover-only transitions, carousels, drag gestures and scroll-linked animation are not driven at all — so a G6 pass means "this disclosure kept its
   information under reduced motion", not "the whole page's motion is verified".
 - Not audited independently yet. The final checkpoint (T1006) precedes that audit by
   design; `T1003`/`T1005` are owner actions.

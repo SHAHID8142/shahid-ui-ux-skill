@@ -5,8 +5,9 @@
  * the audit produced one: `--mode deep` had no interaction script, so motion was `not-run` on every
  * target forever and the reduced-motion guard shipped unmeasured.
  *
- * This module is the missing small piece: it drives one disclosure widget (an element that declares
- * `aria-expanded`) in three ways — pointer, keyboard, and pointer again under
+ * This module is the missing small piece: it drives one disclosure widget — an element that declares
+ * `aria-expanded`, or a native `details > summary` when the page has none — in three ways — pointer,
+ * keyboard, and pointer again under
  * `prefers-reduced-motion: reduce` — records what the user would see in each, and hands the traces to
  * the oracles. It does not invent a scenario for a page it cannot drive: no disclosure means
  * `not-run` with that reason, which is the honest answer and stays distinguishable from a pass.
@@ -32,6 +33,20 @@ export interface MotionProbeResult {
   readonly verdict: { readonly status: 'pass' | 'fail'; readonly detail: string[] } | null;
 }
 
+/**
+ * The two disclosure shapes this probe can drive. A hand-rolled widget exposes its state in
+ * `aria-expanded`; a native one keeps it in the `open` property of `<details>`, and clicking the
+ * `<summary>` is what a user does. Driving both means a page is not "not-run" merely because it used
+ * the platform control (T1040).
+ */
+type DisclosureKind = 'aria-expanded' | 'details';
+
+interface Disclosure {
+  readonly kind: DisclosureKind;
+  /** Selector that a click lands on and that can take focus. */
+  readonly selector: string;
+}
+
 interface Snap {
   readonly state: string;
   /** Readable text of the controlled element, empty when it is not rendered (see below). */
@@ -41,41 +56,90 @@ interface Snap {
 
 /** Read the disclosure state and the readable text of what it controls. Descriptors, not page text
  *  beyond the controlled element — a report must not quote unrelated content. */
-async function snap(page: import('playwright').Page, selector: string): Promise<Snap> {
-  return page.evaluate((triggerSelector) => {
-    const trigger = document.querySelector(triggerSelector);
-    if (trigger === null) return { state: 'missing', text: '', visible: false };
-    const controls = trigger.getAttribute('aria-controls');
-    const panel = controls === null ? null : document.getElementById(controls);
-    const state = trigger.getAttribute('aria-expanded') ?? 'none';
-    const target = panel ?? trigger.parentElement;
-    // `innerText` on a non-rendered element falls back to textContent, which would make a panel that
-    // reduced motion hides look identical to one it shows. Visibility is therefore read explicitly.
-    const visible = target !== null && (target as HTMLElement).checkVisibility();
-    const text = target === null || !visible ? '' : (target as HTMLElement).innerText.trim();
-    return { state, text: text.slice(0, 400), visible };
-  }, selector);
+async function snap(
+  page: import('playwright').Page,
+  selector: string,
+  kind: DisclosureKind,
+): Promise<Snap> {
+  return page.evaluate(
+    (input: { selector: string; kind: DisclosureKind }) => {
+      const trigger = document.querySelector(input.selector);
+      if (trigger === null) return { state: 'missing', text: '', visible: false };
+      if (input.kind === 'details') {
+        const details = trigger.closest('details');
+        if (details === null) return { state: 'missing', text: '', visible: false };
+        const visible = details.checkVisibility();
+        const text = visible ? details.innerText.trim() : '';
+        return { state: details.open ? 'open' : 'closed', text: text.slice(0, 400), visible };
+      }
+      const controls = trigger.getAttribute('aria-controls');
+      const panel = controls === null ? null : document.getElementById(controls);
+      const state = trigger.getAttribute('aria-expanded') ?? 'none';
+      const target = panel ?? trigger.parentElement;
+      // `innerText` on a non-rendered element falls back to textContent, which would make a panel that
+      // reduced motion hides look identical to one it shows. Visibility is therefore read explicitly.
+      const visible = target !== null && (target as HTMLElement).checkVisibility();
+      const text = target === null || !visible ? '' : (target as HTMLElement).innerText.trim();
+      return { state, text: text.slice(0, 400), visible };
+    },
+    { selector, kind },
+  );
 }
 
-async function transitionMs(page: import('playwright').Page, selector: string): Promise<number> {
-  return page.evaluate((triggerSelector) => {
-    const trigger = document.querySelector(triggerSelector);
-    if (trigger === null) return 0;
-    const controls = trigger.getAttribute('aria-controls');
-    const panel = controls === null ? null : document.getElementById(controls);
-    const longest = (element: Element | null): number => {
-      if (element === null) return 0;
-      const style = getComputedStyle(element);
-      const durations = style.transitionDuration.split(',').map((part) => parseFloat(part) || 0);
-      const delays = style.transitionDelay.split(',').map((part) => parseFloat(part) || 0);
-      const scale = style.transitionDuration.includes('ms') ? 1 : 1000;
-      return Math.max(
-        0,
-        ...durations.map((duration, index) => duration * scale + (delays[index] ?? 0) * scale),
-      );
-    };
-    return Math.max(longest(trigger), longest(panel));
-  }, selector);
+async function transitionMs(
+  page: import('playwright').Page,
+  selector: string,
+  kind: DisclosureKind,
+): Promise<number> {
+  return page.evaluate(
+    (input: { selector: string; kind: DisclosureKind }) => {
+      const trigger = document.querySelector(input.selector);
+      if (trigger === null) return 0;
+      const controls = trigger.getAttribute('aria-controls');
+      const panel =
+        input.kind === 'details'
+          ? trigger.closest('details')
+          : controls === null
+            ? null
+            : document.getElementById(controls);
+      const longest = (element: Element | null): number => {
+        if (element === null) return 0;
+        const style = getComputedStyle(element);
+        const durations = style.transitionDuration.split(',').map((part) => parseFloat(part) || 0);
+        const delays = style.transitionDelay.split(',').map((part) => parseFloat(part) || 0);
+        const scale = style.transitionDuration.includes('ms') ? 1 : 1000;
+        return Math.max(
+          0,
+          ...durations.map((duration, index) => duration * scale + (delays[index] ?? 0) * scale),
+        );
+      };
+      return Math.max(longest(trigger), longest(panel));
+    },
+    { selector, kind },
+  );
+}
+
+/** Pick the disclosure to drive: a hand-rolled one first, a native `details/summary` second. */
+async function findDisclosure(page: import('playwright').Page): Promise<Disclosure | null> {
+  const found = await page.evaluate(() => {
+    const custom = document.querySelector('[aria-expanded]');
+    if (custom !== null) {
+      const id = custom.getAttribute('id');
+      const selector =
+        id !== null && id !== ''
+          ? '[aria-expanded]#' + id
+          : custom.getAttribute('aria-controls') !== null
+            ? '[aria-controls="' + custom.getAttribute('aria-controls')! + '"]'
+            : '[aria-expanded]';
+      return { kind: 'aria-expanded' as const, selector, tag: custom.tagName.toLowerCase() };
+    }
+    const summary = document.querySelector('details > summary');
+    if (summary !== null) {
+      return { kind: 'details' as const, selector: 'details > summary', tag: 'summary' };
+    }
+    return null;
+  });
+  return found === null ? null : { kind: found.kind, selector: found.selector };
 }
 
 /**
@@ -134,44 +198,48 @@ export async function probeMotionWith(
     await page.goto(url, { waitUntil: 'networkidle' });
     navigation.assertOnAuthorizedPage(page);
 
-    const triggerHandle = await page.$('[aria-expanded]');
-    if (triggerHandle === null) {
+    const disclosure = await findDisclosure(page);
+    if (disclosure === null) {
       await navigation.dispose();
       await defaultContext.close();
       return {
         url,
         status: 'not-run',
         reason:
-          'no element declares aria-expanded, so there is no disclosure to drive: the audit does not invent an interaction',
+          'no element declares aria-expanded and no details/summary disclosure exists, so there is no disclosure to drive: the audit does not invent an interaction',
         trigger: null,
         transitionsMs: 0,
         verdict: null,
       };
     }
     // A stable descriptor for the report: id, else name, else the tag with its text-free position.
-    const trigger = await page.evaluate(() => {
-      const element = document.querySelector('[aria-expanded]');
+    const trigger = await page.evaluate((input: { selector: string; kind: string }) => {
+      const element = document.querySelector(input.selector);
       if (element === null) return 'unknown';
       const id = element.getAttribute('id');
       if (id !== null && id !== '') return element.tagName.toLowerCase() + '#' + id;
+      if (input.kind === 'details') {
+        const label = element.textContent?.replace(/\s+/g, ' ').trim() ?? '';
+        return 'details > summary' + (label === '' ? '' : ' "' + label.slice(0, 40) + '"');
+      }
       const label = element.getAttribute('aria-label') ?? element.getAttribute('name') ?? '';
       return element.tagName.toLowerCase() + (label === '' ? '' : '[' + label.slice(0, 40) + ']');
-    });
-    const transitionsMs = await transitionMs(page, '[aria-expanded]');
+    }, disclosure);
+    const transitionsMs = await transitionMs(page, disclosure.selector, disclosure.kind);
 
-    const pointerBefore = await snap(page, '[aria-expanded]');
-    await page.click('[aria-expanded]');
+    const pointerBefore = await snap(page, disclosure.selector, disclosure.kind);
+    await page.click(disclosure.selector);
     await page.waitForTimeout(400);
-    const pointerAfter = await snap(page, '[aria-expanded]');
+    const pointerAfter = await snap(page, disclosure.selector, disclosure.kind);
 
     // Keyboard: reload so the widget starts closed, then reach it the way a keyboard user does.
     await page.goto(url, { waitUntil: 'networkidle' });
     navigation.assertOnAuthorizedPage(page);
-    await page.focus('[aria-expanded]');
-    const keyboardBefore = await snap(page, '[aria-expanded]');
-    await page.keyboard.press('Enter');
+    await page.focus(disclosure.selector);
+    const keyboardBefore = await snap(page, disclosure.selector, disclosure.kind);
+    await page.keyboard.press(disclosure.kind === 'details' ? 'Space' : 'Enter');
     await page.waitForTimeout(400);
-    const keyboardAfter = await snap(page, '[aria-expanded]');
+    const keyboardAfter = await snap(page, disclosure.selector, disclosure.kind);
     await navigation.dispose();
     await defaultContext.close();
 
@@ -183,10 +251,10 @@ export async function probeMotionWith(
     const reducedGuard = await guardNavigations(reducedPage, authorizedHosts);
     await reducedPage.goto(url, { waitUntil: 'networkidle' });
     reducedGuard.assertOnAuthorizedPage(reducedPage);
-    const reducedBefore = await snap(reducedPage, '[aria-expanded]');
-    await reducedPage.click('[aria-expanded]');
+    const reducedBefore = await snap(reducedPage, disclosure.selector, disclosure.kind);
+    await reducedPage.click(disclosure.selector);
     await reducedPage.waitForTimeout(400);
-    const reducedAfter = await snap(reducedPage, '[aria-expanded]');
+    const reducedAfter = await snap(reducedPage, disclosure.selector, disclosure.kind);
     await reducedGuard.dispose();
     await reducedContext.close();
 

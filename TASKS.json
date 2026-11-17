@@ -2668,7 +2668,10 @@
         "T1035",
         "T1036",
         "T1037",
-        "T1038"
+        "T1038",
+        "T1039",
+        "T1040",
+        "T1041"
       ],
       "files": [],
       "acc": [
@@ -5002,6 +5005,112 @@
         ".sus-dev/VERIFICATION/T1038.md",
         "packages/eval-core/tests/component-states.test.ts",
         "fixtures/bestpractice/states/index.html"
+      ]
+    },
+    {
+      "id": "T1039",
+      "m": "M12",
+      "title": "Component states: drive hover and checked, and refuse to judge a native tick",
+      "obj": "pressed/disabled were measured in T1038; hover is a real DOM state and so is :checked where the appearance is custom. Compare the press with hover so a press that repeats hover is caught, judge checked only for a custom appearance, and skip the press on a toggle because pressing it is the state change.",
+      "deps": [
+        "T1038"
+      ],
+      "files": [
+        "packages/eval-core/src/harness/states.ts",
+        "packages/eval-core/src/audit/",
+        "packages/eval-core/tests/",
+        "fixtures/bestpractice/",
+        "docs/"
+      ],
+      "acc": [
+        "hover is driven and counted",
+        "the press delta is measured against hover, so a control with hover but no press distinction fails",
+        "a checkbox/radio press is skipped with a stated reason instead of toggling the control",
+        ":checked is read after a frame, not in the task that flips it",
+        "a native-appearance control is not judged for checked, and the report says so",
+        "the check status is derived from the findings it pushed, so pass and findings cannot disagree"
+      ],
+      "tests": [
+        "packages/eval-core/tests/component-states.test.ts"
+      ],
+      "risk": "a probe that measures its own click, or claims a native control is broken",
+      "rollback": "drop the hover/checked deltas; pressed and disabled behave as in T1038",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1039.md",
+        "packages/eval-core/tests/component-states.test.ts",
+        "fixtures/bestpractice/states-checked/index.html"
+      ]
+    },
+    {
+      "id": "T1040",
+      "m": "M12",
+      "title": "Motion: drive a native details/summary disclosure as a second shape",
+      "obj": "T1036 could only drive an element declaring aria-expanded, so a page using the platform disclosure was not-run forever. Pick the disclosure in two steps and drive both shapes through the same oracles.",
+      "deps": [
+        "T1039"
+      ],
+      "files": [
+        "packages/eval-core/src/harness/motion.ts",
+        "packages/eval-core/tests/",
+        "fixtures/bestpractice/",
+        "docs/"
+      ],
+      "acc": [
+        "a details > summary page is measured, not not-run",
+        "state is read from details.open, not an aria attribute",
+        "keyboard uses Space for the native summary",
+        "a native disclosure that loses content under reduced motion fails reduced-motion-information-lost",
+        "a page with neither shape stays not-run and the reason names both"
+      ],
+      "tests": [
+        "packages/eval-core/tests/motion-probe.test.ts"
+      ],
+      "risk": "reading a native disclosure's state from the wrong attribute and reporting a false pass",
+      "rollback": "revert to the aria-expanded-only probe",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1040.md",
+        "packages/eval-core/tests/motion-probe.test.ts",
+        "fixtures/bestpractice/motion-details-lost/index.html"
+      ]
+    },
+    {
+      "id": "T1041",
+      "m": "M12",
+      "title": "File scope: attribute an HTML file to the route it serves, keep components unattributed",
+      "obj": "R8 left file scopes unable to attribute anything. An HTML file is the page it serves, so its route's findings are its findings without any descriptor-to-file guess; a component file stays unattributed and the two counts are no longer confused.",
+      "deps": [
+        "T1040"
+      ],
+      "files": [
+        "packages/eval-core/src/bestpractice/",
+        "packages/eval-core/tests/",
+        "docs/"
+      ],
+      "acc": [
+        "an HTML file scope proposes its route's findings and prints the attribution basis",
+        "a component scope still exits 3 with the remedy named",
+        "a clean HTML file scope exits 0, not 3",
+        "findings on other routes are counted as out of scope, not unattributed",
+        "the route is derived exactly as the audit derives it, index.html included"
+      ],
+      "tests": [
+        "packages/eval-core/tests/bestpractice.file-scope.test.ts"
+      ],
+      "risk": "attributing one page's defect to another page through a wrong route derivation",
+      "rollback": "remove the route filter; file scopes return to the exit-3 refusal",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1041.md",
+        "packages/eval-core/tests/bestpractice.file-scope.test.ts",
+        "packages/eval-core/src/bestpractice/command.ts"
       ]
     }
   ]

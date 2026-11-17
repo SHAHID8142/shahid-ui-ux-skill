@@ -6,8 +6,10 @@
  * application states, and inventing them (setting a `.is-loading` class we guessed) would measure our
  * guess rather than the product. So this probe drives the two that are real DOM states:
  *
- *  - **pressed** — a pointer press on the control;
- *  - **disabled** — the control's own disabled/aria-disabled state.
+ *  - **hover** — the pointer over the control;
+ *  - **pressed** — a pointer press, compared with hover (so a press that only repeats hover is caught);
+ *  - **disabled** — the control's own disabled/aria-disabled state;
+ *  - **checked** — toggling a checkbox or radio, and only those.
  *
  * For each it records which computed properties changed, which is a number a report can carry. Zero
  * changed properties on a press means the control gives no perceptible feedback; zero on disabled means
@@ -28,8 +30,21 @@ export interface StateDelta {
 
 export interface ControlStates {
   readonly descriptor: string;
+  /** Pointer over the control, compared with idle. */
+  readonly hover: StateDelta;
+  /** Pointer press, compared with **hover** — so a press that only repeats hover is not a press. */
   readonly pressed: StateDelta;
+  /** Why the press was not driven; null when it was. */
+  readonly pressSkippedReason: string | null;
   readonly disabled: StateDelta;
+  /** Only for a checkbox/radio with a custom appearance: toggling it, compared with idle. */
+  readonly checked: StateDelta | null;
+  /**
+   * Why `checked` was not judged, when the control has a checked state but the browser draws it itself.
+   * A native checkbox renders its tick outside computed style, so claiming "looks unchecked" from a
+   * style delta would be false.
+   */
+  readonly checkedSkippedReason: string | null;
 }
 
 export interface StatesProbeResult {
@@ -56,10 +71,14 @@ const STYLE_PROPERTIES = [
 ] as const;
 
 const MAX_CONTROLS = 3;
-const SELECTOR = 'button, [role="button"], input[type="submit"], input[type="button"], a[href]';
+const SELECTOR =
+  'button, [role="button"], a[href], input[type="submit"], input[type="button"], ' +
+  'input[type="checkbox"], input[type="radio"], select, textarea';
 
 interface Snapshot {
   readonly descriptor: string;
+  /** True for a checkbox/radio: pressing it changes state, so a press delta would measure that change. */
+  readonly toggle: boolean;
   readonly style: Record<string, string>;
   readonly box: { x: number; y: number } | null;
 }
@@ -77,11 +96,27 @@ function readSnapshot(page: Page, index: number): Promise<Snapshot | null> {
       const rect = element.getBoundingClientRect();
       const id = element.getAttribute('id');
       const classes = element.className.trim().split(/\s+/).filter(Boolean).slice(0, 2);
-      const descriptor =
-        element.tagName.toLowerCase() +
-        (id ? '#' + id : classes.length ? '.' + classes.join('.') : '');
+      const tag = element.tagName.toLowerCase();
+      const asInput = element instanceof HTMLInputElement ? element : null;
+      const label =
+        id !== null && id !== ''
+          ? '#' + id
+          : classes.length
+            ? '.' + classes.join('.')
+            : asInput !== null
+              ? '[type=' +
+                asInput.type +
+                (asInput.name === '' ? '' : '[name=' + asInput.name + ']') +
+                ']'
+              : '';
+      const labelText = (element.closest('label')?.textContent ?? element.textContent ?? '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, 32);
+      const descriptor = tag + label + (labelText === '' ? '' : ' "' + labelText + '"');
       return {
         descriptor,
+        toggle: asInput !== null && (asInput.type === 'checkbox' || asInput.type === 'radio'),
         style,
         box:
           rect.width > 0 && rect.height > 0
@@ -133,7 +168,7 @@ export async function probeStatesWith(
         url,
         status: 'not-run',
         reason:
-          'no interactive control (button, link, submit input) on this route: nothing to drive',
+          'no interactive control (button, link, submit input, checkbox, select or textarea) on this route: nothing to drive',
         controls: [],
         notDriven: ['loading', 'success', 'error'],
       };
@@ -144,44 +179,132 @@ export async function probeStatesWith(
       const idle = await readSnapshot(page, index);
       if (idle === null) continue;
 
-      // Pressed: a real pointer press, not a class we set.
+      // Hover: the pointer arrives first. Its delta is measured against idle, and the press below is
+      // measured against *hover*: a control that only repeats its hover style on press gives no press
+      // feedback, and comparing press to idle would hide exactly that.
+      let hoverChanged: readonly string[] = [];
+      let hoverStyle: Record<string, string> | null = null;
       let pressedChanged: readonly string[] = [];
+      let pressSkippedReason: string | null = null;
       if (idle.box !== null) {
         await page.mouse.move(idle.box.x, idle.box.y);
-        await page.mouse.down();
-        const pressedStyle = await readStyle(page, index);
-        await page.mouse.up();
-        if (pressedStyle !== null) pressedChanged = [...delta(idle.style, pressedStyle).changed];
+        hoverStyle = await readStyle(page, index);
+        if (hoverStyle !== null) hoverChanged = [...delta(idle.style, hoverStyle).changed];
+        if (idle.toggle) {
+          // A press on a checkbox *is* a state change, and a click here reverted the state the checked
+          // probe was about to measure. The checked probe drives that control instead.
+          pressSkippedReason =
+            'pressing a checkbox or radio toggles it, so a press delta would measure the state change, ' +
+            'not press feedback';
+        } else {
+          await page.mouse.down();
+          const pressedStyle = await readStyle(page, index);
+          await page.mouse.up();
+          if (pressedStyle !== null) {
+            pressedChanged = [...delta(hoverStyle ?? idle.style, pressedStyle).changed];
+          }
+        }
+      } else if (idle.toggle) {
+        pressSkippedReason =
+          'the control has no rendered box, so a pointer press on it would not land';
       }
 
-      // Disabled: the control's own state, set and then restored on the page (never on the source).
-      const disabledStyle = await page.evaluate(
-        (input: { index: number; properties: readonly string[]; selector: string }) => {
+      // Disabled: the control's own state, set on the loaded page and restored, never written to source.
+      const disabledProbe = await page.evaluate(
+        (input: { selector: string; index: number }) => {
           const element = document.querySelectorAll(input.selector)[input.index];
-          if (!(element instanceof HTMLElement)) return null;
+          if (!(element instanceof HTMLElement)) return { applicable: false };
           const hadDisabled = element.hasAttribute('disabled');
           const hadAria = element.getAttribute('aria-disabled');
-          if ('disabled' in element) (element as HTMLButtonElement).disabled = true;
+          element.setAttribute('disabled', '');
           element.setAttribute('aria-disabled', 'true');
-          const computed = getComputedStyle(element);
-          const style: Record<string, string> = {};
-          for (const property of input.properties)
-            style[property] = computed.getPropertyValue(property);
-          if (!hadDisabled) element.removeAttribute('disabled');
-          if (hadAria === null) element.removeAttribute('aria-disabled');
-          else element.setAttribute('aria-disabled', hadAria);
-          return style;
+          return { applicable: true, hadDisabled, hadAria };
         },
-        { index, properties: STYLE_PROPERTIES as readonly string[], selector: SELECTOR },
+        { selector: SELECTOR, index },
       );
+      let disabledStyle: Record<string, string> | null = null;
+      if (disabledProbe.applicable) {
+        disabledStyle = await readStyle(page, index);
+        await page.evaluate(
+          (input: {
+            selector: string;
+            index: number;
+            hadDisabled: boolean;
+            hadAria: string | null;
+          }) => {
+            const element = document.querySelectorAll(input.selector)[input.index];
+            if (!(element instanceof HTMLElement)) return;
+            if (!input.hadDisabled) element.removeAttribute('disabled');
+            if (input.hadAria === null) element.removeAttribute('aria-disabled');
+            else element.setAttribute('aria-disabled', input.hadAria);
+          },
+          {
+            selector: SELECTOR,
+            index,
+            hadDisabled: disabledProbe.hadDisabled === true,
+            hadAria: disabledProbe.hadAria ?? null,
+          },
+        );
+      }
+
+      // Checked: `:checked` matching is refreshed on the next style recalc, not in the task that flips
+      // the property, so the flip, a frame and the read are three steps. Reading in the same task
+      // returned the old background and hid a real checked state.
+      const checkedProbe = await page.evaluate(
+        (input: { selector: string; index: number }) => {
+          const element = document.querySelectorAll(input.selector)[input.index];
+          if (!(element instanceof HTMLInputElement)) return { applicable: false, skipped: null };
+          if (element.type !== 'checkbox' && element.type !== 'radio') {
+            return { applicable: false, skipped: null };
+          }
+          const appearance = getComputedStyle(element).appearance;
+          if (appearance === 'auto' || appearance === '') {
+            return {
+              applicable: false,
+              skipped:
+                'its appearance is native, so the browser draws the checked state outside computed style',
+            };
+          }
+          element.dataset.susCheckedBefore = element.checked ? 'checked' : 'unchecked';
+          element.checked = !element.checked;
+          return { applicable: true, skipped: null };
+        },
+        { selector: SELECTOR, index },
+      );
+      let checkedStyle: Record<string, string> | null = null;
+      if (checkedProbe.applicable) {
+        await page.evaluate(
+          () => new Promise((resolve) => requestAnimationFrame(() => resolve(0))),
+        );
+        checkedStyle = await readStyle(page, index);
+        await page.evaluate(
+          (input: { selector: string; index: number }) => {
+            const element = document.querySelectorAll(input.selector)[input.index];
+            if (!(element instanceof HTMLInputElement)) return;
+            element.checked = element.dataset.susCheckedBefore === 'checked';
+            delete element.dataset.susCheckedBefore;
+          },
+          { selector: SELECTOR, index },
+        );
+      }
 
       controls.push({
         descriptor: idle.descriptor,
+        hover: { changed: hoverChanged, styleCount: STYLE_PROPS_COUNT },
         pressed: { changed: pressedChanged, styleCount: STYLE_PROPS_COUNT },
+        pressSkippedReason,
         disabled: {
           changed: disabledStyle === null ? [] : delta(idle.style, disabledStyle).changed,
           styleCount: STYLE_PROPS_COUNT,
         },
+        checked:
+          checkedStyle === null
+            ? null
+            : {
+                changed: [...delta(idle.style, checkedStyle).changed],
+                styleCount: STYLE_PROPS_COUNT,
+              },
+        checkedSkippedReason: checkedProbe.skipped,
       });
     }
     return {

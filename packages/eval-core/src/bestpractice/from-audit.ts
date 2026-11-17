@@ -96,6 +96,12 @@ export interface ProposalInputSelection {
    * evidence about this one. Omit to propose every finding in the selected dimensions.
    */
   readonly targets?: readonly string[];
+  /**
+   * Restrict to findings measured on one route. An HTML source file *is* the page it serves, so a
+   * file scope for `about.html` attributes that page's findings without mapping any descriptor to a
+   * source file (issue #21 R8): the file needs no mapping because it is the unit the audit measured.
+   */
+  readonly route?: string;
 }
 
 export interface ItemsFromReport {
@@ -275,6 +281,7 @@ export function itemsFromReport(
 ): ItemsFromReport {
   const wanted = new Set(selection.dimensions);
   const targets = selection.targets;
+  const route = selection.route;
   const items: ProposalItem[] = [];
   const groups = new Map<string, { label: string; contexts: string[]; items: ProposalItem[] }>();
   let outOfScope = 0;
@@ -287,6 +294,11 @@ export function itemsFromReport(
       continue;
     }
     if (!wanted.has(dimension)) {
+      outOfScope += 1;
+      continue;
+    }
+    if (route !== undefined && finding.route !== route) {
+      // Measured, but on another page of the site: out of this file's scope, not unattributable.
       outOfScope += 1;
       continue;
     }

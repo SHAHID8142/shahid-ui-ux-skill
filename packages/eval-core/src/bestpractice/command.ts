@@ -13,7 +13,7 @@
  *   3 proposal written but nothing in scope was measured (every item is a judgment)
  */
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { isAbsolute, join, resolve, sep } from 'node:path';
+import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
   SCOPE_LIMITS,
@@ -132,6 +132,33 @@ async function openScopePage(
   return { page, close: () => browser.close() };
 }
 
+/**
+ * The route an HTML source file serves, or null when the scope is not an HTML file.
+ *
+ * This is the one attribution the command can make honestly without a descriptor→file map: for a
+ * static HTML file the file *is* the page, so the findings the audit measured on that route are
+ * findings about that file. A component (`.tsx`, `.vue`, `.astro`) produces a fragment of many pages
+ * and stays unmapped, and still exits 3 rather than claiming it was clean.
+ */
+export function htmlScopeRoute(
+  reference: { readonly kind: string; readonly value: string },
+  target: string,
+  targetIsDirectory: boolean,
+): { readonly route: string; readonly file: string } | null {
+  if (reference.kind !== 'component-path' && reference.kind !== 'editor-selection') return null;
+  if (!/[^/]\.html?$/i.test(reference.value)) return null;
+  const file = resolve(reference.value);
+  if (!existsSync(file) || statSync(file).isDirectory()) return null;
+  const root = targetIsDirectory ? resolve(target) : dirname(resolve(target));
+  const rel = relative(root, file).split(sep).join('/');
+  if (rel.startsWith('..')) return null;
+  if (rel === 'index.html' || rel === 'index.htm') return { route: '/', file };
+  if (rel.endsWith('/index.html') || rel.endsWith('/index.htm')) {
+    return { route: '/' + rel.slice(0, rel.lastIndexOf('/')), file };
+  }
+  return { route: '/' + rel, file };
+}
+
 export interface ScopedSelection {
   readonly dimensions: readonly FocusDimension[];
   readonly notApplicable: readonly { dimension: FocusDimension; reason: string }[];
@@ -151,6 +178,7 @@ export function selectScopedItems(
   report: AuditRun['report'],
   scope: ScopeResolution,
   focus?: readonly FocusDimension[],
+  options?: { readonly route?: string },
 ): ScopedSelection {
   if (scope.focus === null) {
     return {
@@ -172,13 +200,17 @@ export function selectScopedItems(
   // The page owns everything measured on it: no element descriptor can be "outside" the document,
   // and the page-level findings (a missing description) are reported at their own route, which no
   // element descriptor would ever match. So a page scope attributes by dimension, not by selector.
+  // An HTML file is a page: the audit measured exactly the unit the scope names, so its findings are
+  // attributable without any descriptor→file guess (issue #21 R8). Component files stay unmapped.
+  const route = options?.route;
   const targets =
-    scope.focus.kind === 'page'
+    scope.focus.kind === 'page' || route !== undefined
       ? undefined
       : scope.targets.flatMap((target) => [target.selector, ...(target.descendants ?? [])]);
   const { items, outOfScope, unattributed, unmapped } = itemsFromReport(report, {
     dimensions,
     targets,
+    ...(route === undefined ? {} : { route }),
   });
   return {
     dimensions,
@@ -302,8 +334,15 @@ export async function runBestPractice(request: BestPracticeRequest): Promise<Bes
     };
   }
 
-  // 3. Selection: the scope's dimensions, optionally narrowed by --focus.
-  const selection = selectScopedItems(audit.report, scope, request.focus);
+  // 3. Selection: the scope's dimensions, optionally narrowed by --focus. An HTML file scope also
+  //    narrows to the route that file serves — the file is the page.
+  const scopeRoute = htmlScopeRoute(request.scope, request.target, targetIsDirectory);
+  const selection = selectScopedItems(
+    audit.report,
+    scope,
+    request.focus,
+    scopeRoute === null ? undefined : { route: scopeRoute.route },
+  );
   const {
     dimensions,
     items,
@@ -345,7 +384,15 @@ export async function runBestPractice(request: BestPracticeRequest): Promise<Bes
         : 'The audit measured ' +
           dimensions.join(', ') +
           ' and found nothing to change inside this scope' +
-          (outOfScope === 0 ? '' : '; ' + outOfScope + ' finding(s) in other dimensions') +
+          (outOfScope === 0
+            ? ''
+            : scopeRoute === null
+              ? '; ' + outOfScope + ' finding(s) in other dimensions'
+              : '; ' +
+                outOfScope +
+                ' finding(s) on other routes (this file serves only `' +
+                scopeRoute.route +
+                '`)') +
           (unattributed === 0
             ? ''
             : '; ' + unattributed + ' finding(s) the audit attributes elsewhere on the page') +
@@ -413,7 +460,18 @@ export async function runBestPractice(request: BestPracticeRequest): Promise<Bes
   );
   const exitCode = facts.length === 0 ? 3 : blocking.length > 0 ? 1 : 0;
 
-  const markdown = renderProposalMarkdown(proposal);
+  const rendered = renderProposalMarkdown(proposal);
+  // An HTML file scope attributes by route, not by descriptor→file mapping. Say so where a reader
+  // meets the scope line, so the attribution basis travels with the proposal.
+  const markdown =
+    scopeRoute === null
+      ? rendered
+      : rendered.replace(
+          '\n',
+          '\nAttribution: this HTML file is the page it serves, so the audit findings measured on the `' +
+            scopeRoute.route +
+            '` route are findings about this file.\n',
+        );
   const proposalPath = join(request.outDir, 'proposal.json');
   const markdownPath = join(request.outDir, 'proposal.md');
   writeFileSync(proposalPath, JSON.stringify(proposal, null, 2) + '\n', 'utf8');
