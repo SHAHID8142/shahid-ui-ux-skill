@@ -11,7 +11,7 @@ BUILD_COMPLETE_PUSHED=true at release revision 2f344df — pnpm regression 3 sta
 679 tests). Architecture: ADR-001/002/004/005/006 adopted, ADR-003 as amended (D29).
 Repository is PUBLIC (D34); the product is unpublished.
 
-Canonical task statuses: TASKS.json (166 of 169 done; owner-only T1003 independent audit and
+Canonical task statuses: TASKS.json (177 of 180 done; owner-only T1003 independent audit and
 T1005 release approval/publish remain, both owner-only, and the M12 hardening queue T1026–T1029
 from issue triage is open). Every D32 owner-issue item from
 triaging issues #13/#14 is done and receipted. Issue #15 (`/sus-bestpractice`) is triaged into

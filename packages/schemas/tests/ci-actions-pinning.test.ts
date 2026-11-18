@@ -118,7 +118,9 @@ describe('the host-smoke step can actually fail the build (T1048)', () => {
     const step = smokeLine();
     expect(step).not.toBeNull();
     expect(step?.text).toMatch(/smoke-host\.mjs\s*>\s*\S+/);
-    expect(step?.text).not.toContain('|');
+    // A pipe INTO another command consumes the smoke's exit code (the T1048 defect); an `||`
+    // fallback that prints the receipt on failure does not — it preserves the exit code.
+    expect(step?.text).not.toMatch(/smoke-host\.mjs[^>|]*\|/);
   });
 
   it('still writes the JSON receipt the job documents', () => {
