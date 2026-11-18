@@ -381,7 +381,11 @@ export function untestedFromReport(
     found.push({
       dimension,
       reason:
-        'check `' + descriptor.id + '` is not part of ' + mode + ' mode: the dimensions it measures were not measured, not passed',
+        'check `' +
+        descriptor.id +
+        '` is not part of ' +
+        mode +
+        ' mode: the dimensions it measures were not measured, not passed',
     });
   }
   return found;

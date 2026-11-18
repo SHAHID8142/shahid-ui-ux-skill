@@ -280,9 +280,9 @@ describe('apply — forged, stale, replayed and untrusted authority is refused b
     const receipt = await harness.engine.apply(baseRequest(harness));
     for (const hostile of ['../../escape', 'sub/dir', 'op id', '']) {
       expect(() => harness.engine.receipts.load(hostile)).toThrow(/invalid operation id/);
-      expect(() =>
-        harness.engine.receipts.save({ ...receipt, operationId: hostile }),
-      ).toThrow(/invalid operation id/);
+      expect(() => harness.engine.receipts.save({ ...receipt, operationId: hostile })).toThrow(
+        /invalid operation id/,
+      );
     }
     // A legitimate id (the randomUUID shape: hex with hyphens) still round-trips.
     const fresh = happyHarness();

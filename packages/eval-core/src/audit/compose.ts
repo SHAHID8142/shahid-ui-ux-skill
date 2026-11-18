@@ -1013,8 +1013,7 @@ export function composeReport(inputs: AuditInputs): AuditReport {
     // that reads as fail; routes the probe never drove (or that errored) keep the check at
     // not-run with the reasons in the detail (T1003-2/T1003-26).
     const unmeasured = motionMissingEntries.length + motionFailed.length;
-    const status =
-      failed.length > 0 ? 'fail' : unmeasured > 0 ? 'not-run' : 'pass';
+    const status = failed.length > 0 ? 'fail' : unmeasured > 0 ? 'not-run' : 'pass';
     checks.push(
       checkResult(
         'transition-oracle',
@@ -1024,12 +1023,12 @@ export function composeReport(inputs: AuditInputs): AuditReport {
         detail,
         status === 'not-run'
           ? 'the probe did not drive every route: ' +
-            [
-              ...motionMissingEntries.map(
-                (entry) => entry.route + ': ' + (entry.value.reason ?? 'not driven'),
-              ),
-              ...motionFailed.map((failure) => failure.route + ': ' + failure.reason),
-            ].join('; ')
+              [
+                ...motionMissingEntries.map(
+                  (entry) => entry.route + ': ' + (entry.value.reason ?? 'not driven'),
+                ),
+                ...motionFailed.map((failure) => failure.route + ': ' + failure.reason),
+              ].join('; ')
           : undefined,
       ),
     );
@@ -1260,12 +1259,12 @@ export function composeReport(inputs: AuditInputs): AuditReport {
         detail,
         stateStatus === 'not-run'
           ? 'the states probe did not measure every route: ' +
-            [
-              ...stateNotRun.map(
-                (sample) => sample.route + ': ' + (sample.value.reason ?? 'not driven'),
-              ),
-              ...stateFailed.map((failure) => failure.route + ': ' + failure.reason),
-            ].join('; ')
+              [
+                ...stateNotRun.map(
+                  (sample) => sample.route + ': ' + (sample.value.reason ?? 'not driven'),
+                ),
+                ...stateFailed.map((failure) => failure.route + ': ' + failure.reason),
+              ].join('; ')
           : undefined,
       ),
     );
@@ -1322,7 +1321,10 @@ export function composeReport(inputs: AuditInputs): AuditReport {
   for (const entry of inputs.html) {
     if (entry.html !== null && entry.reason !== undefined) {
       needsReview.push(
-        entry.route + ': ' + entry.reason + ' — defects beyond the cutoff are unmeasured, not passed',
+        entry.route +
+          ': ' +
+          entry.reason +
+          ' — defects beyond the cutoff are unmeasured, not passed',
       );
     }
   }

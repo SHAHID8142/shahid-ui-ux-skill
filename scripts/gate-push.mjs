@@ -85,7 +85,7 @@ try {
   }
   if (baselinesDirtyBefore && drift !== '') {
     lines.push(
-      '[WARN] evals/baselines had uncommitted edits before the gate ran; they are preserved, mixed with verify\'s timing churn — review before committing',
+      "[WARN] evals/baselines had uncommitted edits before the gate ran; they are preserved, mixed with verify's timing churn — review before committing",
     );
   }
 } catch (error) {
@@ -100,7 +100,7 @@ const dirtyAfterVerify = git(['status', '--porcelain']).trim();
 const dirtyNote =
   dirtyAfterVerify === ''
     ? ''
-    : ' (verified with uncommitted changes in the tree — the verified tree is NOT exactly the pushed commit; CI\'s fresh-clone job re-verifies the pushed commit after push)';
+    : " (verified with uncommitted changes in the tree — the verified tree is NOT exactly the pushed commit; CI's fresh-clone job re-verifies the pushed commit after push)";
 lines.push(`[INFO] verified tree: ${head}${dirtyNote}`);
 
 console.log(lines.join('\n'));

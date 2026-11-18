@@ -468,8 +468,14 @@ describe('audit evidence contract (T1013)', () => {
     expect(found[0]!.observation.confidence).toBe('measured');
     // T1055 (audit finding T1003-10): a boolean rule still observes something. Without an
     // observation this finding used to refuse the whole proposal (fact-without-observation).
-    expect(found[0]!.observation.expected).toEqual({ value: 1, unit: 'visible focus indicator while focused' });
-    expect(found[0]!.observation.observed).toEqual({ value: 0, unit: 'visible focus indicator while focused' });
+    expect(found[0]!.observation.expected).toEqual({
+      value: 1,
+      unit: 'visible focus indicator while focused',
+    });
+    expect(found[0]!.observation.observed).toEqual({
+      value: 0,
+      unit: 'visible focus indicator while focused',
+    });
     expect(report.checks.find((c) => c.id === 'keyboard-flow')?.status).toBe('fail');
     expect(report.summary.P1).toBe(1);
   });
@@ -526,7 +532,9 @@ describe('audit evidence contract (T1013)', () => {
   // only in a header comment.
   it('renders a network boundary section when the proxy refused hosts (T1052)', () => {
     const report = composeReport(
-      base({ networkRefusals: ['blocked.invalid (plain request)', 'blocked.invalid (CONNECT tunnel)'] }),
+      base({
+        networkRefusals: ['blocked.invalid (plain request)', 'blocked.invalid (CONNECT tunnel)'],
+      }),
     );
     expect(report.networkRefusals).toHaveLength(2);
     const markdown = renderAuditMarkdown(report);

@@ -149,14 +149,21 @@ describe('planted-manifest containment (T1051, audit finding T1003-6)', () => {
     const opId = 'planted-0000';
     const dir = join(root, '.sus', 'transactions', opId);
     mkdirSync(dir, { recursive: true });
-    writeFileSync(join(dir, 'manifest.json'), JSON.stringify({
-      opId,
-      planId: 'planted-plan',
-      contractVersion: 1,
-      createdAt: new Date().toISOString(),
-      state: 'prepared',
-      files,
-    }, null, 2));
+    writeFileSync(
+      join(dir, 'manifest.json'),
+      JSON.stringify(
+        {
+          opId,
+          planId: 'planted-plan',
+          contractVersion: 1,
+          createdAt: new Date().toISOString(),
+          state: 'prepared',
+          files,
+        },
+        null,
+        2,
+      ),
+    );
     return opId;
   }
 
