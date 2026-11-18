@@ -38,6 +38,11 @@ export async function startAuthorizedProxy(
   };
 
   const proxy = createServer((req, res) => {
+    // A teardown reset on a client socket is an expected part of an audit run ending, not an
+    // exceptional event: without a handler the 'error' event crashes the process with an
+    // unhandled ECONNRESET mid-teardown (4 unhandled errors in one verify run).
+    req.on('error', () => req.destroy());
+    res.on('error', () => res.destroy());
     let destination: URL;
     try {
       destination = new URL(req.url ?? '');
@@ -66,6 +71,9 @@ export async function startAuthorizedProxy(
     req.pipe(upstream);
   });
 
+  proxy.on('clientError', (_error: Error, clientSocket: Socket) => {
+    clientSocket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+  });
   proxy.on('connect', (req: { url?: string }, socket: Socket, head: Buffer) => {
     // A `CONNECT` target is `host:port`, and an IPv6 literal is `[::1]:443`. Splitting on ':' read that
     // as host `[`, which is refused — safe, but it also meant an authorized IPv6 host could never be
@@ -87,6 +95,7 @@ export async function startAuthorizedProxy(
       socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
       return;
     }
+    socket.on('error', () => socket.destroy());
     const upstream = netConnect(port, host, () => {
       socket.write('HTTP/1.1 200 Connection Established\r\n\r\n');
       if (head.length > 0) upstream.write(head);
