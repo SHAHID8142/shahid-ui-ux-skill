@@ -260,7 +260,7 @@ describe('session expiry (T1062, issue #25)', () => {
   });
 
   it('evicts the least-recently-used session at the cap, and the evicted token fails', () => {
-    let now = 3_000_000;
+    const now = 3_000_000;
     const bridge = expiryBridge(() => now);
     const a = bridge.openSession('http://127.0.0.1:4317');
     const b = bridge.openSession('http://127.0.0.1:4317');
@@ -277,7 +277,7 @@ describe('session expiry (T1062, issue #25)', () => {
   });
 
   it('a closed session stays closed and a fresh bridge knows nothing of old tokens (post-restart)', () => {
-    let now = 4_000_000;
+    const now = 4_000_000;
     const bridge = expiryBridge(() => now);
     const { sessionId, token } = bridge.openSession('http://127.0.0.1:4317');
     bridge.closeSession(sessionId);
