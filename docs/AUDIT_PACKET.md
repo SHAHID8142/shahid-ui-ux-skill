@@ -37,7 +37,7 @@ Three habits make your review worth more than the build's own receipts:
 | Checkpoint | T1006, the verified final push before this audit |
 | Node / pnpm | 26.13.1 / 11.22.0 |
 | Build state claimed by the author | `pnpm verify` green: 96 test files + 3 skipped, 1050 tests passing, 61/61 gates |
-| Task state claimed by the author | `TASKS.json`: pending exactly T1003 and T1005 (T1003 was commissioned after this row was written; absolute done/total counts rot with every task — read `git show HEAD:TASKS.json` yourself for the count at the revision you audit) |
+| Task state claimed by the author | `TASKS.json`: pending T1003 (this audit), T1005 (release approval) and T1062 (session expiry, deferred — owner to accept or reject); absolute done/total counts rot with every task — read `git show HEAD:TASKS.json` yourself for the count at the revision you audit |
 
 Verify all five lines yourself. A wrong row here is a finding in itself (severity: high — the documents would
 be describing a tree that is not the one under review).

@@ -167,7 +167,14 @@ function captureFindings(samples: readonly LiveSample<CaptureResult>[]): AuditFi
               check: 'capture-matrix',
               severity: 'P2',
               effort: 'quick-win',
-              title: 'Tap target below 44x44 css px at ' + captureViewportName(combo.viewport),
+              // The theme is in the title (id material): the same control flagged in both themes
+              // produced two byte-identical findings with one id and an inflated summary.
+              title:
+                'Tap target below 44x44 css px at ' +
+                captureViewportName(combo.viewport) +
+                ' in ' +
+                combo.theme +
+                ' theme',
               detail:
                 target.selector +
                 ' measures ' +
@@ -748,11 +755,19 @@ function seoCheck(html: readonly RouteHtml[]): AuditCheckResult {
     for (const line of [...result.g3.detail, ...result.g9.detail]) {
       detail.push(entry.route + ': ' + line);
     }
+    // T1054 follow-up (re-audit finding F6): g3/g9 detail carry the structural sub-checks in
+    // their own wording, so an exact-match dedupe never matched and five defects were reported
+    // twice. Only the two sub-checks the gate details never mention (title, meta description)
+    // need their own line; the structural ones are already named above.
     for (const check of result.checks) {
       if (check.status === 'pass') continue;
-      const alreadyDetailed =
-        result.g3.detail.includes(check.detail) || result.g9.detail.includes(check.detail);
-      if (!alreadyDetailed) {
+      const detailedInGate =
+        check.id === 'single-h1' ||
+        check.id === 'heading-ladder' ||
+        check.id === 'img-alt' ||
+        check.id === 'no-placeholders' ||
+        check.id === 'single-main';
+      if (!detailedInGate) {
         detail.push(entry.route + ': ' + check.id + ' — ' + check.detail);
       }
     }

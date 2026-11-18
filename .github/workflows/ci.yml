@@ -125,7 +125,7 @@ jobs:
       # default run shell is `bash -e` without pipefail, so a pipe would discard the smoke's
       # exit code and this step could never turn red.
       - name: Host smoke (fails the build if any check fails)
-        run: node scripts/coord/smoke-host.mjs > "$RUNNER_TEMP/smoke.json"
+        run: node scripts/coord/smoke-host.mjs > "$RUNNER_TEMP/smoke.json" || { cat "$RUNNER_TEMP/smoke.json" >&2; exit 1; }
       - name: Support matrix on this runner is the generated one
         run: pnpm support
 

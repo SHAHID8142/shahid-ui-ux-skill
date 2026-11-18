@@ -2,7 +2,7 @@
   "meta": {
     "product": "SUS — Shahid UI UX Skill",
     "version": "planning-v1.4",
-    "updated": "2026-11-18",
+    "updated": "2026-11-19",
     "protocol": "docs/AGENT_CONTINUE_PROTOCOL.md; docs/TASK_RECORD_CONTRACT.md",
     "build_gate": "APERIO received 2026-11-13 (D28): build authorized; TASKS.json statuses are canonical",
     "concurrency": {
@@ -5750,14 +5750,17 @@
       "approval": "pending",
       "phase": "build",
       "evidence": [
-        ".sus-dev/VERIFICATION/T1060.md"
+        ".sus-dev/VERIFICATION/T1060.md",
+        ".sus-dev/VERIFICATION/T1061.md",
+        "package.json",
+        "packages/eval-core/tests/baselines.test.ts"
       ]
     },
     {
       "id": "T1062",
       "m": "M13",
       "title": "T1003-18 (low, deferred) — bridge sessions expire and prune",
-      "obj": "Bridge sessions never expired and the sessions map never pruned; the token lifetime is the process lifetime, documented honestly in bridge.mjs. The reviewer noted this is acceptable until a long-lived trusted surface exists — deferred rather than risk breaking the studio flow. DEFERRED by the fix wave: token lifetime is the documented process lifetime and no long-lived trusted surface exists; recorded in the T1003 receipt response for the owner to accept.",
+      "obj": "T1003-18 finding: bridge sessions never expire and the sessions map never prunes; the token lifetime is the process lifetime, documented honestly in bridge.mjs. DEFERRED by the fix wave with owner sign-off required: no long-lived trusted surface exists, and changing auth semantics now risks the studio flow for no attacker today. Revisit when a long-lived surface lands.",
       "deps": [],
       "files": [
         "packages/studio-bridge/src/server.ts"
@@ -5769,12 +5772,10 @@
       "tests": [],
       "risk": "an unbounded sessions map in a long-lived process",
       "rollback": "not applicable — no change made",
-      "status": "done",
+      "status": "pending",
       "approval": "pending",
       "phase": "build",
-      "evidence": [
-        ".sus-dev/VERIFICATION/T1049.md"
-      ]
+      "evidence": []
     },
     {
       "id": "T1063",
@@ -5796,10 +5797,14 @@
       ],
       "risk": "the documented 64KB cap is not the real cap",
       "rollback": "restore the code-unit comparison",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1060.md",
+        "packages/studio-bridge/src/server.ts",
+        "packages/studio-bridge/tests/server.test.ts"
+      ]
     },
     {
       "id": "T1064",
@@ -6111,6 +6116,295 @@
         ".sus-dev/VERIFICATION/T1048.md",
         ".github/workflows/ci.yml",
         "packages/schemas/tests/ci-actions-pinning.test.ts"
+      ]
+    },
+    {
+      "id": "T1076",
+      "m": "M13",
+      "title": "Re-audit F2 — networkRefusals covers all six browser phases",
+      "obj": "The re-audit's regression hunter found that networkRefusals collected refusals only from the scan phases and Lighthouse, while capture, reflow, motion and states each launch their own guarded browser whose refusals never surfaced — contradicting the report's 'every host' claim. A run-wide refusal sink in startAuthorizedProxy now feeds every phase's refusals into the report.",
+      "deps": [],
+      "files": [
+        "packages/eval-core/src/harness/authorized-proxy.ts",
+        "packages/eval-core/src/audit/pipeline.ts",
+        "docs/LIMITATIONS.md"
+      ],
+      "acc": [
+        "a hostile subresource refused during ANY deep phase appears in audit.json networkRefusals and the report's Network boundary section",
+        "quick mode records an empty list by construction",
+        "the sink unregisters when the phases end"
+      ],
+      "tests": [
+        "packages/eval-core/tests/audit.test.ts"
+      ],
+      "risk": "a re-audit finding left unfixed",
+      "rollback": "revert the change",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1076.md"
+      ]
+    },
+    {
+      "id": "T1077",
+      "m": "M13",
+      "title": "Re-audit F5 — the proxy's own error handlers cannot throw",
+      "obj": "The clientError handler answered with socket.end() on sockets that may already be destroyed, and the CONNECT refusal branches ran before the socket's error handler was registered — both could raise ERR_STREAM_DESTROYED from inside the error handler, the exact crash class they exist to prevent. Node's documented guard (ECONNRESET or unwritable → destroy) is now applied, and the handler registers before any end().",
+      "deps": [],
+      "files": [
+        "packages/eval-core/src/harness/authorized-proxy.ts",
+        "packages/eval-core/src/audit/pipeline.ts"
+      ],
+      "acc": [
+        "a clientError on a reset or destroyed socket destroys instead of writing",
+        "every CONNECT refusal branch runs with the socket error handler already registered"
+      ],
+      "tests": [
+        "packages/eval-core/tests/net-guard.test.ts"
+      ],
+      "risk": "a re-audit finding left unfixed",
+      "rollback": "revert the change",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1076.md"
+      ]
+    },
+    {
+      "id": "T1078",
+      "m": "M13",
+      "title": "Re-audit F4 — the teardown guard is precise, classified and self-tested",
+      "obj": "The teardown guard's filter was effectively 'all uncaught socket resets' (async stacks never carry project frames) and its fail-red path was unproven. It now swallows only while no test is executing (getCurrentTest), the classifier is exported and pinned by tests both ways, and a dead regex in the first cut (the test caught it: error.message has no 'Error:' prefix) is fixed.",
+      "deps": [],
+      "files": [
+        "packages/eval-core/tests/teardown-reset-guard.ts",
+        "packages/eval-core/tests/teardown-reset-guard.test.ts"
+      ],
+      "acc": [
+        "a reset mid-test is never swallowed",
+        "the classifier accepts exactly the detached-socket signature and refuses project errors, frame-carrying resets and non-Errors",
+        "the classifier tests pin both directions"
+      ],
+      "tests": [
+        "packages/eval-core/tests/teardown-reset-guard.test.ts"
+      ],
+      "risk": "a re-audit finding left unfixed",
+      "rollback": "revert the change",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1076.md"
+      ]
+    },
+    {
+      "id": "T1079",
+      "m": "M13",
+      "title": "Re-audit F3 — verify typechecks against fresh dist",
+      "obj": "Moving typecheck before build in the verify chain made cross-package tsc resolve stale .d.ts when dist existed but was stale — false reds of exactly the class the audit complained about. The chain now builds first and typechecks after.",
+      "deps": [],
+      "files": [
+        "package.json"
+      ],
+      "acc": [
+        "verify typechecks against the dist the same run built",
+        "standalone pnpm typecheck still builds first"
+      ],
+      "tests": [
+        "package.json"
+      ],
+      "risk": "a re-audit finding left unfixed",
+      "rollback": "revert the change",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1076.md"
+      ]
+    },
+    {
+      "id": "T1080",
+      "m": "M13",
+      "title": "Re-audit F6 — the seo detail no longer reports five defects twice",
+      "obj": "T1054's detail dedupe compared differently-worded strings and never matched, so five structural sub-checks appeared both in the g3/g9 detail and as their own line. Only the two sub-checks the gate details never carry (title, meta description) get their own line now.",
+      "deps": [],
+      "files": [
+        "packages/eval-core/src/audit/compose.ts"
+      ],
+      "acc": [
+        "a page with structural SEO defects shows each defect once in the check detail",
+        "title/meta failures keep their own line (the T1054 fix is intact)"
+      ],
+      "tests": [
+        "packages/eval-core/tests/audit.test.ts"
+      ],
+      "risk": "a re-audit finding left unfixed",
+      "rollback": "revert the change",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1076.md"
+      ]
+    },
+    {
+      "id": "T1081",
+      "m": "M13",
+      "title": "Re-audit F11 — fetchHtml's truncation cap measures bytes",
+      "obj": "The 4MB cap compared text.length (UTF-16 code units) but labelled the result 'truncated at N bytes' — the same unit/label bug the audit fixed in the bridge. Buffer.byteLength now measures, and a multi-byte page is no longer sliced mid-measurement under a byte number it never had.",
+      "deps": [],
+      "files": [
+        "packages/eval-core/src/audit/pipeline.ts"
+      ],
+      "acc": [
+        "a multi-byte page truncates at the byte cap, and the label names what was measured"
+      ],
+      "tests": [
+        "packages/eval-core/tests/audit.test.ts"
+      ],
+      "risk": "a re-audit finding left unfixed",
+      "rollback": "revert the change",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1076.md"
+      ]
+    },
+    {
+      "id": "T1082",
+      "m": "M13",
+      "title": "Re-audit V1 — theme is in the tap-target finding's id material",
+      "obj": "The adversarial verifier observed two byte-identical findings with one id: the same control flagged in light and dark themes produced identical title/viewport/location, so stableFindingId collided and summary.P2 counted the defect twice. The theme is now in the title; the viewport field stays bare because artifact attachment keys on it.",
+      "deps": [],
+      "files": [
+        "packages/eval-core/src/audit/compose.ts"
+      ],
+      "acc": [
+        "the same control flagged in both themes yields two distinct finding ids",
+        "a single-theme run's ids are unchanged"
+      ],
+      "tests": [
+        "packages/eval-core/tests/component-states.test.ts"
+      ],
+      "risk": "a re-audit finding left unfixed",
+      "rollback": "revert the change",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1076.md"
+      ]
+    },
+    {
+      "id": "T1083",
+      "m": "M13",
+      "title": "Re-audit V2 — axe is a declared runtime dependency of the eval-core CLI",
+      "obj": "@axe-core/playwright sat in devDependencies while the built CLI imports it at runtime — a consumer installing @sus/eval-core would miss it. Moved to dependencies (lockfile synced) and the handoff row now says exactly which package carries the runtime MPL-2.0 burden; studio-bridge's copy is test-only and stays a devDependency.",
+      "deps": [],
+      "files": [
+        "packages/eval-core/package.json",
+        "pnpm-lock.yaml",
+        "docs/BUILD_COMPLETION_HANDOFF.md"
+      ],
+      "acc": [
+        "pnpm install --frozen-lockfile succeeds",
+        "the handoff row names the runtime burden in eval-core only"
+      ],
+      "tests": [
+        "packages/schemas/tests/ci-actions-pinning.test.ts"
+      ],
+      "risk": "a re-audit finding left unfixed",
+      "rollback": "revert the change",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1076.md"
+      ]
+    },
+    {
+      "id": "T1084",
+      "m": "M13",
+      "title": "Re-audit F7 — the push gate fails on drift in baselines that were clean before it ran",
+      "obj": "T1074's dirty-baseline preservation also skipped the drift FAIL entirely when any baseline was dirty pre-gate, so verify-introduced drift rode into a push. The gate now snapshots the pre-gate dirty set, restores churn only in files that were clean, keeps the operator's edits, and fails on any drift in a previously-clean file.",
+      "deps": [],
+      "files": [
+        "scripts/gate-push.mjs"
+      ],
+      "acc": [
+        "churn in a pre-clean baseline is restored, not pushed",
+        "drift in a pre-clean baseline fails the gate",
+        "intentional pre-dirty edits are preserved with a review warning"
+      ],
+      "tests": [
+        "scripts/gate-push.mjs"
+      ],
+      "risk": "a re-audit finding left unfixed",
+      "rollback": "revert the change",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1076.md"
+      ]
+    },
+    {
+      "id": "T1085",
+      "m": "M13",
+      "title": "Re-audit F8 — a failing CI smoke prints its checks",
+      "obj": "T1048's redirect sent the smoke's stdout solely into a file nothing read, so a red smoke showed which of the 8 checks failed nowhere. The step cats the receipt to stderr on failure while preserving the restored exit code.",
+      "deps": [],
+      "files": [
+        ".github/workflows/ci.yml"
+      ],
+      "acc": [
+        "a failing smoke surfaces its per-check output in the CI log",
+        "a passing smoke still writes only the receipt file"
+      ],
+      "tests": [
+        "packages/schemas/tests/ci-actions-pinning.test.ts"
+      ],
+      "risk": "a re-audit finding left unfixed",
+      "rollback": "revert the change",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1076.md"
+      ]
+    },
+    {
+      "id": "T1086",
+      "m": "M13",
+      "title": "Re-audit F10 + F1 — the ledger says one thing about the findings",
+      "obj": "The re-audit found three different fixed-findings counts (STATE said 25, the peer's report 27, the ledger 29/30) and an off-by-one in the builder response: the deferral is T1062, and T1063 (payload caps) was a landed fix recorded as pending. TASKS.json is repaired, the receipt response rows corrected, and STATE/INBOX/AUDIT_PACKET now cite the ledger.",
+      "deps": [],
+      "files": [
+        "TASKS.json",
+        ".sus-dev/VERIFICATION/T1003.md",
+        ".sus-dev/STATE.md",
+        ".sus-dev/INBOX.md",
+        "docs/AUDIT_PACKET.md",
+        "ROADMAP.md"
+      ],
+      "acc": [
+        "TASKS.json pending is exactly T1003, T1005, T1062",
+        "every document that states a count matches the ledger or declines to state one",
+        "check-continuation and check-handoff pass"
+      ],
+      "tests": [
+        "scripts/check-continuation.mjs"
+      ],
+      "risk": "a re-audit finding left unfixed",
+      "rollback": "revert the change",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1076.md"
       ]
     }
   ]

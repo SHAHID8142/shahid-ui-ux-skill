@@ -30,7 +30,7 @@ import {
   isAuthorizationRefused,
   launchGuardedBrowser,
 } from '../harness/net-guard.js';
-import { startAuthorizedProxy } from '../harness/authorized-proxy.js';
+import { onAnyRefusal, startAuthorizedProxy } from '../harness/authorized-proxy.js';
 import { chromeForTestingPath, runLighthouse, scanA11y } from '../harness/scans.js';
 import { probeMotionWith, type MotionProbeResult } from '../harness/motion.js';
 import { probeStatesWith, type StatesProbeResult } from '../harness/states.js';
@@ -230,7 +230,10 @@ async function fetchHtml(
       return { html: null, reason: 'not an HTML response (' + type + ')' };
     const text = await response.text();
     void finalUrl;
-    if (text.length > MAX_FETCH_BYTES) {
+    // The cap is a BYTE cap, measured on the response's bytes — `text.length` counts UTF-16 code
+    // units and would slice a multi-byte page mid-measurement while labelling the result with a
+    // byte number it never measured (re-audit finding F11, the class T1003-19 fixed in the bridge).
+    if (Buffer.byteLength(text) > MAX_FETCH_BYTES) {
       return {
         html: text.slice(0, MAX_FETCH_BYTES),
         reason: 'truncated at ' + MAX_FETCH_BYTES + ' bytes',
@@ -595,22 +598,30 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
     motion = emptyGroup<MotionProbeResult>(reason);
     states = emptyGroup<StatesProbeResult>(reason);
   } else {
-    capture = await collectCapture(
-      origin,
-      routes,
-      join(outDir, AUDIT_OUTPUT_FILES.shotsDir),
-      authorizedHosts,
-    );
-    reflow = await collectReflow(origin, routes, authorizedHosts);
-    const scans = await collectScans(origin, routes, authorizedHosts, scopeSelectors);
-    axe = scans.axe;
-    keyboard = scans.keyboard;
-    lighthouse = scans.lighthouse;
-    scopedAxe = scans.scopedAxe;
-    motion = await collectMotion(origin, routes, authorizedHosts);
-    states = await collectStates(origin, routes, authorizedHosts);
-    browser = scans.browser;
-    networkRefusals = scans.networkRefusals;
+    // T1052 follow-up (re-audit finding F2): every proxy in EVERY phase records into the shared
+    // sink, so a hostile subresource refused during capture, reflow, the scan phases, motion or
+    // states surfaces exactly like one refused anywhere else. Unregistered in `finally`.
+    const stopCollectingRefusals = onAnyRefusal((host) => networkRefusals.push(host));
+    try {
+      capture = await collectCapture(
+        origin,
+        routes,
+        join(outDir, AUDIT_OUTPUT_FILES.shotsDir),
+        authorizedHosts,
+      );
+      reflow = await collectReflow(origin, routes, authorizedHosts);
+      const scans = await collectScans(origin, routes, authorizedHosts, scopeSelectors);
+      axe = scans.axe;
+      keyboard = scans.keyboard;
+      lighthouse = scans.lighthouse;
+      scopedAxe = scans.scopedAxe;
+      motion = await collectMotion(origin, routes, authorizedHosts);
+      states = await collectStates(origin, routes, authorizedHosts);
+      browser = scans.browser;
+      networkRefusals = scans.networkRefusals;
+    } finally {
+      stopCollectingRefusals();
+    }
   }
 
   return {

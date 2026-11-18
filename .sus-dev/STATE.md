@@ -58,10 +58,10 @@ criteria: 0 critical, 4 HIGH open + 1 HIGH fixed mid-audit, 9 medium, 17 low —
 `.sus-dev/VERIFICATION/T1003.md` (written by the auditor of record; findings recorded verbatim as
 M13 tasks T1046–T1075). The owner then directed the fix wave; it is complete: every open HIGH and
 medium carries a fix with a receipt and tests (commits 680c9ac..765be5f plus eac8967 and the
-teardown-robustness follow-up), and 25 of the 31 findings are done. What is left is
+teardown-robustness follow-up), and 30 of the 31 findings are closed with fixes (1 deferred, T1062). What is left is
 owner/auditor-gated and must not be started by an agent: T1003's verdict acceptance (the auditor
 or owner accepts each fix's measurement; the build agent's response is appended to the receipt),
-T1005 (release approval and publication), and T1063 (session expiry — deferred by the fix wave
+T1005 (release approval and publication), and T1062 (session expiry — deferred by the fix wave
 with the rationale recorded in TASKS.json; the owner accepts or rejects the deferral).
 
 `pnpm verify` is green on the fix-wave tree: exit 0, 99 test files + 3 env-gated skips,
@@ -71,7 +71,7 @@ push; the fresh-clone job re-runs the documented first-run path on the pushed co
 
 Next exact steps: (1) the auditor/owner reviews the appended fix measurements in
 `.sus-dev/VERIFICATION/T1003.md` and accepts or contests each closed finding; (2) the owner
-decides T1005 (release approval and publication) and the deferred T1063; (3) no agent may touch
+decides T1005 (release approval and publication) and the deferred T1062; (3) no agent may touch
 `main` or publish. If the owner asks to keep building: triage a fresh `gh issue list --state open`
 rather than reopen a closed item.
 
@@ -80,7 +80,7 @@ Blockers: standing B003 (licence/publication, owner gate). Active files: none af
 Latest checks: 2026-11-18 (fix wave) — `pnpm verify` exit 0 (99 files + 3 skipped, 1086 tests
 passed / 9 skipped, zero unhandled errors after the proxy-teardown fix), 13/13 gates with
 61 `[PASS]` lines, claims 22/22, handoff consistent (166 of 169 tasks done; pending T1003, T1005,
-T1063-deferred). The flake class the audit recorded (T1003-16) is reduced at the source: proxy
+T1062-deferred). The flake class the audit recorded (T1003-16) is reduced at the source: proxy
 sockets and serveLocal carry error handlers, and the baselines suite binds an ephemeral port.
 
 Format for this file: the Current-task line names ONLY live tasks; done-task ids live in

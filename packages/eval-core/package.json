@@ -22,7 +22,6 @@
     "benchmark": "SUS_BENCH=1 vitest run tests/benchmark.run.test.ts"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.14.0",
     "@types/node": "20.17.6",
     "chrome-launcher": "^1.2.3",
     "lighthouse": "^13.6.0",
@@ -30,6 +29,7 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@sus/scanners": "workspace:*",
     "@sus/schemas": "workspace:*",
     "zod": "^4.6.7"

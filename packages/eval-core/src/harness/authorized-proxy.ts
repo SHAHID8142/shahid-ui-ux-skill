@@ -23,6 +23,20 @@ export interface AuthorizedProxy {
   close(): Promise<void>;
 }
 
+/**
+ * A run-wide sink for host refusals: every proxy this process starts records into it, so the
+ * audit can surface refusals from ALL browser phases (capture, reflow, axe, keyboard, motion,
+ * states, the scope page and Lighthouse) without each collector threading its own proxy handle
+ * (T1052 follow-up: the first cut covered only three of the six phases while the report claimed
+ * "every host"). Returns an unregister function; the caller wraps the phases it owns.
+ */
+const refusalListeners = new Set<(host: string) => void>();
+
+export function onAnyRefusal(listener: (host: string) => void): () => void {
+  refusalListeners.add(listener);
+  return () => refusalListeners.delete(listener);
+}
+
 export async function startAuthorizedProxy(
   authorizedHosts: readonly string[],
 ): Promise<AuthorizedProxy> {
@@ -34,6 +48,7 @@ export async function startAuthorizedProxy(
     const host = rawHost.replace(/^\[/, '').replace(/\]$/, '');
     if (isAuthorizedHost(host, authorizedHosts)) return true;
     refused.push(host);
+    for (const listener of refusalListeners) listener(host);
     return false;
   };
 
@@ -74,10 +89,20 @@ export async function startAuthorizedProxy(
     req.pipe(upstream);
   });
 
-  proxy.on('clientError', (_error: Error, clientSocket: Socket) => {
+  // Node's documented clientError pattern: a reset or an already-destroyed socket cannot be
+  // answered — end() on one would throw ERR_STREAM_DESTROYED from inside the error handler
+  // itself, the exact crash class the handlers exist to prevent (re-audit finding F5).
+  proxy.on('clientError', (error: Error, clientSocket: Socket) => {
+    if ((error as NodeJS.ErrnoException).code === 'ECONNRESET' || !clientSocket.writable) {
+      clientSocket.destroy();
+      return;
+    }
     clientSocket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
   });
   proxy.on('connect', (req: { url?: string }, socket: Socket, head: Buffer) => {
+    // The error handler registers BEFORE any end(): every refusal branch below writes to a
+    // socket the peer may already have destroyed.
+    socket.on('error', () => socket.destroy());
     // A `CONNECT` target is `host:port`, and an IPv6 literal is `[::1]:443`. Splitting on ':' read that
     // as host `[`, which is refused — safe, but it also meant an authorized IPv6 host could never be
     // reached and the refusal named a host nobody asked for. Parsed as a URL instead.
@@ -98,7 +123,6 @@ export async function startAuthorizedProxy(
       socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
       return;
     }
-    socket.on('error', () => socket.destroy());
     const upstream = netConnect(port, host, () => {
       socket.write('HTTP/1.1 200 Connection Established\r\n\r\n');
       if (head.length > 0) upstream.write(head);

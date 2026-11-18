@@ -72,20 +72,49 @@ const baselinesDirtyBefore = git(['status', '--porcelain', '--', 'evals/baseline
 run('pnpm', ['verify'], 'full release suite (pnpm verify)');
 
 // Verification regenerates baselines; restore them and refuse any other drift.
+// T1074 (audit finding T1003-30), tightened by the re-audit (finding F7): baselines that were
+// already modified BEFORE the gate are somebody's intentional edits — verify's timing churn must
+// not be separated from them by a `git checkout --` that discards both. But the gate must still
+// fail when verify introduces drift in a baseline file that was CLEAN before: that drift is the
+// suite saying the measured behaviour changed.
 try {
-  const baselines = git(['status', '--porcelain', '--', 'evals/baselines']).trim();
-  if (baselines !== '' && !baselinesDirtyBefore) {
-    execFileSync('git', ['checkout', '--', 'evals/baselines'], { cwd: ROOT });
-    lines.push('[PASS] restored evals/baselines after verification churn');
-  }
-  const drift = git(['status', '--porcelain', '--', 'evals/baselines']).trim();
-  if (drift !== '' && !baselinesDirtyBefore) {
-    failed = true;
-    lines.push('[FAIL] evals/baselines could not be restored');
-  }
-  if (baselinesDirtyBefore && drift !== '') {
+  const preDirtyBaselines = new Set(
+    baselinesDirtyBefore
+      ? git(['status', '--porcelain', '--', 'evals/baselines'])
+          .split('\n')
+          .filter((line) => line.trim() !== '')
+          .map((line) => line.slice(3).trim())
+      : [],
+  );
+  const postLines = git(['status', '--porcelain', '--', 'evals/baselines'])
+    .split('\n')
+    .filter((line) => line.trim() !== '');
+  const postFiles = postLines.map((line) => line.slice(3).trim());
+  const drifted = postFiles.filter((file) => !preDirtyBaselines.has(file));
+  if (drifted.length > 0) {
+    // Churn in files that were clean before is verify's: restore only those, keep the
+    // operator's intentional edits in files that were already dirty.
+    for (const file of drifted) {
+      execFileSync('git', ['checkout', '--', file], { cwd: ROOT });
+    }
     lines.push(
-      "[WARN] evals/baselines had uncommitted edits before the gate ran; they are preserved, mixed with verify's timing churn — review before committing",
+      '[PASS] restored verification churn in baseline files that were clean before the gate',
+    );
+  }
+  const stillDirty = git(['status', '--porcelain', '--', 'evals/baselines'])
+    .split('\n')
+    .filter((line) => line.trim() !== '')
+    .map((line) => line.slice(3).trim());
+  const newDrift = stillDirty.filter((file) => !preDirtyBaselines.has(file));
+  if (newDrift.length > 0) {
+    failed = true;
+    lines.push(
+      '[FAIL] evals/baselines drift that was not there before the gate: ' + newDrift.join(', '),
+    );
+  }
+  if (preDirtyBaselines.size > 0 && stillDirty.length > 0) {
+    lines.push(
+      '[WARN] evals/baselines had uncommitted edits before the gate ran; they are preserved — review before committing',
     );
   }
 } catch (error) {

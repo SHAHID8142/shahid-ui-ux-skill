@@ -25,7 +25,7 @@
     "skill": "node scripts/validate-skill.mjs",
     "playbooks": "node scripts/validate-playbooks.mjs",
     "knowledge": "node scripts/validate-knowledge.mjs",
-    "verify": "pnpm ensure:built && pnpm handoff && pnpm reach && pnpm claims && pnpm roadmap && pnpm gates:full && pnpm lint && pnpm format:check && pnpm stylelint && pnpm run --silent typecheck:only && pnpm build && (pnpm directions || test $? -eq 3) && (pnpm motion || test $? -eq 3) && (pnpm parts || test $? -eq 3) && pnpm support && pnpm examples:check && pnpm coverage:check && pnpm review:index && pnpm test",
+    "verify": "pnpm ensure:built && pnpm handoff && pnpm reach && pnpm claims && pnpm roadmap && pnpm gates:full && pnpm lint && pnpm format:check && pnpm stylelint && pnpm build && pnpm run --silent typecheck:only && (pnpm directions || test $? -eq 3) && (pnpm motion || test $? -eq 3) && (pnpm parts || test $? -eq 3) && pnpm support && pnpm examples:check && pnpm coverage:check && pnpm review:index && pnpm test",
     "gates:full": "node scripts/check-gates.mjs && node scripts/validate-skill.mjs && node scripts/validate-knowledge.mjs && node scripts/validate-playbooks.mjs || test $? -eq 3",
     "hooks:install": "git config core.hooksPath .githooks && echo \"push gate installed (.githooks/pre-push)\"",
     "setup": "git config core.hooksPath .githooks && pnpm --filter @sus/eval-core exec playwright install chromium && node scripts/check-handoff.mjs >/dev/null && echo \"machine ready: push gate installed, chromium present, recorded state consistent\"",
