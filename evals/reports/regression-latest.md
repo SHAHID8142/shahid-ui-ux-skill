@@ -1,12 +1,14 @@
 # Cross-module regression report (T1001)
 
-Revision: `918020d59df08aedcc3136fd617cc2ae51929f7c` on `chore/continuation-reconciliation`
-Started: 2026-11-16T13:30:41.920Z
-Total: 150.6s
+Revision: `23f7c9ee2f7893cf7cfcf4e823c781484f26497b` on `chore/continuation-reconciliation` — **working tree dirty**
+Started: 2026-11-18T17:47:26.618Z
+Total: 511.8s
 Verdict: **pass**
 
 | Stage | Command | Status | Exit | Duration |
 | --- | --- | --- | --- | --- |
-| verify | `pnpm verify` | pass | 0 | 119.3s |
-| demo-loop | `pnpm demo:loop` | pass | 0 | 5.3s |
-| dogfood | `pnpm dogfood` | pass | 0 | 26.0s |
+| verify | `pnpm verify` | pass | 0 | 474.8s |
+| demo-loop | `pnpm demo:loop` | pass | 0 | 8.3s |
+| dogfood | `pnpm dogfood` | pass | 0 | 28.7s |
+
+The tree was dirty when this ran, so the verdict describes a revision plus uncommitted changes.
