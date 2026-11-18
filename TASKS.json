@@ -5430,9 +5430,8 @@
       "approval": "pending",
       "phase": "build",
       "evidence": [
-        ".sus-dev/VERIFICATION/T1044.md",
-        ".sus-dev/VERIFICATION/T1003.md",
-        "commit cfd3049"
+        ".sus-dev/VERIFICATION/T1050.md",
+        "packages/studio-bridge/tests/apply.test.ts"
       ]
     },
     {

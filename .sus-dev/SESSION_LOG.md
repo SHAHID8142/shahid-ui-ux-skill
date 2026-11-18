@@ -1028,3 +1028,64 @@ Lessons worth carrying:
     widening two and capping eval-core workers at 4: 97 files + 3 skipped, 1057 tests, 402 s.
 - Lesson: widening a timeout moved the failure to the next three files instead of removing the cause. The
   second occurrence is what identified the scheduler as the culprit.
+
+## 2026-11-18 — the T1003 audit ran (verdict FAIL), and the fix wave landed (zcode-audit)
+
+The owner commissioned the independent audit and asked for it to be run with fresh-context
+subagents, two at a time (D33). Five auditors covered the packet's scope: baseline reproduction,
+security (bridge/apply + network boundary), the honesty engine + gates, supply chain/claims/
+licence, and a dynamic-execution pass on the security findings. The receipt lives in
+`.sus-dev/VERIFICATION/T1003.md` (auditor of record; verdict FAIL per §6 — 0 critical, 4 HIGH
+open at `69c8a45`, 1 HIGH fixed mid-audit, 9 medium, 17 low). Findings are recorded verbatim as
+M13 tasks T1046–T1075. Two auditors' claims were refuted by execution — the `bestpractice` CLI
+refuses unauthorized `--url` before contact on every flag combination (downgraded from high to a
+latent medium), which is why the dynamic wave ran before the report was written.
+
+The owner then said "start fixing and make this ready to use ASAP" / "do not stop working until
+the project is ready to use". The fix wave, one atomic commit per surface, every fix with a
+receipt and a test:
+
+- T1046 `680c9ac`: the deep-mode Lighthouse Chrome rides the allowlisting proxy (audit finding
+  T1003-1, reproduced three times — a hostile page reached an unauthorized LAN host from the
+  unproxied chrome-launcher Chrome during exactly one phase). Proxy-start failure is fail-closed.
+- T1047 `e1041d8`: a partially measured route set never reads as a clean states/motion check
+  (T1003-2): errored and never-driven routes are named and keep the check at not-run; a real
+  parity failure still fails. Also lands T1003-26 (never-driven ≠ parity failure).
+- T1048 `b4300af`: the CI host-smoke step can actually fail the build (T1003-3: `| tee` under
+  `bash -e` discarded the smoke's exit code); workflow-text test added; header claim scoped to
+  push (T1075). Shell-semantics negative control executed in the receipt.
+- T1049 `697815d`: the release handoff states the real dependency licence distribution (T1003-4:
+  MPL-2.0 axe-core in production, LGPL libvips in fixture tooling, FSL sentry dev-only — the old
+  row claimed "all permissive"). Claim gate grew from 6 to 22 files (T1003-12); packet rows and
+  README wording fixed (T1059/T1062/T1072/T1073).
+- T1051 `09f7abb`: recovery honors apply containment and sentinels never read as hashes (T1003-6:
+  a planted prepared manifest could write/delete outside the root; the classifier compared the
+  literal 'missing'). `insideRoot` moved to `paths.ts`; prepare/apply/recover/verify all hold it;
+  `preimageMissing` replaces the sentinel; roll-back of a create removes the file.
+- T1053 `d362099`: quick-mode proposals name their unmeasured dimensions instead of claiming a
+  complete sweep (T1003-8); seo status agrees with its findings (T1003-9); keyboard boolean
+  findings carry observations instead of refusing every proposal (T1003-10). Lesson: an existing
+  test caught the first cut over-deriving when a report had no `mode` field — default to deep.
+- T1052 `d29f9fa`: the report says what the network boundary refused (T1003-7): `networkRefusals`
+  in the schema (default []) and a "Network boundary" section naming refused requests plus the
+  subresource allowance; net-guard's header promise is implemented, not asserted.
+- T1056 `1b98203`: the gate checker cannot silently stop asserting (T1003-11): a coverage test
+  holds a floor of output lines per unconditional report() call site plus 29 pinned canary
+  names. Negative control executed: deleting the G7 320px assertion turns the test red.
+- T1058 `eac8967`: runBestPractice authorizes liveUrl before any browser contact and routes the
+  scope browser through the guarded proxy (T1003-13): the audit's dynamic repro inverted — a
+  LAN-IP listener records zero hits and the refusal lands in 5 ms.
+- Lows `765be5f`: eleven findings with tests or executed probes (ephemeral baselines port;
+  verify builds once; byte caps; capability/grant digest cross-check; operation-id validation;
+  truncation disclosure; capture/reflow empty guards; G9 fail-closed probe fields; G12 wording;
+  claim-gate line numbers; push-gate attribution). T1063 (session expiry) deferred with
+  rationale; T1070 closed by T1047.
+- T1061 follow-up: verify failed on 4 unhandled ECONNRESET teardown errors with all 1086 tests
+  passing. Root cause: the authorized proxy's client sockets had no error handlers — a teardown
+  reset crashed the process. Expected resets are now recorded, not fatal; upstream response and
+  serveLocal keep-alive teardown guarded the same way. `pnpm verify` exit 0: 99 files / 1086
+  tests / zero unhandled errors.
+
+Lesson: an unhandled 'error' event on a socket is a crash waiting for the next teardown. When a
+suite owns servers, every stream it creates needs an error handler, because the failure arrives
+after the test that caused it and blames an unrelated file.
