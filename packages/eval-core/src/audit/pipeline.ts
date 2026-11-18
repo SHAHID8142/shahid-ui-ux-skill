@@ -195,6 +195,12 @@ async function serveLocal(site: LocalSite): Promise<{ origin: string; close: () 
       response.writeHead(500, { 'content-type': 'text/plain' }).end('unreadable');
     }
   });
+  // A Chromium teardown reset on a keep-alive socket is expected at the end of a run (T1061
+  // follow-up): answer it instead of letting it surface as an uncaught ECONNRESET, and drop the
+  // idle keep-alives on close so server.close() is not left waiting on them.
+  server.on('clientError', (_error: Error, socket: import('node:net').Socket) => {
+    socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+  });
   await new Promise<void>((done, fail) => {
     server.once('error', fail);
     server.listen(0, '127.0.0.1', done);
@@ -202,7 +208,10 @@ async function serveLocal(site: LocalSite): Promise<{ origin: string; close: () 
   const address = server.address() as AddressInfo;
   return {
     origin: 'http://127.0.0.1:' + address.port,
-    close: () => server.close(),
+    close: () => {
+      server.closeAllConnections?.();
+      server.close();
+    },
   };
 }
 

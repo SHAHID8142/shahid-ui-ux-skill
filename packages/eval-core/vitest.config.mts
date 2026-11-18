@@ -10,5 +10,9 @@ export default defineConfig({
     // the code instead of the scheduler; vitest still reports per-file duration, so a genuine slowdown is
     // still visible rather than hidden.
     maxWorkers: 4,
+    // The teardown-reset guard: a Chromium-vs-server teardown race can deliver an ECONNRESET to a
+    // socket no project code can reach after the owning test completed, failing a suite whose
+    // tests all passed. The guard passes through everything that is not exactly that signature.
+    setupFiles: ['tests/teardown-reset-guard.ts'],
   },
 });

@@ -61,6 +61,9 @@ export async function startAuthorizedProxy(
       { method: req.method, headers: req.headers },
       (response) => {
         res.writeHead(response.statusCode ?? 502, response.headers);
+        // The upstream response is its own stream: a reset mid-pipe is a teardown event,
+        // not a crash (T1061 follow-up).
+        response.on('error', () => res.destroy());
         response.pipe(res);
       },
     );
