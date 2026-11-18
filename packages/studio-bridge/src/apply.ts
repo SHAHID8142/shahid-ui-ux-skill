@@ -147,7 +147,22 @@ function nowIso(): string {
 export class OperationReceipts {
   constructor(private readonly root: string) {}
 
+  /**
+   * T1065 (audit finding T1003-21): the id is caller-supplied and becomes a file name under
+   * .sus/ops; refuse anything that could walk out of that directory instead of joining it.
+   * Validated explicitly at every entry point (save embeds the id in its temp-file name before
+   * any rename), so the guard cannot be ordered around.
+   */
+  private assertValidId(operationId: string): void {
+    if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(operationId)) {
+      throw new Error(
+        `invalid operation id ${JSON.stringify(operationId)}: ids are file names under ${OPS_DIR} and may contain letters, digits, dot, underscore and hyphen only`,
+      );
+    }
+  }
+
   private path(operationId: string): string {
+    this.assertValidId(operationId);
     return join(this.root, OPS_DIR, `${operationId}.json`);
   }
 
@@ -162,6 +177,7 @@ export class OperationReceipts {
   }
 
   save(receipt: ApplyReceipt): void {
+    this.assertValidId(receipt.operationId);
     const dir = join(this.root, OPS_DIR);
     mkdirSync(dir, { recursive: true });
     const tmp = join(dir, `.${receipt.operationId}.${randomUUID()}.tmp`);
@@ -280,6 +296,16 @@ export class ApplyEngine {
           ? 'stale-approval'
           : 'grant-mismatch',
         `approval rejected (${grantCheck.reason}): ${grantCheck.detail}`,
+      );
+    }
+    // T1064 (audit finding T1003-20): the capability binding and the grant must describe the SAME
+    // proposal. Each was verified against the proposal on its own side, so a capability issued
+    // for proposal A with a grant for proposal B passed both checks; the chain is content-bound
+    // end to end only with this cross-check.
+    if (request.binding.proposalSha256 !== request.grant.proposalSha256) {
+      return refuse(
+        'grant-mismatch',
+        'the approval binding and the approval grant name different proposals; a capability is consumed only with a grant for the same content',
       );
     }
 

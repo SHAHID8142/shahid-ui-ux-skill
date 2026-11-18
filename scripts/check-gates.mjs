@@ -527,6 +527,10 @@ const unmeasured = [
 console.log(
   `VERDICT: registry consistent; ${registry.gates.length - unimplemented.length}/` +
     `${registry.gates.length} gates implemented and verified` +
+    // T1069 (audit finding T1003-25): G12 has no in-process block in THIS script — its
+    // negatives run in the token pipeline test suite, which CI executes as part of pnpm test.
+    // Counting it as verified by this run alone overstated what this script exercised.
+    ` (G12's negatives run in the token pipeline test suite, not in-process here)` +
     (unimplemented.length === 0
       ? ''
       : `; ${unimplemented.map((gate) => gate.id).join(', ')} reported not-run`) +

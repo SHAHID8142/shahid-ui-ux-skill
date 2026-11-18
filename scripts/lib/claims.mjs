@@ -32,10 +32,13 @@ const ABSOLUTE = [
   /\balways accessible\b/i,
 ];
 
-/** Removes fenced blocks and inline code so policy documents can quote themselves. */
+/** Removes fenced blocks and inline code so policy documents can quote themselves.
+ * Fenced blocks are blanked line-preservingly (T1071, audit finding T1003-27): replacing a
+ * multi-line fence with a single space collapsed its lines, so every reported line number
+ * after a fence was shifted down by the fence's length and an operator chased the wrong line. */
 export function stripCode(text) {
   return String(text ?? '')
-    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/```[\s\S]*?```/g, (fence) => fence.replace(/[^\n]/g, ''))
     .replace(/`[^`\n]*`/g, ' ');
 }
 

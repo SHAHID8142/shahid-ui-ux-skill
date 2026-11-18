@@ -144,12 +144,15 @@ export class BridgeServer {
         detail: `Host ${host} not allowlisted (DNS-rebinding guard)`,
       };
     }
-    if (body.length > MAX_PAYLOAD_BYTES) {
+    // T1063 (audit finding T1003-19): the cap is a BYTE cap — `body.length` counts UTF-16 code
+    // units, so a multi-byte body up to ~4x the cap in bytes was accepted against the documented
+    // 64KB.
+    if (Buffer.byteLength(body) > MAX_PAYLOAD_BYTES) {
       return {
         ok: false,
         status: 413,
         event: 'payload-too-large',
-        detail: `${body.length} bytes > cap ${MAX_PAYLOAD_BYTES}`,
+        detail: `${Buffer.byteLength(body)} bytes > cap ${MAX_PAYLOAD_BYTES}`,
       };
     }
     return { ok: true };
@@ -205,9 +208,11 @@ export class BridgeServer {
   start(): Promise<number> {
     this.server = createServer((req, res) => {
       let body = '';
+      let bodyBytes = 0;
       req.on('data', (chunk: Buffer) => {
+        bodyBytes += chunk.byteLength;
         body += chunk.toString('utf8');
-        if (body.length > MAX_PAYLOAD_BYTES * 4) req.destroy(); // hard cap on drain
+        if (bodyBytes > MAX_PAYLOAD_BYTES * 4) req.destroy(); // hard cap on drain (bytes, T1063)
       });
       req.on('end', () => {
         const result = this.handleMessage(req, body);

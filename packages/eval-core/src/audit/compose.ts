@@ -735,6 +735,10 @@ function seoCheck(html: readonly RouteHtml[]): AuditCheckResult {
   const detail: string[] = [];
   let failed = false;
   for (const entry of evaluated) {
+    // T1066: a truncated prefix is a partial measurement — name it in the check's detail.
+    if (entry.reason !== undefined) {
+      detail.push(entry.route + ': measured a truncated prefix (' + entry.reason + ')');
+    }
     const result = checkSeo(entry.html as string);
     // T1054 (audit finding T1003-9): the status must agree with the findings this check pushes.
     // seoFindings emits a finding for every sub-check that is not a pass (title, meta description,
@@ -808,8 +812,12 @@ export function composeReport(inputs: AuditInputs): AuditReport {
   const capturePass = inputs.capture.samples.length + inputs.capture.failed.length;
   const captureProblems = captureFindings(inputs.capture.samples);
   findings.push(...captureProblems);
+  // T1067 (audit finding T1003-23): the empty-samples guard its siblings (keyboard, axe,
+  // lighthouse) have — a pass needs at least one measurement, so zero captured combinations read
+  // not-run, never a green pass with "0 captured" in the detail. Unreachable through runAudit
+  // (resolveTarget guarantees a route); this protects direct callers of the pure composer.
   checks.push(
-    captureReason === null
+    captureReason === null && inputs.capture.samples.length > 0
       ? checkResult(
           'capture-matrix',
           'Capture matrix per viewport and theme',
@@ -823,7 +831,7 @@ export function composeReport(inputs: AuditInputs): AuditReport {
           'G8',
           'not-run',
           [],
-          captureReason,
+          captureReason ?? 'no capture combination was measured',
         ),
   );
 
@@ -837,15 +845,16 @@ export function composeReport(inputs: AuditInputs): AuditReport {
   const zoomMeasured = inputs.reflow.samples.filter((s) => s.value.zoom400 !== null).length;
   const zoomMissing =
     reflowReason === null && inputs.reflow.samples.length > 0 && zoomMeasured === 0;
+  // T1067: same empty-samples guard as capture — zero measured cells is not-run, never pass.
   checks.push(
-    reflowReason !== null
+    reflowReason !== null || inputs.reflow.samples.length === 0
       ? checkResult(
           'reflow-matrix',
           'Reflow matrix at 320/390/1440 in both themes',
           'G7',
           'not-run',
           [],
-          reflowReason,
+          reflowReason ?? 'no reflow cell was measured',
         )
       : zoomMissing
         ? checkResult(
@@ -1309,6 +1318,13 @@ export function composeReport(inputs: AuditInputs): AuditReport {
     needsReview.push(
       'browser phases were not requested (quick mode): accessibility, reflow and performance are unmeasured, not passed',
     );
+  }
+  for (const entry of inputs.html) {
+    if (entry.html !== null && entry.reason !== undefined) {
+      needsReview.push(
+        entry.route + ': ' + entry.reason + ' — defects beyond the cutoff are unmeasured, not passed',
+      );
+    }
   }
   if (captureReason !== null) {
     needsReview.push('capture-matrix did not run: ' + captureReason);

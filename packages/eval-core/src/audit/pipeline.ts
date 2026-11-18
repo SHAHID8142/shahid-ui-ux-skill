@@ -554,11 +554,14 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
   const html: RouteHtml[] = [];
   for (const route of routes) {
     const fetched = await fetchHtml(routeUrl(origin, route), authorizedHosts);
-    html.push(
-      fetched.html === null
-        ? { route, html: null, ...(fetched.reason === undefined ? {} : { reason: fetched.reason }) }
-        : { route, html: fetched.html },
-    );
+    // T1066 (audit finding T1003-22): the reason is carried even when the HTML is present — a
+    // >4MB page is measured as a truncated prefix, and a truncated measurement must say so
+    // instead of reading as a whole-page measurement.
+    html.push({
+      route,
+      html: fetched.html,
+      ...(fetched.reason === undefined ? {} : { reason: fetched.reason }),
+    });
   }
 
   let capture: LiveGroup<CaptureResult>;

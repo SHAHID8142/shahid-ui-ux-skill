@@ -146,16 +146,20 @@ export function evaluateG9(fixture) {
       problems.push(`${path}: missing-main-landmark — no main landmark recorded`);
     }
 
-    const clickHandlers = page?.clickHandlers ?? [];
+    // T1068 (audit finding T1003-24): an ABSENT probe record is "we did not look", which is the
+    // same fail-closed case as absent headings/landmarks — defaulting it to [] read two of G9's
+    // four defect classes as clean whenever a harness omitted the fields. `null` stays the
+    // recorded "no click-only controls / no custom focus styles on this page" answer.
+    const clickHandlers = page?.clickHandlers ?? null;
     if (!Array.isArray(clickHandlers)) {
-      problems.push(`${path}: clickHandlers malformed (fail-closed)`);
+      problems.push(`${path}: clickHandlers not recorded (fail-closed)`);
     } else {
       for (const problem of clickOnlyProblems(clickHandlers)) problems.push(`${path}: ${problem}`);
     }
 
-    const focusStyles = page?.focusStyles ?? [];
+    const focusStyles = page?.focusStyles ?? null;
     if (!Array.isArray(focusStyles)) {
-      problems.push(`${path}: focusStyles malformed (fail-closed)`);
+      problems.push(`${path}: focusStyles not recorded (fail-closed)`);
     } else {
       for (const problem of focusProblems(focusStyles)) problems.push(`${path}: ${problem}`);
     }

@@ -5720,10 +5720,12 @@
       ],
       "risk": "recurring red verifies that are not regressions",
       "rollback": "restore the fixed port; concurrent runs collide again",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1060.md"
+      ]
     },
     {
       "id": "T1061",
@@ -5745,16 +5747,18 @@
       ],
       "risk": "agents on a shared machine see red verifies that are not regressions",
       "rollback": "restore the double build and the tight timeout",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1060.md"
+      ]
     },
     {
       "id": "T1062",
       "m": "M13",
       "title": "T1003-18 (low, deferred) — bridge sessions expire and prune",
-      "obj": "Bridge sessions never expired and the sessions map never pruned; the token lifetime is the process lifetime, documented honestly in bridge.mjs. The reviewer noted this is acceptable until a long-lived trusted surface exists — deferred rather than risk breaking the studio flow.",
+      "obj": "Bridge sessions never expired and the sessions map never pruned; the token lifetime is the process lifetime, documented honestly in bridge.mjs. The reviewer noted this is acceptable until a long-lived trusted surface exists — deferred rather than risk breaking the studio flow. DEFERRED by the fix wave: token lifetime is the documented process lifetime and no long-lived trusted surface exists; recorded in the T1003 receipt response for the owner to accept.",
       "deps": [],
       "files": [
         "packages/studio-bridge/src/server.ts"
@@ -5817,10 +5821,12 @@
       ],
       "risk": "defense in depth: the content binding rests on one trusted surface",
       "rollback": "remove the refusal; the cross-check disappears",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1060.md"
+      ]
     },
     {
       "id": "T1065",
@@ -5841,10 +5847,12 @@
       ],
       "risk": "a trusted-caller input can place receipts outside .sus/ops",
       "rollback": "remove the validation",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1060.md"
+      ]
     },
     {
       "id": "T1066",
@@ -5866,10 +5874,12 @@
       ],
       "risk": "defects below the cutoff are missed and reported clean",
       "rollback": "revert; truncation stays silent",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1060.md"
+      ]
     },
     {
       "id": "T1067",
@@ -5890,10 +5900,12 @@
       ],
       "risk": "a future caller of the pure composer can produce a vacuous pass",
       "rollback": "revert the guards",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1060.md"
+      ]
     },
     {
       "id": "T1068",
@@ -5916,10 +5928,12 @@
       ],
       "risk": "a harness change silently vacates two G9 defect classes",
       "rollback": "restore the ?? [] defaults",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1060.md"
+      ]
     },
     {
       "id": "T1069",
@@ -5939,10 +5953,12 @@
       ],
       "risk": "a verdict line overstates what it exercised",
       "rollback": "restore the old wording",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1060.md"
+      ]
     },
     {
       "id": "T1070",
@@ -5963,10 +5979,12 @@
       ],
       "risk": "unmeasured routes inflate defect counts and exit codes",
       "rollback": "restore the fail branch",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1060.md"
+      ]
     },
     {
       "id": "T1071",
@@ -5987,10 +6005,12 @@
       ],
       "risk": "an operator chases the wrong line when the gate fires",
       "rollback": "restore the collapsing strip",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1060.md"
+      ]
     },
     {
       "id": "T1072",
@@ -6060,10 +6080,12 @@
       ],
       "risk": "a receipt claiming the pushed tree passed when a different tree did",
       "rollback": "revert the attribution and restore changes",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1060.md"
+      ]
     },
     {
       "id": "T1075",

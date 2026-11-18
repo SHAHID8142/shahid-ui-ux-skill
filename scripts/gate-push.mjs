@@ -64,27 +64,44 @@ run('node', ['scripts/check-continuation.mjs'], 'continuation checker');
 // that is a warning here, not a push blocker, because the pushed tree is HEAD.
 execFileSync('true');
 
+// T1074 (audit finding T1003-30): baselines that were already modified BEFORE the gate ran are
+// somebody's intentional edits — verify's timing churn must not be separated from them by a
+// `git checkout --` that discards both.
+const baselinesDirtyBefore = git(['status', '--porcelain', '--', 'evals/baselines']).trim() !== '';
+
 run('pnpm', ['verify'], 'full release suite (pnpm verify)');
 
 // Verification regenerates baselines; restore them and refuse any other drift.
 try {
   const baselines = git(['status', '--porcelain', '--', 'evals/baselines']).trim();
-  if (baselines !== '') {
+  if (baselines !== '' && !baselinesDirtyBefore) {
     execFileSync('git', ['checkout', '--', 'evals/baselines'], { cwd: ROOT });
     lines.push('[PASS] restored evals/baselines after verification churn');
   }
   const drift = git(['status', '--porcelain', '--', 'evals/baselines']).trim();
-  if (drift !== '') {
+  if (drift !== '' && !baselinesDirtyBefore) {
     failed = true;
     lines.push('[FAIL] evals/baselines could not be restored');
+  }
+  if (baselinesDirtyBefore && drift !== '') {
+    lines.push(
+      '[WARN] evals/baselines had uncommitted edits before the gate ran; they are preserved, mixed with verify\'s timing churn — review before committing',
+    );
   }
 } catch (error) {
   failed = true;
   lines.push(`[FAIL] baseline hygiene: ${error.message}`);
 }
 
+// T1074: the receipt names the tree that was ACTUALLY verified. A dirty tree means the suite
+// ran over uncommitted work, so the receipt must not read as "the pushed commit passed".
 const head = git(['rev-parse', '--short', 'HEAD']).trim();
-lines.push(`[INFO] verified tree: ${head}`);
+const dirtyAfterVerify = git(['status', '--porcelain']).trim();
+const dirtyNote =
+  dirtyAfterVerify === ''
+    ? ''
+    : ' (verified with uncommitted changes in the tree — the verified tree is NOT exactly the pushed commit; CI\'s fresh-clone job re-verifies the pushed commit after push)';
+lines.push(`[INFO] verified tree: ${head}${dirtyNote}`);
 
 console.log(lines.join('\n'));
 console.log('='.repeat(60));

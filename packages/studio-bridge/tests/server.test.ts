@@ -7,7 +7,7 @@
  */
 import { request } from 'node:http';
 import { describe, expect, it, afterAll } from 'vitest';
-import { BridgeServer } from '../src/server.js';
+import { BridgeServer, MAX_PAYLOAD_BYTES } from '../src/server.js';
 
 const PORT = 4729;
 const bridge = new BridgeServer({
@@ -101,6 +101,30 @@ describe('bridge server security posture (T0701)', () => {
       authorization: `Bearer ${token}`,
     });
     expect(res.status).toBe(401);
+  });
+
+  // T1063 (audit finding T1003-19): the documented 64KB cap is a BYTE cap. The old comparison
+  // used `body.length` (UTF-16 code units), so a multi-byte body up to ~4x the cap in bytes was
+  // accepted — here ~30k emoji is 30k code units (under the old cap) but ~122KB of UTF-8 bytes.
+  it('fail-closed: the payload cap counts bytes, not UTF-16 code units', async () => {
+    const { sessionId, token } = bridge.openSession('http://127.0.0.1:4317');
+    const text = '\u{1F680}'.repeat(30 * 1024);
+    expect(text.length).toBeLessThan(MAX_PAYLOAD_BYTES);
+    const big = JSON.stringify({
+      sessionId,
+      kind: 'intent',
+      domData: {
+        quarantined: true,
+        origin_url: 'http://127.0.0.1:4317/',
+        text,
+      },
+    });
+    expect(Buffer.byteLength(big)).toBeGreaterThan(MAX_PAYLOAD_BYTES);
+    const res = await post('/message', big, {
+      origin: 'http://127.0.0.1:4317',
+      authorization: `Bearer ${token}`,
+    });
+    expect(res.status).toBe(413);
   });
 
   it('fail-closed: oversized payload denied 413', async () => {

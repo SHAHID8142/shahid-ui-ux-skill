@@ -26,7 +26,10 @@ import type { RubricScoreData } from '@sus/schemas';
 import { captureMatrix, type CaptureResult } from '../src/harness/capture.js';
 import { scanA11y, runLighthouse, chromeForTestingPath } from '../src/harness/scans.js';
 
-const PORT = 4345;
+/** The suite binds an ephemeral port (T1060, audit finding T1003-15): the fixed port 4345 made
+ * any concurrent run or orphaned worker fail the whole suite with a misleading beforeAll timeout
+ * — the fix T0807 receipted in 2026-11-14 and this is it, four days later. */
+let port = 0;
 const ROOT = join(__dirname, '..', '..', '..', 'evals', 'baselines');
 const SURFACES = ['marketing', 'commerce', 'admin', 'portfolio'] as const;
 type Surface = (typeof SURFACES)[number];
@@ -48,7 +51,8 @@ beforeAll(async () => {
       res.writeHead(404).end('not found');
     }
   });
-  await new Promise<void>((resolve) => server!.listen(PORT, '127.0.0.1', resolve));
+  await new Promise<void>((resolve) => server!.listen(0, '127.0.0.1', resolve));
+  port = (server!.address() as import('node:net').AddressInfo).port;
 });
 
 afterAll(() => {
@@ -61,7 +65,7 @@ async function scanSurface(surface: Surface): Promise<{
   g4: GateResult;
   g5: GateResult;
 }> {
-  const url = `http://127.0.0.1:${PORT}/${surface}`;
+  const url = `http://127.0.0.1:${port}/${surface}`;
   // captures + gate evidence go to a TEMP dir: committed evidence under
   // evals/baselines/<surface>/evidence is the FROZEN baseline record —
   // reruns validate reproducibility without churning committed files

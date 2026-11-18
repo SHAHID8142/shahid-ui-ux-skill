@@ -256,6 +256,41 @@ describe('apply — forged, stale, replayed and untrusted authority is refused b
     untouched(harness);
   });
 
+  // T1064 (audit finding T1003-20): the engine verified the grant against the proposal and the
+  // capability binding against its issue, but never compared the two digests to each other — a
+  // capability issued for proposal A with a grant for proposal B passed both checks.
+  it('refuses when the capability binding and the grant name different proposals', async () => {
+    const h = happyHarness();
+    const forgedBinding: CapabilityBinding = { ...h.binding, proposalSha256: 'e'.repeat(64) };
+    const capabilityId = h.authority.issue(forgedBinding, 'owner@example').id;
+    const receipt = await h.engine.apply({
+      ...baseRequest(h),
+      capabilityId,
+      binding: forgedBinding,
+    });
+    expect(receipt.status).toBe('refused');
+    expect(receipt.reason).toBe('grant-mismatch');
+    expect(receipt.detail).toContain('different proposals');
+    untouched(h);
+  });
+
+  // T1065 (audit finding T1003-21): an operation id becomes a file name under .sus/ops; a
+  // caller-supplied id that walks out of that directory is refused instead of joined.
+  it('refuses an operation id that would place receipts outside .sus/ops', async () => {
+    const receipt = await harness.engine.apply(baseRequest(harness));
+    for (const hostile of ['../../escape', 'sub/dir', 'op id', '']) {
+      expect(() => harness.engine.receipts.load(hostile)).toThrow(/invalid operation id/);
+      expect(() =>
+        harness.engine.receipts.save({ ...receipt, operationId: hostile }),
+      ).toThrow(/invalid operation id/);
+    }
+    // A legitimate id (the randomUUID shape: hex with hyphens) still round-trips.
+    const fresh = happyHarness();
+    const ok = await fresh.engine.apply({ ...baseRequest(fresh), operationId: 'op-abc-123' });
+    expect(ok.status).toBe('applied');
+    expect(fresh.engine.receipts.load('op-abc-123')).not.toBeNull();
+  });
+
   it('refuses a replayed capability', async () => {
     const first = await harness.engine.apply({ ...baseRequest(harness), operationId: 'op-1' });
     expect(first.status).toBe('applied');
