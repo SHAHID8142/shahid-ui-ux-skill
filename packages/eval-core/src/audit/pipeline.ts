@@ -301,6 +301,7 @@ async function collectScans(
   lighthouse: LiveGroup<LighthouseSummary>;
   scopedAxe: LiveGroup<AxeScanResult>;
   browser: string | null;
+  networkRefusals: string[];
 }> {
   const axe: { route: string; value: AxeScanResult }[] = [];
   const keyboard: { route: string; value: KeyboardScanResult }[] = [];
@@ -311,6 +312,9 @@ async function collectScans(
   const scopedAxe: { route: string; value: AxeScanResult }[] = [];
   const scopedAxeFailed: { route: string; reason: string }[] = [];
   let browser: string | null = null;
+  // T1052 (audit finding T1003-7): refusals the network boundary makes are evidence — a page
+  // measured without its refused resources must say so instead of reading as a full page.
+  const refusals: string[] = [];
   try {
     const guarded = await launchGuardedBrowser(authorizedHosts);
     const instance = guarded.browser;
@@ -361,11 +365,14 @@ async function collectScans(
           keyboardFailed.push({ route, reason: describeError(error) });
         }
       }
+      refusals.push(...kbGuard.blocked());
       await kbGuard.dispose();
       await kbContext.close();
+      refusals.push(...axeGuard.blocked());
       await axeGuard.dispose();
       await context.close();
     } finally {
+      refusals.push(...guarded.proxy.refused());
       await guarded.close();
     }
   } catch (error) {
@@ -396,6 +403,7 @@ async function collectScans(
           lhFailed.push({ route, reason: describeError(error) });
         }
       }
+      refusals.push(...lighthouseProxy.refused());
     } finally {
       await lighthouseProxy.close();
     }
@@ -417,6 +425,7 @@ async function collectScans(
         ? { samples: [], failed: [], skipped: 'no scopes requested' }
         : { samples: scopedAxe, failed: scopedAxeFailed, skipped: null },
     browser,
+    networkRefusals: refusals,
   };
 }
 
@@ -561,6 +570,7 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
   let motion: LiveGroup<MotionProbeResult>;
   let states: LiveGroup<StatesProbeResult>;
   let browser: string | null = null;
+  let networkRefusals: string[] = [];
   if (mode === 'quick') {
     const reason =
       'quick mode runs no browser phase: pass --mode deep for accessibility, reflow and performance';
@@ -588,6 +598,7 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
     motion = await collectMotion(origin, routes, authorizedHosts);
     states = await collectStates(origin, routes, authorizedHosts);
     browser = scans.browser;
+    networkRefusals = scans.networkRefusals;
   }
 
   return {
@@ -610,6 +621,7 @@ async function measure(request: MeasureRequest): Promise<AuditInputs> {
     scopedAxe,
     motion,
     states,
+    networkRefusals,
   };
 }
 

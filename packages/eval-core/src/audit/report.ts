@@ -225,6 +225,15 @@ export const AuditReport = z
     target: AuditTarget,
     /** Viewport names from the fixed contract. */
     viewports: z.array(z.string().min(1)).min(1),
+    /**
+     * Hosts the network boundary refused during this run (allowlisting proxy + navigation
+     * guard), newest last, deduplicated. Empty when nothing was refused — a silent omission
+     * would let a half-loaded page read as a full measurement (T1052, audit finding T1003-7).
+     */
+    // `.default([])` keeps hand-built reports (tests, tools) parseable: absent means nothing
+    // was refused, which is exactly what an empty array means — never a silent omission of a
+    // half-loaded page.
+    networkRefusals: z.array(z.string().min(1)).default([]),
     checks: z.array(AuditCheckResult),
     /** Sorted P0 to P3 then check, route, viewport, id: reproducible ordering. */
     findings: z.array(AuditFinding),
@@ -567,6 +576,20 @@ export function renderAuditMarkdown(report: AuditReport): string {
     '',
     ...report.needsReview.map((item) => '- ' + item),
     '',
+    ...(report.networkRefusals.length > 0
+      ? [
+          '## Network boundary',
+          '',
+          'The allowlisting proxy refused the following requests during this run; their content is',
+          'not in these measurements, and every check below saw the page without it. Non-document',
+          'subresources served by the authorised origin are measured as the page serves them: the',
+          'tool constrains which hosts it contacts, not which bytes an authorised page pulls',
+          '(docs/LIMITATIONS.md states this limitation where it belongs).',
+          '',
+          ...report.networkRefusals.map((entry) => '- refused: ' + entry),
+          '',
+        ]
+      : []),
     '## Remediation',
     '',
     'A proposed fix is written to a plan file and requires explicit approval before it is',

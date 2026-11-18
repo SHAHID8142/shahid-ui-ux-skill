@@ -104,6 +104,12 @@ export interface AuditInputs {
   /** Pressed/disabled style deltas from the state probe (issue #21 R6). */
   readonly states?: LiveGroup<StatesProbeResult>;
   /**
+   * Hosts the network boundary refused during this run, collected from the allowlisting proxy
+   * and the navigation guards (T1052). Absent means no refusal was observed; never a silent
+   * omission of a half-loaded page.
+   */
+  readonly networkRefusals?: readonly string[];
+  /**
    * Recorded artefacts keyed by the route they belong to. Only the pipeline can
    * fill this: it is the layer that writes files and can therefore hash them.
    */
@@ -1328,6 +1334,7 @@ export function composeReport(inputs: AuditInputs): AuditReport {
     mode: inputs.mode,
     target: inputs.target,
     viewports: AUDIT_VIEWPORTS.map((v) => v.name),
+    networkRefusals: [...new Set(inputs.networkRefusals ?? [])],
     checks: ordered,
     findings: sorted,
     summary: summariseFindings(sorted, ordered, inputs.mode),

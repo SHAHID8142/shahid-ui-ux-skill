@@ -24,6 +24,7 @@ import {
 import {
   AuditReport,
   exitCodeFor,
+  renderAuditMarkdown,
   summariseFindings,
   requiredIn,
   stableFindingId,
@@ -517,6 +518,27 @@ describe('audit evidence contract (T1013)', () => {
     expect(check?.detail.join(' ')).toContain('title');
     const seoFindings = report.findings.filter((f) => f.check === 'seo-structure');
     expect(seoFindings.length).toBeGreaterThan(0);
+  });
+
+  // T1052 (audit finding T1003-7): refusals the network boundary makes are part of the
+  // measurement context. A page measured without its refused resources must say so instead of
+  // reading as a full page, and the stated subresource allowance belongs in the report, not
+  // only in a header comment.
+  it('renders a network boundary section when the proxy refused hosts (T1052)', () => {
+    const report = composeReport(
+      base({ networkRefusals: ['blocked.invalid (plain request)', 'blocked.invalid (CONNECT tunnel)'] }),
+    );
+    expect(report.networkRefusals).toHaveLength(2);
+    const markdown = renderAuditMarkdown(report);
+    expect(markdown).toContain('## Network boundary');
+    expect(markdown).toContain('- refused: blocked.invalid (plain request)');
+    expect(markdown).toContain('authorised origin');
+  });
+
+  it('renders no network section and an empty list when nothing was refused', () => {
+    const report = composeReport(base({}));
+    expect(report.networkRefusals).toEqual([]);
+    expect(renderAuditMarkdown(report)).not.toContain('## Network boundary');
   });
 
   it('never passes keyboard-flow when no traversal was recorded', () => {

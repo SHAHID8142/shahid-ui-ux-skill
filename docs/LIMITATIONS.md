@@ -38,6 +38,13 @@ written down is a bug with better manners.
 
 ## 4. Implementation limits found while building
 
+- The audit's network boundary constrains **which hosts** it contacts, not which bytes an
+  authorised page pulls: a document navigation to an unauthorised host is refused (and so is a
+  redirect hop, per-hop, at fetch and in every browser phase through the allowlisting proxy),
+  while non-document subresources served by the authorised origin are measured as the page
+  serves them. Every host the boundary refused during a run is now disclosed in the report's
+  "Network boundary" section and in `audit.json` (`networkRefusals`), so a page measured without
+  its refused resources cannot read as a full page (T1052).
 - The dogfood audit runs **five** checks over three reference sites. All three pass all five,
   which says the checks are not exhaustive, not that the sites are exemplary. The five checks
   exercise four playbooks — `search-filters`, `tabs`, `accordion`, `form-input-validation` —

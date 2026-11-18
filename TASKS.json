@@ -5462,10 +5462,16 @@
       ],
       "risk": "measurements of a half-loaded page read as measurements of the page",
       "rollback": "revert the threading; refusals stay internal as before",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1052.md",
+        "packages/eval-core/src/audit/report.ts",
+        "packages/eval-core/src/audit/pipeline.ts",
+        "packages/eval-core/src/audit/compose.ts",
+        "docs/LIMITATIONS.md"
+      ]
     },
     {
       "id": "T1053",
