@@ -204,3 +204,98 @@ describe('bridge server security posture (T0701)', () => {
     expect(surface.some((m) => /write|apply|patch|save/i.test(m))).toBe(false);
   });
 });
+
+/**
+ * T1062 (audit finding T1003-18, issue #25): bridge sessions had no expiry — a token stayed
+ * valid until the process exited. Sessions now carry an absolute deadline and an idle timeout
+ * (both enforced fail-closed in verifyToken, clock injectable for tests), retained sessions are
+ * bounded with least-recently-used eviction, and expired sessions are pruned. The five-minute
+ * capability TTL in security.ts is a DIFFERENT control (privileged operations) and is not
+ * affected.
+ */
+import { BridgeServer, DEFAULT_SESSION_POLICY } from '../src/server.js';
+
+describe('session expiry (T1062, issue #25)', () => {
+  /** A bridge whose clock the test controls, listening like the other suites. */
+  function expiryBridge(clock: () => number) {
+    return new BridgeServer({
+      port: 0,
+      allowedOrigins: ['http://127.0.0.1:4317'],
+      allowedHosts: ['127.0.0.1'],
+      sessionPolicy: {
+        absoluteTtlMs: 60_000,
+        idleTtlMs: 10_000,
+        maxSessions: 3,
+        clock,
+      },
+    });
+  }
+
+  it('denies a token after the absolute deadline and prunes the session', () => {
+    let now = 1_000_000;
+    const bridge = expiryBridge(() => now);
+    const { sessionId, token } = bridge.openSession('http://127.0.0.1:4317');
+    expect(bridge.verifyToken(sessionId, token)).toBe(true);
+    now += 60_001; // past the absolute deadline
+    expect(bridge.verifyToken(sessionId, token)).toBe(false);
+    // pruned on the next open: the map no longer retains the dead session
+    bridge.openSession('http://127.0.0.1:4317');
+    expect(bridge.sessions.has(sessionId)).toBe(false);
+    expect(bridge.audit.entries.some((e) => e.event === 'session-expired')).toBe(true);
+  });
+
+  it('denies a token after the idle timeout, and activity renews it', () => {
+    let now = 2_000_000;
+    const bridge = expiryBridge(() => now);
+    const { sessionId, token } = bridge.openSession('http://127.0.0.1:4317');
+    now += 9_000; // under the idle timeout
+    expect(bridge.verifyToken(sessionId, token)).toBe(true); // and renews
+    now += 9_000; // still under, because the last use renewed the clock
+    expect(bridge.verifyToken(sessionId, token)).toBe(true);
+    now += 11_000; // idle past the timeout with no renewal in between
+    expect(bridge.verifyToken(sessionId, token)).toBe(false);
+    expect(
+      bridge.audit.entries.some((e) => e.detail.includes('idle') || e.detail.includes('expired')),
+    ).toBe(true);
+  });
+
+  it('evicts the least-recently-used session at the cap, and the evicted token fails', () => {
+    let now = 3_000_000;
+    const bridge = expiryBridge(() => now);
+    const a = bridge.openSession('http://127.0.0.1:4317');
+    const b = bridge.openSession('http://127.0.0.1:4317');
+    const c = bridge.openSession('http://127.0.0.1:4317');
+    // a is the least-recently-used (never verified since open)
+    const d = bridge.openSession('http://127.0.0.1:4317');
+    expect(bridge.sessions.size).toBe(3);
+    expect(bridge.sessions.has(a.sessionId)).toBe(false);
+    expect(bridge.verifyToken(a.sessionId, a.token)).toBe(false);
+    expect(bridge.verifyToken(b.sessionId, b.token)).toBe(true);
+    expect(bridge.verifyToken(c.sessionId, c.token)).toBe(true);
+    expect(bridge.verifyToken(d.sessionId, d.token)).toBe(true);
+    expect(bridge.audit.entries.some((e) => e.event === 'session-evicted')).toBe(true);
+  });
+
+  it('a closed session stays closed and a fresh bridge knows nothing of old tokens (post-restart)', () => {
+    let now = 4_000_000;
+    const bridge = expiryBridge(() => now);
+    const { sessionId, token } = bridge.openSession('http://127.0.0.1:4317');
+    bridge.closeSession(sessionId);
+    expect(bridge.verifyToken(sessionId, token)).toBe(false);
+    const restarted = expiryBridge(() => now);
+    expect(restarted.verifyToken(sessionId, token)).toBe(false);
+  });
+
+  it('defaults keep the documented studio flow working without configuration', () => {
+    const bridge = new BridgeServer({
+      port: 0,
+      allowedOrigins: ['http://127.0.0.1:4317'],
+      allowedHosts: ['127.0.0.1'],
+    });
+    const { sessionId, token } = bridge.openSession('http://127.0.0.1:4317');
+    expect(bridge.verifyToken(sessionId, token)).toBe(true);
+    const session = bridge.sessions.get(sessionId);
+    expect(session!.expiresAt - session!.lastUsedAt).toBe(DEFAULT_SESSION_POLICY.absoluteTtlMs);
+    expect(DEFAULT_SESSION_POLICY.idleTtlMs).toBe(30 * 60 * 1000);
+  });
+});

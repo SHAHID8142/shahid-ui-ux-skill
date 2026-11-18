@@ -5771,22 +5771,30 @@
       "id": "T1062",
       "m": "M13",
       "title": "T1003-18 (low, deferred) — bridge sessions expire and prune",
-      "obj": "T1003-18 finding: bridge sessions never expire and the sessions map never prunes; the token lifetime is the process lifetime, documented honestly in bridge.mjs. DEFERRED by the fix wave with owner sign-off required: no long-lived trusted surface exists, and changing auth semantics now risks the studio flow for no attacker today. Revisit when a long-lived surface lands.",
+      "obj": "T1003-18 finding (issue #25): bridge sessions never expired — a token stayed valid until process exit. Deferred by the fix wave with owner sign-off required; the owner then directed work on all open issues, so the fix is implemented: absolute 24h lifetime + 30min idle timeout (renewed per authenticated use), injectable clock, retained-session cap with LRU eviction, expired-session pruning, all fail-closed in verifyToken. The five-minute capability TTL in security.ts is a different control and unchanged.",
       "deps": [],
       "files": [
-        "packages/studio-bridge/src/server.ts"
+        "packages/studio-bridge/src/server.ts",
+        "packages/studio-bridge/tests/server.test.ts",
+        "scripts/studio/bridge.mjs"
       ],
       "acc": [
-        "deferred: a session TTL or pruning loop lands when a long-lived surface exists",
-        "the deferral is stated in the T1003 receipt response for the owner to accept"
+        "a token is denied after the absolute deadline and the session is pruned",
+        "a token is denied after the idle timeout; activity renews the idle clock",
+        "the least-recently-used session is evicted at the cap and its token fails",
+        "closed sessions stay closed; a fresh bridge knows nothing of old tokens (post-restart)",
+        "defaults keep the documented studio flow working without configuration"
       ],
       "tests": [],
       "risk": "an unbounded sessions map in a long-lived process",
       "rollback": "not applicable — no change made",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1062.md",
+        "packages/studio-bridge/tests/server.test.ts"
+      ]
     },
     {
       "id": "T1063",
@@ -6416,6 +6424,88 @@
       "phase": "build",
       "evidence": [
         ".sus-dev/VERIFICATION/T1076.md"
+      ]
+    },
+    {
+      "id": "T1087",
+      "m": "M13",
+      "title": "Issue #24 — 720s deep-test timeout: diagnose, measure, and keep the suite reproducible",
+      "obj": "The independent auditor's #24 asks for diagnosis of the 720s timeout, a reproducible verify, and a bounded deep test. Diagnosis (documented): the two 720s timeouts this session were self-inflicted scheduler contention from concurrent heavy suites on one machine, not an indefinite hang; serial runs finish the deep test in 285-402s consistently (measured across five verify runs and two regression runs). The verify chain was made reproducible (build-once F3/T1079, ephemeral baselines port T1060, teardown-reset guard T1061). The deep-test rework (single-route scoped conversion + one retained full integration run) is triaged as queued work — the suite currently passes serially and in CI, so the blocker condition (release promoted on a failed run) is not present.",
+      "deps": [],
+      "files": [
+        "packages/eval-core/tests/bestpractice.command.test.ts",
+        "package.json",
+        ".sus-dev/VERIFICATION/T1061.md"
+      ],
+      "acc": [
+        "verify and regression pass at the release-candidate SHA (done: exit 0, PASS 3 stages 522.6s, CI green)",
+        "the timeout diagnosis is recorded with measurements",
+        "the bounded-deep-test rework is queued with a concrete plan"
+      ],
+      "tests": [
+        "packages/eval-core/tests/bestpractice.command.test.ts"
+      ],
+      "risk": "an open owner/auditor issue left unaddressed",
+      "rollback": "revert",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1061.md",
+        "evals/reports/regression-latest.md"
+      ]
+    },
+    {
+      "id": "T1088",
+      "m": "M13",
+      "title": "Issues #18/#26/#27/#28/#29/#30 — evidence comments at the release-candidate SHA",
+      "obj": "The independent auditor filed six issues against remote 1c694a9, before the fix wave was pushed. Every demanded fix is now on the remote at fe2ec79 (CI green, fresh-clone included) and adversarially re-verified by a fresh-context auditor. Each issue gets an evidence comment naming the fix SHA, the receipt, the adversarial re-verification, and the CI run; issues whose own acceptance criteria are met are closed by that evidence (the documented #10 pattern).",
+      "deps": [],
+      "files": [
+        "docs/AUDIT_PACKET.md",
+        ".sus-dev/VERIFICATION/T1003.md"
+      ],
+      "acc": [
+        "each of the six issues carries an evidence comment naming commit SHAs that resolve on GitHub",
+        "closures follow each issue's own acceptance criteria",
+        "no issue is closed on a local-claim alone"
+      ],
+      "tests": [],
+      "risk": "an open owner/auditor issue left unaddressed",
+      "rollback": "revert",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1076.md"
+      ]
+    },
+    {
+      "id": "T1089",
+      "m": "M13",
+      "title": "Issue #31 — UX-laws catalog and coverage matrix (first slice)",
+      "obj": "The owner's #31 requests research on ten named UX laws plus discovery of additional candidates, compared against SUS's actual implementation, integrated contextually. First slice: an evidence-gated catalog (original writing, sources cited by URL — no copied guide text, D06 still open) classifying each law by kind and evidence tier, and a coverage matrix mapping laws to the playbooks/references that operationalize them, with integration decisions (now/queued/not-applicable) and reasons. No unmeasured capability is asserted; the matrix is honest about gaps.",
+      "deps": [],
+      "files": [
+        "evals/research/ux-laws/catalog.json",
+        "docs/UX_LAWS_COVERAGE.md"
+      ],
+      "acc": [
+        "the catalog covers the owner's ten named laws plus the triaged candidates from the issue",
+        "every entry carries kind, evidence tier, sources, SUS coverage and an integration decision with a reason",
+        "no guide text is copied; provenance records the sources",
+        "the coverage matrix cites the actual playbook/reference files it maps to"
+      ],
+      "tests": [
+        "evals/research/ux-laws/catalog.json"
+      ],
+      "risk": "an open owner/auditor issue left unaddressed",
+      "rollback": "revert",
+      "status": "done",
+      "approval": "pending",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1090.md"
       ]
     }
   ]

@@ -1,0 +1,625 @@
+{
+  "schemaVersion": 1,
+  "provenance": {
+    "writtenBy": "build agent (zcode-audit), original writing — no guide text copied",
+    "sourcesCitedBy": "URL only; lawsofux.com and nngroup.com are curated references, not primary science",
+    "licenceNote": "D06 open: nothing copied verbatim from any source; descriptions are original",
+    "accessDate": "2026-11-19"
+  },
+  "counts": {
+    "ownerNamed": 10,
+    "additionalTriaged": 22,
+    "total": 32
+  },
+  "laws": [
+    {
+      "id": "jakobs-law",
+      "name": "Jakob's Law",
+      "kind": "effect",
+      "evidenceTier": "popular-heuristic-with-real-basis",
+      "ownerNamed": true,
+      "sources": [
+        "https://lawsofux.com/",
+        "https://www.nngroup.com/articles/consistency-and-standards/"
+      ],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/onboarding.json",
+          "operationalizes": "familiar step patterns for first-run flows",
+          "attribution": "partial"
+        },
+        {
+          "artifact": "skill/references/playbooks/navbar.json",
+          "operationalizes": "conventional navigation placement",
+          "attribution": "partial"
+        },
+        {
+          "artifact": "skill/references/foundations-heuristics-ia.md",
+          "operationalizes": "consistency and standards (Nielsen #4)",
+          "attribution": "partial"
+        }
+      ],
+      "integrationDecision": "queued-integration",
+      "decisionReason": "The references already push conventional patterns; naming the law turns an implicit rule into an attributable decision. One-line attribution + an E2 question, queued behind the owner's review of the matrix."
+    },
+    {
+      "id": "hicks-law",
+      "name": "Hick's / Hick–Hyman Law",
+      "kind": "empirical-law",
+      "evidenceTier": "replicated-with-boundaries",
+      "ownerNamed": true,
+      "sources": ["https://www.nngroup.com/videos/hicks-law-long-menus/", "https://lawsofux.com/"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/search-filters.json",
+          "operationalizes": "bounded filter sets",
+          "attribution": "none"
+        },
+        {
+          "artifact": "skill/references/playbooks/dropdown.json",
+          "operationalizes": "menu depth choices",
+          "attribution": "none"
+        }
+      ],
+      "integrationDecision": "queued-research",
+      "decisionReason": "Replicated, but reaction-time predictions need a measured task model SUS does not have; a playbook rule ('limit simultaneous choices') is a heuristic borrowing the name. Decide after #20's coverage work names the measuring instrument."
+    },
+    {
+      "id": "millers-law",
+      "name": "Miller's Law / chunking",
+      "kind": "effect",
+      "evidenceTier": "contested",
+      "ownerNamed": true,
+      "sources": ["https://en.wikipedia.org/wiki/Working_memory", "https://lawsofux.com/"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/data-table.json",
+          "operationalizes": "pagination bounds",
+          "attribution": "none"
+        },
+        {
+          "artifact": "skill/references/playbooks/record-forms.json",
+          "operationalizes": "grouped form sections",
+          "attribution": "partial"
+        }
+      ],
+      "integrationDecision": "queued-research",
+      "decisionReason": "The famous 7±2 is a misread of Miller (1956); modern working-memory work (Cowan's ~4) is the defensible core. SUS should phrase rules as chunking/grouping, not as a memory-span number. Needs a written position before integration."
+    },
+    {
+      "id": "gestalt-similarity",
+      "name": "Gestalt Law of Similarity",
+      "kind": "perceptual-principle",
+      "evidenceTier": "strong-empirical",
+      "ownerNamed": true,
+      "sources": ["https://en.wikipedia.org/wiki/Gestalt_psychology", "https://lawsofux.com/"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/card.json",
+          "operationalizes": "uniform card treatment",
+          "attribution": "partial"
+        },
+        {
+          "artifact": "skill/references/playbooks/product-grid.json",
+          "operationalizes": "grid item consistency",
+          "attribution": "partial"
+        }
+      ],
+      "integrationDecision": "queued-integration",
+      "decisionReason": "Perceptual science is solid; integration is an attribution line on existing grouping rules plus a review question, not a new evaluator."
+    },
+    {
+      "id": "gestalt-common-region",
+      "name": "Gestalt Law of Common Region",
+      "kind": "perceptual-principle",
+      "evidenceTier": "strong-empirical",
+      "ownerNamed": true,
+      "sources": ["https://en.wikipedia.org/wiki/Gestalt_psychology", "https://lawsofux.com/"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/settings.json",
+          "operationalizes": "grouped setting sections",
+          "attribution": "partial"
+        },
+        {
+          "artifact": "skill/references/playbooks/dashboard-widgets.json",
+          "operationalizes": "panel grouping",
+          "attribution": "partial"
+        }
+      ],
+      "integrationDecision": "queued-integration",
+      "decisionReason": "Same shape as similarity: attribute existing grouping guidance, then decide whether a scoped bestpractice check can detect ungrouped related controls (hard to measure honestly)."
+    },
+    {
+      "id": "gestalt-continuity",
+      "name": "Gestalt Law of Continuity / Good Continuation",
+      "kind": "perceptual-principle",
+      "evidenceTier": "strong-empirical",
+      "ownerNamed": true,
+      "sources": ["https://en.wikipedia.org/wiki/Gestalt_psychology", "https://lawsofux.com/"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/breadcrumb.json",
+          "operationalizes": "path continuity",
+          "attribution": "none"
+        },
+        {
+          "artifact": "skill/references/playbooks/stepper-style-flows",
+          "operationalizes": "multi-step flows",
+          "attribution": "none"
+        }
+      ],
+      "integrationDecision": "queued-research",
+      "decisionReason": "Solid perception science; no SUS artifact operationalizes flow alignment today and a fake check would be worse than none. Research whether a playbook rule (steppers, breadcrumbs) is honest to write."
+    },
+    {
+      "id": "von-restorff",
+      "name": "Von Restorff / Isolation Effect",
+      "kind": "effect",
+      "evidenceTier": "replicated-with-boundaries",
+      "ownerNamed": true,
+      "sources": ["https://en.wikipedia.org/wiki/Isolation_effect", "https://lawsofux.com/"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/button-cta.json",
+          "operationalizes": "one primary action per view (repo rule)",
+          "attribution": "partial"
+        },
+        {
+          "artifact": "skill/references/playbooks/badge.json",
+          "operationalizes": "attention badges",
+          "attribution": "none"
+        }
+      ],
+      "integrationDecision": "queued-integration",
+      "decisionReason": "The repo's one-primary-action rule IS an isolation effect application. Attribution is cheap and honest; a measurable check (distinctiveness delta) needs a colour/contrast instrument that exists in tokens, not scanners."
+    },
+    {
+      "id": "serial-position",
+      "name": "Serial Position Effect",
+      "kind": "effect",
+      "evidenceTier": "replicated-with-boundaries",
+      "ownerNamed": true,
+      "sources": ["https://en.wikipedia.org/wiki/Serial-position_effect", "https://lawsofux.com/"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/navbar.json",
+          "operationalizes": "item ordering",
+          "attribution": "none"
+        },
+        {
+          "artifact": "skill/references/playbooks/pricing-table.json",
+          "operationalizes": "plan ordering",
+          "attribution": "none"
+        }
+      ],
+      "integrationDecision": "queued-research",
+      "decisionReason": "Primacy/recency is list-context dependent; a playbook rule about placing critical items first/last is defensible, measuring it is not (no eye-tracking). Decide as E2 expert-review guidance."
+    },
+    {
+      "id": "fittss-law",
+      "name": "Fitts's Law",
+      "kind": "empirical-law",
+      "evidenceTier": "strong-empirical",
+      "ownerNamed": true,
+      "sources": ["https://en.wikipedia.org/wiki/Fitts%27s_law", "https://lawsofux.com/"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/foundations-layout-responsive.md",
+          "operationalizes": "44px minimum target policy",
+          "attribution": "partial"
+        },
+        {
+          "artifact": "skill/references/playbooks/data-table.json",
+          "operationalizes": "row action sizes",
+          "attribution": "partial"
+        }
+      ],
+      "integrationDecision": "queued-integration",
+      "decisionReason": "The 44px policy operationalizes Fitts's target-size term directly. Attribution plus one sentence on distance (edge-reaching) is an honest, cheap integration; a distance check would need pointer-path measurement SUS does not have."
+    },
+    {
+      "id": "gestalt-proximity",
+      "name": "Gestalt Law of Proximity",
+      "kind": "perceptual-principle",
+      "evidenceTier": "strong-empirical",
+      "ownerNamed": true,
+      "sources": ["https://en.wikipedia.org/wiki/Gestalt_psychology", "https://lawsofux.com/"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/form-input-validation.json",
+          "operationalizes": "error-message placement",
+          "attribution": "partial"
+        },
+        {
+          "artifact": "skill/references/foundations-layout-responsive.md",
+          "operationalizes": "spacing scale",
+          "attribution": "partial"
+        }
+      ],
+      "integrationDecision": "queued-integration",
+      "decisionReason": "Spacing-scale + validation-placement guidance is proximity in practice. Attribution line, then decide if a scoped check can flag related controls separated by unrelated content (plausible with geometry the capture matrix already measures)."
+    },
+    {
+      "id": "doherty-threshold",
+      "name": "Doherty Threshold",
+      "kind": "empirical-guideline",
+      "evidenceTier": "replicated-with-boundaries",
+      "ownerNamed": false,
+      "sources": ["https://en.wikipedia.org/wiki/Doherty_threshold"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/progress.json",
+          "operationalizes": "progress indication",
+          "attribution": "partial"
+        },
+        {
+          "artifact": "skill/references/playbooks/skeleton.json",
+          "operationalizes": "perceived latency",
+          "attribution": "partial"
+        },
+        {
+          "artifact": "skill/references/motion-interruption.md",
+          "operationalizes": "motion budgets under reduced motion",
+          "attribution": "partial"
+        }
+      ],
+      "integrationDecision": "queued-research",
+      "decisionReason": "SUS already measures LCP/TBT (G5) — response-time budgets exist; the 400ms guideline needs an owner decision on which metric it binds to before any rule is written."
+    },
+    {
+      "id": "steering-law",
+      "name": "Steering Law",
+      "kind": "empirical-law",
+      "evidenceTier": "strong-empirical",
+      "ownerNamed": false,
+      "sources": ["https://en.wikipedia.org/wiki/Steering_law"],
+      "susCoverage": [],
+      "integrationDecision": "not-applicable",
+      "decisionReason": "Solid psychophysics but SUS audits web UIs, not trajectory input devices; no honest check or playbook rule is available. Revisit only if pointer-drawing features (Studio pen) need path guidance."
+    },
+    {
+      "id": "goal-gradient",
+      "name": "Goal-Gradient Effect",
+      "kind": "effect",
+      "evidenceTier": "replicated-with-boundaries",
+      "ownerNamed": false,
+      "sources": ["https://en.wikipedia.org/wiki/Goal_gradient_effect"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/checkout-steps.json",
+          "operationalizes": "step indication",
+          "attribution": "partial"
+        },
+        {
+          "artifact": "skill/references/playbooks/progress.json",
+          "operationalizes": "progress display",
+          "attribution": "partial"
+        }
+      ],
+      "integrationDecision": "queued-integration",
+      "decisionReason": "Checkout/progress playbooks already imply progress visibility; attribution + an E2 question ('does the user see the remaining distance shrink?') is a cheap honest integration."
+    },
+    {
+      "id": "peak-end-rule",
+      "name": "Peak–End Rule",
+      "kind": "effect",
+      "evidenceTier": "replicated-with-boundaries",
+      "ownerNamed": false,
+      "sources": ["https://en.wikipedia.org/wiki/Peak%E2%80%93end_rule"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/empty-loading-error.json",
+          "operationalizes": "error/empty moments",
+          "attribution": "none"
+        },
+        {
+          "artifact": "skill/references/playbooks/toast-notification.json",
+          "operationalizes": "end-of-flow confirmation",
+          "attribution": "none"
+        }
+      ],
+      "integrationDecision": "queued-research",
+      "decisionReason": "Requires knowing which moments are peaks — a judgement SUS cannot measure; candidate for an E2 expert-review question, not a gate."
+    },
+    {
+      "id": "zeigarnik-effect",
+      "name": "Zeigarnik Effect",
+      "kind": "effect",
+      "evidenceTier": "mixed-replication",
+      "ownerNamed": false,
+      "sources": ["https://en.wikipedia.org/wiki/Zeigarnik_effect"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/onboarding.json",
+          "operationalizes": "multi-session onboarding",
+          "attribution": "none"
+        }
+      ],
+      "integrationDecision": "queued-research",
+      "decisionReason": "Replication record is mixed; if onboarding ever needs 'resume where you left off' guidance, cite it as context, not as a measured claim."
+    },
+    {
+      "id": "aesthetic-usability",
+      "name": "Aesthetic–Usability Effect",
+      "kind": "effect",
+      "evidenceTier": "replicated-with-boundaries",
+      "ownerNamed": false,
+      "sources": ["https://lawsofux.com/"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/art-direction.md",
+          "operationalizes": "art-direction strategies",
+          "attribution": "partial"
+        }
+      ],
+      "integrationDecision": "queued-research",
+      "decisionReason": "SUS measures aesthetics nowhere and the effect tolerates usability debt — dangerous if used to excuse G-gate failures. Keep out of gates; possible E2 framing."
+    },
+    {
+      "id": "cognitive-load",
+      "name": "Cognitive Load Theory",
+      "kind": "model",
+      "evidenceTier": "strong-empirical",
+      "ownerNamed": false,
+      "sources": ["https://en.wikipedia.org/wiki/Cognitive_load"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/foundations-heuristics-ia.md",
+          "operationalizes": "recognition over recall (Nielsen #6)",
+          "attribution": "partial"
+        }
+      ],
+      "integrationDecision": "queued-research",
+      "decisionReason": "A model, not a law; SUS has no load instrument. Candidate for E2 guidance language rather than any measurable check."
+    },
+    {
+      "id": "chunking",
+      "name": "Chunking (as design practice)",
+      "kind": "heuristic",
+      "evidenceTier": "popular-heuristic",
+      "ownerNamed": false,
+      "sources": ["https://en.wikipedia.org/wiki/Working_memory"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/record-forms.json",
+          "operationalizes": "sectioned forms",
+          "attribution": "partial"
+        }
+      ],
+      "integrationDecision": "queued-integration",
+      "decisionReason": "As a DESIGN PRACTICE (group related fields) it is honest; as a memory-span claim it is not. Integrate the practice wording with Miller's-Law caveat."
+    },
+    {
+      "id": "mental-models",
+      "name": "Mental Models",
+      "kind": "concept",
+      "evidenceTier": "popular-heuristic",
+      "ownerNamed": false,
+      "sources": ["https://www.nngroup.com/articles/ten-usability-heuristics/"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/foundations-heuristics-ia.md",
+          "operationalizes": "match between system and real world (Nielsen #2)",
+          "attribution": "partial"
+        }
+      ],
+      "integrationDecision": "queued-integration",
+      "decisionReason": "Already implicit in Nielsen #2; explicit naming in the E2 questions is cheap. No gate possible."
+    },
+    {
+      "id": "selective-attention",
+      "name": "Selective Attention / banner blindness",
+      "kind": "effect",
+      "evidenceTier": "replicated-with-boundaries",
+      "ownerNamed": false,
+      "sources": ["https://lawsofux.com/"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/toast-notification.json",
+          "operationalizes": "non-interrupting notices",
+          "attribution": "none"
+        }
+      ],
+      "integrationDecision": "queued-research",
+      "decisionReason": "Banner-blindness evidence exists for ad-shaped regions; generalizing to UI notices needs care. Research before any rule."
+    },
+    {
+      "id": "teslers-law",
+      "name": "Tesler's Law (conservation of complexity)",
+      "kind": "heuristic",
+      "evidenceTier": "popular-heuristic",
+      "ownerNamed": false,
+      "sources": ["https://lawsofux.com/"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/settings.json",
+          "operationalizes": "sensible defaults",
+          "attribution": "partial"
+        }
+      ],
+      "integrationDecision": "queued-integration",
+      "decisionReason": "Defaults-first guidance already encodes it; attribution is cheap. No measurable check imaginable."
+    },
+    {
+      "id": "occams-razor",
+      "name": "Occam's Razor",
+      "kind": "principle",
+      "evidenceTier": "popular-heuristic",
+      "ownerNamed": false,
+      "sources": ["https://lawsofux.com/"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/precedence.md",
+          "operationalizes": "fewest moving parts",
+          "attribution": "none"
+        }
+      ],
+      "integrationDecision": "not-applicable",
+      "decisionReason": "A general principle, not UX-specific evidence; SUS precedence rules already encode simplicity. No separate integration."
+    },
+    {
+      "id": "gestalt-closure",
+      "name": "Gestalt Law of Closure",
+      "kind": "perceptual-principle",
+      "evidenceTier": "strong-empirical",
+      "ownerNamed": false,
+      "sources": ["https://en.wikipedia.org/wiki/Gestalt_psychology"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/avatar.json",
+          "operationalizes": "partial-image treatment",
+          "attribution": "none"
+        }
+      ],
+      "integrationDecision": "not-applicable",
+      "decisionReason": "Solid perception science, but SUS audit checks must not rely on the user completing missing shape — closure applies to perception of incomplete forms, and designing intentionally incomplete controls is a visual-design choice outside the audit's gates."
+    },
+    {
+      "id": "figure-ground",
+      "name": "Gestalt Figure–Ground",
+      "kind": "perceptual-principle",
+      "evidenceTier": "strong-empirical",
+      "ownerNamed": false,
+      "sources": ["https://en.wikipedia.org/wiki/Gestalt_psychology"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/modal-dialog.json",
+          "operationalizes": "overlay separation",
+          "attribution": "partial"
+        },
+        {
+          "artifact": "skill/references/playbooks/drawer.json",
+          "operationalizes": "layer separation",
+          "attribution": "partial"
+        }
+      ],
+      "integrationDecision": "queued-integration",
+      "decisionReason": "Modal/drawer guidance already implies layering; attribution is cheap and honest."
+    },
+    {
+      "id": "pragnanz",
+      "name": "Prägnanz (Good Form)",
+      "kind": "perceptual-principle",
+      "evidenceTier": "strong-empirical",
+      "ownerNamed": false,
+      "sources": ["https://en.wikipedia.org/wiki/Gestalt_psychology"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/foundations-color-typography.md",
+          "operationalizes": "token discipline",
+          "attribution": "none"
+        }
+      ],
+      "integrationDecision": "not-applicable",
+      "decisionReason": "A perceptual organizing tendency; translating it into an audit rule would produce subjective verdicts SUS cannot defend. Keep as design vocabulary only."
+    },
+    {
+      "id": "uniform-connectedness",
+      "name": "Uniform Connectedness",
+      "kind": "perceptual-principle",
+      "evidenceTier": "strong-empirical",
+      "ownerNamed": false,
+      "sources": ["https://lawsofux.com/"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/tabs.json",
+          "operationalizes": "connected tab containers",
+          "attribution": "partial"
+        }
+      ],
+      "integrationDecision": "queued-integration",
+      "decisionReason": "Tabs/drawers guidance implies connected grouping; attribution is a one-liner."
+    },
+    {
+      "id": "common-fate",
+      "name": "Gestalt Common Fate",
+      "kind": "perceptual-principle",
+      "evidenceTier": "strong-empirical",
+      "ownerNamed": false,
+      "sources": ["https://en.wikipedia.org/wiki/Gestalt_psychology"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/motion-interruption.md",
+          "operationalizes": "grouped motion",
+          "attribution": "none"
+        }
+      ],
+      "integrationDecision": "queued-research",
+      "decisionReason": "Motion-based grouping (elements moving together belong together) could be checked from existing motion traces; research whether the traces carry enough signal before promising anything."
+    },
+    {
+      "id": "paradox-active-user",
+      "name": "Paradox of the Active User",
+      "kind": "empirical-observation",
+      "evidenceTier": "replicated-with-boundaries",
+      "ownerNamed": false,
+      "sources": ["https://en.wikipedia.org/wiki/Paradox_of_the_active_user"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/onboarding.json",
+          "operationalizes": "just-in-time learning",
+          "attribution": "none"
+        }
+      ],
+      "integrationDecision": "queued-research",
+      "decisionReason": "Users jump into doing rather than reading help — relevant to onboarding and docs; an E2 question, not a gate."
+    },
+    {
+      "id": "postels-law",
+      "name": "Postel's Law (Robustness Principle)",
+      "kind": "principle",
+      "evidenceTier": "contested",
+      "ownerNamed": false,
+      "sources": ["https://en.wikipedia.org/wiki/Robustness_principle"],
+      "susCoverage": [],
+      "integrationDecision": "not-applicable",
+      "decisionReason": "In UI terms ('be liberal in what you accept') it directly conflicts with strict input validation the form playbooks enforce, and the principle is formally criticized in security contexts. SUS rejects it as guidance; recorded so the decision is visible."
+    },
+    {
+      "id": "pareto-principle",
+      "name": "Pareto Principle (80/20)",
+      "kind": "heuristic",
+      "evidenceTier": "popular-heuristic",
+      "ownerNamed": false,
+      "sources": ["https://lawsofux.com/"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/playbooks/product-grid.json",
+          "operationalizes": "prioritize common paths",
+          "attribution": "none"
+        }
+      ],
+      "integrationDecision": "queued-research",
+      "decisionReason": "A prioritization heuristic; the dogfood coverage work (#20) is the honest place to decide whether rule prioritization references it."
+    },
+    {
+      "id": "parkinsons-law",
+      "name": "Parkinson's Law",
+      "kind": "adage",
+      "evidenceTier": "contested",
+      "ownerNamed": false,
+      "sources": ["https://lawsofux.com/"],
+      "susCoverage": [],
+      "integrationDecision": "not-applicable",
+      "decisionReason": "A workplace adage about time; no UX design rule or measurable check follows from it in SUS's scope."
+    },
+    {
+      "id": "flow",
+      "name": "Flow (Csikszentmihalyi)",
+      "kind": "model",
+      "evidenceTier": "strong-empirical-as-model",
+      "ownerNamed": false,
+      "sources": ["https://en.wikipedia.org/wiki/Flow_(psychology)"],
+      "susCoverage": [
+        {
+          "artifact": "skill/references/motion-interruption.md",
+          "operationalizes": "interruption contracts",
+          "attribution": "partial"
+        }
+      ],
+      "integrationDecision": "queued-research",
+      "decisionReason": "A psychological model; SUS's motion-interruption contracts touch one precondition (interruption cost). A 'flow checklist' would be unmeasurable; keep as E2 framing."
+    }
+  ]
+}

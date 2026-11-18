@@ -108,7 +108,9 @@ async function main() {
         '',
         '  endpoint   ' + origin,
         '  session    ' + sessionId,
-        '  token      ' + token + '   (shown once; valid until this process exits)',
+        '  token      ' +
+          token +
+          '   (shown once; expires after 24h or 30min idle, whichever comes first)',
         '  allowlist  Origin ' +
           (options.origins.length === 0 ? '(none: same-origin only)' : options.origins.join(', ')),
         '             Host   127.0.0.1, localhost',

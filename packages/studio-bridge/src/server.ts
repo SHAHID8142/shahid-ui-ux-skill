@@ -42,12 +42,22 @@ export interface SessionState {
   /** HMAC secret for this session's tokens. */
   secret: string;
   status: 'active' | 'closed';
+  /**
+   * Expiry bookkeeping (T1062, audit finding T1003-18, issue #25): `expiresAt` is the absolute
+   * deadline (epoch ms), `lastUsedAt` is renewed on every successful authenticated request for
+   * the idle timeout. Both are enforced fail-closed in `verifyToken` — an expired or idle-expired
+   * session is dead even though its HMAC is still valid.
+   */
+  expiresAt: number;
+  lastUsedAt: number;
 }
 
 export interface AuditEntry {
   at: string;
   event:
     | 'session-open'
+    | 'session-expired'
+    | 'session-evicted'
     | 'message-ok'
     | 'message-rejected'
     | 'origin-denied'
@@ -56,12 +66,37 @@ export interface AuditEntry {
   detail: string;
 }
 
+export interface SessionPolicy {
+  /**
+   * Absolute session lifetime in ms. Default 24h: the bridge is a per-use, localhost process, so
+   * this is a backstop against a leaked token living forever, not the primary control.
+   */
+  absoluteTtlMs?: number;
+  /**
+   * Idle timeout in ms, renewed on every successful authenticated request. Default 30min: an
+   * abandoned Studio tab's token stops working half an hour after the last real use.
+   */
+  idleTtlMs?: number;
+  /** Maximum simultaneously retained sessions; the least-recently-used is evicted beyond it. */
+  maxSessions?: number;
+  /** Injectable clock for tests; production uses Date.now. */
+  clock?: () => number;
+}
+
+export const DEFAULT_SESSION_POLICY: Required<Omit<SessionPolicy, 'clock'>> = {
+  absoluteTtlMs: 24 * 60 * 60 * 1000,
+  idleTtlMs: 30 * 60 * 1000,
+  maxSessions: 16,
+};
+
 export interface BridgeOptions {
   port: number;
   /** Allowed Origins (browser clients). Empty string = same-origin/no-Origin header. */
   allowedOrigins: string[];
   /** Allowed Host header values (DNS-rebinding guard). */
   allowedHosts: string[];
+  /** Session lifetime policy (T1062). Defaults keep the studio flow working unchanged. */
+  sessionPolicy?: SessionPolicy;
 }
 
 export class BridgeAudit {
@@ -81,19 +116,55 @@ export class BridgeServer {
   readonly audit = new BridgeAudit();
   readonly sessions = new Map<string, SessionState>();
   private server: Server | null = null;
+  private readonly policy: Required<Omit<SessionPolicy, 'clock'>> & { clock: () => number };
 
-  constructor(private readonly options: BridgeOptions) {}
+  constructor(private readonly options: BridgeOptions) {
+    const { clock, ...rest } = options.sessionPolicy ?? {};
+    this.policy = { ...DEFAULT_SESSION_POLICY, ...rest, clock: clock ?? (() => Date.now()) };
+  }
+
+  /** Drops sessions whose deadline has passed; an expired session is dead, not retained. */
+  private pruneExpired(now: number): void {
+    for (const [id, session] of this.sessions) {
+      if (session.status === 'active' && now >= session.expiresAt) {
+        session.status = 'closed';
+        this.audit.record('session-expired', `session ${id} passed its absolute deadline`);
+        this.sessions.delete(id);
+      }
+    }
+  }
 
   /** Creates a session and returns its auth token (shown once, like T0904 credentials). */
   openSession(origin: string): { sessionId: string; token: string } {
+    const now = this.policy.clock();
+    this.pruneExpired(now);
+    // Bound retained sessions: the least-recently-used active session is evicted beyond the cap,
+    // so a leaked token cannot keep a slot alive indefinitely by never being used again.
+    if (this.sessions.size >= this.policy.maxSessions) {
+      let oldestId: string | null = null;
+      let oldestUsed = Number.POSITIVE_INFINITY;
+      for (const [id, session] of this.sessions) {
+        if (session.status === 'active' && session.lastUsedAt < oldestUsed) {
+          oldestId = id;
+          oldestUsed = session.lastUsedAt;
+        }
+      }
+      if (oldestId !== null) {
+        this.sessions.get(oldestId)!.status = 'closed';
+        this.audit.record('session-evicted', `session ${oldestId} evicted at the session cap`);
+        this.sessions.delete(oldestId);
+      }
+    }
     const sessionId = randomBytes(16).toString('hex');
     const secret = randomBytes(32).toString('hex');
     this.sessions.set(sessionId, {
       id: sessionId,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date(now).toISOString(),
       origin,
       secret,
       status: 'active',
+      expiresAt: now + this.policy.absoluteTtlMs,
+      lastUsedAt: now,
     });
     this.audit.record('session-open', `session ${sessionId} origin ${origin}`);
     return { sessionId, token: this.sign(sessionId, secret) };
@@ -103,10 +174,21 @@ export class BridgeServer {
     return createHmac('sha256', secret).update(sessionId).digest('hex');
   }
 
-  /** Constant-time token verification; closed sessions fail closed. */
+  /**
+   * Constant-time token verification; closed, expired and idle-expired sessions fail closed.
+   * A successful verification renews the session's idle clock (T1062).
+   */
   verifyToken(sessionId: string, token: string): boolean {
+    const now = this.policy.clock();
+    this.pruneExpired(now);
     const session = this.sessions.get(sessionId);
     if (!session || session.status !== 'active') return false;
+    if (now >= session.expiresAt || now - session.lastUsedAt > this.policy.idleTtlMs) {
+      session.status = 'closed';
+      this.audit.record('session-expired', `session ${sessionId} expired (absolute or idle)`);
+      this.sessions.delete(sessionId);
+      return false;
+    }
     const expected = Buffer.from(this.sign(sessionId, session.secret), 'hex');
     let provided: Buffer;
     try {
@@ -114,7 +196,9 @@ export class BridgeServer {
     } catch {
       return false;
     }
-    return expected.length === provided.length && timingSafeEqual(expected, provided);
+    const ok = expected.length === provided.length && timingSafeEqual(expected, provided);
+    if (ok) session.lastUsedAt = now;
+    return ok;
   }
 
   closeSession(sessionId: string): void {
