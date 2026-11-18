@@ -70,8 +70,9 @@ with the rationale recorded in TASKS.json; the owner accepts or rejects the defe
 push; the fresh-clone job re-runs the documented first-run path on the pushed commit.
 
 Next exact steps: (1) the auditor/owner reviews the appended fix measurements in
-`.sus-dev/VERIFICATION/T1003.md` and accepts or contests each closed finding; (2) the owner
-decides T1005 (release approval and publication) and the deferred T1062; (3) no agent may touch
+`.sus-dev/VERIFICATION/T1003.md` and accepts or contests each closed finding (the implemented
+session-expiry measurement is receipted as T1062.md); (2) the owner decides T1005 (release
+approval and publication); (3) no agent may touch `main` or publish.
 `main` or publish. If the owner asks to keep building: triage a fresh `gh issue list --state open`
 rather than reopen a closed item.
 
