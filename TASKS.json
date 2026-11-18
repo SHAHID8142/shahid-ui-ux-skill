@@ -5667,10 +5667,14 @@
       ],
       "risk": "library consumers of runBestPractice contact unauthorized hosts before refusal",
       "rollback": "revert the pre-authorization; the latent contact-before-refusal returns",
-      "status": "pending",
+      "status": "done",
       "approval": "pending",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1058.md",
+        "packages/eval-core/src/bestpractice/command.ts",
+        "packages/eval-core/tests/bestpractice.command.test.ts"
+      ]
     },
     {
       "id": "T1059",

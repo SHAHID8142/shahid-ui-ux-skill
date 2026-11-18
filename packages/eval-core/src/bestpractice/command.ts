@@ -33,6 +33,9 @@ import {
   type ScopeResolution,
 } from '../audit/scope.js';
 import { runAudit, type AuditRun } from '../audit/pipeline.js';
+import { assertAuthorizedUrl } from '../audit/contract.js';
+import { guardNavigations } from '../harness/net-guard.js';
+import { startAuthorizedProxy } from '../harness/authorized-proxy.js';
 import { itemsFromReport, untestedFromReport } from './from-audit.js';
 import type { ProposalItem } from './proposal.js';
 import {
@@ -133,6 +136,39 @@ async function openScopePage(
         : null);
   if (url === null) return null;
   const { chromium } = await import('playwright');
+  // T1058 (audit finding T1003-13): a live scope page answers to the same boundary as every audit
+  // phase — every host through the allowlisting proxy, document navigations guarded, and the page
+  // the selector resolves on asserted to be the authorised one. The library API used to goto() a
+  // bare chromium.launch() straight at `liveUrl`, contacting the target (and anything it
+  // redirected to, subresources executing) before the audit's own authorization check refused.
+  // A file:// scope page contacts no host by construction and keeps the plain launch.
+  if (request.liveUrl != null) {
+    const authorizedHosts = [...(request.authorizedHosts ?? [])];
+    const proxy = await startAuthorizedProxy(authorizedHosts);
+    const browser = await chromium.launch({
+      proxy: { server: proxy.server, bypass: '' },
+      args: ['--proxy-bypass-list=<-loopback>'],
+    });
+    const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+    const guard = await guardNavigations(page, authorizedHosts);
+    try {
+      await page.goto(url, { waitUntil: 'networkidle' });
+      guard.assertOnAuthorizedPage(page);
+    } catch (error) {
+      await guard.dispose();
+      await browser.close();
+      await proxy.close();
+      throw error;
+    }
+    return {
+      page,
+      close: async () => {
+        await guard.dispose();
+        await browser.close();
+        await proxy.close();
+      },
+    };
+  }
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   await page.goto(url, { waitUntil: 'networkidle' });
@@ -257,6 +293,14 @@ export async function runBestPractice(request: BestPracticeRequest): Promise<Bes
           '): write the proposal somewhere else, e.g. --out ./sus-bp',
       );
     }
+  }
+
+  // 0. Authorization before any contact (T1058, audit finding T1003-13): a liveUrl is checked
+  //    with the same rule the audit applies to its own target, before the scope browser exists.
+  //    The CLI paths already refuse before contact; this closes the library API's
+  //    contact-before-refusal window.
+  if (request.liveUrl != null) {
+    assertAuthorizedUrl(request.liveUrl, [...(request.authorizedHosts ?? [])]);
   }
 
   // 1. The scope: resolved or refused, never guessed. It is resolved first because a resolved

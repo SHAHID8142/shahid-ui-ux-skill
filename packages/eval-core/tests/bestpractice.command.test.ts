@@ -7,8 +7,10 @@
  * "read-only" is a property of the run, not a sentence in the help text.
  */
 import { createHash } from 'node:crypto';
+import { createServer } from 'node:http';
+import type { AddressInfo } from 'node:net';
 import { existsSync, mkdtempSync, readFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { networkInterfaces, tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
@@ -128,6 +130,77 @@ describe('scoped run against a real fixture (deep)', () => {
     expect(run.markdown).toContain('Resolve the scope and run again');
     expect(existsSync(join(out, 'proposal.json'))).toBe(false);
   }, 120000);
+
+  // T1058 (audit finding T1003-13): the library API used to goto() a bare chromium.launch()
+  // straight at `liveUrl` before the audit's authorization check refused — a full page load with
+  // subresources executing, 861 ms ahead of the refusal (reproduced during the audit against a
+  // local listener on an unauthorised host). Now the URL is authorised first and the scope
+  // browser rides the allowlisting proxy.
+  it('refuses an unauthorised liveUrl before any browser contact', async () => {
+    // The machine's own LAN IP is a real, bindable, NON-loopback address — the loopback
+    // allowlist (localhost/127.0.0.1/::1/.localhost) does not cover it, so this listener is a
+    // genuine unauthorised host; if the library contacted it, the hits array would know.
+    // (127.0.0.2 is unavailable on macOS — EADDRNOTAVAIL — so the LAN IP it is.)
+    const lanIp = Object.values(networkInterfaces())
+      .flat()
+      .find((entry) => entry !== undefined && !entry.internal && entry.family === 'IPv4')?.address;
+    expect(lanIp).toBeTruthy();
+    const hits: string[] = [];
+    const server = createServer((req, res) => {
+      hits.push(req.url ?? '/');
+      res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
+      res.end('<html><body><h1>unauthorised</h1></body></html>');
+    });
+    await new Promise<void>((resolve) => server.listen(0, lanIp, resolve));
+    const port = (server.address() as AddressInfo).port;
+    try {
+      // The library contract is a rejection that names the host and the remedy, thrown before
+      // the scope browser (or anything else) exists — 5 ms, no listener hits.
+      await expect(
+        runBestPractice({
+          target: FIXTURE,
+          liveUrl: 'http://' + lanIp + ':' + port + '/',
+          scope: { kind: 'selector', value: 'h1' },
+          outDir: mkdtempSync(join(tmpdir(), 'sus-bp-unauth-')),
+          mode: 'quick',
+          authorizedHosts: [],
+        }),
+      ).rejects.toThrow('is not authorized');
+      expect(hits).toEqual([]);
+    } finally {
+      server.closeAllConnections?.();
+      await new Promise<void>((resolve) => server.close(() => resolve()));
+    }
+  }, 60000);
+
+  it('resolves a selector on an authorised liveUrl through the guarded proxy', async () => {
+    const server = createServer((_req, res) => {
+      res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
+      res.end(
+        '<html><body><a href="#main" id="skip">skip</a><main id="main">content</main></body></html>',
+      );
+    });
+    await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+    const port = (server.address() as AddressInfo).port;
+    try {
+      const run = await runBestPractice({
+        target: FIXTURE,
+        liveUrl: 'http://127.0.0.1:' + port + '/',
+        scope: { kind: 'selector', value: '#skip' },
+        outDir: mkdtempSync(join(tmpdir(), 'sus-bp-auth-')),
+        mode: 'quick',
+        authorizedHosts: [],
+      });
+      // Loopback is authorised by default; the scope resolved on the live page through the
+      // proxy. The resolved selector is the element's descriptor (a#skip), not the raw query.
+      expect(run.scope.outcome).toBe('resolved');
+      expect(run.scope.targets.length).toBeGreaterThan(0);
+      expect(run.scope.targets.every((target) => target.selector.includes('skip'))).toBe(true);
+    } finally {
+      server.closeAllConnections?.();
+      await new Promise<void>((resolve) => server.close(() => resolve()));
+    }
+  }, 60000);
 
   it('refuses a selector that means the whole page', async () => {
     const out = mkdtempSync(join(tmpdir(), 'sus-bp-star-'));
