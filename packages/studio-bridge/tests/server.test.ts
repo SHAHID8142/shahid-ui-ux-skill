@@ -306,3 +306,215 @@ describe('session expiry (T1062, issue #25)', () => {
     expect(DEFAULT_SESSION_POLICY.idleTtlMs).toBe(30 * 60 * 1000);
   });
 });
+
+/**
+ * T1092 (issue #32, Codex preliminary review): valid JSON `null` is parseable, and reading
+ * `.sessionId` off it threw a TypeError out of `handleMessage` — before authentication — with
+ * no catch in the HTTP `end` handler, so the exception escaped the per-request handler. The fix
+ * validates the top-level JSON shape (stable 400 + bounded `message-rejected` audit, never
+ * logging body content), keeps 401 for structurally acceptable bodies with a bad token, and
+ * catches anything else at the `end` boundary with an intentional bounded response.
+ *
+ * These are REAL HTTP tests against a loopback bridge on an ephemeral port — not in-memory
+ * probes — because the defect lived at the request boundary. Every payload asserts the status,
+ * the audit event, that the server is still listening, and that a subsequent authenticated
+ * request still succeeds (the bridge remains operational).
+ */
+import { BridgeServer } from '../src/server.js';
+
+describe('malformed and hostile payloads over real HTTP (T1092, issue #32)', () => {
+  let port = 0;
+  let httpBridge: BridgeServer;
+  let credentials: { sessionId: string; token: string };
+
+  const postTo = async (
+    body: string,
+    headers: Record<string, string> = {},
+  ): Promise<{ status: number; json: Record<string, unknown> }> => {
+    const res = await fetch(`http://127.0.0.1:${port}/message`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', ...headers },
+      body,
+    });
+    return { status: res.status, json: (await res.json()) as Record<string, unknown> };
+  };
+
+  const withOrigin = { origin: 'http://127.0.0.1:4317' };
+  const authed = () => ({
+    origin: 'http://127.0.0.1:4317',
+    authorization: `Bearer ${credentials.token}`,
+  });
+
+  afterAll(async () => {
+    await httpBridge.stop();
+  });
+
+  it('boots a loopback bridge on an ephemeral port and opens a real session', async () => {
+    httpBridge = new BridgeServer({
+      port: 0,
+      allowedOrigins: ['http://127.0.0.1:4317'],
+      allowedHosts: ['127.0.0.1'],
+    });
+    port = await httpBridge.start();
+    expect(port).toBeGreaterThan(0);
+    credentials = httpBridge.openSession('http://127.0.0.1:4317');
+    const ok = await postTo(
+      JSON.stringify({ sessionId: credentials.sessionId, kind: 'ping' }),
+      authed(),
+    );
+    expect(ok.status).toBe(200);
+  });
+
+  it.each([
+    ['JSON null', 'null'],
+    ['JSON array', '[]'],
+    ['JSON true', 'true'],
+    ['JSON number', '1'],
+    ['JSON string', '"text"'],
+    ['malformed JSON', '{"sessionId":'],
+  ])(
+    'survives an unauthenticated %s body: bounded 400, audited, server stays up',
+    async (_label, body) => {
+      const res = await postTo(body, withOrigin);
+      expect([400, 413]).toContain(res.status);
+      expect([400, 413].includes(res.status) ? res.json.error : '').toMatch(
+        /invalid-shape|unparseable|payload-too-large/,
+      );
+      // the handler did not throw past the boundary: the server is still listening and
+      // an authenticated request still succeeds afterwards
+      expect(httpBridge['server']?.listening).toBe(true);
+      const control = await postTo(
+        JSON.stringify({ sessionId: credentials.sessionId, kind: 'ping' }),
+        authed(),
+      );
+      expect(control.status).toBe(200);
+    },
+  );
+
+  it('rejects non-object shapes 400 BEFORE authentication, with a bounded audit event naming the shape', async () => {
+    const before = httpBridge.audit.entries.length;
+    for (const body of ['null', '[]', 'true', '1', '"text"']) {
+      const res = await postTo(body, withOrigin);
+      expect(res.status).toBe(400);
+      expect(res.json.error).toBe('invalid-shape');
+    }
+    const rejects = httpBridge.audit.entries
+      .slice(before)
+      .filter((e) => e.event === 'message-rejected');
+    expect(rejects.map((e) => e.detail).sort()).toEqual([
+      'non-object JSON body (array)',
+      'non-object JSON body (boolean)',
+      'non-object JSON body (null)',
+      'non-object JSON body (number)',
+      'non-object JSON body (string)',
+    ]);
+    // no rejection detail ever echoes hostile body content
+    for (const entry of rejects) expect(entry.detail).not.toMatch(/sessionId|text/);
+  });
+
+  it('a structurally acceptable envelope with a bad token still gets 401 (status ordering is deliberate)', async () => {
+    const res = await postTo(JSON.stringify({ sessionId: '12345678', kind: 'ping' }), withOrigin);
+    expect(res.status).toBe(401);
+    expect(res.json.error).toBe('auth-denied');
+  });
+
+  it('an excessively large body is refused 413 and the bridge keeps serving', async () => {
+    const res = await postTo('x'.repeat(MAX_PAYLOAD_BYTES + 1), withOrigin);
+    expect(res.status).toBe(413);
+    expect(httpBridge['server']?.listening).toBe(true);
+    const control = await postTo(
+      JSON.stringify({ sessionId: credentials.sessionId, kind: 'ping' }),
+      authed(),
+    );
+    expect(control.status).toBe(200);
+  });
+
+  it('the control: authenticated valid envelope → 200, audited message-ok', async () => {
+    const before = httpBridge.audit.entries.length;
+    const res = await postTo(
+      JSON.stringify({ sessionId: credentials.sessionId, kind: 'ping' }),
+      authed(),
+    );
+    expect(res.status).toBe(200);
+    expect(res.json.ok).toBe(true);
+    expect(httpBridge.audit.entries.slice(before).some((e) => e.event === 'message-ok')).toBe(true);
+  });
+});
+
+/**
+ * T1093 (issue #25, Codex preliminary recheck): closeSession retained the entry, pruneExpired
+ * removed only expired ACTIVE sessions, and the cap eviction searched only ACTIVE entries — so
+ * open/close churn accumulated closed entries past maxSessions (Codex probe: 20 retained at a
+ * cap of 16). Closing now deletes the entry (closed state lives in the audit trail), and the
+ * cap bounds TOTAL retained entries with an any-status fallback eviction.
+ */
+describe('session retention is bounded over closed entries too (T1093, issue #25)', () => {
+  function capBridge(clock: () => number, maxSessions = 16) {
+    return new BridgeServer({
+      port: 0,
+      allowedOrigins: ['http://127.0.0.1:4317'],
+      allowedHosts: ['127.0.0.1'],
+      sessionPolicy: { maxSessions, clock },
+    });
+  }
+
+  it('100 open/close cycles never exceed maxSessions; closed entries are deleted, not retained', () => {
+    let now = 5_000_000;
+    const bridge = capBridge(() => now, 16);
+    const sessions = [];
+    for (let i = 0; i < 100; i++) {
+      const opened = bridge.openSession('http://127.0.0.1:4317');
+      now += 1;
+      expect(bridge.sessions.size).toBeLessThanOrEqual(16);
+      bridge.closeSession(opened.sessionId);
+      now += 1;
+      // the closed session is gone from the map and its token is dead
+      expect(bridge.sessions.has(opened.sessionId)).toBe(false);
+      expect(bridge.verifyToken(opened.sessionId, opened.token)).toBe(false);
+      expect(bridge.sessions.size).toBeLessThanOrEqual(16);
+      sessions.push(opened);
+    }
+    expect(bridge.sessions.size).toBeLessThanOrEqual(16);
+    expect(sessions.length).toBe(100);
+    const closed = bridge.audit.entries.filter((e) => e.event === 'session-closed');
+    expect(closed.length).toBe(100);
+  });
+
+  it('the exact Codex probe: 20 open/close cycles at the default cap leave at most 16 retained', () => {
+    let now = 6_000_000;
+    const bridge = capBridge(() => now, 16);
+    for (let i = 0; i < 20; i++) {
+      const opened = bridge.openSession('http://127.0.0.1:4317');
+      now += 1;
+      bridge.closeSession(opened.sessionId);
+    }
+    expect(bridge.sessions.size).toBeLessThanOrEqual(16);
+    expect(bridge.audit.entries.filter((e) => e.event === 'session-closed').length).toBe(20);
+  });
+
+  it('closing does not revive: a closed session id is rejected, and reopening issues a fresh token', () => {
+    let now = 7_000_000;
+    const bridge = capBridge(() => now);
+    const first = bridge.openSession('http://127.0.0.1:4317');
+    bridge.closeSession(first.sessionId);
+    expect(bridge.verifyToken(first.sessionId, first.token)).toBe(false);
+    const second = bridge.openSession('http://127.0.0.1:4317');
+    expect(second.sessionId).not.toBe(first.sessionId);
+    expect(bridge.verifyToken(second.sessionId, second.token)).toBe(true);
+  });
+
+  it('a stale token from before a close cannot authenticate after the map slot is reused', () => {
+    let now = 8_000_000;
+    const bridge = capBridge(() => now, 1);
+    const stale = bridge.openSession('http://127.0.0.1:4317');
+    now += 1;
+    bridge.closeSession(stale.sessionId);
+    // the cap is 1 and the map is empty after the close: opening again must not resurrect the
+    // old session id, and the old token must stay dead
+    const fresh = bridge.openSession('http://127.0.0.1:4317');
+    expect(fresh.sessionId).not.toBe(stale.sessionId);
+    expect(bridge.verifyToken(stale.sessionId, stale.token)).toBe(false);
+    expect(bridge.verifyToken(fresh.sessionId, fresh.token)).toBe(true);
+    expect(bridge.sessions.size).toBeLessThanOrEqual(1);
+  });
+});

@@ -58,11 +58,13 @@ export interface AuditEntry {
     | 'session-open'
     | 'session-expired'
     | 'session-evicted'
+    | 'session-closed'
     | 'message-ok'
     | 'message-rejected'
     | 'origin-denied'
     | 'auth-denied'
-    | 'payload-too-large';
+    | 'payload-too-large'
+    | 'handler-failure';
   detail: string;
 }
 
@@ -153,6 +155,26 @@ export class BridgeServer {
         this.sessions.get(oldestId)!.status = 'closed';
         this.audit.record('session-evicted', `session ${oldestId} evicted at the session cap`);
         this.sessions.delete(oldestId);
+      } else {
+        // T1093 (issue #25): the cap bounds TOTAL retained entries, not just active ones. The
+        // normal close path deletes entries (see closeSession), so this fallback should never
+        // fire — but a future code path that leaves a non-active entry behind must not be able
+        // to grow the map past the cap. Evict the oldest entry of any status instead of adding.
+        let staleId: string | null = null;
+        let staleUsed = Number.POSITIVE_INFINITY;
+        for (const [id, session] of this.sessions) {
+          if (session.lastUsedAt < staleUsed) {
+            staleId = id;
+            staleUsed = session.lastUsedAt;
+          }
+        }
+        if (staleId !== null) {
+          this.audit.record(
+            'session-evicted',
+            `session ${staleId} evicted at the session cap (no active entry to evict)`,
+          );
+          this.sessions.delete(staleId);
+        }
       }
     }
     const sessionId = randomBytes(16).toString('hex');
@@ -201,9 +223,19 @@ export class BridgeServer {
     return ok;
   }
 
+  /**
+   * T1093 (issue #25): closing removes the session outright. The previous behaviour flipped
+   * `status` to `'closed'` and kept the entry, so open/close churn accumulated dead entries
+   * beyond `maxSessions` (Codex probe: 20 retained at a cap of 16). A closed entry is dead
+   * weight — `verifyToken` rejects it — so the closed state lives in the audit trail, not in
+   * the map. Fail-closed semantics are unchanged: a closed or deleted session denies the token.
+   */
   closeSession(sessionId: string): void {
     const session = this.sessions.get(sessionId);
-    if (session) session.status = 'closed';
+    if (session) {
+      this.audit.record('session-closed', `session ${sessionId} closed`);
+      this.sessions.delete(sessionId);
+    }
   }
 
   private checkGuards(
@@ -259,6 +291,19 @@ export class BridgeServer {
       this.audit.record('message-rejected', 'unparseable body');
       return { status: 400, body: { error: 'unparseable' } };
     }
+    // T1092 (issue #32): JSON.parse succeeding says nothing about the top-level shape. `null`
+    // is valid JSON, and reading `.sessionId` off it threw a TypeError that escaped the request
+    // handler before authentication ever ran. The status ordering below is deliberate and
+    // documented: a body whose top-level shape is wrong (null, array, string, number, boolean)
+    // is rejected with a stable 400 and a bounded `message-rejected` audit entry — the detail
+    // names the shape, never the body content — while a structurally acceptable object with a
+    // bad or missing token keeps its 401. Only shapes an envelope could plausibly have reach
+    // the token check.
+    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+      const shape = parsed === null ? 'null' : Array.isArray(parsed) ? 'array' : typeof parsed;
+      this.audit.record('message-rejected', `non-object JSON body (${shape})`);
+      return { status: 400, body: { error: 'invalid-shape' } };
+    }
     const sessionId = (parsed as { sessionId?: string }).sessionId ?? '';
     const token = String(req.headers.authorization?.replace(/^Bearer\s+/i, '') ?? '');
     if (!this.verifyToken(sessionId, token)) {
@@ -299,9 +344,22 @@ export class BridgeServer {
         if (bodyBytes > MAX_PAYLOAD_BYTES * 4) req.destroy(); // hard cap on drain (bytes, T1063)
       });
       req.on('end', () => {
-        const result = this.handleMessage(req, body);
-        res.writeHead(result.status, { 'content-type': 'application/json' });
-        res.end(JSON.stringify(result.body));
+        // T1092 (issue #32): no exception from the message path may escape the request handler.
+        // The catch answers with an intentional bounded body so the connection never hangs; it
+        // records a bounded audit event and never logs the request body or any secret.
+        try {
+          const result = this.handleMessage(req, body);
+          res.writeHead(result.status, { 'content-type': 'application/json' });
+          res.end(JSON.stringify(result.body));
+        } catch {
+          this.audit.record('handler-failure', 'request handler threw; bounded response sent');
+          if (!res.headersSent) {
+            res.writeHead(500, { 'content-type': 'application/json' });
+          }
+          if (!res.writableEnded) {
+            res.end(JSON.stringify({ error: 'handler-failure' }));
+          }
+        }
       });
     });
     // ADR-003 binding posture: loopback only, never 0.0.0.0.
