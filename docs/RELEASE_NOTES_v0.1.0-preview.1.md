@@ -41,8 +41,10 @@ exercised with.
 
 ## What a user can actually do with this preview
 
-All commands run through one entry point, `pnpm exec sus <command>` (it passes arguments and exit
-codes to the package that owns the command):
+All commands run through one entry point, `pnpm exec sus <command>` — or `node bin/sus.mjs
+<command>`, which on a fresh clone is the one that works immediately after `pnpm build` (the
+`pnpm exec` links are created by install, which runs before the first build; the quickstart
+documents both). Either form passes arguments and exit codes to the package that owns the command:
 
 | Ability | Command | State |
 | --- | --- | --- |

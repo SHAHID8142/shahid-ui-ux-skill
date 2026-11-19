@@ -29,6 +29,15 @@ pnpm build            # compiles packages/*; the CLI entry points live in dist/
 `pnpm setup` also installs the pre-push gate and downloads Chromium — only needed if you intend to
 push or run the browser phases.
 
+**Fresh-clone entry point.** The `pnpm exec sus …` links are created by `pnpm install`, which on a
+fresh clone runs **before** `pnpm build` — so right after building, the linked name does not exist
+yet (measured 2026-11-19 on the release candidate). Two honest ways to run the commands below:
+
+- `node bin/sus.mjs <command> …` — the same entry point by path; works immediately after
+  `pnpm build` with no relink; or
+- `pnpm install --frozen-lockfile` once more **after** `pnpm build` — the store is warm, and the
+  `pnpm exec sus …` links then exist.
+
 Licence: SUS is MIT (`LICENSE`, owner decision D36); third-party material keeps its own licences
 (`docs/THIRD_PARTY_NOTICES.md`). The preview is **experimental software** — see
 `docs/LIMITATIONS.md` before relying on any verdict it prints.
@@ -44,6 +53,8 @@ pnpm exec sus audit --path path/to/your-site/dist --out /tmp/sus-audit --mode qu
 `pnpm exec sus <command>` is one entry point for all of them (`audit`, `bestpractice`, `scan`,
 `route`, `load`, `capabilities`, `status`, …); it passes arguments and exit codes to the package that
 owns the command, so `node packages/eval-core/dist/cli.js audit …` is the same thing spelled out.
+On a fresh clone see the entry-point note above: `node bin/sus.mjs <command> …` is the same
+dispatcher and needs no relink.
 
 A running server:
 
