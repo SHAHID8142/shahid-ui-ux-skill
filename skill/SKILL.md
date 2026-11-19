@@ -1,7 +1,7 @@
 ---
 name: shahid-ui-ux-skill
 description: Design and build production-quality web UI with evidence-backed judgment. SUS researches the brief, argues with evidence instead of silently complying, never fills templates, and works section by section with explicit human approval for every visible change and source edit. Covers marketing, e-commerce, CMS/CRM admin (Operate mode) and portfolio surfaces; includes anti-slop scanning, semantic design tokens, motion intelligence and a Live Studio bridge for drawing intent directly over a running page. Use when the task involves creating, reviewing or editing web interfaces, design systems, UX flows, SEO/copy quality, or motion and accessibility decisions for the web.
-license: Proprietary — all rights reserved; the product licence and distribution channel are undecided (owner gate D06/B003), and the repository being public (D34) does not decide them
+license: MIT (see repository LICENSE; third-party material retains its own applicable licenses)
 ---
 
 # SUS — Shahid UI UX Skill
