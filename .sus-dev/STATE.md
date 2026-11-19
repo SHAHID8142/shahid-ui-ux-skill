@@ -6,9 +6,9 @@ docs/RESUME_ON_NEW_MACHINE.md (install, branch, `pnpm setup`, `pnpm verify`). Ho
 as `sus-release`. A second agent/host cooperates per D33: claim tasks via TASKS.json leases; read
 `.sus-dev/INBOX.md`.
 
-Branches: `chore/continuation-reconciliation` (development, HEAD 8ceb27f, CI green) and
-`release/v0.1.0-preview.1-prep` (release candidate cut from 8ceb27f in worktree
-`/Volumes/SSD/CODES/SUS-release-prep`). Original main: 6ea7fb708f54e630e74e858eaa8aa2c469f04c33.
+Branch: release/v0.1.0-preview.1-prep (release candidate in this worktree, cut from
+chore/continuation-reconciliation @ 8ceb27f — development branch, CI green). Original main:
+6ea7fb708f54e630e74e858eaa8aa2c469f04c33.
 Stage: BUILD complete (BUILD_PERMISSION=true, APERIO recorded as D28;
 BUILD_COMPLETE_PUSHED=true at release revision 2f344df). Architecture: ADR-001/002/004/005/006
 adopted, ADR-003 as amended (D29). Repository is PUBLIC (D34); the product is unpublished.
