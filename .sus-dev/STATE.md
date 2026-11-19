@@ -14,8 +14,9 @@ BUILD_COMPLETE_PUSHED=true at release revision 2f344df). Architecture: ADR-001/0
 adopted, ADR-003 as amended (D29). Repository is PUBLIC (D34); the product is unpublished.
 Licence decided (D36, 2026-11-19): MIT, holder SHAHID8142, GitHub Experimental Preview channel.
 
-Canonical task statuses: TASKS.json (182 of 184 done; owner-only T1003 independent audit and
-T1005 release approval/publish remain). Every D32 owner-issue item from
+Canonical task statuses: TASKS.json (185 of 188 done; owner-only T1003 independent audit and
+T1005 release approval/publish remain, and T1095 — branch reconciliation + serial clean-SHA
+verification — is in progress by the sus-release agent). Every D32 owner-issue item from
 triaging issues #13/#14 is done and receipted. Issue #15 (`/sus-bestpractice`) is triaged into
 T1021–T1024 (scope resolver -> proposal contract -> invocation -> measured examples).
 M11 is **done**: T1021 (scope resolution + focus selection), T1022 (proposal record, digest-bound
@@ -54,16 +55,18 @@ T0706 preview, T0806 security/G13, T0707 apply + rollback, T0700w CLOSED — dua
 feasibility GO on both Next.js and Astro. zcode stale. Concurrency: 2 workers (D33) — claim
 via lease before editing.
 
-Current task: none live for an agent. Background: the owner-commissioned
+Current task: T1095 (branch reconciliation + serial clean-SHA verify/regression + exact-SHA CI
+evidence), owned by `sus-release` on the release-prep worktree, per the owner's 2026-11-20 Codex
+review round (issues #32, #25, #19). T1092 (#32 malformed-JSON bridge fix + real HTTP negative
+tests) and T1093 (#25 closed-session cap) are fixed and receipted; T1094 (quickstart install
+blocks; source-install vs runtime dependency notices) is done and receipted; the development
+branch is merged into the candidate (`9e74bbf`). Background: the owner-commissioned
 independent audit (T1003, D35) ran on 2026-11-18 and returned **FAIL** per the packet's §6
 criteria (0 critical, 4 HIGH open at audit time + 1 HIGH fixed mid-audit, 9 medium, 17 low) —
 receipt in `.sus-dev/VERIFICATION/T1003.md` (written by the auditor of record; findings recorded
 verbatim as M13 tasks). The owner then directed the fix wave; every finding carries a fix with a
 receipt and tests, and the session-expiry finding was implemented after the owner directed work on
-the open issues. The release candidate is prepared on `release/v0.1.0-preview.1-prep` (worktree
-`/Volumes/SSD/CODES/SUS-release-prep`): MIT licence (owner decision D36), third-party notices,
-fixed quickstart install path, honest preview notes, serial verify + regression green. What is
-left is owner/auditor-gated and must not be started by an agent: T1003's
+the open issues. What is left is owner/auditor-gated and must not be started by an agent: T1003's
 verdict acceptance (the auditor or owner accepts each fix's measurement; the build agent's response
 is appended to the receipt), T1005 (release approval and publication).
 

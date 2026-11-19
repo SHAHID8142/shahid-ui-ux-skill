@@ -6588,10 +6588,12 @@
       ],
       "risk": "an unauthenticated request path destabilizing the bridge process",
       "rollback": "revert the commit",
-      "status": "pending",
+      "status": "done",
       "approval": "owner directive 2026-11-20 (Codex preliminary review round); finding closure stays auditor/owner-gated per D35b",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1092.md"
+      ]
     },
     {
       "id": "T1093",
@@ -6615,10 +6617,12 @@
       ],
       "risk": "unbounded retained sessions contradicting the documented cap",
       "rollback": "revert the commit",
-      "status": "pending",
+      "status": "done",
       "approval": "owner directive 2026-11-20 (Codex preliminary review round); finding closure stays auditor/owner-gated per D35b",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1093.md"
+      ]
     },
     {
       "id": "T1094",
@@ -6642,10 +6646,12 @@
       ],
       "risk": "release-facing install or licence text misleading a reader",
       "rollback": "revert the commit",
-      "status": "pending",
+      "status": "done",
       "approval": "owner directive 2026-11-20 (Codex preliminary review round)",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1094.md"
+      ]
     },
     {
       "id": "T1095",

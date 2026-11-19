@@ -1122,3 +1122,30 @@ after the test that caused it and blames an unrelated file.
   fresh-clone first-run path included). Dev-branch evidence commit e6440b7 (AUDIT_REPORT.md +
   FIXING_GUIDE.md tracked) pushed after its own gate run. T1091 closed; T1003/T1005 remain
   owner/auditor-gated.
+
+## 2026-11-20 — Codex preliminary review round: #32, #25, docs, reconciliation (sus-release)
+
+- Read #32 (malformed unauthenticated JSON escapes the bridge request handler), the #25 Codex
+  recheck (closed-session retention bypasses the cap), and the #19 Codex comment (branch
+  divergence; stale regression report; quickstart dual-block; notices source-install error).
+  No live claims on the bus; stale-lane takeovers logged per file.
+- Reconciliation: development merged into `release/v0.1.0-preview.1-prep` (`9e74bbf`) — dev's
+  evidence commit, gate-fix and flake-fix cherry-picks and inbox handoff integrated without
+  overwriting either side (identical patch content auto-resolved). One candidate, not two.
+- T1092 `a91424e`: top-level JSON shape validation before auth (400 invalid-shape, bounded
+  audit naming the shape only; deliberate 400-before-401 ordering documented) + end-boundary
+  catch (500 handler-failure, bounded response, no body/secret logging). 15 new REAL-HTTP tests
+  on an ephemeral port: null/[]/true/1/"text"/malformed/oversized/401-ordering/200-control,
+  server-alive asserted per case. server.test.ts 16 -> 31, suite green; tsc clean.
+- T1093 (same commit): closeSession deletes the entry (session-closed audit) + any-status
+  fallback eviction so the cap bounds TOTAL retained entries. Tests: 100 and 20 open/close
+  cycles at the default cap, close/reopen, cap-1 slot reuse, stale-token death.
+- T1094 `5b864c8`: QUICKSTART + release notes install blocks split into mutually exclusive
+  options (tag declared not-existing); THIRD_PARTY_NOTICES re-measured (285 prod / 503
+  source-install) with the sentry "never reaches a user's install" claim corrected.
+- Launcher-test false alarm: `pnpm --filter … exec vitest run` changes cwd, and the launcher
+  test resolves `scripts/studio/bridge.mjs` from the repo root — run suites from the root
+  runner (`pnpm exec vitest run …`); noted here because the filtered invocation cost one
+  debugging cycle.
+- T1095 next: clean clone -> serial verify + regression -> report bound to the frozen SHA ->
+  push -> CI at the exact final SHA.

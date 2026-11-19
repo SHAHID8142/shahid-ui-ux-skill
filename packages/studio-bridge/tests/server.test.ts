@@ -493,7 +493,7 @@ describe('session retention is bounded over closed entries too (T1093, issue #25
   });
 
   it('closing does not revive: a closed session id is rejected, and reopening issues a fresh token', () => {
-    let now = 7_000_000;
+    const now = 7_000_000;
     const bridge = capBridge(() => now);
     const first = bridge.openSession('http://127.0.0.1:4317');
     bridge.closeSession(first.sessionId);
