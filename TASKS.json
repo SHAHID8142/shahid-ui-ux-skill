@@ -2,7 +2,7 @@
   "meta": {
     "product": "SUS — Shahid UI UX Skill",
     "version": "planning-v1.4",
-    "updated": "2026-11-19",
+    "updated": "2026-11-20",
     "protocol": "docs/AGENT_CONTINUE_PROTOCOL.md; docs/TASK_RECORD_CONTRACT.md",
     "build_gate": "APERIO received 2026-11-13 (D28): build authorized; TASKS.json statuses are canonical",
     "concurrency": {
@@ -2728,7 +2728,11 @@
         "T1087",
         "T1088",
         "T1089",
-        "T1091"
+        "T1091",
+        "T1092",
+        "T1093",
+        "T1094",
+        "T1095"
       ],
       "files": [],
       "acc": [
@@ -6561,6 +6565,124 @@
       "evidence": [
         ".sus-dev/VERIFICATION/T1091.md"
       ]
+    },
+    {
+      "id": "T1092",
+      "m": "M14",
+      "title": "Issue #32 — malformed unauthenticated JSON must not escape the Studio bridge request handler",
+      "obj": "Codex preliminary review (#32): handleMessage() JSON.parses the body and reads parsed.sessionId without validating the top-level shape, so valid JSON null throws a TypeError before token verification, and the HTTP 'end' handler has no catch, so the exception escapes the per-request handler. Fix: validate top-level JSON shape (reject null, arrays, strings, numbers, booleans, malformed envelopes) with a stable 400 and a bounded message-rejected audit entry; keep 401 for structurally acceptable messages with a bad or missing token; document the status ordering deliberately; catch handler exceptions at the end boundary and answer with an intentional bounded response without logging secrets or raw hostile body content. Add a real HTTP integration negative test on a loopback bridge with an ephemeral port covering null, [], true, 1, \"text\", malformed text, an excessively large body, a valid-shaped unauthenticated envelope (401) and an authenticated valid control, asserting statuses, audit events, that the server stays alive, and that a subsequent valid request succeeds.",
+      "deps": [],
+      "files": [
+        "packages/studio-bridge/src/server.ts",
+        "packages/studio-bridge/tests/server.test.ts"
+      ],
+      "acc": [
+        "no payload shape can throw out of the request handler; malformed shapes get 400 with a bounded audit event, bad tokens on acceptable shapes get 401",
+        "an exception in the request path cannot crash the bridge or hang the connection",
+        "the negative HTTP test passes against a real loopback server on an ephemeral port, including the process/server survival assertion"
+      ],
+      "tests": [
+        "packages/studio-bridge/tests/server.test.ts",
+        "pnpm verify",
+        "pnpm regression"
+      ],
+      "risk": "an unauthenticated request path destabilizing the bridge process",
+      "rollback": "revert the commit",
+      "status": "pending",
+      "approval": "owner directive 2026-11-20 (Codex preliminary review round); finding closure stays auditor/owner-gated per D35b",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1093",
+      "m": "M14",
+      "title": "Issue #25 — closed-session retention must not exceed the configured session cap",
+      "obj": "Codex preliminary recheck on #25: closeSession() retains entries, pruneExpired() removes only expired active sessions, and openSession() evicts only an active LRU entry, so open/close churn accumulates closed entries beyond maxSessions (20 retained with cap 16). Fix: enforce the cap over TOTAL retained entries including closed ones, prune closed sessions explicitly, keep active-LRU eviction for the live-working-set case, injectable clock as appropriate. Tests: 20-100 open/close cycles stay within the cap, active LRU eviction, idle expiration, wrong/old tokens rejected, valid control, audit events. This is a retention/resource-bounding fix; closed tokens were already rejected by verifyToken.",
+      "deps": [],
+      "files": [
+        "packages/studio-bridge/src/server.ts",
+        "packages/studio-bridge/tests/server.test.ts"
+      ],
+      "acc": [
+        "after any sequence of open/close/expiry, this.sessions.size never exceeds maxSessions",
+        "closed sessions do not accumulate; active-LRU eviction still protects the live working set",
+        "the cap test runs 20-100 open/close cycles and asserts the invariant plus audit events"
+      ],
+      "tests": [
+        "packages/studio-bridge/tests/server.test.ts",
+        "pnpm verify",
+        "pnpm regression"
+      ],
+      "risk": "unbounded retained sessions contradicting the documented cap",
+      "rollback": "revert the commit",
+      "status": "pending",
+      "approval": "owner directive 2026-11-20 (Codex preliminary review round); finding closure stays auditor/owner-gated per D35b",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1094",
+      "m": "M14",
+      "title": "Codex review docs corrections — mutually exclusive quickstart install blocks; source-install vs runtime dependency distinction",
+      "obj": "Issue #19 Codex comment: (1) docs/QUICKSTART.md puts the preview-tag checkout and the development-branch checkout in one executable block, so copying all commands leaves the reader on the wrong revision — separate mutually exclusive blocks and do not claim the uncreated tag exists. (2) docs/THIRD_PARTY_NOTICES.md says dev dependencies are 'not installed by consumers' while the documented install is a source checkout where plain pnpm install DOES install devDependencies — distinguish source-checkout dependency downloads from a hypothetical distributed/bundled runtime, and re-run pnpm licenses list (prod and all) so the notice matches the tree.",
+      "deps": [],
+      "files": [
+        "docs/QUICKSTART.md",
+        "docs/THIRD_PARTY_NOTICES.md",
+        "docs/RELEASE_NOTES_v0.1.0-preview.1.md"
+      ],
+      "acc": [
+        "the quickstart install blocks are mutually exclusive and honest about the tag not existing",
+        "the notices distinguish production/runtime dependencies from source-install dev dependencies without implying any distributed artifact exists",
+        "licence tables match a fresh pnpm licenses list run on the candidate tree"
+      ],
+      "tests": [
+        "pnpm claims",
+        "pnpm verify"
+      ],
+      "risk": "release-facing install or licence text misleading a reader",
+      "rollback": "revert the commit",
+      "status": "pending",
+      "approval": "owner directive 2026-11-20 (Codex preliminary review round)",
+      "phase": "build",
+      "evidence": []
+    },
+    {
+      "id": "T1095",
+      "m": "M14",
+      "title": "Reconcile development and preview branches; freeze one candidate; serial clean-SHA verify + regression + CI",
+      "obj": "Issue #19 Codex comment: the branches diverged (four development-only commits, five release-only commits) and regression-latest.md at c45c789 still described 8ceb27f with a dirty tree. Freeze a single candidate: merge the development branch into release/v0.1.0-preview.1-prep without overwriting concurrent work, land the #32/#25 fixes and doc corrections on top, then from a clean checkout of the final candidate SHA run pnpm verify and pnpm regression serially (one heavy suite at a time), commit the regression report that binds the final SHA with a clean tree, push, and require all GitHub CI jobs green at exactly that SHA. No main merge, no tag, no publication; T1003 acceptance and T1005 remain owner/auditor-gated.",
+      "deps": [
+        "T1092",
+        "T1093",
+        "T1094"
+      ],
+      "files": [
+        "evals/reports/regression-latest.md",
+        "TASKS.json",
+        ".sus-dev/STATE.md",
+        ".sus-dev/SESSION_LOG.md",
+        ".sus-dev/VERIFICATION/T1092.md",
+        ".sus-dev/VERIFICATION/T1093.md",
+        ".sus-dev/VERIFICATION/T1094.md",
+        ".sus-dev/VERIFICATION/T1095.md"
+      ],
+      "acc": [
+        "the release candidate contains the latest development work (evidence commits, gate fix, flake fix, inbox) without reverting either side",
+        "verify and regression run serially from a clean checkout and bind to the final SHA",
+        "all GitHub CI jobs green at the exact final SHA; regression-latest.md binds that SHA with a clean tree"
+      ],
+      "tests": [
+        "pnpm verify",
+        "pnpm regression",
+        "GitHub CI on the final SHA"
+      ],
+      "risk": "mixing regression evidence between diverged branches",
+      "rollback": "revert the merge/fix commits on the release branch",
+      "status": "pending",
+      "approval": "owner directive 2026-11-20 (Codex preliminary review round)",
+      "phase": "build",
+      "evidence": []
     }
   ]
 }
