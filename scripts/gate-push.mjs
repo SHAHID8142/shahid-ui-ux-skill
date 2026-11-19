@@ -16,8 +16,15 @@
  * Exit 0 = safe to push. Any failure prints what failed and exits non-zero.
  * `SUS_SKIP_PUSH_GATE=1` is honoured for a deliberate emergency bypass and is
  * recorded loudly, because a silent bypass would defeat the gate.
+ *
+ * T1091: the suite the gate spawns runs in a clean git environment. Git sets `GIT_DIR` (and
+ * friends) for hooks; a verify run that inherits it turns the suite's temp-dir fixture git
+ * repositories (`checker-hardening.test.ts`, `apply.test.ts`) into commits on the real branch —
+ * observed once as five ghost commits, caught by the verified-tree check below. The gate's own
+ * `git()` calls keep the hook environment: they address this repository on purpose.
  */
 import { execFileSync } from 'node:child_process';
+import { gitCleanEnv } from './lib/hook-env.mjs';
 
 const ROOT = process.cwd();
 const lines = [];
@@ -26,7 +33,12 @@ let failed = false;
 function run(command, args, label) {
   const started = Date.now();
   try {
-    execFileSync(command, args, { cwd: ROOT, stdio: 'pipe', encoding: 'utf8' });
+    execFileSync(command, args, {
+      cwd: ROOT,
+      stdio: 'pipe',
+      encoding: 'utf8',
+      env: gitCleanEnv(),
+    });
     lines.push(`[PASS] ${label} (${((Date.now() - started) / 1000).toFixed(1)}s)`);
     return true;
   } catch (error) {
