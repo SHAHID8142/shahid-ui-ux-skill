@@ -1116,3 +1116,9 @@ after the test that caused it and blames an unrelated file.
   uncaughtException, so a named `getCurrentTest` import can be gone exactly when the guard runs.
 - Receipt: `.sus-dev/VERIFICATION/T1091.md`. Fresh-clone demo + CI on the candidate SHA are
   appended there after the candidate commit/push.
+- Push + CI (2026-11-20): five gate attempts recorded in the receipt (ghost-commit incident →
+  prettier → config-damage discovery → STATE `Branch:` line → PUSH ALLOWED at `201fdf027abcf
+  c9a5e2e3b6c82c13901ded720bb`). CI on that exact SHA: all 5 jobs green (run 44588817550,
+  fresh-clone first-run path included). Dev-branch evidence commit e6440b7 (AUDIT_REPORT.md +
+  FIXING_GUIDE.md tracked) pushed after its own gate run. T1091 closed; T1003/T1005 remain
+  owner/auditor-gated.

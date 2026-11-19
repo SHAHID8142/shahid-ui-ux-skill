@@ -83,17 +83,19 @@ triage a fresh `gh issue list --state open` rather than reopen a closed item.
 Blockers: publication remains the owner gate (T1005; licence decided by D36, so B003's licence
 half is closed). Active files: none after checkpoint.
 
-Latest checks: 2026-11-19 (release candidate, `release/v0.1.0-preview.1-prep`) — `pnpm verify`
-exit 0 (101 files + 3 skipped, 1099 tests passed / 9 skipped, 13/13 gates, claims scan set 25
-files, handoff + roadmap consistent) and `pnpm regression` PASS (3 stages, 523.6 s), both serial
-in the candidate worktree; the teardown-reset guard was hardened after it killed a run on darwin,
-and the missing pinned Chromium was restored (`playwright install chromium`); full sequence and
-environment notes in `.sus-dev/VERIFICATION/T1091.md`. CI is green on the base development SHA
-8ceb27f (run 44391675332). 2026-11-18 (fix wave) — `pnpm verify` exit 0 (99 files + 3 skipped,
-1086 tests passed / 9 skipped, zero unhandled errors after the proxy-teardown fix), 13/13 gates
-with 61 `[PASS]` lines, claims 22/22, handoff consistent. The flake class the audit recorded
-(T1003-16) is reduced at the source: proxy sockets and serveLocal carry error handlers, and the
-baselines suite binds an ephemeral port.
+Latest checks: 2026-11-20 (release candidate pushed) — the release-prep branch is on the remote
+at `201fdf027abcfc9a5e2e3b6c82c13901ded720bb` (push gate: "this tree passed the release suite");
+CI on that exact SHA all green (run 44588817550: verify node 22 + node 24, fresh clone, host
+smoke, G13). Earlier the same session: `pnpm verify` exit 0 (101 files + 3 skipped, 1099 tests
+passed / 9 skipped, 13/13 gates, claims scan set 25 files) and `pnpm regression` PASS (3 stages,
+523.6 s), serial in the candidate worktree; fresh-clone install + `sus audit`/`sus bestpractice`
+CLI demo exit 0; a push-gate environment incident (hook GIT_DIR hijacked the suite's fixture
+repos into the real branch; also flipped `core.bare` and the `[user]` identity) was found,
+repaired, and fixed at the root with a clean-env gate spawn — full sequence in
+`.sus-dev/VERIFICATION/T1091.md`. 2026-11-18 (fix wave) — `pnpm verify` exit 0 (99 files + 3
+skipped, 1086 tests passed / 9 skipped), 13/13 gates, claims 22/22. CI is green on the
+development base SHA 8ceb27f (run 44391675332) and the evidence commit e6440b7 pushed after its
+own gate run.
 
 Format for this file: the Current-task line names ONLY live tasks; done-task ids live in
 TASKS.json and SESSION_LOG, never here.
