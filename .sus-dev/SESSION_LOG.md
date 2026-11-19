@@ -1156,3 +1156,6 @@ after the test that caused it and blames an unrelated file.
   clean tree (the #19 gap closed). One legitimate gate catch en route: ESLint prefer-const in the
   new cap test. T1095 receipted; the final candidate commit adds only the report + receipts
   (no code delta from the verified SHA); CI runs the full matrix at the exact final SHA.
+- CI evidence (2026-11-20): run 44631873592 — all 5 jobs green on f55a5761 (verify node 22/24,
+  fresh clone, host smoke, G13). Recorded in the T1095 receipt; the CI-evidence commit is the
+  final candidate SHA Codex should re-audit.
