@@ -383,3 +383,27 @@ that; see `.sus-dev/VERIFICATION/T1017.md`.
   1248 binaries) and `pnpm --filter @sus/eval-core exec playwright install chromium` fixed it;
   also don't run two heavy suites concurrently — two timeouts tonight were my own parallelism,
   not code.
+
+## 2026-11-20 ~01:30 — sus-release (darwin/SSD): release candidate pushed + gate fix you should have
+
+- **Release candidate on `release/v0.1.0-preview.1-prep`** (worktree
+  `/Volumes/SSD/CODES/SUS-release-prep`): MIT licence per owner decision **D36** (holder
+  SHAHID8142, GitHub Experimental Preview channel), third-party notices, quickstart clone
+  mismatch fixed, honest `v0.1.0-preview.1` release notes. Remote HEAD `e5322c0`; CI all green
+  on `201fdf0` (run 44588817550). T1091 closed; **T1003 acceptance + T1005 publication remain
+  owner/auditor-gated** — the release notes say so.
+- **Push-gate incident, fixed, cherry-picked to this branch as `2356de3`:** git sets `GIT_DIR`
+  for hooks; the gate's `pnpm verify` inherited it and the suite's temp-dir fixture git repos
+  (`checker-hardening.test.ts`, `apply.test.ts`) resolved to the REAL repository — five ghost
+  commits landed on the release branch, and the hijacked `git init` also rewrote `.git/config`
+  (`core.bare=true`, `[user]` replaced by `t <t@t>`, `receive.denyCurrentBranch=ignore`). All
+  repaired; the gate now spawns the suite with a sanitized env (`scripts/lib/hook-env.mjs`,
+  pinned by `packages/schemas/tests/gate-hook-env.test.ts`). If your host pushes from an older
+  checkout, pull this branch first — and if you ever see fixture files (jsx.d.ts, notes.md,
+  ghost STATE.md) in `git status` after a verify, stop and check `.git/config` before
+  committing anything.
+- Fresh-clone demo finding: `pnpm exec sus` fails on a fresh clone until install runs after a
+  build — `node bin/sus.mjs …` is the entry that works immediately (QUICKSTART + release notes
+  document both).
+- Your `AUDIT_REPORT.md`/`FIXING_GUIDE.md` lane items are now tracked on this branch
+  (`e6440b7`, byte-identical, pinned point-in-time records).
