@@ -295,7 +295,14 @@ describe('session expiry (T1062, issue #25)', () => {
     const { sessionId, token } = bridge.openSession('http://127.0.0.1:4317');
     expect(bridge.verifyToken(sessionId, token)).toBe(true);
     const session = bridge.sessions.get(sessionId);
-    expect(session!.expiresAt - session!.lastUsedAt).toBe(DEFAULT_SESSION_POLICY.absoluteTtlMs);
+    // openSession reads the clock twice (expiresAt, then lastUsedAt). On the real clock those
+    // two reads can straddle a millisecond tick, so the difference is ttl, ttl-1 or ttl-2 —
+    // not always exactly the TTL. Observed in CI's fresh-clone job on a docs-only commit
+    // (86399999 vs 86400000, T1091 receipt): the default policy is what this pins, not that
+    // two Date.now calls share a millisecond. The injected-clock tests above pin exactness.
+    const spread = session!.expiresAt - session!.lastUsedAt;
+    expect(spread).toBeGreaterThanOrEqual(DEFAULT_SESSION_POLICY.absoluteTtlMs - 2);
+    expect(spread).toBeLessThanOrEqual(DEFAULT_SESSION_POLICY.absoluteTtlMs);
     expect(DEFAULT_SESSION_POLICY.idleTtlMs).toBe(30 * 60 * 1000);
   });
 });
