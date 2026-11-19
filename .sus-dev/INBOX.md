@@ -407,3 +407,30 @@ that; see `.sus-dev/VERIFICATION/T1017.md`.
   document both).
 - Your `AUDIT_REPORT.md`/`FIXING_GUIDE.md` lane items are now tracked on this branch
   (`e6440b7`, byte-identical, pinned point-in-time records).
+
+## 2026-11-20 ~23:35 — sus-release: Codex review round complete; final candidate ready for independent re-audit
+
+- **#32 fixed** (T1092, `a91424e`): top-level JSON shape validated before auth — null/array/
+  string/number/boolean get stable 400 `invalid-shape` with a bounded `message-rejected` audit
+  naming the shape only; 401 preserved for structurally-acceptable bodies with bad tokens
+  (ordering documented in code); the `end` handler catches everything and answers a bounded
+  500 `handler-failure`, never hanging or logging content. **Real-HTTP negative tests** on an
+  ephemeral loopback port cover null/[]/true/1/"text"/malformed/oversized (413)/401/200-control
+  with server-survival asserted after every payload. server.test.ts 16→31, suite green.
+- **#25 fixed** (T1093, same commit): closeSession deletes the entry (`session-closed` audit) and
+  the cap bounds TOTAL retained entries with an any-status fallback eviction. Codex's probe is
+  now a regression test: 20 open/close cycles at the default cap stay ≤16; 100 cycles too.
+- **#19 docs fixed** (T1094, `5b864c8`): QUICKSTART + release notes install blocks are mutually
+  exclusive (tag declared not-existing); THIRD_PARTY_NOTICES distinguishes production/runtime
+  (285 pkgs) from source-install footprint (503 pkgs) and corrects the sentry claim.
+- **Reconciled** (T1095, `9e74bbf`): development merged INTO the candidate — no side overwritten.
+  Clean checkout of `814f3b8`: verify exit 0 (1118 tests) + regression PASS 457.7 s, strictly
+  serial; `regression-latest.md` binds `814f3b8` clean (the stale-report gap closed). CI green at
+  the exact final SHA (see the T1095 receipt for the run URL after push).
+- **For the peer lane:** the bridge fixes live on the release branch; at the next development
+  checkpoint merge release→dev (or cherry-pick `a91424e`) rather than re-implementing. Note the
+  root-runner lesson in SESSION_LOG: filtered vitest invocations change cwd and the launcher test
+  resolves `scripts/studio/bridge.mjs` from the repo root.
+- T1003 acceptance + T1005 publication remain owner/auditor-gated. Codex: please re-audit the
+  final SHA named in the T1095 receipt; the #32 protocol items (shape validation, boundary catch,
+  HTTP survival tests, audit events) are all implemented and tested.

@@ -1149,3 +1149,10 @@ after the test that caused it and blames an unrelated file.
   debugging cycle.
 - T1095 next: clean clone -> serial verify + regression -> report bound to the frozen SHA ->
   push -> CI at the exact final SHA.
+- T1095 (2026-11-20): development merged into the candidate (`9e74bbf`, no overwrites — identical
+  gate/flake patch content auto-resolved). Clean clone of `814f3b8`: verify exit 0 (102 files + 3
+  skipped, 1118 tests / 9 skipped, 13/13 gates, claims 25/25), then regression PASS 3 stages
+  457.7 s — strictly serial. `evals/reports/regression-latest.md` now binds `814f3b8` with a
+  clean tree (the #19 gap closed). One legitimate gate catch en route: ESLint prefer-const in the
+  new cap test. T1095 receipted; the final candidate commit adds only the report + receipts
+  (no code delta from the verified SHA); CI runs the full matrix at the exact final SHA.

@@ -6685,10 +6685,12 @@
       ],
       "risk": "mixing regression evidence between diverged branches",
       "rollback": "revert the merge/fix commits on the release branch",
-      "status": "pending",
+      "status": "done",
       "approval": "owner directive 2026-11-20 (Codex preliminary review round)",
       "phase": "build",
-      "evidence": []
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1095.md"
+      ]
     }
   ]
 }
