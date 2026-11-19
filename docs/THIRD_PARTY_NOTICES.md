@@ -4,12 +4,13 @@ SUS itself is MIT-licensed (`../LICENSE`, owner decision D36, copyright holder S
 dependencies SUS runs on keep their own licences, and this page says what they are, what obligations
 attach, and which provenance questions are **not** settled by this file.
 
-**How this list is produced.** It was extracted from `pnpm licenses list --prod` against the
-release-candidate dependency tree (2026-11-19, macOS arm64). It is a *measured snapshot*, not a
-constant: the lockfile changes, and a future release must regenerate it rather than copy this page.
-The dev-only summary comes from `pnpm licenses list` (all environments).
+**How this list is produced.** The production table was extracted from `pnpm licenses list --prod`
+against the release-candidate dependency tree (2026-11-20, macOS arm64), and the source-install
+footprint from `pnpm licenses list` (all environments) on the same tree. It is a *measured
+snapshot*, not a constant: the lockfile changes, and a future release must regenerate both lists
+rather than copy this page.
 
-## Production dependency licences (285 packages, measured 2026-11-19)
+## Production dependency licences (285 packages, measured 2026-11-20)
 
 | Licence | Packages | Notes |
 | --- | --- | --- |
@@ -47,13 +48,36 @@ notices; none of them impose copyleft on SUS or its users.
   Attribution lives in the package's own bundled notices; SUS adds none and modifies nothing.
 - **Python-2.0 — `argparse`.** PSF licence family carried by a transitive dependency.
 
-## Dev-only dependencies (not installed by consumers)
+## Source-install dependencies vs production/runtime dependencies (T1094, Codex review)
+
+SUS is distributed **as source** — there is no bundled artifact and no npm package — so the
+distinction that matters is not "consumers vs developers" but **which packages SUS's own code
+needs at runtime** versus **what a source checkout downloads**:
+
+- **Production/runtime dependencies — 285 packages** (`pnpm licenses list --prod`, measured
+  2026-11-20): the packages `packages/*` declare for execution. These are what the CLI actually
+  loads when it runs; they are also what a hypothetical future distributed artifact would carry,
+  which is why they are the licence list that would be reproduced in a shipped product.
+- **Source-install footprint — 503 packages** (`pnpm licenses list`, all environments, measured
+  2026-11-20): a reader following the documented install path (`pnpm install --frozen-lockfile`)
+  downloads **both** lists, because plain `pnpm install` installs devDependencies too — test
+  runners, linters, the fixture toolchain. Their licences (mostly the same permissive families,
+  plus the rows below) therefore still reach a source-install user's disk and belong in this
+  notice even though nothing from them ships inside SUS's own packages.
+
+Rows that only appear in the source-install footprint:
 
 - **FSL-1.1-Apache-2.0 — `sentry`**, pulled in by `lighthouse` under devDependencies/tooling.
   Functional Source Licence: free to use, not free to compete-with-as-a-service. It is not a
-  runtime dependency of SUS's shipped CLI surface and never reaches a SUS user's install.
+  runtime dependency of SUS's shipped CLI surface, **but it IS downloaded by the documented
+  source install** — the earlier wording ("never reaches a SUS user's install") was wrong for a
+  source checkout and is corrected here.
+- **MIT-0 — three `@csstools/*` packages** (dev tooling). MIT-0 is MIT without the attribution
+  paragraph; permissive.
+- **PSF-2.0 / Python-2.0 — `argparse`** (PSF licence family, dual-tagged across environments),
+  carried by a transitive dependency.
 
-## What a SUS user's machine downloads that this page does not cover
+## What a source-install user's machine downloads beyond this page's package lists
 
 - **Chromium.** The browser phases download a Chromium binary via Playwright at `pnpm setup` time,
   from Playwright's own CDN under Playwright's distribution terms. SUS does not distribute it.
@@ -75,4 +99,5 @@ notices; none of them impose copyleft on SUS or its users.
 
 SUS is Copyright (c) 2026 SHAHID8142, MIT-licensed. This product includes third-party software
 listed above under its own licences. The machine-readable input for this page is
-`pnpm licenses list --prod` at the released revision — rerun it when the lockfile changes.
+`pnpm licenses list --prod` plus `pnpm licenses list` at the released revision — rerun both when
+the lockfile changes.

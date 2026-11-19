@@ -8,20 +8,34 @@ has not been checked.
 ## 1. Get the code
 
 A default clone lands on `main`, which is a **planning-only baseline** — it predates the
-implementation and cannot run the commands below. Executable SUS lives on the development
-branch, and the intended preview install path is the `v0.1.0-preview.1` tag once the owner
-publishes it (T1005). Use whichever of these exists when you read this:
+implementation and cannot run the commands below. Pick **exactly one** of the two options below
+and run only that option's block; running both blocks leaves you on whichever `git switch` ran
+last, which is not a revision this page has checked (T1094, Codex review of the candidate).
+
+Start with the clone, which is the same for both options:
 
 ```bash
 git clone https://github.com/SHAHID8142/shahid-ui-ux-skill.git
 cd shahid-ui-ux-skill
+```
 
-# The intended preview-tag install path (owner publication pending — the tag may not exist yet):
+**Option A — the published preview tag.** Only valid once the owner has actually published the
+release (owner decision T1005; **the tag does not exist as of 2026-11-20** — do not run this
+block unless `git ls-remote --tags origin` shows `v0.1.0-preview.1`):
+
+```bash
+# Option A: detached checkout of the published preview tag
 git switch --detach v0.1.0-preview.1
+pnpm install --frozen-lockfile
+pnpm build            # compiles packages/*; the CLI entry points live in dist/
+```
 
-# Today's verified development revision (this is what CI and the receipts point at):
+**Option B — today's verified development revision.** This is the branch CI and the receipts
+actually point at; it always contains executable SUS:
+
+```bash
+# Option B: the development branch (mutually exclusive with option A)
 git switch chore/continuation-reconciliation
-
 pnpm install --frozen-lockfile
 pnpm build            # compiles packages/*; the CLI entry points live in dist/
 ```

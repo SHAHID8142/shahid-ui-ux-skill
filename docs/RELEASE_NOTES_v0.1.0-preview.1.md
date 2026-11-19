@@ -23,19 +23,30 @@ repository:
 ```bash
 git clone https://github.com/SHAHID8142/shahid-ui-ux-skill.git
 cd shahid-ui-ux-skill
+```
 
-# Intended preview-tag path, once the owner publishes the release (the tag may not exist yet):
+Then pick **exactly one** of the two blocks below — running both leaves you on whichever
+`git switch` ran last, which is not a revision these notes describe:
+
+```bash
+# Block 1 — the published preview tag. Only valid after the owner publishes the release
+# (T1005): the v0.1.0-preview.1 tag does not exist as of 2026-11-20.
 git switch --detach v0.1.0-preview.1
-
-# Until then, the verified development revision this candidate was cut from:
-git switch chore/continuation-reconciliation   # or: git switch --detach <candidate SHA>
-
 pnpm install --frozen-lockfile
 pnpm build          # compiles packages/*; the CLI entry points live in dist/
 pnpm setup          # optional: pre-push gate + Chromium download, needed for browser phases
 ```
 
-A default clone without the `git switch` lands on `main`, which is a **planning-only baseline**
+```bash
+# Block 2 — the verified development revision this candidate was cut from
+# (mutually exclusive with block 1):
+git switch chore/continuation-reconciliation   # or: git switch --detach <candidate SHA>
+pnpm install --frozen-lockfile
+pnpm build          # compiles packages/*; the CLI entry points live in dist/
+pnpm setup          # optional: pre-push gate + Chromium download, needed for browser phases
+```
+
+A default clone without any `git switch` lands on `main`, which is a **planning-only baseline**
 that cannot run any of this. The `docs/QUICKSTART.md` page is the first-run path this release was
 exercised with.
 
