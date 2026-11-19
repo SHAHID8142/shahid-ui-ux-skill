@@ -211,3 +211,29 @@ separately commissioned audit.
 - D35c | **Licence and release stay owner decisions.** An audit finding about the licence choice (D06)
   or publication (T1005) is reported as "owner decision pending", not as a defect. The auditor is not
   asked to settle either.
+
+## 2026-11-19 — release channel and licence selected (D36)
+
+Source: the owner's release-preparation directive ("SUS — RELEASE-CANDIDATE RECONCILIATION AND
+PREPARATION"), which states the selections explicitly and instructs that they not be asked again:
+**GitHub Experimental Preview** (not stable GA, not npm), **MIT licence**, copyright holder
+**SHAHID8142**. Final publication, independent audit acceptance and any merge into `main` remain
+separately controlled. This is the decision the licence packet (`docs/LICENSE_DECISION_PACKET.md`)
+option A asked for; it is recorded here so no future session re-requests it.
+
+- D36 | **Licence: MIT, holder SHAHID8142; distribution channel: GitHub Experimental Preview.**
+  The repository gains the MIT `LICENSE` file (reconciled from draft PR #23 with the current code,
+  not blindly applied), `skill/SKILL.md` declares the MIT licence with third-party notices
+  (`docs/THIRD_PARTY_NOTICES.md`), and release-facing documents describe an explicitly
+  **experimental** preview. What D36 does **not** authorize: publishing the release/tag (still
+  T1005, owner-gated), merging to `main`, npm publication, altering protection rules, and closing
+  T1003 (the independent audit's verdict acceptance remains auditor/owner-gated, D35a/D35b). The
+  preview is a preparation of the candidate, not the publication.
+- D36a | **Preview honesty constraints carry into release notes.** The notes must not claim the
+  Studio page exists (it does not), that slash commands work universally (no host has a verified
+  binding), that screen-reader conformance is proven (no AT session has run), or that a human
+  benchmark ran (none has). These are the standing claim-gate rules applied to the release surface.
+- D36b | **Third-party provenance caveat stays open.** No upstream guide text was copied (D06/D08)
+  and `.sus-cache/` is never committed; dependency licences are catalogued in
+  `docs/THIRD_PARTY_NOTICES.md` (MPL-2.0, LGPL-3.0 prebuilts, FSL-1.1 dev-only, data licences) and
+  must be regenerated at release time, not hard-coded, because the lockfile changes.

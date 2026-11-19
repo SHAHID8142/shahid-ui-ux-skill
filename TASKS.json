@@ -2727,7 +2727,8 @@
         "T1086",
         "T1087",
         "T1088",
-        "T1089"
+        "T1089",
+        "T1091"
       ],
       "files": [],
       "acc": [
@@ -6509,6 +6510,56 @@
       "phase": "build",
       "evidence": [
         ".sus-dev/VERIFICATION/T1090.md"
+      ]
+    },
+    {
+      "id": "T1091",
+      "m": "M14",
+      "title": "Release-candidate reconciliation: MIT licence (D36), preview install path, honest v0.1.0-preview.1 release notes",
+      "obj": "The owner's release-preparation directive selected: GitHub Experimental Preview (not stable GA, not npm), MIT licence, copyright holder SHAHID8142. Reconcile draft PR #23's MIT LICENSE and skill/SKILL.md metadata with the current code on a dedicated release-preparation branch cut from the verified development HEAD (not blindly overwritten); append the decision to the canonical decision log preserving history (D36); update the release-facing licensing documents (README, GOVERNANCE, LICENSE_DECISION_PACKET, CONTRIBUTING, EFFECTIVE_REQUIREMENTS); catalogue third-party licences from the live dependency tree and flag unresolved provenance (no upstream guide text copied, .sus-cache never committed); fix the default-clone/quickstart mismatch (a default clone lands on planning-only main; the quickstart must name the revision that actually contains executable SUS and the intended v0.1.0-preview.1 tag install path); draft honest release notes that keep not-run/unsupported states explicit and claim no Studio page, no universal slash commands, no screen-reader conformance, no human benchmark. The publication act itself (tag/release/npm) stays owner-gated (T1005); the T1003 audit verdict stays auditor/owner-gated (D35a/D35b); no merge to main; no protection-rule change.",
+      "deps": [],
+      "files": [
+        "LICENSE",
+        "skill/SKILL.md",
+        "docs/OWNER_DECISIONS_LOG.md",
+        "docs/EFFECTIVE_REQUIREMENTS.json",
+        "docs/QUICKSTART.md",
+        "docs/THIRD_PARTY_NOTICES.md",
+        "docs/RELEASE_NOTES_v0.1.0-preview.1.md",
+        "docs/GOVERNANCE.md",
+        "docs/LICENSE_DECISION_PACKET.md",
+        "docs/AUDIT_PACKET.md",
+        "CONTRIBUTING.md",
+        "README.md",
+        "scripts/check-claims.mjs",
+        "TASKS.json",
+        "ROADMAP.md",
+        ".sus-dev/STATE.md",
+        ".sus-dev/SESSION_LOG.md",
+        ".sus-dev/VERIFICATION/T1091.md"
+      ],
+      "acc": [
+        "LICENSE is the MIT text with copyright (c) 2026 SHAHID8142, matching PR #23's intent, applied on the current code",
+        "skill/SKILL.md declares MIT and points at third-party notices",
+        "docs/OWNER_DECISIONS_LOG.md gains D36 (MIT + GitHub Experimental Preview + holder SHAHID8142) with all historical entries preserved",
+        "docs/THIRD_PARTY_NOTICES.md catalogues the live dependency licences (MPL-2.0, LGPL-3.0 prebuilts, FSL-1.1 dev-only, data licences) and names the open provenance caveats",
+        "docs/QUICKSTART.md instructs a revision that actually contains executable SUS (dev branch or the intended preview tag), not planning-only main",
+        "docs/RELEASE_NOTES_v0.1.0-preview.1.md is honest: no Studio page, no verified host install path, no AT session, no human benchmark, audit acceptance pending; the new release-facing docs are in the claim-gate scan set",
+        "pnpm verify and pnpm regression pass serially in the candidate checkout; fresh-clone install + sus audit + sus bestpractice demonstrated"
+      ],
+      "tests": [
+        "pnpm verify",
+        "pnpm regression",
+        "pnpm claims",
+        "fresh-clone install + CLI demo"
+      ],
+      "risk": "a release-facing document overstating readiness or misstating a licence",
+      "rollback": "revert the release-prep branch commits",
+      "status": "done",
+      "approval": "owner release-preparation directive, 2026-11-19 (recorded as D36)",
+      "phase": "build",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1091.md"
       ]
     }
   ]

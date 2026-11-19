@@ -2,19 +2,36 @@
 
 SUS is **not published** as an installable package (owner decision T1005 is pending). What exists is
 this repository: a skill plus a verification CLI. The two commands below are the ones exercised by
-hand on 2026-11-17; anything not written here has not been checked.
+hand on 2026-11-17 (re-checked against the release candidate, 2026-11-19); anything not written here
+has not been checked.
 
 ## 1. Get the code
+
+A default clone lands on `main`, which is a **planning-only baseline** — it predates the
+implementation and cannot run the commands below. Executable SUS lives on the development
+branch, and the intended preview install path is the `v0.1.0-preview.1` tag once the owner
+publishes it (T1005). Use whichever of these exists when you read this:
 
 ```bash
 git clone https://github.com/SHAHID8142/shahid-ui-ux-skill.git
 cd shahid-ui-ux-skill
+
+# The intended preview-tag install path (owner publication pending — the tag may not exist yet):
+git switch --detach v0.1.0-preview.1
+
+# Today's verified development revision (this is what CI and the receipts point at):
+git switch chore/continuation-reconciliation
+
 pnpm install --frozen-lockfile
 pnpm build            # compiles packages/*; the CLI entry points live in dist/
 ```
 
 `pnpm setup` also installs the pre-push gate and downloads Chromium — only needed if you intend to
 push or run the browser phases.
+
+Licence: SUS is MIT (`LICENSE`, owner decision D36); third-party material keeps its own licences
+(`docs/THIRD_PARTY_NOTICES.md`). The preview is **experimental software** — see
+`docs/LIMITATIONS.md` before relying on any verdict it prints.
 
 ## 2. Audit a site
 

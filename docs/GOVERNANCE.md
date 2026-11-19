@@ -56,13 +56,15 @@ Recommendation (recorded, not executed): keep the five report-only PRs as extern
 `#2` and `#4` as superseded, and adopt a maintenance policy for `review/*` branches — the reports stay
 in git history either way.
 
-## 3. Licence and distribution: owner decision pending (D06/B003)
+## 3. Licence and distribution: decided (D36, 2026-11-19); publication still owner-gated
 
-Facts: the repository is **public** (D34) and contains **no `LICENSE` file**; `skill/SKILL.md` declares
-`license: Proprietary — all rights reserved`. Public visibility decides nothing about reuse rights, and
-"publicly readable" is not "installable product". The packet is in
-[`LICENSE_DECISION_PACKET.md`](LICENSE_DECISION_PACKET.md); **no licence was selected and no package was
-published**.
+Decided by the owner (D36): **MIT licence**, copyright holder **SHAHID8142**, distribution channel
+**GitHub Experimental Preview** — not stable GA, not npm. The repository now carries the MIT
+`LICENSE` file and `skill/SKILL.md` declares MIT with third-party notices
+([`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)). Earlier state, kept for the record: the
+repository was public (D34) with **no `LICENSE` file** and a `license: Proprietary — all rights
+reserved` declaration — a legal state, not a usable product state. What remains owner-gated: the
+publication act itself (T1005) — no release, no tag, no npm package exists or is authorized by D36.
 
 ## 4. Owner-only gates that remain open
 
@@ -70,7 +72,7 @@ published**.
 | --- | --- | --- | --- |
 | Independent security/a11y/licence review | T1003 | `pending` | owner commissions; a builder must not self-certify |
 | Release approval and publication | T1005 | `pending` | owner |
-| Licence/distribution choice | D06/B003 | open | owner |
+| Licence/distribution choice | D06/B003 → D36 | licence decided (MIT); publication open | owner |
 | Branch protection policy | this page §1 | proposed | owner |
 
 The evidence an independent reviewer should start from: `docs/PLAYBOOK_COVERAGE.md` (named gaps),

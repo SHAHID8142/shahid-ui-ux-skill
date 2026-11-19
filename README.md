@@ -1,6 +1,7 @@
 > Current builder entry: `AGENTS.md` and `docs/AGENT_CONTINUE_PROTOCOL.md`.
 > The build gate is open (owner decision D28, `APERIO`). Publication of the product is
-> **not** authorized; release, licensing and the independent audit remain owner decisions.
+> **not** authorized; the release act and the independent audit's acceptance remain owner
+> decisions. The licence is decided: MIT (owner decision D36, 2026-11-19).
 
 # SUS — Shahid UI UX Skill
 
@@ -9,6 +10,13 @@ building web UI one approved section at a time. The Studio's tested loop and loc
 exist; the Studio *page* does not — [`docs/STUDIO.md`](docs/STUDIO.md) states what is built, what is
 not, and the one command that starts the part that is (`pnpm studio:bridge`). It ships rules a coding agent can follow,
 checks that make those rules falsifiable, and receipts that record what was actually run.
+
+**Licence:** MIT — [`LICENSE`](LICENSE) (owner decision D36). Third-party material keeps its own
+licences: [`docs/THIRD_PARTY_NOTICES.md`](docs/THIRD_PARTY_NOTICES.md). SUS is **experimental
+preview software**, not a finished product: read [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md)
+before trusting anything it prints, and
+[`docs/RELEASE_NOTES_v0.1.0-preview.1.md`](docs/RELEASE_NOTES_v0.1.0-preview.1.md) for what the
+preview does and does not include.
 
 **Scope (owner decision D14):** web UI/UX — marketing sites, e-commerce, CRM/dashboards,
 CMS admin panels, portfolios. No native mobile at v1.
@@ -119,8 +127,10 @@ M8 Studio hardening → M9 multi-agent adapters → M10 benchmarks & release.
 
 ## Known open decisions (block nothing at planning time)
 
-1. Licence and publication channel (D06/B003) — still undecided. There is no `LICENSE`
-   file; the repository being public (D34) is not that decision. Nothing is published.
+1. Licence and publication channel — **licence decided** (D36, 2026-11-19): MIT, copyright
+   holder SHAHID8142, channel GitHub Experimental Preview. The publication act itself
+   (a release/tag, npm — never planned) stays owner-gated (T1005). Until that decision,
+   nothing is published and no release exists.
 2. Studio stack and first supported web framework — the slice runs on Astro and Next has one
    editing path; no host reaches the `supported` tier yet.
 3. Real identities/versions of target hosts — FreePi holds a fresh receipt (`293168993dee`,

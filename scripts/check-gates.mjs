@@ -393,12 +393,13 @@ function ancestry(rootId) {
   return seen;
 }
 // T1001 is the completed build checkpoint over M1-M10. M11 (issue #15), M12 (issue-triage
-// hardening, #16-#20) and M13 (independent-audit findings, D35) are work that started after
-// that checkpoint, so all are covered by the release ancestry (T1005) instead — the assertion
-// below still requires every post-checkpoint task to reach T1005, and rewriting a done
-// checkpoint's dependencies to point at future work would be a false history.
+// hardening, #16-#20), M13 (independent-audit findings, D35) and M14 (release-candidate
+// preparation, D36) are work that started after that checkpoint, so all are covered by the
+// release ancestry (T1005) instead — the assertion below still requires every
+// post-checkpoint task to reach T1005, and rewriting a done checkpoint's dependencies to
+// point at future work would be a false history.
 const preFeature = tasksDoc.tasks
-  .filter((t) => t.m !== 'M10' && t.m !== 'M11' && t.m !== 'M12' && t.m !== 'M13')
+  .filter((t) => t.m !== 'M10' && t.m !== 'M11' && t.m !== 'M12' && t.m !== 'M13' && t.m !== 'M14')
   .map((t) => t.id);
 const a1001 = ancestry('T1001');
 const missing1001 = preFeature.filter((id) => !a1001.has(id) && id !== 'T1001');

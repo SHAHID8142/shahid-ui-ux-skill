@@ -74,6 +74,10 @@ be describing a tree that is not the one under review).
    `skill/SKILL.md` declares `license: Proprietary — all rights reserved` with no LICENSE file. Questions:
    any upstream prose, rule text or fixture copied in? Are dependency licences compatible with the declared
    position? The product licence itself is the owner's open decision (D06) and is **not** yours to settle.
+   *(Dated note, 2026-11-19: the licence question was settled after this packet was written — owner
+   decision D36 selected MIT (holder SHAHID8142) and a GitHub Experimental Preview channel; the
+   repository now carries `LICENSE` and `docs/THIRD_PARTY_NOTICES.md`. The copied-text question and the
+   notices' accuracy remain fair audit targets.)*
 7. **Claims** — `docs/`, `README.md`, and the claim gate (`scripts/check-claims.mjs`,
    `scripts/lib/claims.mjs`). Questions: does any document claim more than a measurement supports? "Verified"
    used for "not measured"? Comparative claims without a paired run?

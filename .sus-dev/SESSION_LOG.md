@@ -1089,3 +1089,30 @@ receipt and a test:
 Lesson: an unhandled 'error' event on a socket is a crash waiting for the next teardown. When a
 suite owns servers, every stream it creates needs an error handler, because the failure arrives
 after the test that caused it and blames an unrelated file.
+
+## 2026-11-19 — T1091: release candidate prepared (sus-release, darwin/SSD)
+
+- Branch `release/v0.1.0-preview.1-prep` cut from 8ceb27f in worktree
+  `/Volumes/SSD/CODES/SUS-release-prep`; no live peer (bus heartbeats stale 45h+); stale-lane
+  takeover of the teardown guard logged on the bus.
+- MIT licence landed (D36): `LICENSE` byte-identical to draft PR #23, `skill/SKILL.md` metadata,
+  third-party notices measured from the live tree (285 prod packages; MPL-2.0 axe family, LGPL
+  libvips prebuilt, FSL sentry dev-only flagged), release-facing docs reconciled, quickstart
+  clone-mismatch fixed (default clone lands on planning-only main; dev branch + intended
+  `v0.1.0-preview.1` tag documented), honest release notes written with explicit not-run rows.
+- Claim scan set 22 -> 25 files (QUICKSTART, RELEASE_NOTES, THIRD_PARTY_NOTICES are claim
+  surfaces). M14 documented in scripts/lib/roadmap.mjs; T1001-ancestry exclusion names M14;
+  T1005.deps extended.
+- Verify sequence (serial, one heavy suite at a time): run 1 exit 1 = handoff gate caught STATE
+  count drift (183 vs 184) — legitimate catch, fixed; run 2 exit 1 = prettier on roadmap.mjs;
+  run 3 crashed INSIDE the teardown-reset guard (`getCurrentTest` binding lost during darwin
+  worker teardown) with orphan vitest workers left behind — killed, guard made total (never
+  crashes the run; classifier 3/3); run 5 exit 1 = 44 tests, one root cause: pinned Chromium
+  missing from the shared Playwright cache (ENOENT, the INBOX-documented cache swap) — restored
+  via `playwright install chromium`; run 6 **exit 0: 101 files + 3 skipped, 1099 tests passed /
+  9 skipped, 13/13 gates, claims 25/25**. `pnpm regression` **PASS, 3 stages, 523.6 s**.
+- Lesson (extends the T1061 lesson): a handler installed to make teardown safe must itself be
+  total — on darwin the vitest namespace is partially destroyed before the worker's final
+  uncaughtException, so a named `getCurrentTest` import can be gone exactly when the guard runs.
+- Receipt: `.sus-dev/VERIFICATION/T1091.md`. Fresh-clone demo + CI on the candidate SHA are
+  appended there after the candidate commit/push.

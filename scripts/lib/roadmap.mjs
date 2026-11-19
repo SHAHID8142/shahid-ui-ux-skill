@@ -50,6 +50,11 @@ export const MILESTONES = [
     id: 'M13',
     scope: 'Independent audit (T1003, D35) findings — the fixes and their measurements',
   },
+  {
+    id: 'M14',
+    scope:
+      'Release-candidate preparation (MIT licence D36, preview install path, honest preview notes)',
+  },
 ];
 
 /** Milestone ids in the order the roadmap lists them. */

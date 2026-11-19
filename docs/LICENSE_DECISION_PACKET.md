@@ -1,9 +1,14 @@
 # Licence and distribution decision packet (owner decision D06/B003)
 
-**Status: undecided. This page does not choose.** It exists because the repository is public while the
-product is proprietary-by-declaration, and those two facts are not a decision.
+**Status: DECIDED (D36, 2026-11-19). The owner chose option A — MIT**, with copyright holder
+SHAHID8142 and the distribution channel set to a GitHub Experimental Preview (not stable GA, not
+npm). The decision is recorded in `docs/OWNER_DECISIONS_LOG.md` D36; the `LICENSE` file and
+`skill/SKILL.md` now carry it, and dependency notices live in
+[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). The publication act itself stays owner-gated
+(T1005): D36 prepares the release candidate, it does not publish it. The rest of this page is kept
+unchanged below as the record of what the decision had to weigh.
 
-## What is true today (measured 2026-11-17)
+## What is true today (measured 2026-11-17; superseded by D36 where they disagree)
 
 | Fact | Where |
 | --- | --- |

@@ -28,6 +28,11 @@ const TARGETS = [
   'docs/STUDIO.md',
   'docs/BESTPRACTICE_EXAMPLES.md',
   'docs/BUILD_COMPLETION_HANDOFF.md',
+  // Release-facing claim surfaces (T1091): the preview install path and the third-party
+  // licence notices are exactly the pages a release reader is meant to trust.
+  'docs/QUICKSTART.md',
+  'docs/RELEASE_NOTES_v0.1.0-preview.1.md',
+  'docs/THIRD_PARTY_NOTICES.md',
   'skill/SKILL.md',
   'skill/README.md',
   // The shipped product text (T1057, audit finding T1003-12): a comparative claim in a

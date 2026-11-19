@@ -1,19 +1,21 @@
 # Development state
 
-Updated: 2026-11-18 (fix wave complete)
-docs/RESUME_ON_NEW_MACHINE.md (install, branch, `pnpm setup`, `pnpm verify`). Host: Pi (FreePi),
-main-integration role; the ZCode peer heartbeat is stale. A second agent/host cooperates per
-D33: claim tasks via TASKS.json leases; read `.sus-dev/INBOX.md`.
+Updated: 2026-11-19 (release-candidate preparation)
+docs/RESUME_ON_NEW_MACHINE.md (install, branch, `pnpm setup`, `pnpm verify`). Host: darwin/SSD
+(release-prep agent, worktree `/Volumes/SSD/CODES/SUS-release-prep`); coordination bus registered
+as `sus-release`. A second agent/host cooperates per D33: claim tasks via TASKS.json leases; read
+`.sus-dev/INBOX.md`.
 
-Branch: chore/continuation-reconciliation. Original main: 6ea7fb708f54e630e74e858eaa8aa2c469f04c33.
+Branches: `chore/continuation-reconciliation` (development, HEAD 8ceb27f, CI green) and
+`release/v0.1.0-preview.1-prep` (release candidate cut from 8ceb27f in worktree
+`/Volumes/SSD/CODES/SUS-release-prep`). Original main: 6ea7fb708f54e630e74e858eaa8aa2c469f04c33.
 Stage: BUILD complete (BUILD_PERMISSION=true, APERIO recorded as D28;
-BUILD_COMPLETE_PUSHED=true at release revision 2f344df — pnpm regression 3 stages / 132.0s,
-679 tests). Architecture: ADR-001/002/004/005/006 adopted, ADR-003 as amended (D29).
-Repository is PUBLIC (D34); the product is unpublished.
+BUILD_COMPLETE_PUSHED=true at release revision 2f344df). Architecture: ADR-001/002/004/005/006
+adopted, ADR-003 as amended (D29). Repository is PUBLIC (D34); the product is unpublished.
+Licence decided (D36, 2026-11-19): MIT, holder SHAHID8142, GitHub Experimental Preview channel.
 
-Canonical task statuses: TASKS.json (181 of 183 done; owner-only T1003 independent audit and
-T1005 release approval/publish remain, both owner-only, and the M12 hardening queue T1026–T1029
-from issue triage is open). Every D32 owner-issue item from
+Canonical task statuses: TASKS.json (182 of 184 done; owner-only T1003 independent audit and
+T1005 release approval/publish remain). Every D32 owner-issue item from
 triaging issues #13/#14 is done and receipted. Issue #15 (`/sus-bestpractice`) is triaged into
 T1021–T1024 (scope resolver -> proposal contract -> invocation -> measured examples).
 M11 is **done**: T1021 (scope resolution + focus selection), T1022 (proposal record, digest-bound
@@ -52,37 +54,46 @@ T0706 preview, T0806 security/G13, T0707 apply + rollback, T0700w CLOSED — dua
 feasibility GO on both Next.js and Astro. zcode stale. Concurrency: 2 workers (D33) — claim
 via lease before editing.
 
-Current task: none live for an agent. The owner-commissioned independent audit (T1003, D35)
-ran on 2026-11-18 via five fresh-context subagents and returned **FAIL** per the packet's §6
-criteria: 0 critical, 4 HIGH open + 1 HIGH fixed mid-audit, 9 medium, 17 low — receipt in
-`.sus-dev/VERIFICATION/T1003.md` (written by the auditor of record; findings recorded verbatim as
-M13 tasks T1046–T1075). The owner then directed the fix wave; it is complete: every open HIGH and
-medium carries a fix with a receipt and tests (commits 680c9ac..765be5f plus eac8967 and the
-teardown-robustness follow-up), and all 31 findings are dispositioned: 30 fixed, 1 (session expiry, T1062) implemented after the
-owner directed work on the open issues. What is left is
-owner/auditor-gated and must not be started by an agent: T1003's verdict acceptance (the auditor
-or owner accepts each fix's measurement; the build agent's response is appended to the receipt),
-T1005 (release approval and publication). The session expiry finding (T1062) is implemented
-(receipt VERIFICATION/T1062.md) and awaits reviewer acceptance like every other fix.
+Current task: none live for an agent. Background: the owner-commissioned
+independent audit (T1003, D35) ran on 2026-11-18 and returned **FAIL** per the packet's §6
+criteria (0 critical, 4 HIGH open at audit time + 1 HIGH fixed mid-audit, 9 medium, 17 low) —
+receipt in `.sus-dev/VERIFICATION/T1003.md` (written by the auditor of record; findings recorded
+verbatim as M13 tasks). The owner then directed the fix wave; every finding carries a fix with a
+receipt and tests, and the session-expiry finding was implemented after the owner directed work on
+the open issues. The release candidate is prepared on `release/v0.1.0-preview.1-prep` (worktree
+`/Volumes/SSD/CODES/SUS-release-prep`): MIT licence (owner decision D36), third-party notices,
+fixed quickstart install path, honest preview notes, serial verify + regression green. What is
+left is owner/auditor-gated and must not be started by an agent: T1003's
+verdict acceptance (the auditor or owner accepts each fix's measurement; the build agent's response
+is appended to the receipt), T1005 (release approval and publication).
 
 `pnpm verify` is green on the fix-wave tree: exit 0, 99 test files + 3 env-gated skips,
 1086 tests passed / 9 skipped, 61/61 gate checks, claims 22 files, handoff/roadmap consistent.
 `pnpm regression` on the final tree: see `evals/reports/regression-latest.md`. CI runs on every
 push; the fresh-clone job re-runs the documented first-run path on the pushed commit.
 
-Next exact steps: (1) the auditor/owner reviews the appended fix measurements in
-`.sus-dev/VERIFICATION/T1003.md` and accepts or contests each closed finding (the implemented
-session-expiry measurement is receipted in VERIFICATION); (2) the owner decides T1005 (release
-approval and publication); (3) no agent may touch `main` or publish.
-`main` or publish. If the owner asks to keep building: triage a fresh `gh issue list --state open`
-rather than reopen a closed item.
+Next exact steps: (1) push the `release/v0.1.0-preview.1-prep` branch (dev-branch checkpoint,
+D30/D34) and record CI on the candidate SHA; (2) the auditor/owner reviews the appended fix
+measurements in `.sus-dev/VERIFICATION/T1003.md` and accepts or contests each closed finding (the
+implemented session-expiry measurement is receipted in VERIFICATION); (3) the owner decides T1005
+(release approval and publication; the intended preview tag install path is documented in
+`docs/QUICKSTART.md`); no agent may touch `main` or publish. If the owner asks to keep building:
+triage a fresh `gh issue list --state open` rather than reopen a closed item.
 
-Blockers: standing B003 (licence/publication, owner gate). Active files: none after checkpoint.
+Blockers: publication remains the owner gate (T1005; licence decided by D36, so B003's licence
+half is closed). Active files: none after checkpoint.
 
-Latest checks: 2026-11-18 (fix wave) — `pnpm verify` exit 0 (99 files + 3 skipped, 1086 tests
-passed / 9 skipped, zero unhandled errors after the proxy-teardown fix), 13/13 gates with
-61 `[PASS]` lines, claims 22/22, handoff consistent (ledger current; pending T1003, T1005). The flake class the audit recorded (T1003-16) is reduced at the source: proxy
-sockets and serveLocal carry error handlers, and the baselines suite binds an ephemeral port.
+Latest checks: 2026-11-19 (release candidate, `release/v0.1.0-preview.1-prep`) — `pnpm verify`
+exit 0 (101 files + 3 skipped, 1099 tests passed / 9 skipped, 13/13 gates, claims scan set 25
+files, handoff + roadmap consistent) and `pnpm regression` PASS (3 stages, 523.6 s), both serial
+in the candidate worktree; the teardown-reset guard was hardened after it killed a run on darwin,
+and the missing pinned Chromium was restored (`playwright install chromium`); full sequence and
+environment notes in `.sus-dev/VERIFICATION/T1091.md`. CI is green on the base development SHA
+8ceb27f (run 44391675332). 2026-11-18 (fix wave) — `pnpm verify` exit 0 (99 files + 3 skipped,
+1086 tests passed / 9 skipped, zero unhandled errors after the proxy-teardown fix), 13/13 gates
+with 61 `[PASS]` lines, claims 22/22, handoff consistent. The flake class the audit recorded
+(T1003-16) is reduced at the source: proxy sockets and serveLocal carry error handlers, and the
+baselines suite binds an ephemeral port.
 
 Format for this file: the Current-task line names ONLY live tasks; done-task ids live in
 TASKS.json and SESSION_LOG, never here.

@@ -28,6 +28,7 @@ build when the two disagree, so this page cannot drift again. It was hand-writte
 | M11 | Scoped best-practice workflow (/sus-bestpractice, issue #15) | T1021–T1024 (4 tasks) | **done** — 4/4 |
 | M12 | Post-M11 hardening from issue triage (#16-#20, D32) | T1025–T1045 (21 tasks) | **done** — 21/21 |
 | M13 | Independent audit (T1003, D35) findings — the fixes and their measurements | T1046–T1089 (44 tasks) | **done** — 44/44 |
+| M14 | Release-candidate preparation (MIT licence D36, preview install path, honest preview notes) | T1091 (1 task) | **done** — 1/1 |
 <!-- roadmap:table end -->
 
 ## What is left

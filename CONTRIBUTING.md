@@ -31,8 +31,9 @@ docs/             planning + contracts; historical reviews preserved read-only
 - Private dev-branch checkpoint pushes are permitted for recovery and agent
   transfer (D30). Never change repository visibility, never publish a package,
   never create public releases. All packages are `"private": true`.
-- The final verified private push of the complete build is task T1006. Publication
-  (licence/channel) stays an owner decision (B003, D06).
+- The final verified private push of the complete build is task T1006. The licence
+  is decided (MIT, owner decision D36, 2026-11-19); the publication act itself
+  stays an owner decision (T1005).
 
 ## Task workflow
 

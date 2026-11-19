@@ -1,6 +1,6 @@
 {
-  "version": 2,
-  "updated": "2026-11-17T00:00:00+06:00",
+  "version": 3,
+  "updated": "2026-11-19T00:00:00+06:00",
   "build_permission": true,
   "authorization_receipt": "OWNER_DECISIONS_LOG.md D28-D31 (same commit as this file's update; discoverable with git log -1 --format=%H -- docs/OWNER_DECISIONS_LOG.md)",
   "build_complete_pushed": true,
@@ -80,8 +80,8 @@
       "id": "ER-LICENCE",
       "status": "fixed",
       "owner": "project owner",
-      "source": "D06",
-      "statement": "Owner decides licence and publication channel before publication"
+      "source": "D06; decided by D36 (owner release-preparation directive, 2026-11-19)",
+      "statement": "Owner decides licence and publication channel before publication. Decided (D36): MIT licence, copyright holder SHAHID8142, distribution channel GitHub Experimental Preview (not stable GA, not npm). The publication act itself stays owner-gated (T1005); audit acceptance stays auditor/owner-gated (D35a/D35b)."
     }
   ],
   "proposals": [
@@ -117,10 +117,17 @@
     }
   ],
   "irreversible_externals_open": [
-    "licence and distribution channel (D06/B003)",
-    "publication/GA decision",
+    "publication/GA decision (T1005, owner-gated; D36 prepares the candidate but publishes nothing)",
     "paid services",
     "real customer data"
+  ],
+  "irreversible_externals_decided": [
+    {
+      "id": "licence-and-distribution",
+      "decision": "MIT licence, copyright holder SHAHID8142, GitHub Experimental Preview channel",
+      "receipt": "OWNER_DECISIONS_LOG.md D36 (2026-11-19, same commit as this file's update)",
+      "supersedes": "the D06/B003 undecided state"
+    }
   ],
   "supersessions": [
     {
@@ -148,6 +155,12 @@
       "supersedes": [
         "T0700 preview-only fallback",
         "amendments A12 automatic breadth cuts"
+      ]
+    },
+    {
+      "source": "D36 (owner release-preparation directive, 2026-11-19)",
+      "supersedes": [
+        "D06/B003 undecided licence state (licence: MIT, holder SHAHID8142, channel: GitHub Experimental Preview); the publication act itself remains T1005 owner-gated"
       ]
     }
   ],

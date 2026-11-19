@@ -1,0 +1,33 @@
+{
+  "head": "8ceb27f17ba95f00ee32e8c42075758bfcde8277",
+  "branch": "release/v0.1.0-preview.1-prep",
+  "dirty": true,
+  "startedAt": "2026-11-19T17:50:25.841Z",
+  "totalDurationMs": 523572,
+  "stages": [
+    {
+      "id": "verify",
+      "command": "pnpm verify",
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 494593
+    },
+    {
+      "id": "demo-loop",
+      "command": "pnpm demo:loop",
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 5051
+    },
+    {
+      "id": "dogfood",
+      "command": "pnpm dogfood",
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 23928
+    }
+  ],
+  "failed": [],
+  "notRun": [],
+  "status": "pass"
+}
