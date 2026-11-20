@@ -2592,7 +2592,7 @@
       "risk": "no independent reviewer available",
       "rollback": "Do not self-author an independent audit; if no independent reviewer is available, report the audit as not-run and leave T1003 pending — never convert this into a pass",
       "status": "pending",
-      "approval": "owner-commissioned (D35, 2026-11-17)",
+      "approval": "owner-commissioned (D35); Codex re-audit of the published SHA formally requested 2026-11-21 on issue #22; acceptance stays auditor/owner-gated (D35a/D35b)",
       "phase": "post-build-audit"
     },
     {
@@ -2743,9 +2743,12 @@
       ],
       "risk": "premature announcement",
       "rollback": "publish is the last action, always",
-      "status": "pending",
-      "approval": "pending",
-      "phase": "publication"
+      "status": "done",
+      "approval": "owner decision D37 (2026-11-21): publish v0.1.0-preview.1 as a GitHub prerelease",
+      "phase": "publication",
+      "evidence": [
+        ".sus-dev/VERIFICATION/T1005.md"
+      ]
     },
     {
       "id": "T0102b",

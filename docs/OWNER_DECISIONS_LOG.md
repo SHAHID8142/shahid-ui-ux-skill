@@ -237,3 +237,27 @@ option A asked for; it is recorded here so no future session re-requests it.
   and `.sus-cache/` is never committed; dependency licences are catalogued in
   `docs/THIRD_PARTY_NOTICES.md` (MPL-2.0, LGPL-3.0 prebuilts, FSL-1.1 dev-only, data licences) and
   must be regenerated at release time, not hard-coded, because the lockfile changes.
+
+## 2026-11-21 — publication of the experimental preview directed (D37)
+
+Source: the owner's direct instruction "complete all task make it ready to use ASAP" (2026-11-21),
+following the Codex preliminary review round (#32/#25 fixes landed, docs corrected, branches
+reconciled, serial clean-SHA verification green, CI green at the exact SHA). This is the T1005
+release approval, exercised for the channel the owner already selected (D36: GitHub Experimental
+Preview — not stable GA, not npm).
+
+- D37 | **Publish `v0.1.0-preview.1` as a GitHub prerelease at the verified candidate SHA.**
+  Executed by the release agent under this directive: the tag is pushed, the GitHub release is
+  created marked **pre-release/experimental**, and the release page carries the honest notes
+  (what works, what does not exist, what was never run). The release receipt records the exact
+  SHA, tag and URL (`.sus-dev/VERIFICATION/T1005.md`).
+- D37a | **What D37 does not do:** it does not close or accept T1003 — the independent audit's
+  verdict acceptance stays with the auditor/owner (D35a/D35b unchanged); the builder has formally
+  requested the Codex re-audit of the published SHA on issue #22. It does not merge anything into
+  `main` (that remains a separate owner decision), does not publish npm (never planned for this
+  channel), and does not authorize stable/GA claims (the claim gate stays closed).
+- D37b | **Recorded risk acceptance:** the owner directs publication **ahead of final independent
+  audit acceptance**, in full knowledge of the disclosure state: 31 T1003 findings carry builder
+  fixes with receipts; two new Codex preliminary findings (#32, #25) are fixed with real HTTP
+  tests; the release notes and LIMITATIONS state every unmeasured area (no AT session, no human
+  benchmark, no host at `supported`, no Studio page).

@@ -49,7 +49,8 @@ and security-reporting route.
 that owns it — `audit`, `bestpractice`, `capture`, `evidence`, `score`, `budget` (eval-core), `scan`
 (scanners), `route`, `load`, `precedence`, `capabilities`, `status` (adapters). Arguments and exit
 codes pass through unchanged, so `sus audit --help` shows exactly what `sus-eval audit --help` shows.
-It runs the built packages: `pnpm build` first. Nothing is published (T1005 is the owner's decision).
+It runs the built packages: `pnpm build` first. Distribution is the GitHub experimental
+preview (`v0.1.0-preview.1` prerelease, owner decision D37) — no npm package exists.
 
 | Command | What it does |
 | --- | --- |
@@ -64,8 +65,8 @@ It runs the built packages: `pnpm build` first. Nothing is published (T1005 is t
 **Latest review:** [Deep audit — 2026-11-13](docs/DEEP_AUDIT_2026-11-13.md) records 48 findings,
 standards checks, research/learning refinements and full Live Studio contracts. The owner confirmed
 that the full scope and mandatory browser drawing/writing Studio remain required. Implementation
-was authorised the same day (owner decision D28, 2026-11-13); no scope reduction was authorised,
-and publication (T1005) is still the owner's decision.
+was authorised the same day (owner decision D28, 2026-11-13); no scope reduction was authorised.
+The experimental preview is published (owner decision D37, `v0.1.0-preview.1` prerelease).
 
 ## Layout
 
@@ -127,10 +128,10 @@ M8 Studio hardening → M9 multi-agent adapters → M10 benchmarks & release.
 
 ## Known open decisions (block nothing at planning time)
 
-1. Licence and publication channel — **licence decided** (D36, 2026-11-19): MIT, copyright
-   holder SHAHID8142, channel GitHub Experimental Preview. The publication act itself
-   (a release/tag, npm — never planned) stays owner-gated (T1005). Until that decision,
-   nothing is published and no release exists.
+1. Licence and publication channel — **decided**: MIT, copyright holder SHAHID8142 (D36);
+   the experimental preview is **published** as the `v0.1.0-preview.1` GitHub prerelease
+   (owner decision D37, 2026-11-21). Not stable GA, and npm was never planned. The
+   independent audit's acceptance (T1003) and any stable/GA step remain open.
 2. Studio stack and first supported web framework — the slice runs on Astro and Next has one
    editing path; no host reaches the `supported` tier yet.
 3. Real identities/versions of target hosts — FreePi holds a fresh receipt (`293168993dee`,

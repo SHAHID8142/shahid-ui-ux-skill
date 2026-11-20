@@ -1,9 +1,9 @@
 # Quick start — first run, without a packaged release
 
-SUS is **not published** as an installable package (owner decision T1005 is pending). What exists is
-this repository: a skill plus a verification CLI. The two commands below are the ones exercised by
-hand on 2026-11-17 (re-checked against the release candidate, 2026-11-19); anything not written here
-has not been checked.
+SUS ships as a **GitHub experimental preview** — no npm package. What exists is this repository:
+a skill plus a verification CLI, published as the `v0.1.0-preview.1` prerelease (owner decisions
+T1005/D37). The commands below are the ones exercised by hand and in CI (fresh-clone job) at the
+published SHA; anything not written here has not been checked.
 
 ## 1. Get the code
 
@@ -19,9 +19,9 @@ git clone https://github.com/SHAHID8142/shahid-ui-ux-skill.git
 cd shahid-ui-ux-skill
 ```
 
-**Option A — the published preview tag.** Only valid once the owner has actually published the
-release (owner decision T1005; **the tag does not exist as of 2026-11-20** — do not run this
-block unless `git ls-remote --tags origin` shows `v0.1.0-preview.1`):
+**Option A — the published preview tag (recommended for first-time users).** The
+`v0.1.0-preview.1` tag exists (owner decision D37, published 2026-11-21); verify with
+`git ls-remote --tags origin` if in doubt:
 
 ```bash
 # Option A: detached checkout of the published preview tag

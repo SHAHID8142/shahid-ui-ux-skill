@@ -1159,3 +1159,16 @@ after the test that caused it and blames an unrelated file.
 - CI evidence (2026-11-20): run 44631873592 — all 5 jobs green on f55a5761 (verify node 22/24,
   fresh clone, host smoke, G13). Recorded in the T1095 receipt; the CI-evidence commit is the
   final candidate SHA Codex should re-audit.
+
+## 2026-11-21 — T1005: experimental preview PUBLISHED (owner decision D37)
+
+- The owner's directive "complete all task make it ready to use ASAP" is the release approval
+  (D37); executed: docs updated to the published state (QUICKSTART Option A now the recommended
+  tag path; RELEASE_NOTES/README say published), D37/D37a/D37b recorded, EFFECTIVE_REQUIREMENTS
+  moved publication to decided, T1005 receipted and flipped done (187/188; only T1003 remains,
+  auditor/owner-gated).
+- Publication act recorded in VERIFICATION/T1005.md: tag `v0.1.0-preview.1` at the CI-green
+  candidate SHA, GitHub prerelease with the honest notes, fresh-clone verification of the tag
+  install path (Option A) performed after publication.
+- T1003: Codex re-audit of the published SHA formally requested on issue #22; the builder did not
+  and will not self-certify. #32/#25 received evidence comments and stay open for Codex's retest.

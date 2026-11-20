@@ -1,7 +1,8 @@
 # SUS v0.1.0-preview.1 — release notes (GitHub Experimental Preview)
 
-**Status: experimental preview candidate — prepared, not published.** The tag, the GitHub release
-and any publication act belong to the owner (T1005) and did not happen when this file was written.
+**Status: PUBLISHED as a GitHub prerelease (owner decision D37, 2026-11-21) — experimental, not
+stable GA, not npm.** The tag `v0.1.0-preview.1` points at the CI-green SHA on
+`release/v0.1.0-preview.1-prep`; the GitHub release page is the authoritative copy of these notes.
 The licence is decided: **MIT** (`../LICENSE`, owner decision D36, copyright holder SHAHID8142).
 
 **Revision:** the release-preparation branch `release/v0.1.0-preview.1-prep`, cut from the verified
@@ -29,8 +30,7 @@ Then pick **exactly one** of the two blocks below — running both leaves you on
 `git switch` ran last, which is not a revision these notes describe:
 
 ```bash
-# Block 1 — the published preview tag. Only valid after the owner publishes the release
-# (T1005): the v0.1.0-preview.1 tag does not exist as of 2026-11-20.
+# Block 1 — the published preview tag (owner decision D37; the tag exists as of 2026-11-21)
 git switch --detach v0.1.0-preview.1
 pnpm install --frozen-lockfile
 pnpm build          # compiles packages/*; the CLI entry points live in dist/

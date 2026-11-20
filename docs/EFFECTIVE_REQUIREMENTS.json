@@ -73,7 +73,7 @@
       "id": "ER-SECURITY",
       "status": "fixed",
       "owner": "project owner",
-      "source": "D24; protocol \u00a72.8",
+      "source": "D24; protocol §2.8",
       "statement": "Critical security/privacy release gate cannot be waived"
     },
     {
@@ -117,7 +117,9 @@
     }
   ],
   "irreversible_externals_open": [
-    "publication/GA decision (T1005, owner-gated; D36 prepares the candidate but publishes nothing)",
+    "stable/GA step (stays closed; the claim gate enforces no comparative or conformance claims)",
+    "independent audit acceptance (T1003 — auditor/owner-gated, D35a/D35b; re-audit of the published SHA requested)",
+    "merge of the release line into main (separate owner decision)",
     "paid services",
     "real customer data"
   ],
@@ -127,13 +129,19 @@
       "decision": "MIT licence, copyright holder SHAHID8142, GitHub Experimental Preview channel",
       "receipt": "OWNER_DECISIONS_LOG.md D36 (2026-11-19, same commit as this file's update)",
       "supersedes": "the D06/B003 undecided state"
+    },
+    {
+      "id": "experimental-preview-publication",
+      "decision": "v0.1.0-preview.1 published as a GitHub prerelease at the verified candidate SHA, ahead of final audit acceptance, with full disclosure state",
+      "receipt": "OWNER_DECISIONS_LOG.md D37/D37a/D37b (2026-11-21) and .sus-dev/VERIFICATION/T1005.md",
+      "supersedes": "the earlier publication-gated state (the owner's 2026-11-21 directive exercised the release approval)"
     }
   ],
   "supersessions": [
     {
       "source": "D25",
       "supersedes": [
-        "PRD \u00a718 interim independent reviews",
+        "PRD §18 interim independent reviews",
         "D10 pending reviewer recruitment"
       ]
     },
@@ -160,7 +168,14 @@
     {
       "source": "D36 (owner release-preparation directive, 2026-11-19)",
       "supersedes": [
-        "D06/B003 undecided licence state (licence: MIT, holder SHAHID8142, channel: GitHub Experimental Preview); the publication act itself remains T1005 owner-gated"
+        "D06/B003 undecided licence state (licence: MIT, holder SHAHID8142, channel: GitHub Experimental Preview)"
+      ],
+      "superseded_by": "D37 (2026-11-21) for the publication act: the owner directed and executed the prerelease publication"
+    },
+    {
+      "source": "D37 (owner directive, 2026-11-21)",
+      "supersedes": [
+        "the publication-pending state: v0.1.0-preview.1 published as a GitHub prerelease; T1003 acceptance and the main merge stay separate"
       ]
     }
   ],

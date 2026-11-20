@@ -14,8 +14,8 @@ BUILD_COMPLETE_PUSHED=true at release revision 2f344df). Architecture: ADR-001/0
 adopted, ADR-003 as amended (D29). Repository is PUBLIC (D34); the product is unpublished.
 Licence decided (D36, 2026-11-19): MIT, holder SHAHID8142, GitHub Experimental Preview channel.
 
-Canonical task statuses: TASKS.json (186 of 188 done; owner-only T1003 independent audit and
-T1005 release approval/publish remain). Every D32 owner-issue item from
+Canonical task statuses: TASKS.json (187 of 188 done; only T1003 — independent audit acceptance —
+remains, auditor/owner-gated). Every D32 owner-issue item from
 triaging issues #13/#14 is done and receipted. Issue #15 (`/sus-bestpractice`) is triaged into
 T1021–T1024 (scope resolver -> proposal contract -> invocation -> measured examples).
 M11 is **done**: T1021 (scope resolution + focus selection), T1022 (proposal record, digest-bound
@@ -54,8 +54,10 @@ T0706 preview, T0806 security/G13, T0707 apply + rollback, T0700w CLOSED — dua
 feasibility GO on both Next.js and Astro. zcode stale. Concurrency: 2 workers (D33) — claim
 via lease before editing.
 
-Current task: none live for an agent. The Codex preliminary review round (issues #32, #25, #19)
-is complete and receipted: T1092 (malformed-JSON bridge fix + real HTTP negative tests), T1093
+Current task: none live for an agent. The experimental preview is PUBLISHED (owner decision D37,
+2026-11-21): tag `v0.1.0-preview.1`, GitHub prerelease at the verified candidate SHA; T1005's
+release approval was exercised by the owner's directive and receipted. The Codex preliminary
+review round (issues #32, #25, #19) is complete and receipted: T1092 (malformed-JSON bridge fix + real HTTP negative tests), T1093
 (closed-session cap), T1094 (quickstart/notices corrections), T1095 (development merged into the
 candidate; serial clean-SHA verify exit 0 with 1118 tests and regression PASS 457.7 s at
 `814f3b8`; exact-SHA CI green). The release candidate is `release/v0.1.0-preview.1-prep` (worktree
@@ -72,16 +74,15 @@ T1005 (release approval and publication).
 `pnpm regression` on the final tree: see `evals/reports/regression-latest.md`. CI runs on every
 push; the fresh-clone job re-runs the documented first-run path on the pushed commit.
 
-Next exact steps: (1) Codex independently re-audits the final candidate SHA (the #32/#25 fixes
-and docs corrections are in; the receipts name the exact commands and SHAs); (2) the auditor/owner
-reviews `.sus-dev/VERIFICATION/T1003.md` and accepts or contests each finding's measurement;
-(3) the owner decides T1005 (release approval and publication; the install path is documented in
-`docs/QUICKSTART.md` with mutually exclusive blocks). No agent may touch `main`, tag, publish, or
-change protection. If the owner asks to keep building: triage a fresh
-`gh issue list --state open` rather than reopen a closed item.
+Next exact steps: (1) Codex independently re-audits the PUBLISHED SHA (the install path is
+documented in `docs/QUICKSTART.md`; the tag and prerelease exist); (2) the auditor/owner reviews
+`.sus-dev/VERIFICATION/T1003.md` and accepts or contests each finding's measurement — that
+acceptance is the only remaining task (T1003). No agent may touch `main` or change protection.
+If the owner asks to keep building: triage a fresh `gh issue list --state open` rather than
+reopen a closed item.
 
-Blockers: publication remains the owner gate (T1005; licence decided by D36, so B003's licence
-half is closed). Active files: none after checkpoint.
+Blockers: the only open gate is the independent audit's acceptance (T1003). Publication is done
+(D37). Active files: none after checkpoint.
 
 Latest checks: 2026-11-20 (Codex review round) — clean checkout of `814f3b8`:
 `pnpm verify` exit 0 (102 files + 3 skipped, 1118 tests / 9 skipped, 13/13 gates, claims 25/25)
