@@ -24,7 +24,7 @@ build when the two disagree, so this page cannot drift again. It was hand-writte
 | M7 | Studio: dual-stack spike → slice → event contract → verification loop | T0700–T0790 (16 tasks) | **done** — 16/16 |
 | M8 | Studio hardening + second-wave playbooks | T0801–T0812 (11 tasks) | **done** — 11/11 |
 | M9 | Adapters + installer + support matrix + dogfood sites | T0901–T0906 (6 tasks) | **done** — 6/6 |
-| M10 | Regression, benchmark, independent review, docs, release | T1001–T1020 (20 tasks) | **18/20 done** — pending: T1003, T1005 |
+| M10 | Regression, benchmark, independent review, docs, release | T1001–T1020 (20 tasks) | **19/20 done** — pending: T1003 |
 | M11 | Scoped best-practice workflow (/sus-bestpractice, issue #15) | T1021–T1024 (4 tasks) | **done** — 4/4 |
 | M12 | Post-M11 hardening from issue triage (#16-#20, D32) | T1025–T1045 (21 tasks) | **done** — 21/21 |
 | M13 | Independent audit (T1003, D35) findings — the fixes and their measurements | T1046–T1089 (44 tasks) | **done** — 44/44 |
@@ -33,14 +33,12 @@ build when the two disagree, so this page cannot drift again. It was hand-writte
 
 ## What is left
 
-Nothing in the build tree. Every milestone is complete except **M10**, and M10's two open tasks
-are the ones a builder must not do for itself:
-
-- **T1003 — independent audit.** A separately commissioned reviewer, not this build loop
-  (D30/D32 forbid interim auditors). A builder that certifies its own independence has certified
-  nothing.
-- **T1005 — release approval.** The owner's decision to publish the product. The repository is
-  public (D34); the product is not published.
+One task: **T1003 — independent audit acceptance.** The experimental preview itself is published
+(`v0.1.0-preview.1` prerelease, owner decision D37, 2026-11-21 — the T1005 release approval was
+exercised by the owner's directive, with D37a/D37b recording what that does not authorize).
+The audit's verdict acceptance stays with the auditor/owner (D35a/D35b): a builder that certifies
+its own independence has certified nothing. The Codex re-audit of the published SHA has been
+formally requested on issue #22. A builder must not move T1003 to `done`.
 
 Everything else is done, verified by the release suite, and evidenced in
 `.sus-dev/VERIFICATION/`. The last five tasks were added by D32 triage of the owner's open
