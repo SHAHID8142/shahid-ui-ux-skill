@@ -1172,3 +1172,10 @@ after the test that caused it and blames an unrelated file.
   install path (Option A) performed after publication.
 - T1003: Codex re-audit of the published SHA formally requested on issue #22; the builder did not
   and will not self-certify. #32/#25 received evidence comments and stay open for Codex's retest.
+- Publication executed (2026-11-20/21): tag `v0.1.0-preview.1` pushed (annotated, points at
+  `c38ea25a2236f9670bc1be55d7f292bc44a2a360`, CI run 44795033900 all 5 jobs green at that SHA);
+  GitHub prerelease created (isPrerelease=true) with the honest notes as the body;
+  https://github.com/SHAHID8142/shahid-ui-ux-skill/releases/tag/v0.1.0-preview.1.
+  Option A verified from a REAL GitHub clone: tag checkout lands at c38ea25a, install 3.8s,
+  build ok, audit exit 0, bestpractice exit 0 (read-only), capabilities exit 0. T1005 receipt
+  updated with the full evidence table. Codex re-audit requested on #22.
